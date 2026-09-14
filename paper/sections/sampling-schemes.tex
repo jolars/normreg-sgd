@@ -1,0 +1,201 @@
+\section{Covariance controls and sampling schemes}\label{sec:sampling}
+
+Population gradient flow depends on the covariance and fixed scales. SGD also
+depends on higher update moments and on how training observations are reused.
+This section keeps population centering and scales known and fixes the
+intercept at its population value. The fixed-data statements condition on the
+entire observed sample, including its realized response noise.
+
+\subsection{Matched covariance, different update moments}
+
+Let $0<q<1/2$, $0\le a\le1$, and $J\sim\operatorname{Bernoulli}(q)$.
+For $U,V\in\{-1,1\}$, specify the conditional joint probabilities by
+\[
+ \Prob(U=u,V=v\mid J=j)=\frac{1+a_j uv}{4},\qquad
+ a_1=a,\quad a_0=-\frac{qa}{1-q}.
+\]
+All cells are nonnegative. The original binary features are
+$W_1=(U+1)/2$, $W_2=(V+1)/2$, and $J$. Their means and covariance are
+$(1/2,1/2,q)$ and $\diag(1/4,1/4,q(1-q))$ for every $a$.
+After standard-deviation scaling, put
+$z=(U,V,Z)^\top$, $Z=(J-q)/\sqrt{q(1-q)}$. Then
+\[
+ H=I_3,\qquad \E[UVZ^2]=d_a:=\frac{a(1-2q)}{1-q},\qquad
+ \E Z^4=\mu_4.
+\]
+Thus even all marginal feature distributions agree, while a mixed fourth
+moment changes.
+
+\begin{proposition}[A covariance-matched SGD comparison]\label{prop:matched}
+For the distributions above, population GD, population gradient flow, and
+the fresh-SGD mean coincide under identical scales and initialization.
+In the noiseless model, initialize with original-scale coefficient error
+$(0,0,e_0)^\top$. At the same $B$ and $\eta$, after two fresh-batch updates,
+\[
+ \E_a[(\beta_{R,2}-\beta_R^*)^2]
+ -\E_0[(\beta_{R,2}-\beta_R^*)^2]
+ =\frac{2\eta^4d_a^2}{B^2}e_0^2.
+\]
+The comparison uses $2B$ processed observations in both populations.
+\end{proposition}
+\begin{proof}
+Conditional balanced signs give zero means and zero common--rare covariances.
+The choice $(1-q)a_0+qa_1=0$ gives $\E UV=0$, while conditioning on $J$
+gives the stated $d_a$. The mean claims follow from $H=I_3$.
+Write $E_{33}=e_3e_3^\top$. Then
+\[
+ \mathcal M_a(E_{33})=
+ \begin{pmatrix}1&d_a&0\\d_a&1&0\\0&0&\mu_4\end{pmatrix}.
+\]
+Since $R=(1-\eta)I_3$, the only $a$-dependent entries of
+$\mathcal T_{a,B}(E_{33})$ are its two common off-diagonal entries
+$\eta^2d_a/B$. Applying $\mathcal T_{a,B}$ again contributes
+$2\eta^4d_a^2/B^2$ to its rare diagonal entry. Multiplication by the initial
+scaled squared error $q(1-q)e_0^2$ and division by $q(1-q)$ prove the result.
+\end{proof}
+
+Stability can differ as well. At $q=1/4$, $\mu_4=7/3$ and $d_a=2a/3$.
+On symmetric matrices, the eigenvalues of $\mathcal M_a$ are
+\[
+ 0,\quad 2,\quad 2(1-d_a),\quad 2(1+d_a),\quad
+ \frac{2+\mu_4\pm\sqrt{(\mu_4-2)^2+8(1+d_a^2)}}{2}.
+\]
+These follow by separating the common diagonal difference, the two
+common--rare off-diagonal modes, and the span of the common diagonal sum,
+the common off-diagonal, and the rare diagonal. The largest eigenvalue
+$\lambda_a$ is the displayed plus root, so
+\[
+ \eta_{\mathrm{crit},a}=\frac{2}{1+(\lambda_a-1)/B}.
+\]
+For $B=1$ the thresholds are $12/(13+\sqrt{73})$ at $a=0$ and
+$12/(13+\sqrt{105})$ at $a=1$. The common step $\eta=8/15$ is strictly
+stable for the first distribution and fails all-initializations mean-square
+convergence for the second. Both means converge. This comparison isolates
+information absent from the population covariance. For fixed $B$ and
+$q\downarrow0$, both thresholds remain asymptotic to $2Bq$, consistent with
+the leading rare-limit result in Section~\ref{sec:sgd}.
+
+\subsection{Sampling a fixed dataset with replacement}
+
+For fixed observations $(z_i,y_i)_{i=1}^n$, suppose
+$H_D=n^{-1}\sum_i z_i z_i^\top\succ0$, and let $\widehat\theta_D$ be the
+empirical least-squares coefficient in scaled coordinates. Define
+\[
+ r_i=y_i-z_i^\top\widehat\theta_D,\quad g_i=z_i r_i,\quad
+ \frac1n\sum_i g_i=0,\quad
+ v_k=\theta_k-\widehat\theta_D,\quad R_D=I-\eta H_D.
+\]
+Each update samples $B$ indices independently and uniformly with replacement,
+independently of previous index draws conditional on the dataset. Write
+\[
+ \mathcal M_D(U)=\frac1n\sum_i z_i z_i^\top U z_i z_i^\top,\quad
+ \mathcal V_D(U)=\mathcal M_D(U)-H_DUH_D,\quad
+ Q_D=\frac1n\sum_i g_i g_i^\top,
+\]
+and let $\mathcal T_{D,B}(U)=R_DUR_D+\eta^2\mathcal V_D(U)/B$.
+The additional linear map
+\[
+ J_D(m)=\frac1n\sum_i z_i z_i^\top m g_i^\top
+\]
+records correlation between the sampled curvature and the residual score.
+
+\begin{proposition}[Conditional replacement moments]\label{prop:replacement}
+Conditional on the dataset, let $m_k=\E_Dv_k$ and
+$U_k=\E_D[v_kv_k^\top]$, with finite initial second moment and initialization
+independent of the sampled indices. Then
+\begin{align*}
+ m_{k+1}&=R_Dm_k,\\
+ U_{k+1}&=\mathcal T_{D,B}(U_k)
+ +\frac{\eta^2}{B}\{Q_D-J_D(m_k)-J_D(m_k)^\top\}.
+\end{align*}
+For $\Sigma_k=U_k-m_km_k^\top$, the covariance recurrence has the additional
+term $\eta^2\mathcal V_D(m_km_k^\top)/B$ on the right.
+\end{proposition}
+\begin{proof}
+Put $\widehat H=B^{-1}\sum_b z_{i_b}z_{i_b}^\top$ and
+$\bar g=B^{-1}\sum_b g_{i_b}$. The update is
+$v_{k+1}=(I-\eta\widehat H)v_k+\eta\bar g$.
+The normal equations give $\E_D\bar g=0$ and
+$\E_D\bar g\bar g^\top=Q_D/B$. Independence within a batch and
+$n^{-1}\sum_i g_i=0$ give
+$\E_D[\widehat Hm\bar g^\top]=J_D(m)/B$.
+Expanding the update outer product proves the second-moment formula. The
+conditional mean and covariance follow directly.
+\end{proof}
+
+Thus empirical normal equations do not replace the fresh-sample conditional
+noise-mean assumption. The $J_D$ terms can be nonzero: scalar observations $z_1=1,z_2=2$ with
+residuals $r_1=2,r_2=-1$ have zero empirical score but $J_D(m)=-3m$.
+The empirical mean of these features need not vanish when centering uses
+known population quantities. The conditional mean
+follows empirical GD toward $\widehat\theta_D$, and the original-scale error
+relative to the population signal is
+\[
+ \beta_k-\beta^*=S^{-1}v_k+(S^{-1}\widehat\theta_D-\beta^*).
+\]
+The second term persists when the same noisy observations are reused. In the
+noiseless full-rank model the residuals vanish, so the homogeneous operator
+criterion in Proposition~\ref{prop:matrix-stability} applies with empirical
+moments. Population thresholds involving $Bq$ require additional empirical
+moment control before being used conditionally on a random dataset.
+
+\subsection{Random reshuffling}
+
+For single-observation updates, augment the error by a constant coordinate:
+\[
+ w=\begin{pmatrix}v\\1\end{pmatrix},\qquad
+ A_i=\begin{pmatrix}I-\eta z_i z_i^\top&\eta g_i\\0&1\end{pmatrix}.
+\]
+For a uniform random permutation $\pi$ of the $n$ indices, put
+$A_\pi=A_{\pi(n)}\cdots A_{\pi(1)}$. Independently reshuffling each epoch
+gives exact conditional epoch recurrences
+\[
+ \E_Dw_{e+1}=\E_\pi[A_\pi]\E_Dw_e,\qquad
+ \E_D[w_{e+1}w_{e+1}^\top]
+ =\E_\pi\left[A_\pi\E_D[w_ew_e^\top]A_\pi^\top\right].
+\]
+Here $e$ counts epochs, each consisting of $n$ updates and $n$ processed
+observations. These identities follow by conditioning on the epoch's starting
+iterate and using an independent permutation. They do not factor into $n$
+independent single-update operators. Fixed-size disjoint minibatches are
+handled by replacing each $A_i$ with its batch-average update, specifying any
+incomplete final batch.
+
+If the original dataset consists of independent identically distributed
+observations, an independent permutation preserves its product distribution.
+Consequently, the first pass, unconditionally over the dataset, has exactly
+the fresh-sample law for an initialization independent of the dataset and
+known population centering and scales. Conditioning on the dataset or making
+another pass changes this conclusion. Empirical centering, estimated scales,
+and an initialization fitted to the dataset also invalidate this argument.
+
+For a concrete conditional counterexample, take a population-standardized
+Bernoulli feature with prevalence $1/3$ and a noiseless dataset containing
+one observation at each of its values $\sqrt2$ and $-1/\sqrt2$. The two
+curvatures are $2$ and $1/2$. At a common two-observation budget,
+\[
+ v_2^{\mathrm{shuffle}}=(1-2\eta)(1-\eta/2)v_0,\qquad
+ \E_Dv_2^{\mathrm{replace}}=(1-5\eta/4)^2v_0.
+\]
+The difference is $-9\eta^2v_0/16$. Replacement contracts in mean square
+exactly for $0<\eta<20/17$, while reshuffling contracts per epoch for
+$0<\eta<5/2$. At $\eta=2$, reshuffling reaches zero in one epoch and
+replacement has second-moment factor $9/2$ per update. These statements
+follow by multiplying the two scalar factors and averaging their squares,
+respectively. They concern this specified dataset and do not establish a
+general advantage for reshuffling.
+
+Reusing response noise also changes unconditional error. With one observed
+pair, an equiprobable sign feature $z$, independent mean-zero noise of variance
+$\sigma^2$, and initialization at truth, repeated use gives
+\[
+ u_k=\{1-(1-\eta)^k\}z\varepsilon,\qquad
+ \E u_k^2=\sigma^2\{1-(1-\eta)^k\}^2.
+\]
+Fresh observations instead give
+$\eta^2\sigma^2\sum_{j=0}^{k-1}(1-\eta)^{2j}$. For $0<\eta<2$, the
+limits are $\sigma^2$ and $\eta\sigma^2/(2-\eta)$, respectively.
+Conditional finite-data identities also require extra integrability before
+averaging over a random dataset: noiseless reuse of a single feature gives
+$u_2^2=(1-\eta z^2)^4u_0^2$, which can have infinite expectation when
+$\E z^4<\infty$ but $\E z^8=\infty$.

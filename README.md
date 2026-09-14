@@ -9,12 +9,15 @@ The manuscript begins with two elementary calculations: a transient dependence
 effect in population gradient flow and a scalar SGD stability bound for rare
 binary observations. It extends these to a fixed common block, exact
 finite-update GD and fresh-sample SGD error moments, and batch-rarity stability
-under a bounded common-block assumption. Population centering and feature scales
-are known. Joint sampling limits, comparisons with adaptive optimizers, and
-empirical validation remain research objectives. Earlier correlated-feature
-shrinkage results are retained as explicit-regularization baselines in the
-appendices, following *The Choice of Normalization Influences Shrinkage in
-Regularized Regression* by Johan Larsson and Jonas Wallin.
+under a bounded common-block assumption. A matched-covariance binary comparison
+isolates higher update moments, while conditional identities and counterexamples
+distinguish replacement sampling and reshuffling from fresh observations.
+Population centering and feature scales are known. Joint sampling limits,
+comparisons with adaptive optimizers, and empirical validation remain research
+objectives. Earlier correlated-feature shrinkage results are retained as
+explicit-regularization baselines in the appendices, following *The Choice of
+Normalization Influences Shrinkage in Regularized Regression* by Johan Larsson
+and Jonas Wallin.
 
 ## Start here
 
@@ -57,10 +60,11 @@ make check-optimization
 This runs the elementary checks in `experiments/check_optimization.py`,
 block-flow checks in `experiments/check_block_flow.py`, finite-update moment
 checks in `experiments/check_discrete_dynamics.py`, and stability checks in
-`experiments/check_multivariate_stability.py`. They use independent ODE
-solutions and exact support, batch, and short-trajectory enumeration without
-writing reference results. They are mathematical checks, not a comparative
-optimizer experiment.
+`experiments/check_multivariate_stability.py`, plus covariance and
+sampling-scheme checks in `experiments/check_sampling_schemes.py`. They use
+independent ODE solutions and exact support, batch, and short-trajectory
+enumeration without writing reference results. They are mathematical checks, not
+a comparative optimizer experiment.
 
 To regenerate the numerical reference results for the shrinkage baselines:
 

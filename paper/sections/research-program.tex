@@ -13,9 +13,11 @@ thresholds for a bounded common block across the three $Bq$ regimes. The
 mean trajectory separates incomplete common-feature learning from direct
 rare-feature learning, while the covariance formulas separate initial
 uncertainty, multiplicative update variance, and observation noise. These
-results use known population centering and fixed scales. Joint sampling
-and stopping-time limits remain open; fixed-data sampling with replacement
-and random reshuffling require their own assumptions.
+results use known population centering and fixed scales.
+Section~\ref{sec:sampling} supplies a matched-covariance binary comparison,
+conditional fixed-data replacement identities, and exact reshuffling epoch
+recurrences. Counterexamples delimit their relation to fresh sampling.
+Joint sampling and stopping-time limits remain open.
 
 For empirical samples, specify $n\to\infty$, rare prevalence $q_n\downarrow0$,
 and whether $nq_n\to\infty$ or rare counts remain bounded. Compare error
@@ -48,7 +50,9 @@ errors must not be confused with coefficient effects.
 The repository's optimization checks compare matrix exponentials and block
 limits with independent ODE solutions, stochastic moment formulas with exact
 batch and short-trajectory enumeration, and stability thresholds with operator
-eigenvalues on feasible binary supports. Existing coordinate-descent and Gaussian integration
+eigenvalues on feasible binary supports. Rational path enumeration also checks
+first-pass sampling equivalence and the effects of reusing observations.
+Existing coordinate-descent and Gaussian integration
 checks validate the explicit-penalty baselines. These are mathematical
 checks, not a completed comparative experiment. A later empirical study should
 use sparse text or categorical data, starting with linear models and then a

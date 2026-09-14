@@ -39,15 +39,22 @@ standalone novelty claim.
   progress. Established for a uniformly bounded fixed common block with
   known population standard-deviation scales in [stochastic
   stability](paper/sections/stochastic-gradient.tex).
-- [ ] Compare distributions with matched covariance but different update moments
-  to isolate what population gradient flow cannot explain about SGD.
+- [x] Compare distributions with matched covariance but different update moments
+  to isolate what population gradient flow cannot explain about SGD. A
+  feasible three-binary-feature family has identical means and covariance
+  but different two-update rare-coefficient error and stability thresholds;
+  see [sampling schemes](paper/sections/sampling-schemes.tex).
 - [ ] Specify joint limits for sample size, prevalence, learning rate, batch
   size, and stopping time. Start with $nq_n \to \infty$ and fixed error
   variance; compare error terms with the $(nq_n)^{-1/2}$ uncertainty scale
   under stated regularity assumptions. Check whether the order of limits
   matters.
-- [ ] Distinguish online fresh samples, fixed-data sampling with replacement,
+- [x] Distinguish online fresh samples, fixed-data sampling with replacement,
   and random reshuffling. Establish which conclusions extend to each scheme.
+  Exact conditional replacement and reshuffling epoch identities, first-pass
+  unconditional equivalence, and counterexamples are in [sampling
+  schemes](notes/sampling-schemes.md). Population centering, scales, and the
+  intercept remain known and fixed.
 - [ ] Analyze estimated feature scales, training centering, and intercept
   handling. State what happens when a training sample has no rare
   observations.
