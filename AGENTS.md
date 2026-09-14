@@ -3,9 +3,11 @@
 This is a research manuscript with supporting Python calculations. It studies
 rare-feature learning under normalization, early stopping, and stochastic
 optimization, with an emphasis on rare-subgroup prediction. Elementary
-population-flow and scalar SGD results are the starting point; multivariate
-finite-time theory, sampling guarantees, novelty, and empirical usefulness
-remain research objectives. Earlier shrinkage results are supporting baselines.
+population-flow and scalar SGD results are extended to a fixed common block,
+exact finite-update moments, and batch-rarity stability under explicit
+population assumptions. Joint sampling guarantees, novelty, and empirical
+usefulness remain research objectives. Earlier shrinkage results are supporting
+baselines.
 
 ## Sources and mathematical conventions
 
@@ -19,8 +21,11 @@ remain research objectives. Earlier shrinkage results are supporting baselines.
 - `experiments/check_two_features.py` contains exact region integration and
   independent checks of the explicit-penalty baselines.
   `experiments/check_optimization.py` checks the population gradient-flow and
-  scalar fresh-batch SGD formulas. This is a script project, not an installable
-  Python library.
+  scalar fresh-batch SGD formulas. `experiments/check_block_flow.py`,
+  `experiments/check_discrete_dynamics.py`, and
+  `experiments/check_multivariate_stability.py` check the corresponding block,
+  finite-update, and stability extensions. This is a script project, not an
+  installable Python library.
 - The paper and optimization checks use the averaged loss and
   $C = X_c^\top X_c/n$ for empirical designs, while the shrinkage script uses
   $G = nC$. Keep $\lambda_1 = nt$ and $\lambda_2 = nr$ consistent. Report

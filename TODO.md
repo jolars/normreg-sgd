@@ -25,16 +25,20 @@ standalone novelty claim.
 
 ## First milestone: learning dynamics and sampling
 
-- [ ] Extend the population early-stopping result to a fixed block of common
+- [x] Extend the population early-stopping result to a fixed block of common
   predictors and one rare binary feature. State the assumptions on $A_n$,
-  $c_n/b_n$, feature scales, and initialization.
-- [ ] Derive finite-time mean-error and covariance formulas or bounds for
+  $c_n/b_n$, feature scales, and initialization. See the common-block
+  proposition in [gradient flow](paper/sections/gradient-flow.tex).
+- [x] Derive finite-time mean-error and covariance formulas or bounds for
   discrete GD and fresh-sample SGD. Separate incomplete common-feature
-  learning, observation noise, and stochastic update moments.
-- [ ] Characterize stability and learning rates across small, intermediate, and
+  learning, observation noise, and stochastic update moments. See the exact
+  formulas in [discrete dynamics](paper/sections/discrete-dynamics.tex).
+- [x] Characterize stability and learning rates across small, intermediate, and
   large $Bq$. Identify what dependence changes beyond the scalar
   fourth-moment calculation and whether a common learning rate limits
-  progress.
+  progress. Established for a uniformly bounded fixed common block with
+  known population standard-deviation scales in [stochastic
+  stability](paper/sections/stochastic-gradient.tex).
 - [ ] Compare distributions with matched covariance but different update moments
   to isolate what population gradient flow cannot explain about SGD.
 - [ ] Specify joint limits for sample size, prevalence, learning rate, batch

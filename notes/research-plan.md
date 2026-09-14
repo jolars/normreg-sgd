@@ -46,7 +46,7 @@ calibration, while $kB$ counts processed observations in fresh-batch SGD. The
 explicit-penalty baselines retain $t = \lambda_1/n$ and $r = \lambda_2/n$;
 neither symbol denotes training time.
 
-For the multivariate target, partition the covariance as
+For the multivariate population setup, partition the covariance as
 
 $$
   C_n = \begin{pmatrix}
@@ -61,21 +61,23 @@ $$
 
 The common block initially has fixed dimension. The rare coordinate is binary,
 with prevalence $q_n$ and variance $b_n = q_n(1 - q_n)$. Actual binary designs
-must satisfy their joint-cell bounds. The desired finite-time analysis should
-separate incomplete learning of the common coefficients, rare-feature
-information, and stochastic update moments.
+must satisfy their joint-cell bounds. The finite-time formulas separate
+incomplete learning of the common coefficients, rare-feature learning, and
+stochastic update moments under known population centering and fixed scales.
 
 ## Current foundation
 
-  | Result                                                         | Status and scope                                                                                                             |
-  | -------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-  | Feature scaling as preconditioning                             | Standard exact change of coordinates for fixed scales.                                                                       |
-  | Transient dependence under early stopping                      | Proved for two-feature population gradient flow, with a fixed-time rare-feature limit.                                       |
-  | Scalar SGD stability                                           | Exact second-moment recurrence for a noiseless standardized Bernoulli predictor and fresh independent batches.               |
-  | Independent numerical checks                                   | Matrix exponential versus a scaled-coordinate ODE solution, rare-limit checks, and exact binomial batch enumeration.         |
-  | Explicit-regularization baselines                              | Existing bivariate lasso and elastic-net formulas, ridge moments, and binary counterexamples are retained in the appendices. |
-  | Multivariate SGD, sampling theory, and comparative experiments | Open research objectives.                                                                                                    |
-  | Standalone novelty                                             | Unresolved; the elementary calculations are supporting results.                                                              |
+  | Result                                            | Status and scope                                                                                                                                                 |
+  | ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | Feature scaling as preconditioning                | Standard exact change of coordinates for fixed scales.                                                                                                           |
+  | Transient dependence under early stopping         | Proved for a fixed common block and one rare binary feature, uniformly on bounded population-flow time intervals, with convergent original-scale initialization. |
+  | Scalar SGD stability                              | Exact second-moment recurrence for a noiseless standardized Bernoulli predictor and fresh independent batches.                                                   |
+  | Finite-update GD and fresh-sample SGD moments     | Exact mean, second-moment, and centered covariance formulas, with initial uncertainty, multiplicative update variance, and observation noise separated.          |
+  | Multivariate batch-rarity stability               | Exact operator criterion and three-regime threshold limits for a uniformly bounded fixed common block with positive definite limiting covariance.                |
+  | Independent numerical checks                      | Support-based ODE integration, block limits, exact batch and short-trajectory enumeration, mixed moments, and stability eigenvalues.                             |
+  | Explicit-regularization baselines                 | Existing bivariate lasso and elastic-net formulas, ridge moments, and binary counterexamples are retained in the appendices.                                     |
+  | Joint sampling limits and comparative experiments | Open research objectives, including estimated centering/scales and fixed-data sampling.                                                                          |
+  | Standalone novelty                                | Unresolved; the elementary calculations are supporting results.                                                                                                  |
 
 For standard-deviation scaling in the two-feature population model,
 $c/b \to \kappa$ gives, at fixed $T$,
@@ -104,17 +106,38 @@ updates across several feature frequencies. Population scales and centering are
 known here. The result is not a guarantee for adaptive optimizers or for random
 reshuffling of a fixed dataset.
 
-The derivations are in [the manuscript](../paper/main.tex), and the
-deterministic checks are in
-[check_optimization.py](../experiments/check_optimization.py). Run them with
-`make check-optimization` inside `devenv shell`.
+The block extension allows common scales $D_n \to D \succ 0$ and rare scales
+with $b_n/s_{R,n}^2 \to \rho \in [0,\infty)$. Its rare-coordinate limit is a
+convolution of the remaining common error with the rare response at rate $\rho$.
+Discrete GD and the fresh-SGD mean have the corresponding finite-sum formula at
+each fixed update count. Exact covariance formulas require finite fourth feature
+moments and finite gradient-noise moments in each population; these conditions
+alone give no uniform rare-limit covariance bound.
+
+For a uniformly bounded common block under population standard-deviation
+scaling, the all-initializations mean-square stability threshold is
+$\Theta(\min\{1,Bq\})$. It is asymptotic to $2Bq$ for small $Bq$. The
+intermediate limit also depends on the largest eigenvalue of the standardized
+common covariance, and the large-$Bq$ limit recovers the population GD
+threshold. Mixed fourth moments affect finite-prevalence stability. With small
+$Bq$, a stable shared learning rate can also slow common-feature learning. These
+results distinguish updates from processed observations and noiseless
+contraction from a nonzero observation-noise floor.
+
+The derivations are in [the manuscript](../paper/main.tex). Run all
+deterministic checks with `make check-optimization` inside `devenv shell`: the
+[elementary checks](../experiments/check_optimization.py), [block-flow
+checks](../experiments/check_block_flow.py), [finite-update moment
+checks](../experiments/check_discrete_dynamics.py), and [multivariate stability
+checks](../experiments/check_multivariate_stability.py).
 
 ## First milestone and empirical objective
 
 The first milestone combines a checked finite-time result for a rare feature
 with common predictors, a comparison with the closest prior theorems, and one
-controlled experiment showing a consequential difference. Start with population
-flow and discrete GD, then fresh-sample SGD. Finite-data resampling, empirical
+controlled experiment showing a consequential difference. The population-flow
+and fresh-SGD results now supply the initial theory under their stated
+assumptions. Joint sampling limits, finite-data resampling, empirical
 normalization, validation-based stopping, and adaptive optimizers need explicit
 additional assumptions.
 

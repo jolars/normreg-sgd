@@ -25,6 +25,9 @@ check-python:
 
 check-optimization:
 	python experiments/check_optimization.py
+	python experiments/check_block_flow.py
+	python experiments/check_discrete_dynamics.py
+	python experiments/check_multivariate_stability.py
 
 verify: check-optimization
 	python experiments/check_two_features.py --check-only

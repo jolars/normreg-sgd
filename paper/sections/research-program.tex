@@ -7,13 +7,15 @@ and a comparison with the closest prior theorems. Write
  C_n=\begin{pmatrix}A_n&c_n\\c_n^\top&b_n\end{pmatrix},\qquad
  A_n\to A\succ0,\quad b_n\downarrow0,\quad c_n/b_n\to\kappa.
 \]
-The target is an account of mean error and covariance along the learning
-trajectory that separates incomplete learning of common features, rarity,
-and stochastic update moments. Population gradient flow should be extended
-first, followed by discrete GD and fresh-sample SGD with explicit scales,
-learning rates, batch sizes, and stopping rules. Fixed-data sampling with
-replacement and random reshuffling require their own assumptions. None of
-these general results is established by the two elementary propositions.
+Sections~\ref{sec:flow}--\ref{sec:sgd} establish the population block-flow
+limit, exact finite-update GD and fresh-SGD error moments, and stability
+thresholds for a bounded common block across the three $Bq$ regimes. The
+mean trajectory separates incomplete common-feature learning from direct
+rare-feature learning, while the covariance formulas separate initial
+uncertainty, multiplicative update variance, and observation noise. These
+results use known population centering and fixed scales. Joint sampling
+and stopping-time limits remain open; fixed-data sampling with replacement
+and random reshuffling require their own assumptions.
 
 For empirical samples, specify $n\to\infty$, rare prevalence $q_n\downarrow0$,
 and whether $nq_n\to\infty$ or rare counts remain bounded. Compare error
@@ -43,9 +45,10 @@ prevalence shift that preserves the conditional response model and uses the
 training centering and scales at prediction time. New intercept or centering
 errors must not be confused with coefficient effects.
 
-The repository's optimization checks compare matrix exponentials with an
-independent ODE solution and stochastic moment formulas with exact binomial
-batch enumeration. Existing coordinate-descent and Gaussian integration
+The repository's optimization checks compare matrix exponentials and block
+limits with independent ODE solutions, stochastic moment formulas with exact
+batch and short-trajectory enumeration, and stability thresholds with operator
+eigenvalues on feasible binary supports. Existing coordinate-descent and Gaussian integration
 checks validate the explicit-penalty baselines. These are mathematical
 checks, not a completed comparative experiment. A later empirical study should
 use sparse text or categorical data, starting with linear models and then a

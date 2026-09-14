@@ -7,11 +7,14 @@ prediction within rare subgroups and under specified prevalence shifts.
 
 The manuscript begins with two elementary calculations: a transient dependence
 effect in population gradient flow and a scalar SGD stability bound for rare
-binary observations. General finite-time theory, comparisons with adaptive
-optimizers, and empirical validation remain research objectives. Earlier
-correlated-feature shrinkage results are retained as explicit-regularization
-baselines in the appendices, following *The Choice of Normalization Influences
-Shrinkage in Regularized Regression* by Johan Larsson and Jonas Wallin.
+binary observations. It extends these to a fixed common block, exact
+finite-update GD and fresh-sample SGD error moments, and batch-rarity stability
+under a bounded common-block assumption. Population centering and feature scales
+are known. Joint sampling limits, comparisons with adaptive optimizers, and
+empirical validation remain research objectives. Earlier correlated-feature
+shrinkage results are retained as explicit-regularization baselines in the
+appendices, following *The Choice of Normalization Influences Shrinkage in
+Regularized Regression* by Johan Larsson and Jonas Wallin.
 
 ## Start here
 
@@ -51,9 +54,13 @@ To check just the optimization calculations inside `devenv shell`:
 make check-optimization
 ```
 
-This runs `experiments/check_optimization.py` and prints deterministic numerical
-checks without writing reference results. It is not a comparative optimizer
-experiment.
+This runs the elementary checks in `experiments/check_optimization.py`,
+block-flow checks in `experiments/check_block_flow.py`, finite-update moment
+checks in `experiments/check_discrete_dynamics.py`, and stability checks in
+`experiments/check_multivariate_stability.py`. They use independent ODE
+solutions and exact support, batch, and short-trajectory enumeration without
+writing reference results. They are mathematical checks, not a comparative
+optimizer experiment.
 
 To regenerate the numerical reference results for the shrinkage baselines:
 
