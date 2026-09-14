@@ -1,0 +1,61 @@
+name: Check research project
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  markdown:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: jolars/panache-action@v1
+        with:
+          version: v3.4.0
+
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: cachix/install-nix-action@v31
+      - name: Install devenv
+        run: nix profile add nixpkgs#devenv
+      - name: Validate calculations and build manuscript
+        run: devenv shell make check
+      - uses: actions/upload-artifact@v7
+        with:
+          name: normreg-multi-manuscript
+          path: build/main.pdf
+          if-no-files-found: error
+
+  versionary:
+    if: >-
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      vars.ENABLE_RELEASES == 'true'
+    needs: [markdown, check]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.RELEASE_TOKEN }}
+      - uses: cachix/install-nix-action@v31
+      - name: Install uv for release lockfile updates
+        run: nix profile add nixpkgs#uv
+      - uses: jolars/versionary@v1
+        with:
+          token: ${{ secrets.RELEASE_TOKEN }}

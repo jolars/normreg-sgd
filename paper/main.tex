@@ -1,0 +1,59 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage[round,authoryear]{natbib}
+\usepackage{microtype}
+\usepackage[colorlinks=true,allcolors=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\sign}{sign}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\soft}{S}
+
+\title{Normalization and Shrinkage with Correlated Binary Features}
+\author{Johan Larsson}
+\date{Working manuscript --- September 14, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This working theoretical investigation studies how correlation changes the
+effect of normalization in penalized linear regression with binary features.
+For two features, we derive an exact selection integral for the weighted
+elastic net and identify normalization conclusions that survive correlation.
+Variance weighting preserves the noiseless lasso solution for a single signal,
+but shrinkage with two active signals depends on their signs and on covariance
+divided by feature variance. A rare binary feature can consequently retain a
+nonvanishing effect from another coefficient's shrinkage even as Pearson
+correlation tends to zero. We give explicit counterexamples, an approximation
+bound, and a formal Gaussian limit, and separate these results from the open
+problem of a general sampling theorem. The manuscript establishes a foundation
+for further work; literature novelty and empirical usefulness remain to be
+assessed.
+\end{abstract}
+
+\input{sections/setup}
+\input{sections/two-features}
+\input{sections/binary}
+\input{sections/rare-features}
+\input{sections/research-program}
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\appendix
+\input{sections/formal-limit}
+\end{document}

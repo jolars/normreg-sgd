@@ -1,0 +1,61 @@
+\section{A formal Gaussian Gram-matrix limit}\label{sec:formal}
+\begin{theorem}\label{thm:formal}
+Hold $a,t,\tau>0$, $r\ge0$, and $\beta^*\in\R^2$ fixed. Let $b\downarrow0$
+and $c/b\to\kappa$, and use $u=(a^\delta,b^\delta)$ and
+$v=(a^{2\delta},b^{2\delta})$ for $\delta\ge1/2$. Define
+\[
+ B_1=\frac{\soft_{ta^\delta}(a\beta_1^*+\xi_1)}{a+ra^{2\delta}},
+ \quad \xi_1\sim N(0,\tau^2a),\qquad
+ L=\beta_2^*+\kappa(\beta_1^*-\E B_1).
+\]
+Under \eqref{eq:score-law}, the limits are
+\begin{align*}
+ \lim\E\hat\beta_2&=
+ \begin{cases}2\Phi(-t/\tau)L/(1+r),&\delta=1/2,\\L,&\delta>1/2,\end{cases}\\
+ \lim\Prob(\hat\beta_2\ne0)&=
+ \begin{cases}2\Phi(-t/\tau),&\delta=1/2,\\1,&\delta>1/2,\end{cases}\\
+ \lim b\Var(\hat\beta_2)&=
+ \begin{cases}\Var(\soft_t(\tau Z))/(1+r)^2,&\delta=1/2,\\
+ \tau^2,&\delta>1/2,\end{cases}\qquad Z\sim N(0,1).
+\end{align*}
+\end{theorem}
+\begin{proof}
+Couple the score errors by $\xi_2=(c/a)\xi_1+
+\tau\sqrt{b-c^2/a}\,Z$, with $Z$ independent of $\xi_1$.
+The coordinate KKT equations and the Lipschitz property of soft-thresholding
+give $\|\hat\beta_2\|_{L^2}=O(b^{-1/2})$ and
+$\|\hat\beta_1-B_1\|_{L^2}=O(\sqrt b)$. For the first bound, combine
+$d_j\|\hat\beta_j\|_{L^2}\le\|z_j\|_{L^2}+|c|\|\hat\beta_{3-j}\|_{L^2}$
+and use $d_2-c^2/d_1\asymp b$; for the second, apply the Lipschitz bound to
+the first coordinate equation. Replacing $\hat\beta_1$ by $B_1$ in the second
+coordinate changes its estimate by $O_{L^2}(\sqrt b)$. The replacement is
+\[
+ \widetilde B_2=
+ \frac{\soft_{tb^\delta}(\tau\sqrt{b-c^2/a}\,Z+bU_b)}{b+rb^{2\delta}},
+ \qquad U_b=\beta_2^*+(c/b)(\beta_1^*-B_1+\xi_1/a).
+\]
+Here $U_b$ is independent of $Z$, converges in $L^2$, and has mean tending
+to $L$. Define
+\[
+ F_b(h)=\E_Z\soft_{tb^\delta}(\tau\sqrt{b-c^2/a}\,Z+h).
+\]
+Symmetry gives $F_b(0)=0$ and differentiation gives
+\[
+ F_b'(h)=\Prob_Z(|\tau\sqrt{b-c^2/a}\,Z+h|>tb^\delta),\qquad
+ \frac{F_b(bU_b)}b=U_b\int_0^1F_b'(sbU_b)\,ds.
+\]
+The integrand tends to $2\Phi(-t/\tau)$ when $\delta=1/2$ and to one
+otherwise. It is bounded by one, and the $L^2$ bound on $U_b$ gives uniform
+integrability. Taking expectations and dividing by $1+rb^{2\delta-1}$
+proves the mean limit.
+
+The same representation gives $\sqrt b\hat\beta_2\to
+\soft_t(\tau Z)/(1+r)$ in $L^2$ when $\delta=1/2$, and $\sqrt b\hat\beta_2\to
+\tau Z$ in $L^2$ otherwise. Both limiting variables have mean zero, proving
+the variance limits. For selection, use \eqref{eq:inactive}; its residual
+divided by $\sqrt b$ converges in distribution to $\tau Z$, while its
+threshold tends to $t$ or zero. The limiting boundary has probability zero.
+\end{proof}
+This formal experiment keeps score noise $\tau$ fixed. A statistical theorem
+for actual binary samples must replace it with a specified joint limit for
+$n$, prevalence, error variance, and penalties.

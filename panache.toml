@@ -1,0 +1,9 @@
+flavor = "gfm"
+extend-exclude = ["build/**", "CHANGELOG.md"]
+
+[format]
+line-width = 80
+
+[formatters]
+python = "ruff"
+

@@ -1,0 +1,47 @@
+\section{A rare feature with vanishing correlation}
+Keep $q_1\in(0,1)$ fixed and let $q_2\downarrow0$. Binary feasibility implies
+$c=O(b)$, so $\rho\to0$, but $c/b$ need not vanish. Suppose $c/b\to\kappa$.
+For nested binary features, $X_2=1$ implies $X_1=1$, and
+\begin{equation}\label{eq:nested}
+ c=q_2(1-q_1),\qquad \frac cb=\frac{1-q_1}{1-q_2}\longrightarrow1-q_1.
+\end{equation}
+With positive signals that remain active, \eqref{eq:binary-shrinkage} gives
+\begin{equation}\label{eq:noiseless-limit}
+ \hat\beta_1\longrightarrow\beta_1^*-t,\qquad
+ \hat\beta_2\longrightarrow\beta_2^*-t(1-\kappa).
+\end{equation}
+For $q_1=1/2$, the rare coefficient loses $t/2$, compared with the orthogonal
+loss $t$. Pearson correlation tends to zero in both comparisons.
+
+This example is realizable along actual binary designs. Take $n_m=2m^2$,
+with cell counts $(n_{11},n_{10},n_{01},n_{00})=(m,m^2-m,0,m^2)$ for
+$m\ge2$. Then $q_1=1/2$, $q_2=1/(2m)$, and $n_mq_2=m\to\infty$.
+Fix $t>0$ and $\beta_1^*,\beta_2^*>t$. Under independent Gaussian errors
+with fixed variance, \eqref{eq:noiseless-limit} holds in probability for
+variance-weighted lasso. Indeed, the positive-sign candidate equals the
+noiseless candidate plus $C^{-1}(z-C\beta^*)$, whose covariance is
+$\sigma_\varepsilon^2 C^{-1}/n_m$. Its largest coordinate variance is
+$O((n_mq_2)^{-1})$, so its noise vanishes. The limiting coefficients are
+strictly positive, and hence the candidate satisfies the active-sign
+conditions with probability tending to one. This fixes the averaged penalty,
+meaning $\lambda_1=n_mt$.
+
+Ridge gives another explicit counterexample. With standard-deviation scaling,
+$V=\diag(a,b)$, Proposition~\ref{prop:ridge} yields
+\[
+ \E\hat\beta_2=
+ \frac{r(c/b)\beta_1^*+(1+r-\rho^2)\beta_2^*}{(1+r)^2-\rho^2}
+ \longrightarrow\frac{\beta_2^*}{1+r}+
+ \frac{r\kappa\beta_1^*}{(1+r)^2}.
+\]
+For $q_1=1/2$, $r=1$, and $\beta^*=(1,1)$, this mean tends to $5/8$,
+whereas the orthogonal mean is $1/2$.
+
+There is a distinct formal Gaussian experiment in which $\tau$ in
+\eqref{eq:score-law} is fixed while the Gram matrix varies continuously.
+Appendix~\ref{sec:formal} proves a rare-feature mean limit for this experiment.
+It does not represent a fixed-size binary sample, whose empirical proportions
+lie on a finite grid. Nor does it describe increasing samples with fixed
+error variance, since those have $\tau_n\to0$. These distinctions matter
+because thresholding, rare counts, and penalties can interact differently
+under different limiting regimes.

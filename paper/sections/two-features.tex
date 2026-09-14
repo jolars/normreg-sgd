@@ -1,0 +1,70 @@
+\section{An exact two-feature representation}
+Set
+\[
+ C=\begin{pmatrix}a&c\\c&b\end{pmatrix},\qquad
+ M=C+r\diag(v)=\begin{pmatrix}d_1&c\\c&d_2\end{pmatrix},\qquad
+ \ell_j=tu_j,
+\]
+where $a,b>0$ and $ab-c^2>0$. The KKT conditions are
+\begin{equation}\label{eq:kkt}
+ M\hat\beta+\ell\odot g=z,\qquad
+ g_j=\sign(\hat\beta_j)\ \text{if }\hat\beta_j\ne0,
+ \quad |g_j|\le1\ \text{otherwise}.
+\end{equation}
+For $t>0$, the solution has nine support/sign regions. On the empty support,
+the conditions are $|z_j|\le\ell_j$ for both coordinates. On support $\{1\}$
+with sign $h_1\in\{-1,1\}$,
+\[
+ \hat\beta_1=(z_1-\ell_1h_1)/d_1,\qquad \hat\beta_2=0,
+ \quad h_1z_1>\ell_1,\quad |z_2-c\hat\beta_1|\le\ell_2.
+\]
+Exchange the indices for support $\{2\}$. On the full support with signs
+$h\in\{-1,1\}^2$,
+\begin{equation}\label{eq:both-active}
+ \hat\beta=M^{-1}(z-\ell\odot h),\qquad h_j\hat\beta_j>0.
+\end{equation}
+These affine formulas and linear inequalities follow from \eqref{eq:kkt}.
+Strict convexity makes them sufficient as well as necessary. Up to boundaries
+of Gaussian probability zero, the regions partition score space.
+
+\begin{proposition}[Exact selection integral]\label{prop:selection}
+Let $B_1(x)=\soft_{\ell_1}(x)/d_1$. Then
+\begin{equation}\label{eq:inactive}
+ \hat\beta_2=0\quad\Longleftrightarrow\quad
+ |z_2-cB_1(z_1)|\le\ell_2.
+\end{equation}
+Write $\mu=C\beta^*$, $f_1$ for the $N(\mu_1,\tau^2a)$ density, and
+\[
+ m(x)=\mu_2+(c/a)(x-\mu_1),\quad q(x)=cB_1(x),\quad
+ \omega=\tau\sqrt{b-c^2/a}.
+\]
+With $\Phi$ the standard normal distribution function,
+\begin{equation}\label{eq:selection}
+ \Prob(\hat\beta_2\ne0)=\int_{\R}
+ \left\{\Phi\left(\frac{m(x)-q(x)-\ell_2}{\omega}\right)
+ +\Phi\left(\frac{q(x)-m(x)-\ell_2}{\omega}\right)\right\}f_1(x)\,dx.
+\end{equation}
+\end{proposition}
+\begin{proof}
+The restricted minimizer $(B_1(z_1),0)$ solves the full problem precisely when
+the inactive KKT inequality holds. Conditional on $z_1=x$, $z_2$ is normal
+with mean $m(x)$ and variance $\omega^2$. Add the two tail probabilities
+outside $[q(x)-\ell_2,q(x)+\ell_2]$ and integrate over $x$.
+\end{proof}
+Selection of feature 2 generally depends on the ridge penalty on feature 1,
+through $d_1$, while its own ridge weight does not enter this event when other
+parameters are held fixed. Numerical integration can split at $\pm\ell_1$.
+
+The same regions yield exact integral representations for bias and covariance.
+If the estimator is $A_kz+b_k$ on region $R_k$, define the unnormalized
+Gaussian moments $p_k=\int_{R_k}f$, $m_k=\int_{R_k}zf$, and
+$Q_k=\int_{R_k}zz^\top f$. Then
+\begin{align}
+ \E\hat\beta&=\sum_k(A_km_k+b_kp_k),\label{eq:mean-regions}\\
+ \E\hat\beta\hat\beta^\top
+ &=\sum_k\left(A_kQ_kA_k^\top+A_km_kb_k^\top
+ +b_km_k^\top A_k^\top+p_kb_kb_k^\top\right).
+\end{align}
+Subtracting the appropriate mean products gives covariance. Truncation matters:
+substituting $\E z$ into a single active-region formula does not give either
+the unconditional mean or the mean conditional on that region.

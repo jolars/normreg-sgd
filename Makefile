@@ -1,0 +1,36 @@
+.PHONY: all paper check check-quick check-markdown check-config check-python verify reproduce format
+
+all: paper
+
+paper:
+	cd paper && latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error -outdir=../build main.tex
+
+check: check-markdown check-config check-python verify paper
+
+check-quick: check-markdown check-config check-python paper
+	python experiments/check_two_features.py --draws 20000 --check-only
+
+check-markdown:
+	panache format --check .
+	panache lint .
+
+check-config:
+	nixfmt --check devenv.nix
+	actionlint
+	uv lock --check
+
+check-python:
+	ruff format --check experiments
+	ruff check experiments
+
+verify:
+	python experiments/check_two_features.py --check-only
+
+reproduce:
+	python experiments/check_two_features.py
+
+format:
+	panache format .
+	nixfmt devenv.nix
+	ruff format experiments
+

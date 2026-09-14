@@ -1,0 +1,41 @@
+\section{Research program and scope}
+The two-feature results isolate a candidate contribution: normalization can
+control a feature's own shrinkage while leaving an effect transmitted from
+shrinkage of other coefficients. A next step is to establish this mechanism
+for a rare binary feature alongside a fixed number of common predictors.
+Partition the Gram matrix as
+\[
+ C_n=\begin{pmatrix}A_n&c_n\\c_n^\top&b_n\end{pmatrix},\qquad
+ A_n\longrightarrow A\succ0,\quad b_n\downarrow0,\quad c_n/b_n\longrightarrow\kappa.
+\]
+The research objective is a theorem with explicit sampling, penalty, and
+moment assumptions. For scaling exponent $\delta>1/2$ in a formal experiment
+with fixed score noise, a candidate rare-coefficient mean is
+$\beta_{\mathrm{rare}}^*+\kappa^\top(\beta_{\mathrm{common}}^*
+-\E\hat\beta_{\mathrm{common}})$.
+This expression is a guide to investigation, not an established sampling
+limit: thresholding can persist when coefficient noise vanishes, and
+convergence of expectations needs more than convergence in probability.
+
+The first sampling regime should use actual binary triangular arrays with
+$nq_{\mathrm{rare},n}\to\infty$, fixed error variance, and stated rates for
+both penalties. Regimes with bounded rare counts, multiple rare features,
+or data-dependent tuning should be treated separately. Approximation bounds
+should then extend Proposition~\ref{prop:bound} to changing supports, rather
+than only to an assumed active-sign region.
+
+An empirical study should begin with feasible binary cell probabilities,
+varying prevalence, dependence, signal signs, noise, and normalization.
+Fixed cell counts isolate the conditional theory. Primary comparisons should
+report original-scale bias, variance, selection, and prediction risk at fixed
+penalties; tuning rules can then be evaluated as an additional design factor.
+The exact selection integral and the nine-region solver provide numerical
+checks before larger simulations. The repository includes reproducible
+verification code, but this draft makes no claim of a completed empirical
+study.
+
+Finally, a targeted literature review must compare the binary covariance
+bounds, diagonal-weight limitations, and rare-feature limits with existing
+weighted-lasso, correlated-design, and rare-covariate results. The standalone
+paper should be organized around whichever results remain both novel and
+useful after that review.
