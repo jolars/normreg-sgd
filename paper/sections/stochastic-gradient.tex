@@ -1,0 +1,57 @@
+\section{Rare observations and stochastic stability}\label{sec:sgd}
+
+Unit marginal variance does not control the size of individual stochastic
+updates. The following scalar calculation isolates this distinction using
+known population centering and scaling. It is an elementary moment calculation
+that motivates the multivariate problem.
+
+\begin{proposition}[Scalar batch stability]\label{prop:sgd-stability}
+Let $X\sim\operatorname{Bernoulli}(q)$ with $0<q<1$, and set
+\[
+ Z=\frac{X-q}{\sqrt{q(1-q)}},\qquad
+ \mu_4=\E Z^4=\frac{(1-q)^3+q^3}{q(1-q)}.
+\]
+Fit the noiseless model $Y=Z\theta^*$ by SGD on squared loss
+$(Z\theta-Y)^2/2$, with constant step size $\eta$ and batches of size
+$B\ge1$. Each batch consists of fresh independent observations and is
+independent of the previous iterates. For a deterministic initial error
+$e_0=\theta_0-\theta^*$,
+\[
+ \E e_k^2=
+ \left[1-2\eta+\eta^2\left\{1+\frac{\mu_4-1}{B}\right\}\right]^k e_0^2.
+\]
+For $e_0\ne0$, the expected squared error tends to zero precisely when
+\begin{equation}\label{eq:sgd-stability}
+ 0<\eta<\frac{2}{1+(\mu_4-1)/B}.
+\end{equation}
+\end{proposition}
+\begin{proof}
+Write $H_k=B^{-1}\sum_{i=1}^B Z_{ki}^2$. The update gives
+$e_{k+1}=(1-\eta H_k)e_k$.
+Since $\E Z^2=1$, independence within each batch gives
+$\E H_k=1$ and $\E H_k^2=1+(\mu_4-1)/B$.
+Independence from the past yields the displayed recurrence for the second
+moment. Its nonnegative multiplicative factor is less than one exactly
+under \eqref{eq:sgd-stability}.
+\end{proof}
+
+The population Hessian equals one for every $q$, while $\mu_4\sim q^{-1}$
+as $q\downarrow0$. If $B=B_q$ satisfies $B_q q\to0$, the stability bound is
+asymptotic to $2B_q q$. If $B_q q\to\infty$, it tends to two, the stability
+bound for the population gradient update. At $B_q q\to\gamma\in(0,\infty)$,
+it tends to $2\gamma/(1+\gamma)$. These are mean-square stability statements
+for the specified online noiseless model, not guarantees for Adam or for
+minibatches drawn without replacement from a fixed sample.
+
+This calculation also distinguishes mean convergence from mean-square
+convergence: $\E e_k=(1-\eta)^k e_0$, which can converge while the second
+moment grows. A covariance-only description of the population loss therefore
+does not determine stochastic stability.
+
+In one dimension, rescaling a feature can be absorbed into the learning rate.
+The substantive normalization question requires several feature frequencies
+and relative coordinate updates. With common and rare predictors together,
+a shared learning rate must accommodate their different update moments.
+Deriving that interaction with the transient dependence effect in
+Section~\ref{sec:flow}, under label noise and a fixed observation budget, is
+the next research objective.

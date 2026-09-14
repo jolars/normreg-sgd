@@ -1,13 +1,17 @@
-# Normalization and Shrinkage with Correlated Binary Features
+# Learning Rare Features
 
-Working foundation for a follow-up to *The Choice of Normalization Influences
-Shrinkage in Regularized Regression* by Johan Larsson and Jonas Wallin. The
-project investigates which normalization results survive correlated designs,
-starting with two binary features and progressing toward rare-feature theory
-with several nuisance predictors.
+Working title: *Learning Rare Features: Normalization, Stochastic Optimization,
+and Early Stopping*. The project studies how feature scaling, dependence, and
+batch size affect learning under a finite training budget, with an emphasis on
+prediction within rare subgroups and under specified prevalence shifts.
 
-The current title is provisional. The manuscript contains bivariate derivations
-and examples; the general theorem and the novelty review remain research work.
+The manuscript begins with two elementary calculations: a transient dependence
+effect in population gradient flow and a scalar SGD stability bound for rare
+binary observations. General finite-time theory, comparisons with adaptive
+optimizers, and empirical validation remain research objectives. Earlier
+correlated-feature shrinkage results are retained as explicit-regularization
+baselines in the appendices, following *The Choice of Normalization Influences
+Shrinkage in Regularized Regression* by Johan Larsson and Jonas Wallin.
 
 ## Start here
 
@@ -35,11 +39,23 @@ make check
 ```
 
 The manuscript builds to `build/main.pdf`. `make check` checks formatting and
-configuration, verifies the exact calculations against coordinate descent and
-Monte Carlo, and builds the manuscript. `make check-quick` uses fewer Monte
-Carlo draws for iteration. `make format` formats Markdown, Nix, and Python.
+configuration, verifies the optimization formulas against an independent ODE
+solution and exact batch enumeration, validates the shrinkage baselines against
+coordinate descent and Monte Carlo, and builds the manuscript.
+`make check-quick` uses fewer Monte Carlo draws for iteration. `make format`
+formats Markdown, Nix, and Python.
 
-To regenerate the numerical reference results:
+To check just the optimization calculations inside `devenv shell`:
+
+```sh
+make check-optimization
+```
+
+This runs `experiments/check_optimization.py` and prints deterministic numerical
+checks without writing reference results. It is not a comparative optimizer
+experiment.
+
+To regenerate the numerical reference results for the shrinkage baselines:
 
 ```sh
 make reproduce
@@ -61,12 +77,17 @@ used in `paper/main.tex`.
 
 ## Research conventions
 
-The manuscript uses the averaged loss, with $t = \lambda_1/n$ and
-$r = \lambda_2/n$. The experiment code uses the equivalent unaveraged Gram
-matrix $G = X_c^\top X_c$. All reported coefficients are on the original feature
-scale. Finite-sample distribution calculations condition on the design and fixed
-penalty parameters. A continuous Gram-matrix limit is labeled separately from an
-asymptotic sequence of actual binary designs.
+The manuscript and optimization checks use the averaged loss and covariance
+$C = X_c^\top X_c/n$ for empirical designs. The shrinkage script uses the
+equivalent unaveraged Gram matrix $G = nC$, with $t = \lambda_1/n$ and
+$r = \lambda_2/n$. All reported coefficients are on the original feature scale.
+
+Use $T$ for gradient-flow time, $k$ for update count, $B$ for batch size, and
+$\eta$ for learning rate. Distinguish population flow, fixed-design fits, and
+SGD using fresh observations. Finite-sample penalty distributions condition on
+the design and fixed penalties; formal Gram limits are separate from actual
+binary sampling limits. A fixed diagonal preconditioner does not represent the
+complete dynamics of AdaGrad or Adam.
 
 ## Repository administration
 

@@ -1,0 +1,61 @@
+\section{Dependence during early stopping}\label{sec:flow}
+
+Gradient flow in the scaled coordinates starts from $\theta(0)=0$ and
+satisfies $\dot\theta=S^{-1}(z-CS^{-1}\theta)$. Transforming back gives
+\begin{equation}\label{eq:flow}
+ \dot\beta=P(z-C\beta),\qquad
+ \beta(T)=(I-e^{-TPC})C^{-1}z.
+\end{equation}
+For the population model, $z=C\beta^*$, so
+$\beta(T)=(I-e^{-TPC})\beta^*$.
+Although $PC$ need not be symmetric, it is similar to the symmetric positive
+definite matrix $S^{-1}CS^{-1}$. Thus the empirical trajectory tends to
+$C^{-1}z$ as $T\to\infty$. In this full-rank model scaling changes the path,
+while the converged estimator is ordinary least squares.
+
+\begin{proposition}[A transient rare-feature contribution]\label{prop:flow-limit}
+Consider population gradient flow from zero for
+\[
+ C_b=\begin{pmatrix}a&c_b\\c_b&b\end{pmatrix},\qquad
+ a>0,\quad b\downarrow0,\quad c_b/b\to\kappa,
+\]
+with $C_b$ positive definite and fixed $\beta^*\in\R^2$.
+Use standard-deviation scaling, so $P_b=\diag(1/a,1/b)$.
+For each fixed $T\ge0$,
+\begin{align*}
+ \beta_{b,1}(T)&\longrightarrow(1-e^{-T})\beta_1^*,\\
+ \beta_{b,2}(T)&\longrightarrow(1-e^{-T})\beta_2^*
+                         +\kappa T e^{-T}\beta_1^*.
+\end{align*}
+The convergence is uniform on bounded intervals of $T$.
+\end{proposition}
+\begin{proof}
+The generator satisfies
+\[
+ P_bC_b\longrightarrow
+ L=\begin{pmatrix}1&0\\\kappa&1\end{pmatrix}=I+N,
+ \qquad N^2=0.
+\]
+Continuity of the matrix exponential, uniformly on bounded time intervals,
+gives $e^{-TP_bC_b}\to e^{-TL}=e^{-T}(I-TN)$.
+Substitute this expression into \eqref{eq:flow} with $z=C_b\beta^*$.
+\end{proof}
+
+For binary features with fixed common prevalence $q_1\in(0,1)$ and rare
+prevalence $q_2\downarrow0$, write
+\[
+ a=q_1(1-q_1),\quad b=q_2(1-q_2),\quad c=p_{11}-q_1q_2,
+ \quad \max(0,q_1+q_2-1)\le p_{11}\le\min(q_1,q_2).
+\]
+These bounds imply $c=O(b)$ and hence Pearson correlation tends to zero.
+In the feasible nested design $p_{11}=q_2$, however,
+$c/b\to1-q_1$. If $\beta_2^*=0$, a nonzero rare coefficient can consequently
+appear during training, with limiting value
+$(1-q_1)T e^{-T}\beta_1^*$. This is a transient coefficient contribution,
+not lasso selection or an asymptotic inconsistency claim. It vanishes as
+$T\to\infty$ in the limiting trajectory.
+
+The proposition concerns population dynamics at fixed time. It does not
+provide a joint theorem for increasing sample size, changing stopping times,
+or stochastic updates. In particular, faster population dynamics do not
+establish better performance at a fixed number of processed observations.

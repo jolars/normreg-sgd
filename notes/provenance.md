@@ -28,3 +28,10 @@ original manuscript and package have not been modified by this setup.
 The local `tex_article` Cookiecutter template was inspected for conventions. Its
 generic preamble and structure were replaced by a smaller manuscript scaffold
 suited to the existing mathematics and the devenv build.
+
+On September 14, 2026, the research direction shifted to rare-feature learning
+under normalization, early stopping, and SGD. The earlier shrinkage sections and
+numerical reference results were retained as baselines. New manuscript sections
+document elementary population gradient-flow and scalar fresh-batch SGD
+calculations, checked independently in `experiments/check_optimization.py`. The
+general finite-time theory and empirical optimizer comparisons remain open.

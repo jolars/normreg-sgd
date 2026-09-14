@@ -1,81 +1,148 @@
 # Research plan
 
-The consolidated task checklist is in [TODO.md](../TODO.md). This note records
-the research question, mathematical setup, and scope of the existing results.
+The active direction is **Learning Rare Features: Normalization, Stochastic
+Optimization, and Early Stopping**. The consolidated checklist is in
+[TODO.md](../TODO.md).
 
-The central question is when marginal feature normalization controls shrinkage
-in the presence of correlated predictors. The motivating example is a rare
-binary feature whose Pearson correlation with another feature vanishes, while
-the other coefficient's shrinkage continues to affect its estimate.
+## Research question
 
-Covariance divided by the rare feature's variance, together with the nuisance
-estimator's bias, describes this effect more usefully than correlation alone.
-The general bias-transfer mechanism has precedents in regularization-induced
-confounding. The candidate contribution is its interaction with binary rarity,
-normalization, and thresholding; its generality and novelty remain to be
-established through the comparisons in [TODO.md](../TODO.md).
+When does normalization accelerate the learning of rare input features under a
+finite training budget, and when do dependence and stochastic updates offset
+that benefit? The intended contribution connects learning trajectories to
+prediction within rare subgroups and under specified prevalence shifts.
 
-## Current foundation
+The starting model is linear regression with common and rare binary features.
+Full-rank convergence to the unregularized optimum gives OLS. Our initial
+question concerns early stopping and stochastic error. Selecting among
+interpolating solutions is a possible later extension and requires a different
+setting.
 
-  | Result                                                       | Status and scope                                                                                                                                                    |
-  | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | Nine KKT regions and exact selection integral                | Derived for two features with a positive-definite centered Gram matrix and fixed weights.                                                                           |
-  | Gaussian bias and covariance by region integration           | Derived and implemented; independent coordinate descent and Monte Carlo checks are available.                                                                       |
-  | Ridge mean and covariance                                    | Standard matrix formulas, valid beyond orthogonality.                                                                                                               |
-  | Exact variance-scaled lasso shrinkage with one true signal   | Proved for two binary features without noise.                                                                                                                       |
-  | Sign-dependent shrinkage with two signals                    | Derived within a valid active-sign region; includes feasible binary counterexamples.                                                                                |
-  | No universal design-only diagonal correction                 | Proved for reproducing coordinatewise soft thresholding for every signal vector. This is a specific impossibility statement, not a claim that weighting is useless. |
-  | Rare-feature bias transfer                                   | Derived for two features in a formal fixed-noise Gram limit; a genuine binary sequence is available in a specific lasso regime.                                     |
-  | Several nuisance predictors and statistical sampling regimes | Research objective.                                                                                                                                                 |
-  | Novelty relative to weighted-lasso theory                    | Targeted initial references only; unresolved.                                                                                                                       |
+The elementary calculations below establish a foundation, not standalone
+novelty. Early-stopping regularization, geometry-dependent implicit bias, and
+adaptive optimization for rare features already have substantial literatures.
+The first milestone must identify an additional conclusion about their
+interaction with dependence, feature rarity, and batch size.
 
-The initial investigation also identifies a boundary correction at
-$\omega = 1/2$ in the earlier weighted-elastic-net variance theorem. It is
-tracked in [TODO.md](../TODO.md) as a separate task in the earlier project.
+## Mathematical setup
 
-## First milestone: general theorem and novelty assessment
+Use the averaged squared loss. For a fixed centered sample, write
+$C = X_c^\top X_c/n$ and $z = X_c^\top y_c/n$. Population calculations instead
+use a centered random feature vector $x$, covariance $C = E(xx^\top)$, and
+$y = x^\top\beta^* + \varepsilon$ with $E(\varepsilon \mid x) = 0$. Always
+identify which experiment a statement describes.
 
-Use a block design covariance
+Dividing features by positive scales $s_j$ gives $S = \operatorname{diag}(s)$,
+transformed coefficients $\theta = S\beta$, and preconditioner $P = S^{-2}$.
+Report $\beta$ on the original feature scale. Population gradient flow from zero
+satisfies
+
+$$
+  \dot\beta(T) = PC\{\beta^* - \beta(T)\}.
+$$
+
+Use $T$ for gradient-flow time, $k$ for update count, $B$ for batch size, and
+$\eta$ for the learning rate. For discrete GD, $T = k\eta$ is a time
+calibration, while $kB$ counts processed observations in fresh-batch SGD. The
+explicit-penalty baselines retain $t = \lambda_1/n$ and $r = \lambda_2/n$;
+neither symbol denotes training time.
+
+For the multivariate target, partition the covariance as
 
 $$
   C_n = \begin{pmatrix}
           A_n      & c_n \\
           c_n^\top & b_n
-        \end{pmatrix}, \qquad b_n
-      \downarrow 0,
+        \end{pmatrix},\qquad A_n
+      \to A
+      \succ 0,\quad b_n
+      \downarrow 0,\quad c_n/b_n
+      \to \kappa.
 $$
 
-where the last coordinate is binary and rare, $A_n$ describes a fixed number of
-nuisance predictors, and $c_n/b_n$ may have a nonzero vector limit $\kappa$.
-Start with $A_n \to A \succ 0$. Let $B$ denote the appropriate limiting
-penalized estimator fitted to the nuisance block alone.
+The common block initially has fixed dimension. The rare coordinate is binary,
+with prevalence $q_n$ and variance $b_n = q_n(1 - q_n)$. Actual binary designs
+must satisfy their joint-cell bounds. The desired finite-time analysis should
+separate incomplete learning of the common coefficients, rare-feature
+information, and stochastic update moments.
 
-For feature scales $s_{\mathrm{rare}}=b_n^\delta$ with $\delta>1/2$ and fixed
-score-noise level $\tau>0$, the candidate mean relation suggested by the
-two-feature formal limit is
+## Current foundation
+
+  | Result                                                         | Status and scope                                                                                                             |
+  | -------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+  | Feature scaling as preconditioning                             | Standard exact change of coordinates for fixed scales.                                                                       |
+  | Transient dependence under early stopping                      | Proved for two-feature population gradient flow, with a fixed-time rare-feature limit.                                       |
+  | Scalar SGD stability                                           | Exact second-moment recurrence for a noiseless standardized Bernoulli predictor and fresh independent batches.               |
+  | Independent numerical checks                                   | Matrix exponential versus a scaled-coordinate ODE solution, rare-limit checks, and exact binomial batch enumeration.         |
+  | Explicit-regularization baselines                              | Existing bivariate lasso and elastic-net formulas, ridge moments, and binary counterexamples are retained in the appendices. |
+  | Multivariate SGD, sampling theory, and comparative experiments | Open research objectives.                                                                                                    |
+  | Standalone novelty                                             | Unresolved; the elementary calculations are supporting results.                                                              |
+
+For standard-deviation scaling in the two-feature population model,
+$c/b \to \kappa$ gives, at fixed $T$,
 
 $$
-  E\hat\beta_{\mathrm{rare}}
-  \longrightarrow \beta_{\mathrm{rare}}^*
-                  + \kappa^\top(\beta_{\mathrm{nuisance}}^* - EB).
+  \beta_2(T) \longrightarrow (1 - e^{-T})\beta_2^* + \kappa T e^{-T}\beta_1^*.
 $$
 
-This formula is a target to derive under stated assumptions. It must not be
-applied indiscriminately to changing sample sizes, penalty rates, or active
-sets. In particular, the fixed-noise Gram calculation does not itself prove a
-sampling theorem.
+Thus a common feature can contribute to the rare coefficient during training
+even while Pearson correlation vanishes. This transient contribution can exist
+when the true rare coefficient is zero. It is not a lasso selection event or a
+claim of asymptotic inconsistency.
 
-The milestone is complete when there is a checked theorem with a coherent binary
-sampling interpretation, an experiment showing a consequential difference, and a
-written comparison to the closest prior results. The theory tasks, literature
-comparisons, and experiment design are consolidated in [TODO.md](../TODO.md). A
-substantial general result would make the bivariate analysis a useful
-introduction to the main contribution.
+For a standardized Bernoulli predictor $Z$, the population curvature is one, but
+$\mu_4 = E(Z^4) \sim q^{-1}$. In the scalar noiseless model with fresh
+independent batches, mean-square contraction requires
 
-## Possible contribution after the first milestone
+$$
+  0 < \eta < \frac{2}{1 + (\mu_4 - 1)/B}.
+$$
 
-A focused paper could combine a theorem about rare-feature bias transfer,
-conditions that preserve normalization effects, and a practical demonstration.
-The scope decision follows the first milestone. Further questions about bounded
-rare counts, multiple rare features, and nuisance residualization are tracked in
-[TODO.md](../TODO.md).
+The upper bound is asymptotic to $2Bq$ when $Bq \to 0$. This example separates
+population curvature from stochastic stability. Scalar rescaling can be absorbed
+into the learning rate; the substantive normalization question involves relative
+updates across several feature frequencies. Population scales and centering are
+known here. The result is not a guarantee for adaptive optimizers or for random
+reshuffling of a fixed dataset.
+
+The derivations are in [the manuscript](../paper/main.tex), and the
+deterministic checks are in
+[check_optimization.py](../experiments/check_optimization.py). Run them with
+`make check-optimization` inside `devenv shell`.
+
+## First milestone and empirical objective
+
+The first milestone combines a checked finite-time result for a rare feature
+with common predictors, a comparison with the closest prior theorems, and one
+controlled experiment showing a consequential difference. Start with population
+flow and discrete GD, then fresh-sample SGD. Finite-data resampling, empirical
+normalization, validation-based stopping, and adaptive optimizers need explicit
+additional assumptions.
+
+The primary outcomes are original-scale coefficient error, aggregate excess
+prediction risk, and excess prediction risk conditional on rare-feature
+presence. An isolated constant rare-coefficient error has only $O(q_n)$ weight
+in aggregate risk. A test prevalence shift should preserve the conditional
+response model and retain training centering and scales at prediction time. This
+makes the shift interpretable and avoids conflating coefficient effects with a
+changed intercept.
+
+Comparisons should use matched numbers of processed observations and separately
+tuned learning rates. Update count alone is insufficient when batch size
+changes. Synthetic binary designs provide exact controls. Sparse text or
+categorical data, first with linear models and then a small neural model,
+provide the intended empirical progression. This is a research design, not an
+empirical result or a claim that one normalization is universally preferable.
+
+## Role of the earlier investigation
+
+The original shrinkage analysis supplies explicit-regularization baselines and
+examples of why covariance divided by feature variance matters. Exact Gaussian
+region integration remains useful for checking those baselines; it does not
+validate stochastic optimization dynamics.
+
+The former main objective, a general sampling theorem for penalized nuisance
+bias transfer, is deferred. Its formal fixed-score-noise precursor must remain
+separate from actual binary sampling limits. Related theory, literature
+comparisons, and the boundary correction in the original `normreg` project are
+preserved in [TODO.md](../TODO.md). The initial derivations remain in
+[two-feature-investigation.md](two-feature-investigation.md).

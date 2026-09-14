@@ -1,4 +1,4 @@
-.PHONY: all paper check check-quick check-markdown check-config check-python verify reproduce format
+.PHONY: all paper check check-quick check-markdown check-config check-python check-optimization verify reproduce format
 
 all: paper
 
@@ -7,7 +7,7 @@ paper:
 
 check: check-markdown check-config check-python verify paper
 
-check-quick: check-markdown check-config check-python paper
+check-quick: check-markdown check-config check-python check-optimization paper
 	python experiments/check_two_features.py --draws 20000 --check-only
 
 check-markdown:
@@ -23,7 +23,10 @@ check-python:
 	ruff format --check experiments
 	ruff check experiments
 
-verify:
+check-optimization:
+	python experiments/check_optimization.py
+
+verify: check-optimization
 	python experiments/check_two_features.py --check-only
 
 reproduce:
@@ -33,4 +36,3 @@ format:
 	panache format .
 	nixfmt devenv.nix
 	ruff format experiments
-

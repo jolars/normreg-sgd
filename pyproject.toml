@@ -1,7 +1,7 @@
 [project]
 name = "normreg-multi"
 version = "0.1.0"
-description = "Research on normalization and shrinkage with correlated binary features"
+description = "Research on rare-feature learning, normalization, and stochastic optimization"
 requires-python = ">=3.12"
 dependencies = ["numpy>=2.0", "scipy>=1.14"]
 
@@ -17,4 +17,3 @@ line-length = 88
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]
-

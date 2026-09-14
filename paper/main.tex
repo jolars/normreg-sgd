@@ -22,7 +22,7 @@
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\soft}{S}
 
-\title{Normalization and Shrinkage with Correlated Binary Features}
+\title{Learning Rare Features: Normalization, Stochastic Optimization, and Early Stopping}
 \author{Johan Larsson}
 \date{Working manuscript --- September 14, 2026}
 
@@ -30,30 +30,35 @@
 \maketitle
 
 \begin{abstract}
-This working theoretical investigation studies how correlation changes the
-effect of normalization in penalized linear regression with binary features.
-For two features, we derive an exact selection integral for the weighted
-elastic net and identify normalization conclusions that survive correlation.
-Variance weighting preserves the noiseless lasso solution for a single signal,
-but shrinkage with two active signals depends on their signs and on covariance
-divided by feature variance. A rare binary feature can consequently retain a
-nonvanishing effect from another coefficient's shrinkage even as Pearson
-correlation tends to zero. We give explicit counterexamples, an approximation
-bound, and a formal Gaussian limit, and separate these results from the open
-problem of a general sampling theorem. The manuscript establishes a foundation
-for further work; literature novelty and empirical usefulness remain to be
-assessed.
+This working investigation asks how normalization changes the learning of rare
+binary features under a finite training budget. Two elementary calculations
+motivate the research program. In standardized population gradient flow, a rare
+coefficient can retain a transient contribution from a common feature even as
+Pearson correlation vanishes. In scalar stochastic gradient descent, unit
+population curvature coexists with a step-size restriction governed by feature
+rarity and batch size. These calculations separate average optimization
+geometry from the higher moments of stochastic updates. The proposed study
+will connect dependence, normalization, and sampling to learning trajectories
+and prediction within rare subgroups. General finite-sample guarantees,
+comparisons with adaptive optimizers, and empirical usefulness remain research
+objectives. Earlier weighted-lasso and ridge results are retained as
+explicit-regularization baselines; no standalone novelty claim is made for
+the elementary calculations.
 \end{abstract}
 
+\input{sections/introduction}
 \input{sections/setup}
-\input{sections/two-features}
-\input{sections/binary}
-\input{sections/rare-features}
+\input{sections/gradient-flow}
+\input{sections/stochastic-gradient}
 \input{sections/research-program}
 
 \bibliographystyle{plainnat}
 \bibliography{references}
 
 \appendix
+\input{sections/regularization}
+\input{sections/two-features}
+\input{sections/binary}
+\input{sections/rare-features}
 \input{sections/formal-limit}
 \end{document}

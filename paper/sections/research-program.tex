@@ -1,41 +1,54 @@
-\section{Research program and scope}
-The two-feature results isolate a candidate contribution: normalization can
-control a feature's own shrinkage while leaving an effect transmitted from
-shrinkage of other coefficients. A next step is to establish this mechanism
-for a rare binary feature alongside a fixed number of common predictors.
-Partition the Gram matrix as
+\section{Research program and evaluation}
+
+The first milestone is a finite-time theory for one rare binary feature and
+a fixed block of common predictors, supported by a controlled experiment
+and a comparison with the closest prior theorems. Write
 \[
  C_n=\begin{pmatrix}A_n&c_n\\c_n^\top&b_n\end{pmatrix},\qquad
- A_n\longrightarrow A\succ0,\quad b_n\downarrow0,\quad c_n/b_n\longrightarrow\kappa.
+ A_n\to A\succ0,\quad b_n\downarrow0,\quad c_n/b_n\to\kappa.
 \]
-The research objective is a theorem with explicit sampling, penalty, and
-moment assumptions. For scaling exponent $\delta>1/2$ in a formal experiment
-with fixed score noise, a candidate rare-coefficient mean is
-$\beta_{\mathrm{rare}}^*+\kappa^\top(\beta_{\mathrm{common}}^*
--\E\hat\beta_{\mathrm{common}})$.
-This expression is a guide to investigation, not an established sampling
-limit: thresholding can persist when coefficient noise vanishes, and
-convergence of expectations needs more than convergence in probability.
+The target is an account of mean error and covariance along the learning
+trajectory that separates incomplete learning of common features, rarity,
+and stochastic update moments. Population gradient flow should be extended
+first, followed by discrete GD and fresh-sample SGD with explicit scales,
+learning rates, batch sizes, and stopping rules. Fixed-data sampling with
+replacement and random reshuffling require their own assumptions. None of
+these general results is established by the two elementary propositions.
 
-The first sampling regime should use actual binary triangular arrays with
-$nq_{\mathrm{rare},n}\to\infty$, fixed error variance, and stated rates for
-both penalties. Regimes with bounded rare counts, multiple rare features,
-or data-dependent tuning should be treated separately. Approximation bounds
-should then extend Proposition~\ref{prop:bound} to changing supports, rather
-than only to an assumed active-sign region.
+For empirical samples, specify $n\to\infty$, rare prevalence $q_n\downarrow0$,
+and whether $nq_n\to\infty$ or rare counts remain bounded. Compare error
+contributions with statistical uncertainty, typically of order
+$(nq_n)^{-1/2}$ under suitable regularity conditions. Analyze the effects of
+estimating centering and scales, and distinguish a stopping time fixed in
+advance from one chosen by validation. Full-rank convergence to OLS,
+early-stopping regularization, and selection among interpolating solutions
+are separate questions.
 
-An empirical study should begin with feasible binary cell probabilities,
-varying prevalence, dependence, signal signs, noise, and normalization.
-Fixed cell counts isolate the conditional theory. Primary comparisons should
-report original-scale bias, variance, selection, and prediction risk at fixed
-penalties; tuning rules can then be evaluated as an additional design factor.
-The exact selection integral and the nine-region solver provide numerical
-checks before larger simulations. The repository includes reproducible
-verification code, but this draft makes no claim of a completed empirical
-study.
+An initial experiment should use feasible independent, nested, and negatively
+associated binary designs, with common-only, rare-only, equal-sign, and
+opposite-sign signals. Compare no scaling, standard-deviation scaling,
+variance scaling, and damped scaling with separately tuned GD and SGD
+learning rates. Vary $Bq$ across its small, intermediate, and large regimes.
+Add AdaGrad and Adam as empirical comparators, explicitly recording momentum,
+stabilizing constants, clipping, schedules, and weight decay. A fixed diagonal
+preconditioner is not a model of their complete dynamics.
 
-Finally, a targeted literature review must compare the binary covariance
-bounds, diagonal-weight limitations, and rare-feature limits with existing
-weighted-lasso, correlated-design, and rare-covariate results. The standalone
-paper should be organized around whichever results remain both novel and
-useful after that review.
+Report performance against processed observations as well as update count;
+changing batch size changes the cost of an update. Measure original-scale
+coefficient error, aggregate excess prediction risk, and excess risk
+conditional on rare-feature presence. An isolated rare-coefficient error of
+constant size contributes only $O(q_n)$ to population risk. To assess a
+consequence beyond aggregate averages, also consider a specified test
+prevalence shift that preserves the conditional response model and uses the
+training centering and scales at prediction time. New intercept or centering
+errors must not be confused with coefficient effects.
+
+The repository's optimization checks compare matrix exponentials with an
+independent ODE solution and stochastic moment formulas with exact binomial
+batch enumeration. Existing coordinate-descent and Gaussian integration
+checks validate the explicit-penalty baselines. These are mathematical
+checks, not a completed comparative experiment. A later empirical study should
+use sparse text or categorical data, starting with linear models and then a
+small neural model. The novelty assessment must identify a conclusion beyond
+known early-stopping, adaptive-gradient, and preconditioning theory before
+the paper makes a practical recommendation.

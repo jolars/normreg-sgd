@@ -1,24 +1,38 @@
 # Project guidance
 
 This is a research manuscript with supporting Python calculations. It studies
-normalization and shrinkage for correlated binary features. The bivariate
-results are the starting point; the general rare-feature sampling theorem and
-novelty assessment are research objectives.
+rare-feature learning under normalization, early stopping, and stochastic
+optimization, with an emphasis on rare-subgroup prediction. Elementary
+population-flow and scalar SGD results are the starting point; multivariate
+finite-time theory, sampling guarantees, novelty, and empirical usefulness
+remain research objectives. Earlier shrinkage results are supporting baselines.
 
 ## Sources and mathematical conventions
 
 - `paper/main.tex` and `paper/sections/` are the working manuscript.
   `paper/references.bib` contains the bibliography.
 - `notes/research-plan.md` records the research program and the scope of
-  candidate claims. `notes/two-feature-investigation.md` preserves the initial
-  derivations; its references to the original paper concern the earlier
-  `normreg` project.
+  candidate claims. `TODO.md` is the consolidated task checklist, with earlier
+  shrinkage extensions marked as deferred. `notes/two-feature-investigation.md`
+  preserves the initial derivations; its references to the original paper
+  concern the earlier `normreg` project.
 - `experiments/check_two_features.py` contains exact region integration and
-  independent numerical checks. This is a script project, not an installable
+  independent checks of the explicit-penalty baselines.
+  `experiments/check_optimization.py` checks the population gradient-flow and
+  scalar fresh-batch SGD formulas. This is a script project, not an installable
   Python library.
-- The paper uses the averaged loss and $C = X_c^\top X_c/n$, while the numerical
-  script uses $G = nC$. Keep $\lambda_1 = nt$ and $\lambda_2 = nr$ consistent.
-  Report coefficients on the original feature scale.
+- The paper and optimization checks use the averaged loss and
+  $C = X_c^\top X_c/n$ for empirical designs, while the shrinkage script uses
+  $G = nC$. Keep $\lambda_1 = nt$ and $\lambda_2 = nr$ consistent. Report
+  coefficients on the original feature scale.
+- Use $T$ for gradient-flow time, $k$ for update count, $B$ for batch size, and
+  $\eta$ for learning rate. Keep training time separate from penalty $t$.
+  Distinguish population dynamics, fixed-data sampling, and fresh-sample SGD;
+  state centering, scale estimation, initialization, and intercept assumptions.
+  Compare batch sizes using processed observations as well as update count.
+- Full-rank convergence to OLS, early-stopping regularization, and selection
+  among interpolating solutions are distinct questions. Do not equate fixed
+  diagonal preconditioning with the complete dynamics of AdaGrad or Adam.
 - Distinguish noiseless active-sign formulas, unconditional Gaussian moments,
   formal Gram-matrix limits, and asymptotics of actual binary samples. A
   selected region uses truncated Gaussian moments. Binary simulations must
@@ -31,14 +45,17 @@ Enter `devenv shell` before running these commands:
 ```sh
 make paper
 make check-python
+make check-optimization
 make check-quick
 make check
 ```
 
-`make check-python` checks experiment formatting and lint. `make check-quick`
-also checks repository configuration and Markdown, builds the paper, and runs
-the smaller numerical validation. `make check` runs the full validation. The
-mathematical checks use assertions, so run ordinary Python without `-O`.
+`make check-python` checks experiment formatting and lint.
+`make check-optimization` runs deterministic optimization checks without writing
+reference results. `make check-quick` also checks repository configuration and
+Markdown, builds the paper, and runs the smaller numerical validation.
+`make check` runs the full validation. The mathematical checks use assertions,
+so run ordinary Python without `-O`.
 
 Use `make format` for Markdown, Nix, and Python formatting. The devenv shell
 uses Nix's Ruff executable and installs runtime Python dependencies from
