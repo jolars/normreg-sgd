@@ -1,226 +1,326 @@
 # Research plan
 
-The active direction is **Learning Rare Features: Normalization, Stochastic
-Optimization, and Early Stopping**. The consolidated checklist is in
+Working direction: **Normalization and Implicit Regularization in Stochastic
+Learning**. Revised September 15, 2026. The task checklist is in
 [TODO.md](../TODO.md).
 
-## Research question
+## Central question
 
-When does normalization accelerate the learning of rare input features under a
-finite training budget, and when do dependence and stochastic updates offset
-that benefit? The intended contribution connects learning trajectories to
-prediction within rare subgroups and under specified prevalence shifts.
+**How do normalization, learning rate, batch size, and stopping time jointly
+determine the fitted model and its statistical properties?**
 
-The starting model is linear regression with common and rare binary features.
-Full-rank convergence to the unregularized optimum gives OLS. Our initial
-question concerns early stopping and stochastic error. Selecting among
-interpolating solutions is a possible later extension and requires a different
-setting.
+The project studies the interaction among all four choices: which features are
+learned, how their coefficients evolve, how training noise enters the model, and
+what predictions result. The goal is to explain this joint behavior across data
+distributions and training regimes. Choosing hyperparameters is one application
+of that understanding. The analysis must retain the trajectories and tradeoffs
+that disappear when only the best tuned endpoint is reported.
 
-The elementary calculations below establish a foundation, not standalone
-novelty. Early-stopping regularization, geometry-dependent implicit bias, and
-adaptive optimization for rare features already have substantial literatures.
-The first milestone must identify an additional conclusion about their
-interaction with dependence, feature rarity, and batch size.
+Common and rare features provide an interpretable starting point. Their
+different frequencies expose how normalization allocates learning across
+coordinates, how batch composition affects stochastic updates, and how stopping
+changes the balance between incomplete learning and noise. Dependence between
+features is central because it can couple their learning and change the effects
+of each training choice.
 
-## Mathematical setup
+## Connection to the original paper and the ML objective
 
-Use the averaged squared loss. For a fixed centered sample, write
-$C = X_c^\top X_c/n$ and $z = X_c^\top y_c/n$. Population calculations instead
-use a centered random feature vector $x$, covariance $C = E(xx^\top)$, and
-$y = x^\top\beta^* + \varepsilon$ with $E(\varepsilon \mid x) = 0$. Always
-identify which experiment a statement describes.
+The foundation is Johan Larsson and Jonas Wallin's *The Choice of Normalization
+Influences Shrinkage in Regularized Regression*, in the neighboring `normreg`
+repository. That paper studies how normalization changes the fitted model
+through explicit regularization, including binary-feature prevalence,
+penalty-specific bias, variance, mixed feature types, and interactions. It
+already proposes treating normalization as a hyperparameter and evaluates tuning
+a normalization exponent.
 
-Dividing features by positive scales $s_j$ gives $S = \operatorname{diag}(s)$,
-transformed coefficients $\theta = S\beta$, and preconditioner $P = S^{-2}$.
-Report $\beta$ on the original feature scale. Population gradient flow from zero
-satisfies
+This follow-up carries that statistical viewpoint into SGD and implicit
+regularization. Feature scaling changes the geometry of the updates; learning
+rate, batch size, and stopping determine how that geometry affects the trained
+predictor. The intended ML contribution is an explanation of their joint
+effects, supported by controlled theory and experiments that connect to finite
+training budgets and practical learning procedures.
+
+Here, implicit regularization concerns the statistical effects of the training
+procedure, including finite-time bias and stochastic updates. Whether these
+effects improve generalization is an outcome to investigate. Keep full-rank
+convergence to OLS, finite-time regularization, and selection among
+overparameterized interpolating solutions distinct. Begin with the first two;
+interpolation is a possible later extension.
+
+The original paper remains the conceptual foundation. Its explicit-penalty
+calculations also provide comparisons for interpreting the effects of training.
+A general extension of every shrinkage theorem is a separate project branch.
+
+## Joint configuration and statistical outcomes
+
+For a stated data-generating model, initialization, preprocessing convention,
+and sampling scheme, study the relationship
+
+$$
+  \left( S,\{\eta_j\}_{j=0}^{k-1},B,k \right)
+  \longmapsto \mathcal L(\hat\beta_k)
+  \longmapsto \text{coefficient and prediction properties}.
+$$
+
+Here $S$ is the diagonal matrix of feature divisors, $\eta_j$ the learning rate
+at update $j$, $B$ the batch size, and $k$ the stopping update. The law
+$\mathcal L$ must identify which randomness is included: sampled training
+designs, observation noise, or sampled optimization indices. Fixed-data
+conditional results and averages over training datasets answer different
+questions.
+
+### Initial model
+
+Start with squared-loss linear regression and feasible common and rare binary
+features. Use known population centering and scales, a fixed known intercept,
+and zero initialization for the first analytical comparisons. For centered
+features $x$ and the response after subtracting the known intercept, write
+
+$$
+  y = x^\top\beta^* + \varepsilon,
+  \qquad
+  E(\varepsilon \mid x) = 0,\qquad C = E(xx^\top).
+$$
+
+First use fixed conditional noise variance
+$E(\varepsilon^2 \mid x) = \sigma^2 > 0$ and hold the original-scale signal
+fixed across paired training configurations. Study changes in noise level and
+signal-to-noise matching separately.
+
+For fixed empirical designs use $C = X_c^\top X_c/n$. Identify whether the
+centering in $X_c$ is known population centering or estimated training
+centering. The averaged training loss includes the factor $1/2$.
+
+Dividing features by positive $s_j$ gives $S = \operatorname{diag}(s)$,
+$\theta = S\beta$, and $P = S^{-2}$. A batch update on the original coefficient
+scale is
+
+$$
+  \beta_{j+1}
+  = \beta_j
+    + \frac{\eta_j}{B}P\sum_{i \in \mathcal B_j} x_i(y_i - x_i^\top\beta_j),
+$$
+
+where repeated indices retain multiplicity. State whether observations are
+fresh, sampled with replacement from a fixed noisy dataset, or shuffled across
+epochs. A repeated training observation retains its response noise. Population
+gradient flow supplies the comparison
 
 $$
   \dot\beta(T) = PC\{\beta^* - \beta(T)\}.
 $$
 
-Use $T$ for gradient-flow time, $k$ for update count, $B$ for batch size, and
-$\eta$ for the learning rate. For discrete GD, $T = k\eta$ is a time
-calibration, while $kB$ counts processed observations in fresh-batch SGD. The
-explicit-penalty baselines retain $t = \lambda_1/n$ and $r = \lambda_2/n$;
-neither symbol denotes training time.
+For binary coordinate variance $v_j = q_j(1 - q_j) > 0$, start with the family
+$s_j = v_j^\delta$. It includes no scaling at $\delta = 0$, standard-deviation
+scaling at $\delta = 1/2$, and variance scaling at $\delta = 1$. Include damped
+scaling with an explicit damping convention. Record actual divisors and
+centering order for named software normalizations. For example, max-abs scaling
+on uncentered binary data containing ones uses divisor one; applying it after
+centering is a different convention.
 
-For the multivariate population setup, partition the covariance as
+Start with one common and one rare feature under independent, nested, and
+negatively associated feasible joint laws. Vary common-only, rare-only,
+equal-sign, and opposite-sign signals. Extend to a fixed common block after the
+two-feature mechanisms are understood. Changing covariance or prevalence must
+respect actual joint-cell probability bounds.
 
-$$
-  C_n = \begin{pmatrix}
-          A_n      & c_n \\
-          c_n^\top & b_n
-        \end{pmatrix},\qquad A_n
-      \to A
-      \succ 0,\quad b_n
-      \downarrow 0,\quad c_n/b_n
-      \to \kappa.
-$$
+### Outcomes
 
-The common block initially has fixed dimension. The rare coordinate is binary,
-with prevalence $q_n$ and variance $b_n = q_n(1 - q_n)$. Actual binary designs
-must satisfy their joint-cell bounds. The finite-time formulas separate
-incomplete learning of the common coefficients, rare-feature learning, and
-stochastic update moments under known population centering and fixed scales.
+Measure original-scale coefficient means, bias, covariance, and mean squared
+error. Separate incomplete learning, dependence-induced contributions,
+multiplicative update variance, and observation noise where the model permits
+that decomposition. Describe the learning of common and rare signals with a
+stated coefficient-error criterion. Nonzero GD coefficients alone do not define
+feature selection; any thresholded selection metric needs an explicit rule.
 
-## Current foundation
-
-  | Result                                            | Status and scope                                                                                                                                                                                     |
-  | ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | Feature scaling as preconditioning                | Standard exact change of coordinates for fixed scales.                                                                                                                                               |
-  | Transient dependence under early stopping         | Proved for a fixed common block and one rare binary feature, uniformly on bounded population-flow time intervals, with convergent original-scale initialization.                                     |
-  | Scalar SGD stability                              | Exact second-moment recurrence for a noiseless standardized Bernoulli predictor and fresh independent batches.                                                                                       |
-  | Finite-update GD and fresh-sample SGD moments     | Exact mean, second-moment, and centered covariance formulas, with initial uncertainty, multiplicative update variance, and observation noise separated.                                              |
-  | Multivariate batch-rarity stability               | Exact operator criterion and three-regime threshold limits for a uniformly bounded fixed common block with positive definite limiting covariance.                                                    |
-  | Matched covariance and sampling schemes           | Feasible binary distributions with different fourth update moments, exact conditional replacement and reshuffling epoch identities, and first-pass equivalence under fixed population preprocessing. |
-  | Independent numerical checks                      | Support-based ODE integration, block limits, exact batch and short-trajectory enumeration, mixed moments, and stability eigenvalues.                                                                 |
-  | Explicit-regularization baselines                 | Existing bivariate lasso and elastic-net formulas, ridge moments, and binary counterexamples are retained in the appendices.                                                                         |
-  | Joint observation-budget limit                    | Independently reviewed two-binary-feature last-iterate result at $q_n = n^{-1/2}$ with known preprocessing and a specified decreasing-step schedule.                                                 |
-  | Controlled subgroup-risk pilot                    | Reproduced fixed-count, known-preprocessing comparison of four scalings, GD, and replacement SGD with separate oracle tuning.                                                                        |
-  | Broader sampling limits and empirical comparisons | Open research objectives beyond the stated joint-budget regime, including estimated preprocessing and random training designs.                                                                       |
-  | Standalone novelty                                | Unresolved; the elementary calculations are supporting results.                                                                                                                                      |
-
-For standard-deviation scaling in the two-feature population model,
-$c/b \to \kappa$ gives, at fixed $T$,
+For $V = E[(\hat\beta_k - \beta^*)(\hat\beta_k - \beta^*)^\top]$, report
+aggregate and rare-presence excess prediction risks under a stated test law:
 
 $$
-  \beta_2(T) \longrightarrow (1 - e^{-T})\beta_2^* + \kappa T e^{-T}\beta_1^*.
+  R = \tfrac12\operatorname{tr}(CV),
+  \qquad
+  R_R = \tfrac12\operatorname{tr}(C_RV),\qquad C_R = E[xx^\top \mid J = 1].
 $$
 
-Thus a common feature can contribute to the rare coefficient during training
-even while Pearson correlation vanishes. This transient contribution can exist
-when the true rare coefficient is zero. It is not a lasso selection event or a
-claim of asymptotic inconsistency.
+The test point is independent of training. The conditional second moment $C_R$
+includes the nonzero conditional mean. Risk excludes irreducible test noise. The
+existing pilot omits the factor $1/2$; convert or label that convention when
+comparing its values with manuscript risks. Aggregate and subgroup objectives
+can give different assessments of the same trained model.
 
-For a standardized Bernoulli predictor $Z$, the population curvature is one, but
-$\mu_4 = E(Z^4) \sim q^{-1}$. In the scalar noiseless model with fresh
-independent batches, mean-square contraction requires
+## Scientific questions
 
-$$
-  0 < \eta < \frac{2}{1 + (\mu_4 - 1)/B}.
-$$
+1. **Normalization and learning rate.** How does their combination determine
+   relative learning across common and rare features? Identify exact
+   reparameterizations, approximate equivalences, and effects that remain when
+   relative coordinate scales change. Use global rescaling as a basic control.
+2. **Normalization, learning rate, and batch size.** How do feature frequency,
+   dependence, and batch composition affect gradient fluctuations, stability,
+   and coefficient error? Determine what the batch-rarity product $Bq$ explains
+   and what additionally depends on the feature distribution.
+3. **Stopping and the fitted model.** How do these interactions evolve along the
+   training path? Identify when incomplete common or rare learning dominates,
+   when noise dominates, and when comparisons between normalization rules change
+   direction. Constant steps come first; specified decreasing schedules follow.
+4. **Dependence and prediction.** How does incomplete learning of one feature
+   affect another feature's coefficient and the resulting predictions? Relate
+   coefficient effects to aggregate and rare-subgroup risk under the same stated
+   test law.
+5. **Selection of a training configuration.** Once the joint behavior is
+   understood, what do fixed defaults, separate tuning, and joint tuning achieve
+   for a specified objective and budget? Preserve fixed-configuration results
+   alongside tuned summaries so that tuning does not hide the mechanisms being
+   studied.
 
-The upper bound is asymptotic to $2Bq$ when $Bq \to 0$. This example separates
-population curvature from stochastic stability. Scalar rescaling can be absorbed
-into the learning rate; the substantive normalization question involves relative
-updates across several feature frequencies. Population scales and centering are
-known here. The result is not a guarantee for adaptive optimizers or for random
-reshuffling of a fixed dataset.
+These are research questions. Improvements from normalization, simple rules for
+choosing settings, and persistent risk reversals are possible findings to test,
+not assumed conclusions.
 
-The block extension allows common scales $D_n \to D \succ 0$ and rare scales
-with $b_n/s_{R,n}^2 \to \rho \in [0,\infty)$. Its rare-coordinate limit is a
-convolution of the remaining common error with the rare response at rate $\rho$.
-Discrete GD and the fresh-SGD mean have the corresponding finite-sum formula at
-each fixed update count. Exact covariance formulas require finite fourth feature
-moments and finite gradient-noise moments in each population; these conditions
-alone give no uniform rare-limit covariance bound.
+## Comparisons and resource accounting
 
-The [joint-budget theorem](joint-budget-limits.md), independently checked in the
-[referee report](joint-budget-review.md), now gives a specified growing-budget
-regime. For two binary features, known population preprocessing, fixed
-homoscedastic noise variance, $q_n = n^{-1/2}$, $B_n = 1$, and $n$ fresh
-updates, the steps $2/(\lceil16/q_n\rceil + j)$ give rare-coefficient mean
-squared error asymptotic to $4\sigma^2/(3nq_n)$. Optimization bias and
-multiplicative update variance are smaller. This is a last-iterate existence
-result with a schedule-specific constant; it supplies no normalization ranking,
-efficiency claim, or novelty conclusion. Estimated preprocessing and fixed-data
-reuse remain separate questions.
+Different comparisons isolate different interactions. Specify what is held fixed
+before interpreting a change in performance.
 
-For a uniformly bounded common block under population standard-deviation
-scaling, the all-initializations mean-square stability threshold is
-$\Theta(\min\{1,Bq\})$. It is asymptotic to $2Bq$ for small $Bq$. The
-intermediate limit also depends on the largest eigenvalue of the standardized
-common covariance, and the large-$Bq$ limit recovers the population GD
-threshold. Mixed fourth moments affect finite-prevalence stability. With small
-$Bq$, a stable shared learning rate can also slow common-feature learning. These
-results distinguish updates from processed observations and noiseless
-contraction from a nonzero observation-noise floor.
+  | Comparison                                | What it addresses                                                                                                             |
+  | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+  | Same update count $k$                     | How update size, scaling, and gradient noise change the path; larger batches process more observations.                       |
+  | Same processed observations $M = kB$      | How batch size trades fewer updates against averaging within an update. Full empirical GD costs $n$ observations per update.  |
+  | Same cumulative step size $\sum_j\eta_j$  | Whether a flow-time comparison explains the mean trajectory; discrete dynamics and stochastic moments still require checking. |
+  | Same dataset and paired observation noise | How training choices act on a fixed learning problem, including repeated passes.                                              |
+  | Same tuning effort                        | How fixed defaults and configuration-selection procedures compare under a declared search budget.                             |
 
-A three-binary-feature construction keeps the means, covariance, and marginal
-distributions fixed while changing mixed fourth moments. The resulting SGD
-second moments and finite-prevalence stability thresholds differ, although
-population flow and the fresh-SGD mean agree. Conditional fixed-data replacement
-requires an empirical score and curvature-residual cross terms. Random
-reshuffling instead has an exact recurrence at epoch boundaries; its first pass
-has the fresh-sample law only unconditionally over an iid dataset, with fixed
-population preprocessing and independent initialization. The full proofs and
-counterexamples are in [sampling schemes](sampling-schemes.md).
+Use $n$ for the number of distinct training observations, $M$ for processed
+observations, $k$ for update count, and $T$ for flow time. For constant steps,
+$T = k\eta$ is a flow-time calibration. Fresh-sample runs consume new
+observations, whereas fixed-data runs may have $M > n$. Matching $M$ alone does
+not match access to distinct data across these sampling schemes. Report both.
+Wall-clock time is a separate measure with hardware and implementation details.
 
-The derivations are in [the manuscript](../paper/main.tex). Run all
-deterministic checks with `make check-optimization` inside `devenv shell`: the
-[elementary checks](../experiments/check_optimization.py), [block-flow
-checks](../experiments/check_block_flow.py), [finite-update moment
-checks](../experiments/check_discrete_dynamics.py), and [multivariate stability
-checks](../experiments/check_multivariate_stability.py), together with
-[sampling-scheme checks](../experiments/check_sampling_schemes.py). The
-[joint-budget checks](../experiments/check_joint_budget.py) add independent
-short-path enumeration and increasing-budget moment calculations; pass `--large`
-to include budgets through $2^{20}$.
+Show absolute learning rates together with any curvature-normalized or
+stability-normalized rate. A change in normalization can alter both reference
+quantities. State the calibration used in each comparison and retain unstable
+and nonfinite outcomes.
 
-The bounded eight-source [literature audit](novelty-audit.md) maps the flow,
-moment, and stability claims to their closest inspected theorems. It identifies
-substantial established overlap, distinguishes averaging and sampling
-conventions, and leaves priority for the specific rare-limit calculations
-unresolved. Dedicated reshuffling, feature-learning, and recent optimizer-tuning
-comparisons remain open.
+## Existing results and their role
 
-The [controlled pilot](rare-subgroup-pilot.md) compares four fixed scalings, GD,
-and replacement SGD on six feasible binary designs and four signals. It uses
-known preprocessing, fixed cell counts, and separate oracle step-size tuning,
-with exact conditional sampling moments and 256 held-out noise replications.
-Substantial subgroup-risk differences reverse with the signal, dependence, batch
-size, and budget. The finite rate grid is restrictive: 195 of 864 settings
-select its smallest factor. The [focused
-checks](../experiments/check_rare_subgroup_pilot.py) validate the calculation by
-independent batch/path enumeration and moment recurrences. The generated
-artifact was independently reproduced byte-for-byte.
+The completed work supplies analytical tools and a pilot for the joint study.
+Its mathematical and numerical status is separate from its role in the eventual
+contribution.
 
-## First milestone and empirical objective
+  | Existing work                                                                       | Established scope                                                                                                                                        | Use in the joint study                                                                                                                     |
+  | ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+  | [Population flow](../paper/sections/gradient-flow.tex)                              | Bivariate and fixed common-block rare limits under known population preprocessing, on bounded flow-time intervals.                                       | Explain relative learning and transient contributions from dependent features.                                                             |
+  | [Discrete moments](../paper/sections/discrete-dynamics.tex)                         | Exact finite-update GD and fresh-SGD mean and covariance formulas.                                                                                       | Calculate how normalization, steps, batches, and stopping jointly determine error.                                                         |
+  | [Stochastic stability](../paper/sections/stochastic-gradient.tex)                   | Scalar threshold and bounded-common-block batch-rarity limits under stated population assumptions.                                                       | Delimit stable configurations and study their statistical consequences along training paths.                                               |
+  | [Sampling schemes](sampling-schemes.md)                                             | Matched-covariance binary examples, conditional replacement identities, and reshuffling epoch identities.                                                | Identify distributional and sampling effects that a population mean path cannot capture.                                                   |
+  | [Joint-budget theorem](joint-budget-limits.md) and [review](joint-budget-review.md) | Independently reviewed result for two binary features, standard-deviation scaling, $q_n = n^{-1/2}$, and a specified decreasing-step fresh-SGD schedule. | Provide a checked joint limit and error decomposition. Comparisons across normalization, batch size, and schedules remain to be developed. |
+  | [Controlled pilot](rare-subgroup-pilot.md)                                          | Reproduced comparison of four scalings, three GD/SGD methods, three budgets, six fixed binary designs, and four signals.                                 | Locate candidate interactions and reversals for analytical explanation and sensitivity checks.                                             |
+  | [Initial dependence investigation](two-feature-investigation.md)                    | Explicit-penalty calculations beyond orthogonality, with Gaussian region integration and binary examples.                                                | Connect the original paper's modeling perspective to dependence and explicit-regularization comparisons.                                   |
 
-The first milestone combines a checked finite-time result for a rare feature
-with common predictors, a comparison with the closest prior theorems, and one
-controlled experiment showing a consequential difference. The population-flow
-and fresh-SGD results now supply the initial theory under their stated
-assumptions. The joint-budget theorem adds one growing-stopping-count regime.
-The pilot adds a bounded fixed-data comparison. Broader joint sampling limits,
-empirical normalization, validation-based stopping, and adaptive optimizers need
-explicit additional assumptions.
+The budget theorem gives rare-coefficient MSE asymptotic to $4\sigma^2/(3nq_n)$
+under its specified regime, with smaller bias and multiplicative variance. That
+establishes one attainable error limit. It does not compare the four training
+choices over their joint range.
 
-The primary outcomes are original-scale coefficient error, aggregate excess
-prediction risk, and excess prediction risk conditional on rare-feature
-presence. An isolated constant rare-coefficient error has only $O(q_n)$ weight
-in aggregate risk. A test prevalence shift should preserve the conditional
-response model and retain training centering and scales at prediction time. This
-makes the shift interpretable and avoids conflating coefficient effects with a
-changed intercept.
+The pilot uses known preprocessing, fixed rare counts of 4 or 20, and separate
+oracle constant-step tuning. Of 864 evaluated settings, 195 select the smallest
+grid factor. Its reported reversals motivate further analysis; their robustness
+to a wider rate range and practical tuning remains unresolved. Preserve the
+frozen pilot and its provenance when designing the next experiment.
 
-Comparisons should use matched numbers of processed observations and separately
-tuned learning rates. Update count alone is insufficient when batch size
-changes. Synthetic binary designs provide exact controls. Sparse text or
-categorical data, first with linear models and then a small neural model,
-provide the intended empirical progression beyond the completed pilot. The pilot
-supports no universally preferable normalization.
+## Next research steps
 
-The bounded first milestone is complete, but mathematical correctness and
-reproducibility do not resolve novelty. The literature audit places the general
-framework in prior work, the joint theorem supplies a uniform specialization,
-and the pilot illustrates reversals under a restrictive protocol. Current
-evidence favors developing a focused note while testing whether a distinct
-dependence, sampling, or subgroup-risk conclusion survives the remaining
-literature comparisons and tuning checks. A full ML-paper claim is premature.
+### 1. Specify the joint comparisons
 
-## Role of the earlier investigation
+Write `notes/joint-interactions.md` defining the initial normalization family,
+step schedules, batches, stopping counts, sampling laws, and risk objectives.
+Use the existing two-feature setup and include both fixed-update and
+fixed-observation comparisons. Derive and independently check the global-scale
+and learning-rate equivalence as a control, then separate it from changes in
+relative feature scales.
 
-The original shrinkage analysis supplies explicit-regularization baselines and
-examples of why covariance divided by feature variance matters. Exact Gaussian
-region integration remains useful for checking those baselines; it does not
-validate stochastic optimization dynamics.
+**Completion criterion:** every proposed comparison identifies its assumptions,
+fixed quantities, varied quantities, and measured outcomes. Its connection to
+the original paper and the five scientific questions is explicit.
 
-The former main objective, a general sampling theorem for penalized nuisance
-bias transfer, is deferred. Its formal fixed-score-noise precursor must remain
-separate from actual binary sampling limits. Related theory, literature
-comparisons, and the boundary correction in the original `normreg` project are
-preserved in [TODO.md](../TODO.md). The initial derivations remain in
-[two-feature-investigation.md](two-feature-investigation.md).
+### 2. Explain joint behavior in a controlled model
+
+Apply the existing finite-update moments to constant-step SGD with two feasible
+binary features. Begin with an independent design, then add dependence. Analyze
+several normalization exponents, batch-rarity regimes, and stopping counts.
+Locate conditions for changes in coefficient learning and risk comparisons;
+distinguish derived boundaries from numerical patterns. Extend to decreasing
+steps or a common block only when the added complexity answers a specific
+interaction question.
+
+**Completion criterion:** at least one precise comparison across normalization
+and optimization settings, with a full proof and independent numerical check, or
+a checked equivalence or counterexample that rules out a proposed mechanism. A
+result about one fixed configuration must state what it contributes to the
+comparison.
+
+### 3. Map and test the predicted interactions
+
+Build on the pilot with a separately declared experiment. Retain results over
+the joint configuration grid before selecting any optimum. Include near-zero
+steps and enough stopping points to resolve incomplete learning and noise
+effects. Plot coefficient trajectories and risk over learning rate and stopping
+count, faceted by normalization and batch size. Annotate theoretical stability
+boundaries and compare fixed updates with fixed processed observations.
+
+Use paired data and noise, report Monte Carlo uncertainty, and preserve failed
+runs. Separate fixed cell counts from sampled designs and fresh observations
+from fixed-data reuse. Check conditional moments against direct update paths on
+small cases before expanding the grid.
+
+**Completion criterion:** reproducible evidence for or against the proposed
+interactions, including unfavorable and null outcomes, uncertainty, and
+sensitivity to the grid. Changes in rankings alone require a mechanism or a
+clearly stated unresolved explanation.
+
+### 4. Test practical consequences
+
+After the controlled comparisons, study training-estimated centering and scales,
+intercept handling, and samples with no rare observations. Compare fixed
+stopping with a stated validation rule. Evaluate joint normalization and
+optimization tuning with separate validation and test data and comparable search
+effort.
+
+Choose a sparse text or categorical task with an interpretable rare-feature
+definition, first using linear models. Report aggregate and subgroup prediction
+alongside the feature-level mechanism. Add a small neural model or adaptive
+optimizers only with an explicit hypothesis connecting them to the controlled
+study. Record momentum, clipping, schedules, stabilizing constants, and weight
+decay when applicable; fixed diagonal preconditioning does not describe their
+complete dynamics.
+
+**Completion criterion:** determine whether the controlled mechanism remains
+observable with practical preprocessing and training choices, and delimit any
+recommendation by the task, objective, data, and budget.
+
+## Validation, boundaries, and literature review
+
+Follow [AGENTS.md](../AGENTS.md). Mathematical claims require explicit
+assumptions, full proofs, independent proof review, and numerical checks where
+applicable. Numerical agreement validates calculations under the tested
+conditions. Keep proved statements, empirical evidence, conjectures, and novelty
+assessments distinct.
+
+Inside `devenv shell`, use `make check-optimization` for the existing flow,
+moment, stability, sampling, joint-budget, and pilot checks. Use
+`make check-python` for experiment formatting and lint, and `make check` for
+integrated validation. Ordinary Python assertions must remain enabled. Keep the
+explicit penalty convention $t = \lambda_1/n$, $r = \lambda_2/n$ separate from
+training time. Regenerate numerical artifacts with their scripts and record
+provenance.
+
+The initial scope is fixed-feature learning. Multiple rare features, growing
+common dimension, prevalence shift, interpolation, and neural feature learning
+are later extensions. The separate boundary correction in the original `normreg`
+project remains separate work.
+
+Johan will conduct the literature review separately. The existing
+[audit](novelty-audit.md) remains a record of the earlier comparison of selected
+mathematical tools. This plan specifies the scientific program without deciding
+novelty or publication format. Incorporate the separate review before finalizing
+contribution claims and manuscript positioning.

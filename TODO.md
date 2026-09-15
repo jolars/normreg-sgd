@@ -1,15 +1,35 @@
 # Research tasks
 
-The active direction is **Learning Rare Features: Normalization, Stochastic
-Optimization, and Early Stopping**. This checklist consolidates the research
-plan and the September 14–15, 2026 assessments. The [research
-plan](notes/research-plan.md) records the setup and scope. Earlier shrinkage
-extensions remain below as deferred work.
+The active direction is **Normalization and Implicit Regularization in
+Stochastic Learning**. The [research plan](notes/research-plan.md) studies how
+normalization, learning rate, batch size, and stopping time jointly determine
+the fitted model and its statistical properties. It builds on `../normreg` and
+retains SGD and implicit regularization as the follow-up's ML direction.
 
-The first milestone is a checked finite-time result, a precise comparison with
-prior work, and one controlled experiment showing a consequential difference for
-rare-feature learning. The elementary calculations alone do not establish a
-standalone novelty claim.
+The completed calculations and pilot below provide a foundation. The next
+milestone is to explain their joint interactions and resulting models. Johan
+will conduct the literature review separately; novelty and publication format
+remain undecided.
+
+## Current priorities: joint interactions
+
+- [ ] Specify the normalization family, learning-rate schedules, batch sizes,
+  stopping counts, sampling assumptions, and outcomes in
+  `notes/joint-interactions.md`. Include fixed-update and fixed-observation
+  comparisons, plus global-rescaling controls.
+- [ ] Use the exact moments to derive a comparison across normalization and
+  optimization settings. Explain learning, noise, and risk changes in a
+  feasible two-feature model, with independent proof and numerical checks.
+- [ ] Design a separate follow-up to the frozen pilot that retains the joint
+  configuration grid and training paths. Test predicted interactions and
+  reversals, wider learning-rate ranges, uncertainty, and budget
+  sensitivity.
+- [ ] Test practical preprocessing and validation-based choices, then a stated
+  real-data task. Compare defaults and joint tuning with equal search
+  effort, while preserving the fixed-configuration results that explain the
+  effects.
+
+The research plan gives the scope and completion criteria for these steps.
 
 ## Established starting calculations
 
@@ -23,7 +43,7 @@ standalone novelty claim.
 - [x] Add independent ODE and exact batch-enumeration checks to the standard
   validation commands. These validate formulas, not optimizer performance.
 
-## First milestone: learning dynamics and sampling
+## Foundation: learning dynamics and sampling
 
 - [x] Extend the population early-stopping result to a fixed block of common
   predictors and one rare binary feature. State the assumptions on $A_n$,
@@ -68,12 +88,13 @@ standalone novelty claim.
 - [ ] Study early stopping chosen in advance before validation-based stopping.
   Do not infer finite-budget performance from population-flow time alone.
 
-## First milestone: literature and novelty
+## Literature and novelty: separate review
 
-For each source, record the exact theorem or equation, its assumptions and
-conclusions, and whether it already implies a candidate result. Relevant core
-optimization references are in `paper/references.bib`; the comparisons remain
-open except for the bounded eight-source [theorem-level
+Johan owns the next literature review. The earlier audit and checklist are
+retained as inputs. For each source, record the exact theorem or equation, its
+assumptions and conclusions, and whether it already implies a candidate result.
+Relevant core optimization references are in `paper/references.bib`; the
+comparisons remain open except for the bounded eight-source [theorem-level
 audit](notes/novelty-audit.md). It identifies established operator and stability
 frameworks; priority for the specific rare-limit calculations remains
 unresolved.
@@ -108,7 +129,7 @@ unresolved.
   change, bivariate matrix exponential, and scalar stability calculation are
   supporting material unless the literature comparison warrants more.
 
-## First milestone: controlled experiments
+## Existing pilot and experimental extensions
 
 The bounded [pilot](notes/rare-subgroup-pilot.md) completes the two-feature,
 fixed-count comparison below. It uses known population preprocessing and
@@ -163,24 +184,25 @@ robustness; the reversals establish no general scaling recommendation.
 - [ ] Select a sparse text or categorical dataset with an interpretable
   rare-feature definition. Start with linear models, then test the proposed
   mechanism in a small neural model with comparable tuning effort.
-- [x] Complete a bounded first milestone: an independently reviewed joint-budget
-  theorem, an eight-source overlap audit, and a reproducible controlled
-  experiment with substantial risk differences and reversals. Broader
-  novelty comparisons and empirical usefulness remain open.
-- [x] Reassess publication scope after the bounded first milestone. Current
-  evidence favors developing a focused note; it does not establish a
-  standalone novelty claim. The abstract and scope now include the reviewed
-  theorem and bounded pilot.
-- [ ] Establish a distinct contribution and reassess the final publication
-  format before making broader paper claims.
+- [x] Complete a bounded foundation milestone: an independently reviewed
+  joint-budget theorem, an eight-source overlap audit, and a reproducible
+  controlled experiment with substantial risk differences and reversals.
+  Broader novelty comparisons and empirical usefulness remain open.
+- [ ] Assess novelty and publication scope using the separate literature review
+  and the results of the joint-interaction study. Earlier overlap findings
+  concern selected mathematical tools and do not determine the final format.
+- [ ] Align the manuscript's title, abstract, and contribution claims with the
+  resulting account of normalization, optimization choices, and fitted
+  models.
 - [ ] Consider bounded rare counts, multiple rare features, and
   overparameterized interpolation as separate extensions after the first
   milestone.
 
 ## Deferred shrinkage theory and supporting comparisons
 
-These items preserve the earlier research program. They support the new study
-when needed and do not replace the finite-time optimization milestone.
+These items preserve the earlier research program. The original paper supplies
+the conceptual foundation; these technical extensions can support specific
+joint-interaction questions without becoming prerequisites for every step.
 
 - [ ] Establish the fixed-dimensional Gaussian coupling result for a rare
   feature and penalized nuisance block. Specify the penalty, uniform strong
