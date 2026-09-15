@@ -24,10 +24,12 @@ changes the balance between incomplete learning and noise. Dependence between
 features is central because it can couple their learning and change the effects
 of each training choice.
 
-The next milestone asks a narrower question: **Under a declared training budget,
-when does relative feature scaling change the ordering of prediction risks, and
-how do rarity, stopping, stochastic variance, and dependence explain that
-ordering?** Establish one interpretable comparison before expanding the joint
+The comparative milestone asks a narrower question: **Under a declared training
+budget, when does relative feature scaling change the ordering of prediction
+risks, and how do rarity, stopping, stochastic variance, and dependence explain
+that ordering?** The [C1 and C2 proofs](normalization-risk-theorem.md) now
+provide two bounded answers. The next milestone tests their robustness to
+declared learning-rate and stopping adjustments before expanding the joint
 configuration grid. A complete characterization of every training regime remains
 a longer-term research objective.
 
@@ -41,7 +43,7 @@ usable source links, and absence from its search does not establish priority.
 Use the report to prioritize theorem-level comparisons alongside the existing
 [bounded audit](novelty-audit.md).
 
-Three source checks sharpen the immediate comparison:
+The first three source checks sharpened the immediate comparison:
 
 - [Su, Zou, and Wu](https://arxiv.org/html/2403.08585v3) analyze preconditioned
   least-squares SGD and compare its aggregate excess risk with ridge. Their
@@ -60,16 +62,17 @@ Three source checks sharpen the immediate comparison:
   nonzero even when the indicator is absent, so occurrence counts alone do not
   describe which coordinates receive updates.
 
-The [focused audit](normalization-risk-audit.md) now compares these three
-sources at the theorem and equation level. In particular, AdaBatch's
-deterministic-preconditioning analysis strengthens the overlap concern. The
-broader novelty assessment remains open. The central contribution candidate is a
-quantitative risk comparison with a statistical interpretation. Global
-rescaling, independent-coordinate flow rates, moment recursions, and generic
-fourth-moment dependence remain supporting tools. The existing
-covariance-matched construction already illustrates why $Bq$ and covariance do
-not determine SGD behavior. A further result in that direction should identify a
-consequential risk difference or a useful approximation with explicit limits.
+The [focused audit](normalization-risk-audit.md) now also compares
+Ali–Dobriban–Tibshirani, Zou et al., the SGD-QN erratum, covariate-shift
+preconditioning, and feature normalization in GNNs. Harmful rare-feature scaling
+and target-risk geometry have explicit antecedents. The broader novelty
+assessment remains open. The central contribution candidate is a quantitative
+risk comparison with a statistical interpretation. Global rescaling,
+independent-coordinate flow rates, moment recursions, and generic fourth-moment
+dependence remain supporting tools. The existing covariance-matched construction
+already illustrates why $Bq$ and covariance do not determine SGD behavior. A
+further result in that direction should identify a consequential risk difference
+or a useful approximation with explicit limits.
 
 ## Connection to the original paper and the ML objective
 
@@ -287,13 +290,22 @@ proof review is pending because Coterie was unavailable. The first specification
 and grid are complete. The next steps use their findings to select and establish
 one substantive comparison.
 
-[Conjecture C1](normalization-risk-comparison.md) now specifies a continuous
-parameter box for four rare-risk inequalities under matched common-coordinate
-learning. Its reduced moments agree with independent update enumeration and the
-existing operator; 225 sampled parameter settings support the conjecture. The
-uniform proof and its independent review remain open. The associated
-[three-source audit](normalization-risk-audit.md) is complete at its stated
-scope, with additional antecedent comparisons pending.
+[C1](normalization-risk-comparison.md) now has a [proof with controlled
+threshold bounds](normalization-risk-theorem.md) throughout its original
+parameter box. A second theorem, C2, gives opposite aggregate and rare-presence
+orderings for the same configurations at 100 observations, uniformly over
+declared dependence and noise intervals. SD scaling worsens both coefficient
+MSEs in C2; its smaller cross moment of the coefficient errors explains the
+rare-prediction advantage. Independent proof review is tracked with the theorem
+note. The associated [expanded audit](normalization-risk-audit.md) finds no
+direct statement of these comparisons in its inspected sources, while
+identifying substantial overlap in their mechanisms.
+
+The next scientific decision is whether C2's objective disagreement survives a
+declared range of learning-rate and stopping adjustments. Retain C1 as the
+controlled bias-versus-noise comparison and preserve both fixed configurations
+and failures. The steps below retain the milestone criteria that led to these
+results; mathematical completion does not settle novelty or empirical value.
 
 ### 1. Formulate a candidate result and check its closest prior work
 
@@ -325,15 +337,17 @@ already gives the proposed result, credit it and refine the research target.
 
 ### 2. Prove an interpretable normalization-risk comparison
 
-Use the exact finite-update moments to derive sufficient conditions for the
-candidate ordering and its reversal. Separate squared bias, multiplicative
-update variance, and propagated observation-noise variance. Give a quantitative
-parameter range or a threshold bound with controlled approximation error. An
-isolated grid crossing, or continuity around one crossing without useful bounds,
-does not yet explain when the mechanism matters.
+The [comparison proofs](normalization-risk-theorem.md) now implement this step,
+with independent review tracked separately. Use the exact finite-update moments
+to derive sufficient conditions for the candidate ordering and its reversal.
+Separate squared bias, multiplicative update variance, and propagated
+observation-noise variance. Give a quantitative parameter range or a threshold
+bound with controlled approximation error. An isolated grid crossing, or
+continuity around one crossing without useful bounds, does not yet explain when
+the mechanism matters.
 
-The strongest follow-up target is disagreement between aggregate and
-rare-presence risk for the same two training configurations:
+The stronger comparison, now realized by C2, is disagreement between aggregate
+and rare-presence risk for the same two training configurations:
 
 $$
   R^{(a)} < R^{(b)},\qquad R_R^{(a)} > R_R^{(b)}.

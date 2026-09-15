@@ -39,6 +39,7 @@ check-joint-interactions:
 
 check-normalization-risk:
 	python experiments/check_normalization_risk_candidate.py
+	python experiments/check_normalization_risk_theorem.py
 
 reproduce-joint-interactions:
 	python experiments/run_joint_interactions.py

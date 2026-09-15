@@ -5,18 +5,18 @@ fresh-sample study](joint-interactions-results.md).
 
 ## Status and decision
 
-**The immediate candidate is a quantitative normalization-ranking reversal for
-final-iterate rare-presence risk.** The [focused source
-audit](normalization-risk-audit.md) finds that its general learning-versus-noise
-mechanism is established. The remaining work is an explicit comparison with
-useful parameter bounds and a clear account of the training budget. This is a
-candidate for development, not an accepted theorem or a secured novelty claim.
+**C1 now has a written proof and a continuous-box certificate.** The [proof
+note](normalization-risk-theorem.md) gives a scalar threshold bound with a
+controlled remainder, proves the four signs over the original parameter box, and
+adds a dependent-feature aggregate/subgroup comparison, C2. Independent proof
+review is tracked there. The [expanded source
+audit](normalization-risk-audit.md) identifies close prior art and retains C2 as
+the stronger contribution candidate; novelty remains unresolved.
 
-The reduction below has computational checks against enumerated updates and the
-existing full moment operator. Its proof has not received independent review.
-Conjecture C1 specifies a continuous parameter box; the numerical checks cover
-only a finite grid. Both the box and the noise-threshold analysis were chosen
-after inspecting the earlier results. The frozen study is unchanged.
+This note preserves the original conjecture and exploratory calculations. Those
+numerical checks alone cover only a finite grid. Both the box and the
+noise-threshold analysis were chosen after inspecting the earlier results. The
+frozen study is unchanged.
 
 ## Model and matched training configurations
 
@@ -165,7 +165,12 @@ These checks leave gaps between grid points. The noise interval starts at 1.5 to
 allow simultaneous variation of the other parameters; the original $\sigma^2=1$
 anchor does not imply this wider-box statement.
 
-## What would complete the result
+## Original completion criteria
+
+The [proof note](normalization-risk-theorem.md) now supplies the reduction,
+stability proof, uniform bounds, and a controlled threshold approximation
+requested below. Independent review and subsequent robustness work are tracked
+separately.
 
 1. Verify the reduction and give uniform stability bounds, including control of
    the cross moment.
@@ -186,12 +191,14 @@ squared signal coefficients, so changing signal signs alone cannot change these
 risks. Sign-dependent conclusions need an additional mechanism, such as feature
 dependence.
 
-Aggregate-versus-subgroup disagreement remains a separate target. At the anchor
-with $B=1$, $k=10{,}000$, its two calculated noise thresholds are 0.882605636639
-and 0.882532574787, respectively. Their small difference permits opposite signs
-only in a narrow noise interval here. That observation motivates seeking a
+Aggregate-versus-subgroup disagreement was a separate target. At the anchor with
+$B=1$, $k=10{,}000$, its two calculated noise thresholds are 0.882605636639 and
+0.882532574787, respectively. Their small difference permits opposite signs only
+in a narrow noise interval here. That observation motivates seeking a
 consequential risk gap, rather than using the mere existence of an objective
-reversal as sufficient evidence of scientific importance.
+reversal as sufficient evidence of scientific importance. C2 now supplies a
+larger disagreement under feasible dependence, including a sign-dependent
+mechanism.
 
 ## Reproduction
 
@@ -202,4 +209,6 @@ endpoints against the existing full moment implementation, including short paths
 independently enumerated from individual gradient updates. The checks cover two
 prevalences, two rates, both normalization rules, both batch sizes one and two,
 and a mixed-sign signal. They do not constitute independent proof review. The
-target also runs through `make check-optimization`.
+target also runs the separate [interval
+certificate](../experiments/check_normalization_risk_theorem.py), and both run
+through `make check-optimization`.

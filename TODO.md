@@ -7,12 +7,14 @@ the fitted model and its statistical properties. It builds on `../normreg` and
 retains SGD and implicit regularization as the follow-up's ML direction.
 
 The completed calculations and experiments below provide a foundation. Johan's
-[research report](deep-research-report.md) now informs the plan. The next
-milestone is **one proved normalization-risk comparison under a declared
-training budget**, with a quantitative mechanism and a focused novelty audit.
+[research report](deep-research-report.md) now informs the plan. The [comparison
+proofs](notes/normalization-risk-theorem.md) establish C1's stopping reversal
+and C2's aggregate/subgroup disagreement under declared budgets. The next
+milestone is **to test whether the comparisons survive a declared range of
+learning-rate and stopping adjustments**, alongside the expanded novelty audit.
 The report's positive novelty assessment remains provisional.
 
-## Current priorities: establish a comparative result
+## Current priorities: comparative results and their limits
 
 Follow this order, developing the candidate statement alongside its source
 comparison. The research plan gives the completion criteria.
@@ -21,24 +23,33 @@ comparison. The research plan gives the completion criteria.
   stopping reversal as an explicit conjecture.
   [C1](notes/normalization-risk-comparison.md) specifies the risk
   inequalities, feasible law, signal, noise, rate calibration, and budgets.
-  A two-dimensional moment reduction and 225-point exploratory parameter
-  grid support the candidate; uniform proof remains open.
+  The two-dimensional reduction and 225-point exploratory grid are retained;
+  a [uniform proof](notes/normalization-risk-theorem.md) is now available.
 - [x] Complete a bounded theorem-level comparison with Su–Zou–Wu, Seesaw, and
   AdaBatch. The [focused audit](notes/normalization-risk-audit.md) maps
   assumptions, output iterates, risk objectives, moment constants, and
-  budgets. It identifies strong overlap in the general mechanism.
-  Candidate-specific antecedent comparisons and the broader novelty
-  assessment remain open below.
-- [ ] Derive sufficient conditions or a controlled threshold bound for the
+  budgets. It identifies strong overlap in the general mechanism. The
+  expanded audit adds five sources. Further target-risk comparisons and the
+  broader novelty assessment remain open below.
+- [x] Derive sufficient conditions or a controlled threshold bound for the
   normalization-risk reversal. Separate squared bias, multiplicative update
   variance, and observation-noise variance. Obtain independent proof review
   and numerical checks; a grid crossing alone does not complete this task.
-- [ ] Test whether the same two configurations can favor opposite orderings
+  [C1](notes/normalization-risk-theorem.md) has a scalar approximation with
+  a controlled remainder and a continuous-box certificate, with four uniform
+  risk-gap bounds. The [independent agent
+  review](notes/normalization-risk-review.md) also checks the certificates
+  through a separate implementation.
+- [x] Test whether the same two configurations can favor opposite orderings
   under aggregate and rare-presence risk at a common budget and test law. If
   supported, characterize the risk gap and conditions, including how
   feasible dependence and signal signs change them. Treat this as the
   stronger follow-up target, not an assumed result or a claim about globally
-  optimal tuning.
+  optimal tuning. [C2](notes/normalization-risk-theorem.md) gives opposite
+  orderings at 100 observations throughout declared dependence and noise
+  intervals. Scaling increases both coefficient MSEs while improving
+  rare-presence prediction; the cross moment of the coefficient errors
+  explains the difference.
 - [ ] Specify a focused robustness experiment varying prevalence, dependence,
   signal, noise, rates, and stopping resolution. Include global-rescaling
   and common-learning controls, fixed-update and fixed-observation
@@ -73,8 +84,8 @@ comparison. The research plan gives the completion criteria.
   configuration grid and training paths. The [first fresh-sample
   study](notes/joint-interactions-results.md) retains 1,056 configurations,
   60 stopping counts, four figures, paired simulation uncertainty, and a
-  local batch-comparison sensitivity check. Broader robustness and a proved
-  normalization-risk comparison are separate open tasks above.
+  local batch-comparison sensitivity check. The normalization-risk proofs
+  are now separate results above; broader robustness remains open.
 
 ## Established starting calculations
 
@@ -163,11 +174,19 @@ specific rare-limit calculations remains unresolved.
   on sparse gradient aggregation and coordinate rescaling. Account for the
   difference between uncentered sparsity and our centered indicators.
 
-- [ ] Complete the candidate-specific comparison with Ali–Dobriban–Tibshirani on
+- [x] Complete the candidate-specific comparison with Ali–Dobriban–Tibshirani on
   stochastic gradient flow and Zou et al. on SGD versus ridge. Use the
-  existing Jain et al. audit for mini-batch and averaging baselines. Add
-  verified references to `paper/references.bib` when incorporating these
-  comparisons into the manuscript.
+  existing Jain et al. audit for mini-batch and averaging baselines. See
+  S12–S13 in the [expanded audit](notes/normalization-risk-audit.md).
+
+- [ ] Incorporate the verified references from S9–S16 of the expanded audit into
+  `paper/references.bib` when revising the manuscript's related-work
+  section.
+
+- [ ] Extend the C2 comparison with target-risk and subgroup-risk antecedents,
+  starting from Liu et al.'s covariate-shift preconditioning analysis (S15).
+  Subgroup conditioning is already a target-risk problem; test whether the
+  strict configuration comparison adds a substantive conclusion.
 
 - [ ] Resolve the report's exported citation markers into usable sources for
   claims retained in the manuscript, including its recent-paper claims.
@@ -209,7 +228,10 @@ specific rare-limit calculations remains unresolved.
   scalar stability, and generic fourth-moment dependence as supporting
   tools. The existing matched-covariance example already illustrates the
   limits of $Bq$; an extension should add a quantitative statistical
-  consequence.
+  consequence. The [expanded audit](notes/normalization-risk-audit.md) now
+  gives a bounded assessment and a working claim around C2. Retuning and
+  further target-risk comparisons remain prerequisites for the
+  manuscript-level assessment.
 
 ## Existing pilot and experimental extensions
 
