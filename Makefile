@@ -29,6 +29,7 @@ check-optimization:
 	python experiments/check_discrete_dynamics.py
 	python experiments/check_multivariate_stability.py
 	python experiments/check_sampling_schemes.py
+	python experiments/check_joint_budget.py
 
 verify: check-optimization
 	python experiments/check_two_features.py --check-only
