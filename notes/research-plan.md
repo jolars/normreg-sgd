@@ -43,14 +43,14 @@ Use the report to prioritize theorem-level comparisons alongside the existing
 
 Three source checks sharpen the immediate comparison:
 
-- [Su, Zou, and Wu](https://arxiv.org/html/2403.08585v1) analyze preconditioned
+- [Su, Zou, and Wu](https://arxiv.org/html/2403.08585v3) analyze preconditioned
   least-squares SGD and compare its aggregate excess risk with ridge. Their
   equation (3.2) uses tail averaging, and Theorem 4.2 gives a risk bound under
   fourth-moment assumptions. Compare these statements with our final-iterate,
   original-scale, rare-subgroup objective, including how moment constants depend
   on prevalence. A conventional normalization is a special preconditioner;
   different terminology alone creates no research gap.
-- [Meterez et al., Seesaw](https://arxiv.org/html/2510.14717v1) study
+- [Meterez et al., Seesaw](https://arxiv.org/html/2510.14717v2) study
   learning-rate and batch-size scheduling equivalence. Compare the schedules,
   assumptions, risk criterion, and resource accounting in their Theorem 1 with
   any proposed failure of scalar compensation here.
@@ -60,14 +60,16 @@ Three source checks sharpen the immediate comparison:
   nonzero even when the indicator is absent, so occurrence counts alone do not
   describe which coordinates receive updates.
 
-These checks establish relevant overlap; they are not a completed novelty audit.
-The central contribution candidate is a quantitative risk comparison with a
-statistical interpretation. Global rescaling, independent-coordinate flow rates,
-moment recursions, and generic fourth-moment dependence remain supporting tools.
-The existing covariance-matched construction already illustrates why $Bq$ and
-covariance do not determine SGD behavior. A further result in that direction
-should identify a consequential risk difference or a useful approximation with
-explicit limits.
+The [focused audit](normalization-risk-audit.md) now compares these three
+sources at the theorem and equation level. In particular, AdaBatch's
+deterministic-preconditioning analysis strengthens the overlap concern. The
+broader novelty assessment remains open. The central contribution candidate is a
+quantitative risk comparison with a statistical interpretation. Global
+rescaling, independent-coordinate flow rates, moment recursions, and generic
+fourth-moment dependence remain supporting tools. The existing
+covariance-matched construction already illustrates why $Bq$ and covariance do
+not determine SGD behavior. A further result in that direction should identify a
+consequential risk difference or a useful approximation with explicit limits.
 
 ## Connection to the original paper and the ML objective
 
@@ -285,15 +287,23 @@ proof review is pending because Coterie was unavailable. The first specification
 and grid are complete. The next steps use their findings to select and establish
 one substantive comparison.
 
+[Conjecture C1](normalization-risk-comparison.md) now specifies a continuous
+parameter box for four rare-risk inequalities under matched common-coordinate
+learning. Its reduced moments agree with independent update enumeration and the
+existing operator; 225 sampled parameter settings support the conjecture. The
+uniform proof and its independent review remain open. The associated
+[three-source audit](normalization-risk-audit.md) is complete at its stated
+scope, with additional antecedent comparisons pending.
+
 ### 1. Formulate a candidate result and check its closest prior work
 
-Write a focused comparison note, `notes/normalization-risk-comparison.md`,
-starting from the observed no-scaling versus standard-deviation-scaling
-rare-risk reversal. In the independent model at the stated common-learning
-calibration, the ordering changes between 1,000 and 10,000 updates for $B=1$.
-The $B=10$ endpoints have a different ordering pattern. These observations
-identify a candidate mechanism involving bias and observation-noise variance;
-they do not establish a threshold or a comparison of tuned procedures.
+Use the [focused comparison note](normalization-risk-comparison.md), starting
+from the observed no-scaling versus standard-deviation-scaling rare-risk
+reversal. In the independent model at the stated common-learning calibration,
+the ordering changes between 1,000 and 10,000 updates for $B=1$. The $B=10$
+endpoints have a different ordering pattern. These observations identify a
+candidate mechanism involving bias and observation-noise variance; they do not
+establish a threshold or a comparison of tuned procedures.
 
 State the exact risk inequalities to prove, the two normalization rules, rate
 calibration, stopping counts, budget, feasible feature law, signal, and noise.

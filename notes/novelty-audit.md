@@ -10,6 +10,10 @@ has now passed [independent proof review](joint-budget-review.md), and the
 preserves the comparisons at the inspected revision. Mathematical acceptance and
 the pilot's risk reversals do not settle the unresolved priority assessment.
 
+The later [focused addendum](normalization-risk-audit.md) compares a specific
+normalization-risk conjecture with Su–Zou–Wu, Seesaw, and AdaBatch. It preserves
+the scope and historical record of the eight-source audit below.
+
 ## Assessment
 
 The general gradient-flow solution, fresh-SGD moment operators, fourth-moment

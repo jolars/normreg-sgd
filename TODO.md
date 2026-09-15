@@ -17,16 +17,18 @@ The report's positive novelty assessment remains provisional.
 Follow this order, developing the candidate statement alongside its source
 comparison. The research plan gives the completion criteria.
 
-- [ ] Formulate the observed no-scaling versus standard-deviation-scaling
-  stopping reversal as an explicit conjecture in
-  `notes/normalization-risk-comparison.md`. State the risk inequalities,
-  feasible law, signal, noise, rate calibration, and budget. Begin with the
-  [existing fresh-sample endpoints](notes/joint-interactions-results.md),
-  then identify the parameter range a theorem should cover.
-- [ ] Complete the focused theorem-level audit below, prioritizing Su–Zou–Wu,
-  Seesaw, and AdaBatch. Map assumptions, final versus averaged iterates,
-  risk objectives, moment constants as prevalence vanishes, and budget
-  conventions. Refine the conjecture if a known theorem already implies it.
+- [x] Formulate the observed no-scaling versus standard-deviation-scaling
+  stopping reversal as an explicit conjecture.
+  [C1](notes/normalization-risk-comparison.md) specifies the risk
+  inequalities, feasible law, signal, noise, rate calibration, and budgets.
+  A two-dimensional moment reduction and 225-point exploratory parameter
+  grid support the candidate; uniform proof remains open.
+- [x] Complete a bounded theorem-level comparison with Su–Zou–Wu, Seesaw, and
+  AdaBatch. The [focused audit](notes/normalization-risk-audit.md) maps
+  assumptions, output iterates, risk objectives, moment constants, and
+  budgets. It identifies strong overlap in the general mechanism.
+  Candidate-specific antecedent comparisons and the broader novelty
+  assessment remain open below.
 - [ ] Derive sufficient conditions or a controlled threshold bound for the
   normalization-risk reversal. Separate squared bias, multiplicative update
   variance, and observation-noise variance. Obtain independent proof review
@@ -147,18 +149,18 @@ specific rare-limit calculations remains unresolved.
   risk statements. Keep its novelty judgments distinct from established
   mathematical and literature results.
 
-- [ ] Audit [Su, Zou, and Wu](https://arxiv.org/html/2403.08585v1), especially
+- [x] Audit [Su, Zou, and Wu](https://arxiv.org/html/2403.08585v3), especially
   Assumption 3.2, equation (3.2), and Theorem 4.2. Check what aggregate-risk
   bounds for tail-averaged preconditioned SGD imply for our final-iterate,
   prevalence-dependent comparison and what they leave unresolved.
 
-- [ ] Audit [Meterez et al., Seesaw](https://arxiv.org/html/2510.14717v1),
+- [x] Audit [Meterez et al., Seesaw](https://arxiv.org/html/2510.14717v2),
   especially Theorem 1, before claiming that learning-rate and batch changes
   cannot compensate for normalization. Distinguish mean-vector, risk, and
   pathwise equivalence under their respective assumptions.
 
-- [ ] Audit [Défossez and Bach, AdaBatch](https://arxiv.org/abs/1711.01761) on
-  sparse gradient aggregation and coordinate rescaling. Account for the
+- [x] Audit [Défossez and Bach, AdaBatch](https://arxiv.org/html/1711.01761v1)
+  on sparse gradient aggregation and coordinate rescaling. Account for the
   difference between uncentered sparsity and our centered indicators.
 
 - [ ] Complete the candidate-specific comparison with Ali–Dobriban–Tibshirani on
