@@ -6,12 +6,53 @@ normalization, learning rate, batch size, and stopping time jointly determine
 the fitted model and its statistical properties. It builds on `../normreg` and
 retains SGD and implicit regularization as the follow-up's ML direction.
 
-The completed calculations and pilot below provide a foundation. The next
-milestone is to explain their joint interactions and resulting models. Johan
-will conduct the literature review separately; novelty and publication format
-remain undecided.
+The completed calculations and experiments below provide a foundation. Johan's
+[research report](deep-research-report.md) now informs the plan. The next
+milestone is **one proved normalization-risk comparison under a declared
+training budget**, with a quantitative mechanism and a focused novelty audit.
+The report's positive novelty assessment remains provisional.
 
-## Current priorities: joint interactions
+## Current priorities: establish a comparative result
+
+Follow this order, developing the candidate statement alongside its source
+comparison. The research plan gives the completion criteria.
+
+- [ ] Formulate the observed no-scaling versus standard-deviation-scaling
+  stopping reversal as an explicit conjecture in
+  `notes/normalization-risk-comparison.md`. State the risk inequalities,
+  feasible law, signal, noise, rate calibration, and budget. Begin with the
+  [existing fresh-sample endpoints](notes/joint-interactions-results.md),
+  then identify the parameter range a theorem should cover.
+- [ ] Complete the focused theorem-level audit below, prioritizing Su–Zou–Wu,
+  Seesaw, and AdaBatch. Map assumptions, final versus averaged iterates,
+  risk objectives, moment constants as prevalence vanishes, and budget
+  conventions. Refine the conjecture if a known theorem already implies it.
+- [ ] Derive sufficient conditions or a controlled threshold bound for the
+  normalization-risk reversal. Separate squared bias, multiplicative update
+  variance, and observation-noise variance. Obtain independent proof review
+  and numerical checks; a grid crossing alone does not complete this task.
+- [ ] Test whether the same two configurations can favor opposite orderings
+  under aggregate and rare-presence risk at a common budget and test law. If
+  supported, characterize the risk gap and conditions, including how
+  feasible dependence and signal signs change them. Treat this as the
+  stronger follow-up target, not an assumed result or a claim about globally
+  optimal tuning.
+- [ ] Specify a focused robustness experiment varying prevalence, dependence,
+  signal, noise, rates, and stopping resolution. Include global-rescaling
+  and common-learning controls, fixed-update and fixed-observation
+  comparisons, paired simulation uncertainty, and failures. Preserve both
+  existing studies.
+- [ ] Determine which conclusions survive learning-rate and stopping adjustments
+  over a declared range at comparable budgets. Retain fixed-configuration
+  results and report reversals that disappear. Add tail averaging if needed
+  for the closest literature comparison.
+- [ ] After the controlled result, test estimated preprocessing, intercepts,
+  absent rare observations, and validation-based selection. Then evaluate
+  one stated sparse linear-model task with equal tuning effort and both risk
+  objectives. Broader optimizer and neural-model comparisons follow a
+  specific hypothesis.
+
+## Completed first comparison and remaining review
 
 - [x] Specify the normalization family, learning-rate schedules, batch sizes,
   stopping counts, sampling assumptions, and outcomes in
@@ -21,27 +62,17 @@ remain undecided.
   samples, four normalization exponents, both budget conventions, and
   numerical acceptance checks. Decreasing schedules are an explicit
   extension.
-- [ ] Use the exact moments to derive a comparison across normalization and
-  optimization settings. Explain learning, noise, and risk changes in a
-  feasible two-feature model, with independent proof and numerical checks.
-  Draft global-rescaling, relative-learning, and batch-order arguments and
-  independent numerical checks are complete. Independent proof review
-  remains pending because Coterie was unavailable; these arguments are not
-  accepted as independently reviewed results.
-- [ ] Design a separate follow-up to the frozen pilot that retains the joint
-  configuration grid and training paths. Test predicted interactions and
-  reversals, wider learning-rate ranges, uncertainty, and budget
-  sensitivity. The [first fresh-sample
+- [ ] Obtain independent proof review of the draft global-rescaling,
+  relative-learning, and batch-order arguments. Local proofs and independent
+  numerical checks are complete. Independent proof review remains pending
+  because Coterie was unavailable. These controls support the comparative
+  theorem above; they do not by themselves establish the main contribution.
+- [x] Complete a separate follow-up to the frozen pilot that retains the joint
+  configuration grid and training paths. The [first fresh-sample
   study](notes/joint-interactions-results.md) retains 1,056 configurations,
   60 stopping counts, four figures, paired simulation uncertainty, and a
-  local batch-comparison sensitivity check. Broader signals, prevalences,
-  and resolution checks remain open.
-- [ ] Test practical preprocessing and validation-based choices, then a stated
-  real-data task. Compare defaults and joint tuning with equal search
-  effort, while preserving the fixed-configuration results that explain the
-  effects.
-
-The research plan gives the scope and completion criteria for these steps.
+  local batch-comparison sensitivity check. Broader robustness and a proved
+  normalization-risk comparison are separate open tasks above.
 
 ## Established starting calculations
 
@@ -97,49 +128,86 @@ The research plan gives the scope and completion criteria for these steps.
 - [ ] Identify conditions recovering the independent-feature trajectory and a
   useful approximation bound when dependence is weak relative to feature
   variance. Avoid relying on Pearson correlation alone.
-- [ ] Study early stopping chosen in advance before validation-based stopping.
-  Do not infer finite-budget performance from population-flow time alone.
+- [x] Retain trajectories at stopping counts specified in advance in the first
+  fresh-sample study. Broader fixed-stopping comparisons and
+  validation-based choices remain in the priorities above. Do not infer
+  finite-budget performance from population-flow time alone.
 
-## Literature and novelty: separate review
+## Literature and novelty: integrate the report
 
-Johan owns the next literature review. The earlier audit and checklist are
-retained as inputs. For each source, record the exact theorem or equation, its
-assumptions and conclusions, and whether it already implies a candidate result.
-Relevant core optimization references are in `paper/references.bib`; the
-comparisons remain open except for the bounded eight-source [theorem-level
-audit](notes/novelty-audit.md). It identifies established operator and stability
-frameworks; priority for the specific rare-limit calculations remains
-unresolved.
+The report supplies the broader assessment; the earlier audit supplies bounded
+theorem-level comparisons. For each additional source, record the version,
+theorem or equation, assumptions, conclusions, and whether it already implies
+the candidate result. Relevant core optimization references are in
+`paper/references.bib`. The eight-source [audit](notes/novelty-audit.md)
+identifies established operator and stability frameworks; priority for the
+specific rare-limit calculations remains unresolved.
+
+- [x] Incorporate the report into the research plan and prioritize comparative
+  risk statements. Keep its novelty judgments distinct from established
+  mathematical and literature results.
+
+- [ ] Audit [Su, Zou, and Wu](https://arxiv.org/html/2403.08585v1), especially
+  Assumption 3.2, equation (3.2), and Theorem 4.2. Check what aggregate-risk
+  bounds for tail-averaged preconditioned SGD imply for our final-iterate,
+  prevalence-dependent comparison and what they leave unresolved.
+
+- [ ] Audit [Meterez et al., Seesaw](https://arxiv.org/html/2510.14717v1),
+  especially Theorem 1, before claiming that learning-rate and batch changes
+  cannot compensate for normalization. Distinguish mean-vector, risk, and
+  pathwise equivalence under their respective assumptions.
+
+- [ ] Audit [Défossez and Bach, AdaBatch](https://arxiv.org/abs/1711.01761) on
+  sparse gradient aggregation and coordinate rescaling. Account for the
+  difference between uncentered sparsity and our centered indicators.
+
+- [ ] Complete the candidate-specific comparison with Ali–Dobriban–Tibshirani on
+  stochastic gradient flow and Zou et al. on SGD versus ridge. Use the
+  existing Jain et al. audit for mini-batch and averaging baselines. Add
+  verified references to `paper/references.bib` when incorporating these
+  comparisons into the manuscript.
+
+- [ ] Resolve the report's exported citation markers into usable sources for
+  claims retained in the manuscript, including its recent-paper claims.
+  Verify versions and conclusions before treating them as evidence.
 
 - [x] Compare the trajectory and risk claims with [Ali, Kolter, and
   Tibshirani](https://proceedings.mlr.press/v89/ali19a.html) on early
   stopping and ridge regression. Do not claim exact general equivalence
   between the early-stopping and ridge paths.
+
 - [x] Compare with [Duchi, Hazan, and
   Singer](https://jmlr.org/papers/v12/duchi11a.html) on adaptive methods for
   rare predictive features, including the distinction between regret
   guarantees and the proposed statistical conclusions.
+
 - [x] Compare with [Amari et al.](https://arxiv.org/abs/2006.10732) on
   preconditioning and generalization, and [Gunasekar et
   al.](https://proceedings.mlr.press/v80/gunasekar18a.html) on optimization
   geometry. A fixed preconditioner does not describe all of AdaGrad's or
   Adam's dynamics.
+
 - [ ] Compare input-feature rarity with the output-class imbalance studied by
   [Kunstner et al.](https://arxiv.org/abs/2402.19449) and [Yadav et
   al.](https://arxiv.org/abs/2512.00763). Identify an additional conclusion
   beyond slow learning of infrequent classes.
+
 - [ ] Check batch-size and tuning implications against [Srećković, Geiping, and
   Orvieto](https://arxiv.org/abs/2506.12543). Include momentum, clipping,
   and learning-rate tuning in optimizer comparisons.
+
 - [ ] Trace related stochastic least-squares moment and stability results and
   [gradient starvation](https://arxiv.org/abs/2011.09468). Determine which
   conclusions concern fixed-feature fitting and which require feature
   learning. The moment and stability comparison is in the audit; gradient
   starvation and dedicated reshuffling literature remain open.
-- [ ] Write the novelty assessment around whichever dependence, sampling, or
-  rare-subgroup risk result survives these comparisons. The coordinate
-  change, bivariate matrix exponential, and scalar stability calculation are
-  supporting material unless the literature comparison warrants more.
+
+- [ ] Write the novelty assessment around the comparative risk result that
+  survives these checks. Treat coordinate changes, matrix exponentials,
+  scalar stability, and generic fourth-moment dependence as supporting
+  tools. The existing matched-covariance example already illustrates the
+  limits of $Bq$; an extension should add a quantitative statistical
+  consequence.
 
 ## Existing pilot and experimental extensions
 
@@ -158,8 +226,10 @@ robustness; the reversals establish no general scaling recommendation.
 - [x] Vary prevalence, batch size, dependence, and stopping time in the bounded
   fixed-data grid. Compare at matched numbers of processed observations, and
   report update count.
-- [ ] Add a separately specified fresh-sample experiment and compare its
-  conclusions with repeated passes over a fixed training sample.
+- [x] Add a separately specified [fresh-sample
+  experiment](notes/joint-interactions-results.md) with retained paths.
+- [ ] Compare the fresh-sample findings with repeated passes over a fixed
+  training sample under matched budgets and explicit data-access accounting.
 - [x] Hold noise variance fixed and use fixed cell counts to isolate
   empirical-design effects, pairing the same noisy data across comparisons.
 - [ ] Study SNR-matched comparisons and sampled designs with growing rare
@@ -194,15 +264,17 @@ robustness; the reversals establish no general scaling recommendation.
   fixed-penalty comparisons. Avoid general recommendations from a small
   grid.
 - [ ] Select a sparse text or categorical dataset with an interpretable
-  rare-feature definition. Start with linear models, then test the proposed
-  mechanism in a small neural model with comparable tuning effort.
+  rare-feature definition after the controlled comparison. Start with linear
+  models; add a small neural model only for a stated mechanism with
+  comparable tuning effort.
 - [x] Complete a bounded foundation milestone: an independently reviewed
   joint-budget theorem, an eight-source overlap audit, and a reproducible
   controlled experiment with substantial risk differences and reversals.
   Broader novelty comparisons and empirical usefulness remain open.
-- [ ] Assess novelty and publication scope using the separate literature review
-  and the results of the joint-interaction study. Earlier overlap findings
-  concern selected mathematical tools and do not determine the final format.
+- [ ] Assess novelty and publication scope using the report, focused theorem
+  audit, accepted comparison, and robustness results. If no substantive
+  result survives, reconsider the claim and scope before broad empirical
+  expansion.
 - [ ] Align the manuscript's title, abstract, and contribution claims with the
   resulting account of normalization, optimization choices, and fitted
   models.

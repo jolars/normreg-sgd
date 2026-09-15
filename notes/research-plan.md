@@ -2,7 +2,8 @@
 
 Working direction: **Normalization and Implicit Regularization in Stochastic
 Learning**. Revised September 15, 2026. The task checklist is in
-[TODO.md](../TODO.md).
+[TODO.md](../TODO.md). The immediate focus is **feature scaling, finite-time
+SGD, and rare-subgroup prediction**.
 
 ## Central question
 
@@ -22,6 +23,51 @@ coordinates, how batch composition affects stochastic updates, and how stopping
 changes the balance between incomplete learning and noise. Dependence between
 features is central because it can couple their learning and change the effects
 of each training choice.
+
+The next milestone asks a narrower question: **Under a declared training budget,
+when does relative feature scaling change the ordering of prediction risks, and
+how do rarity, stopping, stochastic variance, and dependence explain that
+ordering?** Establish one interpretable comparison before expanding the joint
+configuration grid. A complete characterization of every training regime remains
+a longer-term research objective.
+
+## Implications of the literature report
+
+The [September 15 research report](../deep-research-report.md) supports this
+focus. It identifies substantial prior work on the individual mechanisms and a
+possible gap in their consequences for common and rare features. Its novelty
+ratings are provisional judgments. The exported citation markers do not provide
+usable source links, and absence from its search does not establish priority.
+Use the report to prioritize theorem-level comparisons alongside the existing
+[bounded audit](novelty-audit.md).
+
+Three source checks sharpen the immediate comparison:
+
+- [Su, Zou, and Wu](https://arxiv.org/html/2403.08585v1) analyze preconditioned
+  least-squares SGD and compare its aggregate excess risk with ridge. Their
+  equation (3.2) uses tail averaging, and Theorem 4.2 gives a risk bound under
+  fourth-moment assumptions. Compare these statements with our final-iterate,
+  original-scale, rare-subgroup objective, including how moment constants depend
+  on prevalence. A conventional normalization is a special preconditioner;
+  different terminology alone creates no research gap.
+- [Meterez et al., Seesaw](https://arxiv.org/html/2510.14717v1) study
+  learning-rate and batch-size scheduling equivalence. Compare the schedules,
+  assumptions, risk criterion, and resource accounting in their Theorem 1 with
+  any proposed failure of scalar compensation here.
+- [Défossez and Bach, AdaBatch](https://arxiv.org/abs/1711.01761) connect sparse
+  mini-batch aggregation to coordinate rescaling. Compare that mechanism with
+  fixed prevalence-based preprocessing. Our centered binary coordinates are
+  nonzero even when the indicator is absent, so occurrence counts alone do not
+  describe which coordinates receive updates.
+
+These checks establish relevant overlap; they are not a completed novelty audit.
+The central contribution candidate is a quantitative risk comparison with a
+statistical interpretation. Global rescaling, independent-coordinate flow rates,
+moment recursions, and generic fourth-moment dependence remain supporting tools.
+The existing covariance-matched construction already illustrates why $Bq$ and
+covariance do not determine SGD behavior. A further result in that direction
+should identify a consequential risk difference or a useful approximation with
+explicit limits.
 
 ## Connection to the original paper and the ML objective
 
@@ -235,57 +281,95 @@ results](joint-interactions-results.md) now implement an initial constant-step,
 fresh-sample study: 1,056 configurations, retained training paths, risk
 decompositions, four figures, and paired simulation checks. Draft analytical
 deductions have local proofs and independent computational checks; independent
-proof review is pending because Coterie was unavailable. The steps below retain
-the broader completion criteria, including extensions beyond this first
-controlled grid.
+proof review is pending because Coterie was unavailable. The first specification
+and grid are complete. The next steps use their findings to select and establish
+one substantive comparison.
 
-### 1. Specify the joint comparisons
+### 1. Formulate a candidate result and check its closest prior work
 
-Write `notes/joint-interactions.md` defining the initial normalization family,
-step schedules, batches, stopping counts, sampling laws, and risk objectives.
-Use the existing two-feature setup and include both fixed-update and
-fixed-observation comparisons. Derive and independently check the global-scale
-and learning-rate equivalence as a control, then separate it from changes in
-relative feature scales.
+Write a focused comparison note, `notes/normalization-risk-comparison.md`,
+starting from the observed no-scaling versus standard-deviation-scaling
+rare-risk reversal. In the independent model at the stated common-learning
+calibration, the ordering changes between 1,000 and 10,000 updates for $B=1$.
+The $B=10$ endpoints have a different ordering pattern. These observations
+identify a candidate mechanism involving bias and observation-noise variance;
+they do not establish a threshold or a comparison of tuned procedures.
 
-**Completion criterion:** every proposed comparison identifies its assumptions,
-fixed quantities, varied quantities, and measured outcomes. Its connection to
-the original paper and the five scientific questions is explicit.
+State the exact risk inequalities to prove, the two normalization rules, rate
+calibration, stopping counts, budget, feasible feature law, signal, and noise.
+Start with constant-step, fresh-sample SGD under the existing
+known-preprocessing assumptions. Compare both methods at the same budget within
+each inequality. If batch size changes, report fixed-update and
+fixed-observation comparisons separately.
 
-### 2. Explain joint behavior in a controlled model
+Alongside this formulation, extend the bounded audit with the three closest
+sources above and their relevant antecedents. Map each candidate claim to exact
+theorems, assumptions, output iterates, risk weights, and prevalence-dependent
+constants. Record whether it follows directly, requires a further calculation,
+or remains unresolved. Verify the report's additional recent references before
+using them to support a claim.
 
-Apply the existing finite-update moments to constant-step SGD with two feasible
-binary features. Begin with an independent design, then add dependence. Analyze
-several normalization exponents, batch-rarity regimes, and stopping counts.
-Locate conditions for changes in coefficient learning and risk comparisons;
-distinguish derived boundaries from numerical patterns. Extend to decreasing
-steps or a common block only when the added complexity answers a specific
-interaction question.
+**Completion criterion:** one explicit conjecture and a source-backed account of
+what must be established beyond existing results. If a direct specialization
+already gives the proposed result, credit it and refine the research target.
 
-**Completion criterion:** at least one precise comparison across normalization
-and optimization settings, with a full proof and independent numerical check, or
-a checked equivalence or counterexample that rules out a proposed mechanism. A
-result about one fixed configuration must state what it contributes to the
-comparison.
+### 2. Prove an interpretable normalization-risk comparison
 
-### 3. Map and test the predicted interactions
+Use the exact finite-update moments to derive sufficient conditions for the
+candidate ordering and its reversal. Separate squared bias, multiplicative
+update variance, and propagated observation-noise variance. Give a quantitative
+parameter range or a threshold bound with controlled approximation error. An
+isolated grid crossing, or continuity around one crossing without useful bounds,
+does not yet explain when the mechanism matters.
 
-Build on the pilot with a separately declared experiment. Retain results over
-the joint configuration grid before selecting any optimum. Include near-zero
-steps and enough stopping points to resolve incomplete learning and noise
-effects. Plot coefficient trajectories and risk over learning rate and stopping
-count, faceted by normalization and batch size. Annotate theoretical stability
-boundaries and compare fixed updates with fixed processed observations.
+The strongest follow-up target is disagreement between aggregate and
+rare-presence risk for the same two training configurations:
 
-Use paired data and noise, report Monte Carlo uncertainty, and preserve failed
-runs. Separate fixed cell counts from sampled designs and fresh observations
-from fixed-data reuse. Check conditional moments against direct update paths on
-small cases before expanding the grid.
+$$
+  R^{(a)} < R^{(b)},\qquad R_R^{(a)} > R_R^{(b)}.
+$$
 
-**Completion criterion:** reproducible evidence for or against the proposed
-interactions, including unfavorable and null outcomes, uncertainty, and
-sensitivity to the grid. Changes in rankings alone require a mechanism or a
-clearly stated unresolved explanation.
+Hold the test law and training budget fixed in this comparison. First test
+whether the existing paths support it, then determine how feasible dependence
+and signal signs change the sufficient conditions. Report a risk gap or its
+prevalence order. A comparison of two configurations does not establish
+different global optima over all normalization and training choices.
+
+Pursue one principal theorem first. Dependence, the three $Bq$ limits, and a
+uniform comparison across normalization exponents are extensions when they
+resolve a specific limitation of that theorem. Reuse the existing three-feature
+construction for matched-covariance questions: two binary marginals and their
+covariance already determine their joint law.
+
+**Completion criterion:** a full proof, independent proof review, and
+independent numerical checks of a comparative statistical statement. A checked
+equivalence or counterexample that rules out the candidate mechanism is also a
+useful outcome. The existing algebraic controls alone do not complete this
+milestone.
+
+### 3. Test the comparison's robustness and limits
+
+Declare a focused extension to the retained grid around the proposed result.
+Vary prevalence, feasible dependence, signal signs and magnitudes, noise, rate
+resolution, and stopping resolution. Include near-zero steps, stable regimes,
+theoretical boundaries, and unfavorable or null outcomes. Preserve the frozen
+pilot and first fresh-sample study as separate records.
+
+Use global rescaling as a pathwise control and matching common-feature mean
+learning as a mechanistic calibration. Then check sensitivity to a declared
+range of learning-rate and stopping adjustments at comparable budgets. A fixed
+configuration reversal need not survive retuning; determine whether it does and
+limit the conclusion accordingly. Tail averaging is a focused comparator if
+needed to understand overlap with the preconditioned-SGD literature.
+
+Retain coefficient paths, both risks, and variance decompositions. Use paired
+data and noise for direct simulations and report Monte Carlo uncertainty;
+deterministic moment values do not have Monte Carlo error. Check small direct
+update paths before expanding a calculation, and retain failed runs.
+
+**Completion criterion:** reproducible evidence showing where the proposed
+comparison holds, where it fails, and whether budget calibration or retuning
+explains its limits. Broader grids should answer these questions.
 
 ### 4. Test practical consequences
 
@@ -306,6 +390,20 @@ complete dynamics.
 **Completion criterion:** determine whether the controlled mechanism remains
 observable with practical preprocessing and training choices, and delimit any
 recommendation by the task, objective, data, and budget.
+
+### 5. Decide the manuscript's contribution and scope
+
+Use the theorem-level comparison and robustness results to choose the main
+claim. A promising account is how prevalence-based feature scaling allocates
+finite-time bias and stochastic variance, with consequences for rare-subgroup
+prediction. Use the controls and existing moment machinery to explain that
+result. The single-regime $4\sigma^2/(3nq_n)$ limit remains a foundation unless
+a new comparison gives it a distinct role.
+
+**Completion criterion:** align the title, abstract, contribution statements,
+and literature discussion with the accepted result and its limits. If no
+substantive comparison survives the audit and checks, reassess the claim and
+publication scope before undertaking a broad empirical expansion.
 
 ## Validation, boundaries, and literature review
 
@@ -328,8 +426,9 @@ common dimension, prevalence shift, interpolation, and neural feature learning
 are later extensions. The separate boundary correction in the original `normreg`
 project remains separate work.
 
-Johan will conduct the literature review separately. The existing
-[audit](novelty-audit.md) remains a record of the earlier comparison of selected
-mathematical tools. This plan specifies the scientific program without deciding
-novelty or publication format. Incorporate the separate review before finalizing
-contribution claims and manuscript positioning.
+Johan's [research report](../deep-research-report.md) now supplies the broader
+literature assessment. The existing [audit](novelty-audit.md) remains a record
+of the earlier theorem-level comparison. Complete the focused source checks
+above as candidate claims take shape. Mathematical correctness, originality, and
+empirical usefulness require separate evidence; the report alone settles none of
+them.
