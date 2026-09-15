@@ -28,10 +28,18 @@ imbalance. The candidate contribution is a joint account of dependence,
 feature scaling, batch size, and prediction for rare subgroups. The exact
 relationship to existing results remains to be established.
 
-The calculations below extend the elementary two-feature flow and scalar
-stability results to a fixed common block, finite-update error moments, and
-batch-rarity stability under explicit population assumptions. Their relation
-to the closest prior theorems remains a research objective. The explicit-penalty
+The calculations below specialize established flow and stochastic
+least-squares tools to feasible rare-binary populations. Second-moment
+operators and their fourth-moment dependence are developed by
+\citet{defossez2015averaged,jain2018parallelizing}; an exact general
+mean-square stability criterion is given by \citet{mulayoff2024exact}.
+Our common-block limits and batch-rarity regimes evaluate these tools under
+explicit population assumptions. Decreasing-step error bounds also have a
+classical stochastic-approximation framework
+\citep{moulines2011nonasymptotic}; a joint rarity limit requires control of
+its distribution-dependent constants. A theorem-level audit records these
+overlaps, while priority for the specific rare-limit calculations remains
+unresolved. The explicit-penalty
 analysis in the appendices supplies complementary baselines, extending the
 normalization questions of \citet{larsson2025normalization}. Finite-sample
 weighted-lasso distributions and polyhedral selection geometry already have

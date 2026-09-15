@@ -69,17 +69,20 @@ standalone novelty claim.
 For each source, record the exact theorem or equation, its assumptions and
 conclusions, and whether it already implies a candidate result. Relevant core
 optimization references are in `paper/references.bib`; the comparisons remain
-open.
+open except for the bounded eight-source [theorem-level
+audit](notes/novelty-audit.md). It identifies established operator and stability
+frameworks; priority for the specific rare-limit calculations remains
+unresolved.
 
-- [ ] Compare the trajectory and risk claims with [Ali, Kolter, and
+- [x] Compare the trajectory and risk claims with [Ali, Kolter, and
   Tibshirani](https://proceedings.mlr.press/v89/ali19a.html) on early
   stopping and ridge regression. Do not claim exact general equivalence
   between the early-stopping and ridge paths.
-- [ ] Compare with [Duchi, Hazan, and
+- [x] Compare with [Duchi, Hazan, and
   Singer](https://jmlr.org/papers/v12/duchi11a.html) on adaptive methods for
   rare predictive features, including the distinction between regret
   guarantees and the proposed statistical conclusions.
-- [ ] Compare with [Amari et al.](https://arxiv.org/abs/2006.10732) on
+- [x] Compare with [Amari et al.](https://arxiv.org/abs/2006.10732) on
   preconditioning and generalization, and [Gunasekar et
   al.](https://proceedings.mlr.press/v80/gunasekar18a.html) on optimization
   geometry. A fixed preconditioner does not describe all of AdaGrad's or
@@ -94,7 +97,8 @@ open.
 - [ ] Trace related stochastic least-squares moment and stability results and
   [gradient starvation](https://arxiv.org/abs/2011.09468). Determine which
   conclusions concern fixed-feature fitting and which require feature
-  learning.
+  learning. The moment and stability comparison is in the audit; gradient
+  starvation and dedicated reshuffling literature remain open.
 - [ ] Write the novelty assessment around whichever dependence, sampling, or
   rare-subgroup risk result survives these comparisons. The coordinate
   change, bivariate matrix exponential, and scalar stability calculation are

@@ -84,6 +84,15 @@ does not determine stochastic stability.
 
 \subsection{An exact multivariate criterion}
 
+The generalized-eigenvalue criterion below is the stochastic least-squares
+form of the general criterion of
+\citet[Theorems~5 and~14]{mulayoff2024exact}. Their independent batches
+contain distinct examples from a fixed dataset and use the correction
+$(n-B)/\{B(n-1)\}$; independent draws here use $1/B$.
+Our strict interval concerns decay for every initialization, whereas
+boundedness at the endpoint is a different conclusion. The subsequent
+rare-prevalence limits evaluate this established criterion.
+
 In one dimension, rescaling a feature can be absorbed into the learning rate.
 Several feature frequencies instead impose constraints on relative updates.
 Let $z=S^{-1}x$, $H=\E zz^\top\succ0$, and

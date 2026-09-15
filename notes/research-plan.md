@@ -143,6 +143,13 @@ checks](../experiments/check_discrete_dynamics.py), and [multivariate stability
 checks](../experiments/check_multivariate_stability.py), together with
 [sampling-scheme checks](../experiments/check_sampling_schemes.py).
 
+The bounded eight-source [literature audit](novelty-audit.md) maps the flow,
+moment, and stability claims to their closest inspected theorems. It identifies
+substantial established overlap, distinguishes averaging and sampling
+conventions, and leaves priority for the specific rare-limit calculations
+unresolved. Dedicated reshuffling, feature-learning, and recent optimizer-tuning
+comparisons remain open.
+
 ## First milestone and empirical objective
 
 The first milestone combines a checked finite-time result for a rare feature
