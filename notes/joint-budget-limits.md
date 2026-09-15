@@ -2,13 +2,13 @@
 
 ## Result and scope
 
-This note proves a candidate joint-limit result for the last iterate of
-fresh-sample SGD. With known population centering and standard-deviation scales,
-one common binary feature, and rare prevalence $q_n = n^{-1/2}$, a specified
-decreasing learning rate attains original-scale rare-coefficient mean squared
-error asymptotic to $4\sigma^2/(3nq_n)$. Optimization bias and multiplicative
-update variance are smaller. The factor $4/3$ describes this particular
-last-iterate schedule. It is not an efficiency or optimality claim.
+This note proves a joint-limit result for the last iterate of fresh-sample SGD.
+With known population centering and standard-deviation scales, one common binary
+feature, and rare prevalence $q_n = n^{-1/2}$, a specified decreasing learning
+rate attains original-scale rare-coefficient mean squared error asymptotic to
+$4\sigma^2/(3nq_n)$. Optimization bias and multiplicative update variance are
+smaller. The factor $4/3$ describes this particular last-iterate schedule. It is
+not an efficiency or optimality claim.
 
 The finite-budget inequalities and proof appear below. The argument does not
 substitute a growing update count into the manuscript's fixed-update limit. It
@@ -89,7 +89,7 @@ Every update consumes a different observation. All steps and the stopping count
 are deterministic. Thus $n$ is both the population index and the actual
 available observation budget, and all $n$ observations are used.
 
-## Candidate theorem
+## Joint-budget theorem
 
 Suppress $n$ temporarily, and let $u_j = S_n(\beta_{n,j} - \beta^*)$ and
 $m_j = E u_j$. Define the standardized design and noise covariance contributions
@@ -410,6 +410,8 @@ $nq_n = n^{1/2}$, proving the last two limits in (7). This completes the proof.
   negligible. Failure of the bound for faster decay is not a counterexample to
   the rate.
 - **Fixed stopping count versus growing budget.** Even for schedule (3), at any
+  fixed prevalence, extend the same step schedule to every $j \ge 0$ using an
+  infinite fresh-observation stream for this iterated-limit comparison. At any
   fixed $k$, taking $q \downarrow 0$ first makes each of the first $k$ steps
   $O(q)$ and leaves $E\beta_{R,k} \to 0$. To see this on the original scale, put
   $P = S_n^{-2}$ and $C = E xx^\top$. Then $P C$ has diagonal entries one and
@@ -464,9 +466,12 @@ printed power schedule and this shifted schedule does not itself establish
 novelty. The broader literature audit and exact implication check remain for the
 lead's integration.
 
-The displayed theorem has no unproved mathematical step intended as an
-assumption. Its numerical validation and independent referee review should still
-precede manuscript integration. The following are separate open tasks:
+The [independent referee report](joint-budget-review.md) found no material
+mathematical defect in the submitted proof. Its nonblocking infinite-stream
+clarification is included above. The reproducible [joint-budget
+checks](../experiments/check_joint_budget.py) independently enumerate short
+original-scale trajectories and evaluate increasing budgets. This validity
+evidence does not establish novelty. The following are separate open tasks:
 
 1. Compare the exact assumptions and rates with nonasymptotic least-squares
    stochastic approximation and decreasing-step last-iterate results, including

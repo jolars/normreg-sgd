@@ -67,18 +67,19 @@ stochastic update moments under known population centering and fixed scales.
 
 ## Current foundation
 
-  | Result                                            | Status and scope                                                                                                                                                                                     |
-  | ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | Feature scaling as preconditioning                | Standard exact change of coordinates for fixed scales.                                                                                                                                               |
-  | Transient dependence under early stopping         | Proved for a fixed common block and one rare binary feature, uniformly on bounded population-flow time intervals, with convergent original-scale initialization.                                     |
-  | Scalar SGD stability                              | Exact second-moment recurrence for a noiseless standardized Bernoulli predictor and fresh independent batches.                                                                                       |
-  | Finite-update GD and fresh-sample SGD moments     | Exact mean, second-moment, and centered covariance formulas, with initial uncertainty, multiplicative update variance, and observation noise separated.                                              |
-  | Multivariate batch-rarity stability               | Exact operator criterion and three-regime threshold limits for a uniformly bounded fixed common block with positive definite limiting covariance.                                                    |
-  | Matched covariance and sampling schemes           | Feasible binary distributions with different fourth update moments, exact conditional replacement and reshuffling epoch identities, and first-pass equivalence under fixed population preprocessing. |
-  | Independent numerical checks                      | Support-based ODE integration, block limits, exact batch and short-trajectory enumeration, mixed moments, and stability eigenvalues.                                                                 |
-  | Explicit-regularization baselines                 | Existing bivariate lasso and elastic-net formulas, ridge moments, and binary counterexamples are retained in the appendices.                                                                         |
-  | Joint sampling limits and comparative experiments | Open research objectives, including estimated centering/scales and fixed-data sampling.                                                                                                              |
-  | Standalone novelty                                | Unresolved; the elementary calculations are supporting results.                                                                                                                                      |
+  | Result                                              | Status and scope                                                                                                                                                                                     |
+  | --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | Feature scaling as preconditioning                  | Standard exact change of coordinates for fixed scales.                                                                                                                                               |
+  | Transient dependence under early stopping           | Proved for a fixed common block and one rare binary feature, uniformly on bounded population-flow time intervals, with convergent original-scale initialization.                                     |
+  | Scalar SGD stability                                | Exact second-moment recurrence for a noiseless standardized Bernoulli predictor and fresh independent batches.                                                                                       |
+  | Finite-update GD and fresh-sample SGD moments       | Exact mean, second-moment, and centered covariance formulas, with initial uncertainty, multiplicative update variance, and observation noise separated.                                              |
+  | Multivariate batch-rarity stability                 | Exact operator criterion and three-regime threshold limits for a uniformly bounded fixed common block with positive definite limiting covariance.                                                    |
+  | Matched covariance and sampling schemes             | Feasible binary distributions with different fourth update moments, exact conditional replacement and reshuffling epoch identities, and first-pass equivalence under fixed population preprocessing. |
+  | Independent numerical checks                        | Support-based ODE integration, block limits, exact batch and short-trajectory enumeration, mixed moments, and stability eigenvalues.                                                                 |
+  | Explicit-regularization baselines                   | Existing bivariate lasso and elastic-net formulas, ridge moments, and binary counterexamples are retained in the appendices.                                                                         |
+  | Joint observation-budget limit                      | Independently reviewed two-binary-feature last-iterate result at $q_n = n^{-1/2}$ with known preprocessing and a specified decreasing-step schedule.                                                 |
+  | Broader sampling limits and comparative experiments | Open research objectives beyond the stated joint-budget regime, including estimated preprocessing and fixed-data sampling.                                                                           |
+  | Standalone novelty                                  | Unresolved; the elementary calculations are supporting results.                                                                                                                                      |
 
 For standard-deviation scaling in the two-feature population model,
 $c/b \to \kappa$ gives, at fixed $T$,
@@ -115,6 +116,17 @@ each fixed update count. Exact covariance formulas require finite fourth feature
 moments and finite gradient-noise moments in each population; these conditions
 alone give no uniform rare-limit covariance bound.
 
+The [joint-budget theorem](joint-budget-limits.md), independently checked in the
+[referee report](joint-budget-review.md), now gives a specified growing-budget
+regime. For two binary features, known population preprocessing, fixed
+homoscedastic noise variance, $q_n = n^{-1/2}$, $B_n = 1$, and $n$ fresh
+updates, the steps $2/(\lceil16/q_n\rceil + j)$ give rare-coefficient mean
+squared error asymptotic to $4\sigma^2/(3nq_n)$. Optimization bias and
+multiplicative update variance are smaller. This is a last-iterate existence
+result with a schedule-specific constant; it supplies no normalization ranking,
+efficiency claim, or novelty conclusion. Estimated preprocessing and fixed-data
+reuse remain separate questions.
+
 For a uniformly bounded common block under population standard-deviation
 scaling, the all-initializations mean-square stability threshold is
 $\Theta(\min\{1,Bq\})$. It is asymptotic to $2Bq$ for small $Bq$. The
@@ -141,7 +153,10 @@ deterministic checks with `make check-optimization` inside `devenv shell`: the
 checks](../experiments/check_block_flow.py), [finite-update moment
 checks](../experiments/check_discrete_dynamics.py), and [multivariate stability
 checks](../experiments/check_multivariate_stability.py), together with
-[sampling-scheme checks](../experiments/check_sampling_schemes.py).
+[sampling-scheme checks](../experiments/check_sampling_schemes.py). The
+[joint-budget checks](../experiments/check_joint_budget.py) add independent
+short-path enumeration and increasing-budget moment calculations; pass `--large`
+to include budgets through $2^{20}$.
 
 The bounded eight-source [literature audit](novelty-audit.md) maps the flow,
 moment, and stability claims to their closest inspected theorems. It identifies
@@ -156,9 +171,10 @@ The first milestone combines a checked finite-time result for a rare feature
 with common predictors, a comparison with the closest prior theorems, and one
 controlled experiment showing a consequential difference. The population-flow
 and fresh-SGD results now supply the initial theory under their stated
-assumptions. Joint sampling limits, finite-data resampling, empirical
-normalization, validation-based stopping, and adaptive optimizers need explicit
-additional assumptions.
+assumptions. The joint-budget theorem adds one growing-stopping-count regime.
+Broader joint sampling limits, finite-data resampling, empirical normalization,
+validation-based stopping, and adaptive optimizers need explicit additional
+assumptions.
 
 The primary outcomes are original-scale coefficient error, aggregate excess
 prediction risk, and excess prediction risk conditional on rare-feature

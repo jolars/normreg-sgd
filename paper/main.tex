@@ -24,7 +24,7 @@
 
 \title{Learning Rare Features: Normalization, Stochastic Optimization, and Early Stopping}
 \author{Johan Larsson}
-\date{Working manuscript --- September 14, 2026}
+\date{Working manuscript --- September 15, 2026}
 
 \begin{document}
 \maketitle
@@ -40,7 +40,10 @@ separate initial uncertainty, multiplicative update variance, and observation
 noise. Under a bounded common-block assumption, an exact second-moment operator
 criterion yields stability thresholds across small, intermediate, and large
 products of batch size and rare prevalence. The results use known population
-centering and fixed scales. General finite-sample guarantees,
+centering and fixed scales. For two binary features and prevalence
+$q_n=n^{-1/2}$, a specified decreasing-step schedule using $n$ fresh
+observations attains rare-coefficient mean squared error asymptotic to
+$4\sigma^2/(3nq_n)$. Broader finite-sample guarantees,
 comparisons with adaptive optimizers, and empirical usefulness remain research
 objectives. Earlier weighted-lasso and ridge results are retained as
 explicit-regularization baselines; no standalone novelty claim is made for
@@ -52,6 +55,7 @@ these calculations.
 \input{sections/gradient-flow}
 \input{sections/discrete-dynamics}
 \input{sections/stochastic-gradient}
+\input{sections/joint-budget}
 \input{sections/sampling-schemes}
 \input{sections/research-program}
 

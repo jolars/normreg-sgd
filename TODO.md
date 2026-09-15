@@ -44,11 +44,15 @@ standalone novelty claim.
   feasible three-binary-feature family has identical means and covariance
   but different two-update rare-coefficient error and stability thresholds;
   see [sampling schemes](paper/sections/sampling-schemes.tex).
-- [ ] Specify joint limits for sample size, prevalence, learning rate, batch
+- [x] Specify joint limits for sample size, prevalence, learning rate, batch
   size, and stopping time. Start with $nq_n \to \infty$ and fixed error
   variance; compare error terms with the $(nq_n)^{-1/2}$ uncertainty scale
   under stated regularity assumptions. Check whether the order of limits
-  matters.
+  matters. The [joint-budget theorem](notes/joint-budget-limits.md) and
+  [independent review](notes/joint-budget-review.md) establish one explicit
+  fresh-sample regime: $B_n = 1$, $k_n = n$, $q_n = n^{-1/2}$, and shifted
+  inverse-time steps under known population preprocessing. Broader sampling,
+  batch, and estimated-preprocessing limits remain open.
 - [x] Distinguish online fresh samples, fixed-data sampling with replacement,
   and random reshuffling. Establish which conclusions extend to each scheme.
   Exact conditional replacement and reshuffling epoch identities, first-pass
