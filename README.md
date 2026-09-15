@@ -1,9 +1,9 @@
-# Learning Rare Features
+# Normalization and Implicit Regularization
 
-Working title: *Learning Rare Features: Normalization, Stochastic Optimization,
-and Early Stopping*. The project studies how feature scaling, dependence, and
-batch size affect learning under a finite training budget, with an emphasis on
-prediction within rare subgroups and under specified prevalence shifts.
+Working direction: *Normalization and Implicit Regularization in Stochastic
+Learning*. The project studies how normalization, learning rate, batch size, and
+stopping jointly determine the fitted model and its statistical properties.
+Common and rare features provide the initial controlled setting.
 
 The manuscript begins with two elementary calculations: a transient dependence
 effect in population gradient flow and a scalar SGD stability bound for rare
@@ -30,6 +30,10 @@ Larsson and Jonas Wallin.
   comparisons, experiments, and manuscript development.
 - [Research plan](notes/research-plan.md): the proposed contribution, current
   evidence, mathematical setup, and first milestone.
+- [Joint-interaction specification](notes/joint-interactions.md) and [first
+  results](notes/joint-interactions-results.md): exact fresh-sample training
+  paths, risk decompositions, figures, and paired simulations. Independent
+  review of the new analytical deductions remains pending.
 - [Joint-budget theorem](notes/joint-budget-limits.md) and [independent
   review](notes/joint-budget-review.md): the scoped fresh-sample limit.
 - [Literature audit](notes/novelty-audit.md): theorem-level overlap and
@@ -43,9 +47,9 @@ Larsson and Jonas Wallin.
 
 ## Work locally
 
-The development environment supplies Python, NumPy, SciPy, Ruff, LaTeX, and the
-repository checks. Nix inputs are pinned in `devenv.lock`, and Python
-dependencies are pinned in `uv.lock`.
+The development environment supplies Python, NumPy, SciPy, Matplotlib, Ruff,
+LaTeX, and the repository checks. Nix inputs are pinned in `devenv.lock`, and
+Python dependencies are pinned in `uv.lock`.
 
 ```sh
 devenv shell
@@ -75,6 +79,20 @@ sampling-scheme checks in `experiments/check_sampling_schemes.py`.
 `experiments/check_rare_subgroup_pilot.py` checks the pilot's conditional
 moments and prediction risks. These use independent ODE solutions and exact
 support, batch, and short-trajectory enumeration without rewriting results.
+`experiments/check_joint_interactions.py` checks the new fresh-sample study and
+the provenance of its saved artifacts.
+
+To reproduce the joint-interaction grid, paired simulation, and SVG/PDF figures:
+
+```sh
+make reproduce-joint-interactions
+```
+
+This writes `results/joint-interactions.json`, `results/joint-interactions.npz`,
+and figures under `results/figures/`. Run `make check-joint-interactions` for
+its focused numerical and provenance checks. The
+[specification](notes/joint-interactions.md) records the complete comparison and
+distinguishes it from the fixed-data pilot.
 
 To reproduce the controlled pilot inside `devenv shell`:
 

@@ -230,6 +230,15 @@ frozen pilot and its provenance when designing the next experiment.
 
 ## Next research steps
 
+The [first comparison specification](joint-interactions.md) and [numerical
+results](joint-interactions-results.md) now implement an initial constant-step,
+fresh-sample study: 1,056 configurations, retained training paths, risk
+decompositions, four figures, and paired simulation checks. Draft analytical
+deductions have local proofs and independent computational checks; independent
+proof review is pending because Coterie was unavailable. The steps below retain
+the broader completion criteria, including extensions beyond this first
+controlled grid.
+
 ### 1. Specify the joint comparisons
 
 Write `notes/joint-interactions.md` defining the initial normalization family,

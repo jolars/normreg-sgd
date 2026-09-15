@@ -1,4 +1,4 @@
-.PHONY: all paper check check-quick check-markdown check-config check-python check-optimization verify reproduce format
+.PHONY: all paper check check-quick check-markdown check-config check-python check-optimization check-joint-interactions reproduce-joint-interactions verify reproduce format
 
 all: paper
 
@@ -31,6 +31,14 @@ check-optimization:
 	python experiments/check_sampling_schemes.py
 	python experiments/check_joint_budget.py
 	python experiments/check_rare_subgroup_pilot.py
+	$(MAKE) check-joint-interactions
+
+check-joint-interactions:
+	python experiments/check_joint_interactions.py
+
+reproduce-joint-interactions:
+	python experiments/run_joint_interactions.py
+	python experiments/plot_joint_interactions.py
 
 verify: check-optimization
 	python experiments/check_two_features.py --check-only

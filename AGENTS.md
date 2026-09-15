@@ -26,6 +26,11 @@ baselines.
   `experiments/check_multivariate_stability.py` check the corresponding block,
   finite-update, and stability extensions. This is a script project, not an
   installable Python library.
+- `notes/joint-interactions.md` specifies the first joint training comparison;
+  `notes/joint-interactions-results.md` records its numerical findings and
+  pending independent proof review. `experiments/run_joint_interactions.py`
+  computes fresh-sample paths, and `experiments/check_joint_interactions.py`
+  independently checks them against enumerated updates and prior operators.
 - The paper and optimization checks use the averaged loss and
   $C = X_c^\top X_c/n$ for empirical designs, while the shrinkage script uses
   $G = nC$. Keep $\lambda_1 = nt$ and $\lambda_2 = nr$ consistent. Report
@@ -72,9 +77,13 @@ NixOS.
 `build/` contains generated LaTeX output and is ignored. Regenerate
 `results/two-feature-check.json` with `make reproduce`; do not hand-edit the
 numerical values or provenance. `make verify` validates without rewriting it.
-Refresh `uv.lock` with uv and `devenv.lock` with devenv when changing inputs.
-Keep the Panache version in the Markdown CI job aligned with the devenv package
-when updating the Nix inputs.
+Use `make reproduce-joint-interactions` inside `devenv shell` to regenerate the
+joint-interaction JSON, compressed moment archive, and SVG/PDF figures. Its
+focused checks verify source and archive hashes; regenerate after changing its
+scripts or `uv.lock`. Keep the frozen fixed-data pilot separate. Refresh
+`uv.lock` with uv and `devenv.lock` with devenv when changing inputs. Keep the
+Panache version in the Markdown CI job aligned with the devenv package when
+updating the Nix inputs.
 
 Versionary manages the version in `pyproject.toml`, its lockfile update, and
 `CHANGELOG.md` once releases are enabled. Do not hand-edit that changelog. The

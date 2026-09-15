@@ -13,17 +13,29 @@ remain undecided.
 
 ## Current priorities: joint interactions
 
-- [ ] Specify the normalization family, learning-rate schedules, batch sizes,
+- [x] Specify the normalization family, learning-rate schedules, batch sizes,
   stopping counts, sampling assumptions, and outcomes in
   `notes/joint-interactions.md`. Include fixed-update and fixed-observation
-  comparisons, plus global-rescaling controls.
+  comparisons, plus global-rescaling controls. The [first
+  comparison](notes/joint-interactions.md) specifies constant steps, fresh
+  samples, four normalization exponents, both budget conventions, and
+  numerical acceptance checks. Decreasing schedules are an explicit
+  extension.
 - [ ] Use the exact moments to derive a comparison across normalization and
   optimization settings. Explain learning, noise, and risk changes in a
   feasible two-feature model, with independent proof and numerical checks.
+  Draft global-rescaling, relative-learning, and batch-order arguments and
+  independent numerical checks are complete. Independent proof review
+  remains pending because Coterie was unavailable; these arguments are not
+  accepted as independently reviewed results.
 - [ ] Design a separate follow-up to the frozen pilot that retains the joint
   configuration grid and training paths. Test predicted interactions and
   reversals, wider learning-rate ranges, uncertainty, and budget
-  sensitivity.
+  sensitivity. The [first fresh-sample
+  study](notes/joint-interactions-results.md) retains 1,056 configurations,
+  60 stopping counts, four figures, paired simulation uncertainty, and a
+  local batch-comparison sensitivity check. Broader signals, prevalences,
+  and resolution checks remain open.
 - [ ] Test practical preprocessing and validation-based choices, then a stated
   real-data task. Compare defaults and joint tuning with equal search
   effort, while preserving the fixed-configuration results that explain the
