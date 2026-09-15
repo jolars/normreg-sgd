@@ -65,14 +65,20 @@ The first three source checks sharpened the immediate comparison:
 The [focused audit](normalization-risk-audit.md) now also compares
 Ali–Dobriban–Tibshirani, Zou et al., the SGD-QN erratum, covariate-shift
 preconditioning, and feature normalization in GNNs. Harmful rare-feature scaling
-and target-risk geometry have explicit antecedents. The broader novelty
-assessment remains open. The central contribution candidate is a quantitative
-risk comparison with a statistical interpretation. Global rescaling,
-independent-coordinate flow rates, moment recursions, and generic fourth-moment
-dependence remain supporting tools. The existing covariance-matched construction
-already illustrates why $Bq$ and covariance do not determine SGD behavior. A
-further result in that direction should identify a consequential risk difference
-or a useful approximation with explicit limits.
+and target-risk geometry have explicit antecedents. The [C2 target-risk
+comparison](target-risk-comparison.md) extends the audit through S17–S20: strict
+target-aware separations and average/subgroup tradeoffs also have prior art. A
+deterministic control reproduces deterioration in both coefficient MSEs
+alongside improved subgroup prediction. C2 adds a certified realization through
+conventional scaling and stable finite-budget SGD; that realization alone does
+not yet establish a substantive advance over target-risk theory. The broader
+novelty assessment remains open. The central contribution candidate is a
+quantitative risk comparison with a statistical interpretation. Global
+rescaling, independent-coordinate flow rates, moment recursions, and generic
+fourth-moment dependence remain supporting tools. The existing
+covariance-matched construction already illustrates why $Bq$ and covariance do
+not determine SGD behavior. A further result in that direction should identify a
+consequential risk difference or a useful approximation with explicit limits.
 
 ## Connection to the original paper and the ML objective
 
@@ -302,10 +308,12 @@ direct statement of these comparisons in its inspected sources, while
 identifying substantial overlap in their mechanisms.
 
 The next scientific decision is whether C2's objective disagreement survives a
-declared range of learning-rate and stopping adjustments. Retain C1 as the
-controlled bias-versus-noise comparison and preserve both fixed configurations
-and failures. The steps below retain the milestone criteria that led to these
-results; mathematical completion does not settle novelty or empirical value.
+declared range of learning-rate and stopping adjustments, and what conditions on
+prevalence, dependence, signal, and noise explain its production during training
+beyond the target-weight identity. Retain C1 as the controlled bias-versus-noise
+comparison and preserve both fixed configurations and failures. The steps below
+retain the milestone criteria that led to these results; mathematical completion
+does not settle novelty or empirical value.
 
 ### 1. Formulate a candidate result and check its closest prior work
 

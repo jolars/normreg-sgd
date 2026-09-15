@@ -2,7 +2,7 @@
 
 September 15, 2026. This addendum initially compared [Conjecture
 C1](normalization-risk-comparison.md) with three primary sources. It now covers
-the [C1 and C2 proofs](normalization-risk-theorem.md) and five further sources.
+the [C1 and C2 proofs](normalization-risk-theorem.md) and nine further sources.
 It supplements the historical [eight-source audit](novelty-audit.md), whose
 inspected revision and conclusions remain intact. Primary HTML statements or the
 specified PDF passages were inspected. This is not a review of those papers'
@@ -21,9 +21,13 @@ None of the inspected statements directly gives the stated C1 or C2
 inequalities. Their moment framework is established, and target-risk geometry
 also has explicit antecedents in covariate-shift analysis. A specific example
 absent from the inspected statements is not automatically a substantive new
-theorem. My assessment is that C1 alone is an incremental worked comparison; C2
-provides a more informative mechanism to test for robustness. Publication-level
-novelty and priority remain unresolved.
+theorem. The [target-risk comparison](target-risk-comparison.md), extending S15
+through S17–S20 below, sharpens this limitation: strict target-risk separations
+and average/subgroup tradeoffs already exist, and even deterioration in both
+coefficient MSEs is easy to construct without SGD. C2 remains a useful
+quantitative illustration of conventional scaling under a common budget. Its
+current statement does not establish a substantive advance over target-risk
+theory. Publication-level novelty and priority remain unresolved.
 
 ## S9. Su, Zou, and Wu: preconditioned least-squares SGD
 
@@ -175,7 +179,8 @@ Importance of Precondition,” by Liu, Zhang, Chen, and Fang. Inspected Sections
 Their source and target second moments can differ. Theorems 2–3 characterize
 minimax linear preconditioning with known moment matrices. Theorem 4 bounds
 target error for fresh-sample accelerated SGD with a prescribed decreasing-step
-schedule. Theorem 6 explicitly considers rank-one target matrices.
+schedule. Theorem 6 considers rank-one target matrices under specified
+spectral-decay assumptions; rank one alone does not verify those assumptions.
 
 **Mapping and classification:** set their source matrix to $C$ and target matrix
 to $C_R$. Conditioning on $J=1$ defines a target law preserving the response
@@ -186,7 +191,8 @@ $\psi\geq E x_R^4/b^2=1/b-3$ in our model. Their minimax results and
 scheduled-optimizer upper bound do not directly order our two fixed
 constant-step configurations. A candidate-specific comparison still needs the
 exact contrasts; the different target alone establishes no gap in existing
-theory.
+theory. The [follow-up comparison](target-risk-comparison.md) makes the
+conditioning map explicit and traces the closest antecedents below.
 
 ## S16. Milligan et al.: normalization of binary-frequency features
 
@@ -208,6 +214,95 @@ concern this paper already states. C2 adds a specific prediction-objective
 comparison, beyond their training-loss comparisons. Their empirical GNN
 improvements are neither established nor contradicted by our two-feature
 fresh-sample calculation.
+
+## S17. Lei, Hu, and Lee: target-aware shrinkage and strict separation
+
+Version: [ICML 2021, PMLR
+139:6164–6174](https://proceedings.mlr.press/v139/lei21a.html), “Near-Optimal
+Linear Regression under Distribution Shift.” Inspected Sections 2–3.2, Theorem
+3.2, equation (3), Theorem 3.4, Proposition 3.5, and Remark 3.1 in the
+[published PDF](https://proceedings.mlr.press/v139/lei21a/lei21a.pdf), with
+visual checks of PDF pp.3–4.
+
+Their fixed-design Gaussian model minimizes worst-case target risk over a
+coefficient ball. Equation (3) permits noncommuting matrices; Theorem 3.4
+includes rank-one targets. Remark 3.1 separates their estimator from optimally
+tuned ridge. Proposition 3.5 instead gives a common Bayes-optimal ridge
+estimator across targets under an isotropic Gaussian prior.
+
+**Mapping and classification:** set their target matrix to $C_R$; their
+empirical source Gram differs from our population $C$. Conditional on the
+feature stream, C2's SGD is linear in responses. Their minimax separation does
+not order its fixed-signal U/S pair, but strict target-aware comparisons after
+scalar tuning already exist.
+
+## S18. Wu et al.: final-iterate SGD under covariate shift
+
+Version: NeurIPS 2022, “The Power and Limitation of Pretraining-Finetuning for
+Linear Regression under Covariate Shift,” by Wu, Zou, Braverman, Gu, and Kakade.
+Inspected Definitions 1–2, the SGD update, Assumptions 1–2′, Theorems 3.1–3.2,
+and Corollary 3.3 on printed pp.3–6 of the [published
+PDF](https://papers.nips.cc/paper_files/paper/2022/file/d5c04aa72b92c53bda5b525b60958295-Paper-Conference.pdf),
+including visual checks.
+
+They analyze online SGD with geometric step decay and the last iterate.
+Corollary 3.3 covers source-only training and target evaluation. The upper and
+lower bounds use different fourth-moment assumptions; the lower bound also
+assumes independent Gaussian noise.
+
+**Mapping and classification:** for an invertible diagonal scale matrix $S$, use
+$G=S^{-1}CS^{-1}$ and $H=S^{-1}C_RS^{-1}$. Final-iterate target evaluation is
+already covered. Their scheduled, constant-factor bounds do not give C2's exact
+constant-step contrasts. More decisively, their lower fourth-moment condition 1B
+fails here: testing its common-coordinate entry with $A=e_Ce_C^\top$ gives
+
+$$
+  E x_C^4-(C_{CC})^2=0<\beta(C_{CC})^2
+$$
+
+for every required $\beta>0$. This remains true after diagonal scaling.
+Assumption 1A's source constant must satisfy $\alpha\geq1/b-3$. Their two-sided
+bounds therefore do not directly give a binary U/S separation.
+
+## S19. Hashimoto et al.: minority risk as distributional robustness
+
+Version: [ICML 2018, PMLR
+80:1929–1938](https://proceedings.mlr.press/v80/hashimoto18a.html), “Fairness
+Without Demographics in Repeated Loss Minimization,” by Hashimoto, Srivastava,
+Namkoong, and Liang. Inspected Section 4.1, equation (4), and Proposition 2 on
+PDF p.5 of the [published
+PDF](https://proceedings.mlr.press/v80/hashimoto18a/hashimoto18a.pdf), including
+a visual check.
+
+Proposition 2 bounds each mixture component's risk by a chi-square-ball robust
+risk, with radius determined by its population share.
+
+**Mapping and classification:** use components conditional on $J=0$ and $J=1$,
+with shares $1-q$ and $q$. Minority risk is already a population-reweighting
+problem. Their bound does not rank C2's fixed U/S outputs or make either fit a
+DRO optimizer.
+
+## S20. Sagawa et al.: regularization and worst-group generalization
+
+Version: [arXiv:1911.08731v2](https://arxiv.org/html/1911.08731v2), April 2,
+2020, ICLR 2020 paper, “Distributionally Robust Neural Networks for Group
+Shifts: On the Importance of Regularization for Worst-Case Generalization,” by
+Sagawa, Koh, Hashimoto, and Liang. Inspected Section 2, equations (2)–(4),
+Section 3.2, and Section 4, Proposition 1.
+
+Group DRO minimizes the maximum group risk, equivalently the worst risk over
+mixtures of the group laws. Their classification experiments compare ERM and
+group DRO with stronger penalties and early stopping, reporting average and
+worst-group tradeoffs. Proposition 1 gives an optimal reweighting interpretation
+under continuity, convexity, and compactness assumptions; it is not a
+statistical risk-separation theorem for SGD.
+
+**Mapping and classification:** the target conditional on $J=1$ belongs to the
+two-group mixture family. C2 evaluates that target and trains both
+configurations on the source objective. The experiments already connect stopping
+and regularization to average/subgroup disagreement. Their models do not
+establish C2's binary-regression inequalities, and C2 supplies no group DRO
+guarantee.
 
 ## Additional deductions and implications for the candidate
 
@@ -249,27 +344,28 @@ A concrete statement supported by the calculations is:
 This is a claim about particular configurations and parameter ranges. It does
 not say that scaling improves optimally tuned procedures, that learning-rate
 adjustment cannot remove the reversal, or that the construction is the first of
-its kind. I would develop C2 as the main candidate and retain C1 as the
-controlled learning-versus-noise explanation. Before treating C2 as the main
-paper contribution, determine whether its effect persists over a declared tuning
-range and whether the same limitation has already been formalized in target-risk
-or subgroup-risk work. A broad novelty claim is not justified yet.
+its kind. The [target-risk comparison](target-risk-comparison.md) retains C2 as
+the stronger illustration and C1 as the controlled learning-versus-noise
+explanation. The bounded antecedent search is now complete: target geometry,
+strict target-aware separations, and average/subgroup tradeoffs have prior art.
+Before promoting C2 to the main contribution, establish what its dependence,
+prevalence, or declared tuning range adds beyond that geometry. A broad novelty
+claim is not justified yet.
 
 ## Remaining literature work
 
-- Trace the closest target-risk antecedents cited by Liu et al., checking for
-  existing strict preconditioner comparisons and coefficient-error/subgroup
-  disagreements. The earlier Jain et al. comparison remains an input, not a new
-  proof review.
-- Check whether final-iterate preconditioning results give tighter comparisons
-  for this fixed-dimensional binary setting, with explicit dependence on the
-  fourth-moment constant.
+- If a stronger C2 statement survives, extend S17–S20 around that statement. The
+  bounded search found no direct theorem giving C2's U/S contrasts; an
+  exhaustive priority claim remains unwarranted.
+- Check whether other final-iterate preconditioning results give tighter
+  comparisons for this binary setting. Account for S18's failed lower-moment
+  assumption and prevalence-dependent upper-moment constant.
 - Extend the dependence and subgroup-risk comparison around C2. Check whether
   useful uniform prevalence bounds add anything beyond fixed-distribution
   examples; changing risk weights alone does not establish novelty.
 - Resolve additional citations from the deep research report only as needed for
   retained claims; this addendum does not verify its entire bibliography.
 
-The eight source comparisons in this addendum are complete at their stated
+The twelve source comparisons in this addendum are complete at their stated
 scope. The broader novelty assessment remains open. Mathematical review is
 tracked with the proof note and separately from literature priority.

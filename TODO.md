@@ -29,8 +29,8 @@ comparison. The research plan gives the completion criteria.
   AdaBatch. The [focused audit](notes/normalization-risk-audit.md) maps
   assumptions, output iterates, risk objectives, moment constants, and
   budgets. It identifies strong overlap in the general mechanism. The
-  expanded audit adds five sources. Further target-risk comparisons and the
-  broader novelty assessment remain open below.
+  expanded audit adds nine sources. The bounded target-risk comparison is
+  complete below; the broader novelty assessment remains open.
 - [x] Derive sufficient conditions or a controlled threshold bound for the
   normalization-risk reversal. Separate squared bias, multiplicative update
   variance, and observation-noise variance. Obtain independent proof review
@@ -183,10 +183,16 @@ specific rare-limit calculations remains unresolved.
   `paper/references.bib` when revising the manuscript's related-work
   section.
 
-- [ ] Extend the C2 comparison with target-risk and subgroup-risk antecedents,
+- [x] Extend the C2 comparison with target-risk and subgroup-risk antecedents,
   starting from Liu et al.'s covariate-shift preconditioning analysis (S15).
   Subgroup conditioning is already a target-risk problem; test whether the
-  strict configuration comparison adds a substantive conclusion.
+  strict configuration comparison adds a substantive conclusion. The
+  [follow-up comparison](notes/target-risk-comparison.md) and S17–S20 in the
+  [audit](notes/normalization-risk-audit.md) trace target-aware shrinkage,
+  final-iterate SGD, and subgroup-risk antecedents. A deterministic control
+  reproduces C2's coefficient-error sign pattern. Its stable SGD realization
+  remains useful, but the current fixed-pair statement does not establish a
+  substantive advance; tuning robustness and priority remain open.
 
 - [ ] Resolve the report's exported citation markers into usable sources for
   claims retained in the manuscript, including its recent-paper claims.

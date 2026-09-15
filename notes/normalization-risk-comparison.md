@@ -10,8 +10,10 @@ note](normalization-risk-theorem.md) gives a scalar threshold bound with a
 controlled remainder, proves the four signs over the original parameter box, and
 adds a dependent-feature aggregate/subgroup comparison, C2. Independent proof
 review is tracked there. The [expanded source
-audit](normalization-risk-audit.md) identifies close prior art and retains C2 as
-the stronger contribution candidate; novelty remains unresolved.
+audit](normalization-risk-audit.md) identifies close prior art. The [target-risk
+comparison](target-risk-comparison.md) retains C2 as the stronger quantitative
+illustration, but its current fixed-pair statement does not establish a
+substantive advance over that literature. Novelty remains unresolved.
 
 This note preserves the original conjecture and exploratory calculations. Those
 numerical checks alone cover only a finite grid. Both the box and the
