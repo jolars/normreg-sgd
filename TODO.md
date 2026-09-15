@@ -2,7 +2,7 @@
 
 The active direction is **Learning Rare Features: Normalization, Stochastic
 Optimization, and Early Stopping**. This checklist consolidates the research
-plan and the September 14, 2026 assessments. The [research
+plan and the September 14–15, 2026 assessments. The [research
 plan](notes/research-plan.md) records the setup and scope. Earlier shrinkage
 extensions remain below as deferred work.
 
@@ -110,27 +110,35 @@ unresolved.
 
 ## First milestone: controlled experiments
 
-- [ ] Build feasible binary designs with independent, nested, and negatively
-  associated features. Include common-only, rare-only, equal-sign, and
-  opposite-sign signals; expand to several common predictors after
-  verification.
-- [ ] Compare no scaling, standard-deviation scaling, variance scaling, and
+The bounded [pilot](notes/rare-subgroup-pilot.md) completes the two-feature,
+fixed-count comparison below. It uses known population preprocessing and
+separate oracle tuning on a frozen finite grid. Grid boundary selections limit
+robustness; the reversals establish no general scaling recommendation.
+
+- [x] Build feasible two-binary-feature designs with independent, nested, and
+  negatively associated features. Include common-only, rare-only,
+  equal-sign, and opposite-sign signals.
+- [ ] Expand the verified pilot to several common predictors.
+- [x] Compare no scaling, standard-deviation scaling, variance scaling, and
   damped scaling using GD and SGD. Tune learning rates separately and record
   instability rather than silently discarding failed runs.
-- [ ] Vary prevalence, batch size, dependence, and stopping time. Compare at
-  matched numbers of processed observations, and also report update count.
-  Separate fresh sampling from repeated passes over a fixed training sample.
-- [ ] Hold noise fixed first and study SNR-matched comparisons separately. Use
-  fixed cell counts to isolate empirical-design effects, then sampled
-  designs with growing rare counts.
-- [ ] Measure original-scale coefficient bias, covariance, and error; aggregate
+- [x] Vary prevalence, batch size, dependence, and stopping time in the bounded
+  fixed-data grid. Compare at matched numbers of processed observations, and
+  report update count.
+- [ ] Add a separately specified fresh-sample experiment and compare its
+  conclusions with repeated passes over a fixed training sample.
+- [x] Hold noise variance fixed and use fixed cell counts to isolate
+  empirical-design effects, pairing the same noisy data across comparisons.
+- [ ] Study SNR-matched comparisons and sampled designs with growing rare
+  counts.
+- [x] Measure original-scale coefficient bias, covariance, and error; aggregate
   excess prediction risk; and excess prediction risk within the rare
   subgroup. Distinguish transient nonzero GD coefficients from lasso
   selection.
 - [ ] Evaluate a specified test prevalence shift preserving the conditional
   response model. Apply the training centering and scales at test time, and
   account explicitly for the intercept.
-- [ ] Quantify why an isolated $O(1)$ rare-coefficient error has only $O(q_n)$
+- [x] Quantify why an isolated $O(1)$ rare-coefficient error has only $O(q_n)$
   weight in aggregate risk. Demonstrate a consequential difference for a
   stated prediction or estimation objective.
 - [ ] Include ridge and weighted lasso or elastic net as explicit-regularization
@@ -140,24 +148,31 @@ unresolved.
 - [ ] Add AdaGrad and Adam as empirical comparators. Record momentum,
   stabilizing constants, clipping, schedules, and weight decay. Separate
   these comparisons from claims proved only for fixed preconditioning.
-- [ ] Store cell counts, Gram matrices, normalization conventions, optimizer
+- [x] Store cell counts, Gram matrices, normalization conventions, optimizer
   settings, seeds, and software versions. Verify simulation against the
   exact calculations before larger experiments.
 
 ## Empirical extension and manuscript decision
 
+- [ ] Check sensitivity to a wider learning-rate grid, including near-zero
+  steps: 195 of 864 pilot settings select the smallest factor. Keep this
+  follow-up separate from the frozen pilot evaluation.
 - [ ] Evaluate validation-based stopping and tuning after fixed-budget and
   fixed-penalty comparisons. Avoid general recommendations from a small
   grid.
 - [ ] Select a sparse text or categorical dataset with an interpretable
   rare-feature definition. Start with linear models, then test the proposed
   mechanism in a small neural model with comparable tuning effort.
-- [ ] Complete a checked finite-time result, the theorem-level novelty review,
-  and a consequential controlled experiment before expanding the paper's
-  claims.
-- [ ] Reassess whether the evidence supports a full ML paper or a focused
-  theoretical note. Update the title, abstract, and contribution claims to
-  match the final results; keep outstanding claims explicit.
+- [x] Complete a bounded first milestone: an independently reviewed joint-budget
+  theorem, an eight-source overlap audit, and a reproducible controlled
+  experiment with substantial risk differences and reversals. Broader
+  novelty comparisons and empirical usefulness remain open.
+- [x] Reassess publication scope after the bounded first milestone. Current
+  evidence favors developing a focused note; it does not establish a
+  standalone novelty claim. The abstract and scope now include the reviewed
+  theorem and bounded pilot.
+- [ ] Establish a distinct contribution and reassess the final publication
+  format before making broader paper claims.
 - [ ] Consider bounded rare counts, multiple rare features, and
   overparameterized interpolation as separate extensions after the first
   milestone.

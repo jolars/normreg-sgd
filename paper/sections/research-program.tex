@@ -19,7 +19,9 @@ conditional fixed-data replacement identities, and exact reshuffling epoch
 recurrences. Counterexamples delimit their relation to fresh sampling.
 Section~\ref{sec:budget} supplies a joint observation-budget limit for a
 specified decreasing-step last iterate with one common and one rare binary
-feature. Broader joint sampling and stopping-time limits remain open.
+feature. Section~\ref{sec:pilot} supplies a controlled fixed-data
+comparison with consequential rare-subgroup risk differences and reversals.
+Broader joint sampling and stopping-time limits remain open.
 
 For empirical samples, specify $n\to\infty$, rare prevalence $q_n\downarrow0$,
 and whether $nq_n\to\infty$ or rare counts remain bounded. Compare error
@@ -30,13 +32,13 @@ advance from one chosen by validation. Full-rank convergence to OLS,
 early-stopping regularization, and selection among interpolating solutions
 are separate questions.
 
-An initial experiment should use feasible independent, nested, and negatively
-associated binary designs, with common-only, rare-only, equal-sign, and
-opposite-sign signals. Compare no scaling, standard-deviation scaling,
-variance scaling, and damped scaling with separately tuned GD and SGD
-learning rates. Vary $Bq$ across its small, intermediate, and large regimes.
-Add AdaGrad and Adam as empirical comparators, explicitly recording momentum,
-stabilizing constants, clipping, schedules, and weight decay. A fixed diagonal
+The initial experiment holds binary cell counts and population preprocessing
+fixed. Its finite learning-rate grid and oracle tuning leave robustness and
+practical tuning unresolved. Follow-up experiments should examine wider rate
+ranges, sampled designs with growing rare counts, and validation-based tuning.
+Vary $Bq$ beyond the pilot grid, and add AdaGrad and Adam as empirical
+comparators, explicitly recording momentum, stabilizing constants, clipping,
+schedules, and weight decay. A fixed diagonal
 preconditioner is not a model of their complete dynamics.
 
 Report performance against processed observations as well as update count;
@@ -55,9 +57,11 @@ batch and short-trajectory enumeration, and stability thresholds with operator
 eigenvalues on feasible binary supports. Rational path enumeration also checks
 first-pass sampling equivalence and the effects of reusing observations.
 Existing coordinate-descent and Gaussian integration
-checks validate the explicit-penalty baselines. These are mathematical
-checks, not a completed comparative experiment. A later empirical study should
-use sparse text or categorical data, starting with linear models and then a
+checks validate the explicit-penalty baselines. The pilot additionally
+checks conditional moments and subgroup risks by exact path and support
+enumeration. These checks validate the calculations, while the pilot provides
+a bounded comparison under its declared tuning protocol. A later empirical
+study should use sparse text or categorical data, starting with linear models and then a
 small neural model. The novelty assessment must identify a conclusion beyond
 known early-stopping, adaptive-gradient, and preconditioning theory before
 the paper makes a practical recommendation.

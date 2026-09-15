@@ -12,12 +12,15 @@ finite-update GD and fresh-sample SGD error moments, and batch-rarity stability
 under a bounded common-block assumption. A matched-covariance binary comparison
 isolates higher update moments, while conditional identities and counterexamples
 distinguish replacement sampling and reshuffling from fresh observations.
-Population centering and feature scales are known. Joint sampling limits,
-comparisons with adaptive optimizers, and empirical validation remain research
-objectives. Earlier correlated-feature shrinkage results are retained as
-explicit-regularization baselines in the appendices, following *The Choice of
-Normalization Influences Shrinkage in Regularized Regression* by Johan Larsson
-and Jonas Wallin.
+Population centering and feature scales are known. An independently reviewed
+joint-budget theorem gives a rare-coefficient error limit under specified
+decreasing steps. A controlled fixed-data pilot finds subgroup-risk differences
+that reverse across signals and training budgets. Broader sampling limits,
+adaptive-optimizer comparisons, real-data validation, and standalone novelty
+remain research objectives. Earlier correlated-feature shrinkage results are
+retained as explicit-regularization baselines in the appendices, following *The
+Choice of Normalization Influences Shrinkage in Regularized Regression* by Johan
+Larsson and Jonas Wallin.
 
 ## Start here
 
@@ -27,6 +30,12 @@ and Jonas Wallin.
   comparisons, experiments, and manuscript development.
 - [Research plan](notes/research-plan.md): the proposed contribution, current
   evidence, mathematical setup, and first milestone.
+- [Joint-budget theorem](notes/joint-budget-limits.md) and [independent
+  review](notes/joint-budget-review.md): the scoped fresh-sample limit.
+- [Literature audit](notes/novelty-audit.md): theorem-level overlap and
+  unresolved novelty comparisons.
+- [Controlled pilot](notes/rare-subgroup-pilot.md): protocol, results, and
+  limits of the fixed-data subgroup-risk comparison.
 - [Initial investigation](notes/two-feature-investigation.md): detailed
   derivations and a separate boundary correction to the earlier paper.
 - [Provenance](notes/provenance.md): where the initial theory and code came
@@ -61,10 +70,22 @@ This runs the elementary checks in `experiments/check_optimization.py`,
 block-flow checks in `experiments/check_block_flow.py`, finite-update moment
 checks in `experiments/check_discrete_dynamics.py`, and stability checks in
 `experiments/check_multivariate_stability.py`, plus covariance and
-sampling-scheme checks in `experiments/check_sampling_schemes.py`. They use
-independent ODE solutions and exact support, batch, and short-trajectory
-enumeration without writing reference results. They are mathematical checks, not
-a comparative optimizer experiment.
+sampling-scheme checks in `experiments/check_sampling_schemes.py`.
+`experiments/check_joint_budget.py` adds growing-budget and short-path checks;
+`experiments/check_rare_subgroup_pilot.py` checks the pilot's conditional
+moments and prediction risks. These use independent ODE solutions and exact
+support, batch, and short-trajectory enumeration without rewriting results.
+
+To reproduce the controlled pilot inside `devenv shell`:
+
+```sh
+python experiments/run_rare_subgroup_pilot.py
+```
+
+This writes `results/rare-subgroup-pilot.json`. The [pilot
+report](notes/rare-subgroup-pilot.md) records the frozen tuning grid, seeds,
+uncertainty convention, and interpretation. Its reported excess squared
+prediction errors omit the factor of one half in the training loss.
 
 To regenerate the numerical reference results for the shrinkage baselines:
 

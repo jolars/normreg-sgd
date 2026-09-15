@@ -43,11 +43,13 @@ products of batch size and rare prevalence. The results use known population
 centering and fixed scales. For two binary features and prevalence
 $q_n=n^{-1/2}$, a specified decreasing-step schedule using $n$ fresh
 observations attains rare-coefficient mean squared error asymptotic to
-$4\sigma^2/(3nq_n)$. Broader finite-sample guarantees,
-comparisons with adaptive optimizers, and empirical usefulness remain research
-objectives. Earlier weighted-lasso and ridge results are retained as
-explicit-regularization baselines; no standalone novelty claim is made for
-these calculations.
+$4\sigma^2/(3nq_n)$. A controlled fixed-data pilot finds substantial
+rare-subgroup prediction differences whose direction changes with signal,
+dependence, batch size, and budget under separate oracle step-size tuning.
+Broader finite-sample guarantees, comparisons with adaptive optimizers, and
+real-data usefulness remain research objectives. Earlier weighted-lasso and
+ridge results are retained as explicit-regularization baselines; no standalone
+novelty claim is made for these calculations.
 \end{abstract}
 
 \input{sections/introduction}
@@ -57,6 +59,7 @@ these calculations.
 \input{sections/stochastic-gradient}
 \input{sections/joint-budget}
 \input{sections/sampling-schemes}
+\input{sections/controlled-pilot}
 \input{sections/research-program}
 
 \bibliographystyle{plainnat}

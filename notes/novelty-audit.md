@@ -4,6 +4,12 @@ Date: September 15, 2026. Assignment ct-01M2HVG2T0P9YD8R02VXFMTBZH. Repository
 inspected at 224c7cfab2252c74f6bee7f18326102d6a068f5e. Repository files were not
 changed.
 
+Lead follow-up, September 15: the [joint-budget theorem](joint-budget-limits.md)
+has now passed [independent proof review](joint-budget-review.md), and the
+[controlled pilot](rare-subgroup-pilot.md) has been reproduced. The audit below
+preserves the comparisons at the inspected revision. Mathematical acceptance and
+the pilot's risk reversals do not settle the unresolved priority assessment.
+
 ## Assessment
 
 The general gradient-flow solution, fresh-SGD moment operators, fourth-moment

@@ -10,9 +10,11 @@ under known preprocessing, with no optimality or novelty claim.
 For each sufficiently large integer $n$, let $(W,J)\in\{0,1\}^2$ have genuine
 nonnegative joint-cell probabilities, and write
 \[
- p_n=\E W\to p\in(0,1),\quad q_n=\E J=n^{-1/2},\quad
- a_n=p_n(1-p_n),\quad b_n=q_n(1-q_n),\quad
- c_n=\Cov(W,J),\quad c_n/b_n\to\kappa.
+ \begin{aligned}
+ p_n&=\E W\to p\in(0,1), & q_n&=\E J=n^{-1/2},\\
+ a_n&=p_n(1-p_n), & b_n&=q_n(1-q_n),\\
+ c_n&=\Cov(W,J), & c_n/b_n&\to\kappa.
+ \end{aligned}
 \]
 Choose $a_0>0$ and $n_0$ such that $a_n\ge a_0$ and $q_n\le a_0/64$ for
 $n\ge n_0$. Set $x=(W-p_n,J-q_n)^\top$ and

@@ -67,19 +67,20 @@ stochastic update moments under known population centering and fixed scales.
 
 ## Current foundation
 
-  | Result                                              | Status and scope                                                                                                                                                                                     |
-  | --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | Feature scaling as preconditioning                  | Standard exact change of coordinates for fixed scales.                                                                                                                                               |
-  | Transient dependence under early stopping           | Proved for a fixed common block and one rare binary feature, uniformly on bounded population-flow time intervals, with convergent original-scale initialization.                                     |
-  | Scalar SGD stability                                | Exact second-moment recurrence for a noiseless standardized Bernoulli predictor and fresh independent batches.                                                                                       |
-  | Finite-update GD and fresh-sample SGD moments       | Exact mean, second-moment, and centered covariance formulas, with initial uncertainty, multiplicative update variance, and observation noise separated.                                              |
-  | Multivariate batch-rarity stability                 | Exact operator criterion and three-regime threshold limits for a uniformly bounded fixed common block with positive definite limiting covariance.                                                    |
-  | Matched covariance and sampling schemes             | Feasible binary distributions with different fourth update moments, exact conditional replacement and reshuffling epoch identities, and first-pass equivalence under fixed population preprocessing. |
-  | Independent numerical checks                        | Support-based ODE integration, block limits, exact batch and short-trajectory enumeration, mixed moments, and stability eigenvalues.                                                                 |
-  | Explicit-regularization baselines                   | Existing bivariate lasso and elastic-net formulas, ridge moments, and binary counterexamples are retained in the appendices.                                                                         |
-  | Joint observation-budget limit                      | Independently reviewed two-binary-feature last-iterate result at $q_n = n^{-1/2}$ with known preprocessing and a specified decreasing-step schedule.                                                 |
-  | Broader sampling limits and comparative experiments | Open research objectives beyond the stated joint-budget regime, including estimated preprocessing and fixed-data sampling.                                                                           |
-  | Standalone novelty                                  | Unresolved; the elementary calculations are supporting results.                                                                                                                                      |
+  | Result                                            | Status and scope                                                                                                                                                                                     |
+  | ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | Feature scaling as preconditioning                | Standard exact change of coordinates for fixed scales.                                                                                                                                               |
+  | Transient dependence under early stopping         | Proved for a fixed common block and one rare binary feature, uniformly on bounded population-flow time intervals, with convergent original-scale initialization.                                     |
+  | Scalar SGD stability                              | Exact second-moment recurrence for a noiseless standardized Bernoulli predictor and fresh independent batches.                                                                                       |
+  | Finite-update GD and fresh-sample SGD moments     | Exact mean, second-moment, and centered covariance formulas, with initial uncertainty, multiplicative update variance, and observation noise separated.                                              |
+  | Multivariate batch-rarity stability               | Exact operator criterion and three-regime threshold limits for a uniformly bounded fixed common block with positive definite limiting covariance.                                                    |
+  | Matched covariance and sampling schemes           | Feasible binary distributions with different fourth update moments, exact conditional replacement and reshuffling epoch identities, and first-pass equivalence under fixed population preprocessing. |
+  | Independent numerical checks                      | Support-based ODE integration, block limits, exact batch and short-trajectory enumeration, mixed moments, and stability eigenvalues.                                                                 |
+  | Explicit-regularization baselines                 | Existing bivariate lasso and elastic-net formulas, ridge moments, and binary counterexamples are retained in the appendices.                                                                         |
+  | Joint observation-budget limit                    | Independently reviewed two-binary-feature last-iterate result at $q_n = n^{-1/2}$ with known preprocessing and a specified decreasing-step schedule.                                                 |
+  | Controlled subgroup-risk pilot                    | Reproduced fixed-count, known-preprocessing comparison of four scalings, GD, and replacement SGD with separate oracle tuning.                                                                        |
+  | Broader sampling limits and empirical comparisons | Open research objectives beyond the stated joint-budget regime, including estimated preprocessing and random training designs.                                                                       |
+  | Standalone novelty                                | Unresolved; the elementary calculations are supporting results.                                                                                                                                      |
 
 For standard-deviation scaling in the two-feature population model,
 $c/b \to \kappa$ gives, at fixed $T$,
@@ -165,6 +166,17 @@ conventions, and leaves priority for the specific rare-limit calculations
 unresolved. Dedicated reshuffling, feature-learning, and recent optimizer-tuning
 comparisons remain open.
 
+The [controlled pilot](rare-subgroup-pilot.md) compares four fixed scalings, GD,
+and replacement SGD on six feasible binary designs and four signals. It uses
+known preprocessing, fixed cell counts, and separate oracle step-size tuning,
+with exact conditional sampling moments and 256 held-out noise replications.
+Substantial subgroup-risk differences reverse with the signal, dependence, batch
+size, and budget. The finite rate grid is restrictive: 195 of 864 settings
+select its smallest factor. The [focused
+checks](../experiments/check_rare_subgroup_pilot.py) validate the calculation by
+independent batch/path enumeration and moment recurrences. The generated
+artifact was independently reproduced byte-for-byte.
+
 ## First milestone and empirical objective
 
 The first milestone combines a checked finite-time result for a rare feature
@@ -172,9 +184,9 @@ with common predictors, a comparison with the closest prior theorems, and one
 controlled experiment showing a consequential difference. The population-flow
 and fresh-SGD results now supply the initial theory under their stated
 assumptions. The joint-budget theorem adds one growing-stopping-count regime.
-Broader joint sampling limits, finite-data resampling, empirical normalization,
-validation-based stopping, and adaptive optimizers need explicit additional
-assumptions.
+The pilot adds a bounded fixed-data comparison. Broader joint sampling limits,
+empirical normalization, validation-based stopping, and adaptive optimizers need
+explicit additional assumptions.
 
 The primary outcomes are original-scale coefficient error, aggregate excess
 prediction risk, and excess prediction risk conditional on rare-feature
@@ -188,8 +200,16 @@ Comparisons should use matched numbers of processed observations and separately
 tuned learning rates. Update count alone is insufficient when batch size
 changes. Synthetic binary designs provide exact controls. Sparse text or
 categorical data, first with linear models and then a small neural model,
-provide the intended empirical progression. This is a research design, not an
-empirical result or a claim that one normalization is universally preferable.
+provide the intended empirical progression beyond the completed pilot. The pilot
+supports no universally preferable normalization.
+
+The bounded first milestone is complete, but mathematical correctness and
+reproducibility do not resolve novelty. The literature audit places the general
+framework in prior work, the joint theorem supplies a uniform specialization,
+and the pilot illustrates reversals under a restrictive protocol. Current
+evidence favors developing a focused note while testing whether a distinct
+dependence, sampling, or subgroup-risk conclusion survives the remaining
+literature comparisons and tuning checks. A full ML-paper claim is premature.
 
 ## Role of the earlier investigation
 
