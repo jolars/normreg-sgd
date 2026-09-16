@@ -17,9 +17,46 @@ other laws retain reversals and objective disagreements. The [practical
 study](notes/practical-selection-results.md) now tests estimated preprocessing,
 intercepts, absent rare groups, and validation selection, followed by a sparse
 categorical benchmark. It retains scaling effects and exposes missing-group
-failures and tuning boundaries. The next milestone is the **expanded novelty
-audit and central contribution decision** for the normalization-focused
-conference draft. The report's positive novelty assessment remains provisional.
+failures and tuning boundaries. The next milestone is **one central theorem
+candidate and one decisive rate-search experiment** for the
+normalization-focused conference draft. The report's positive novelty assessment
+remains provisional.
+
+## Next milestone: predictive theory and a resolved rate comparison
+
+Prioritize the first two deliverables over the next two or three days. Use them
+to decide the central contribution and the remaining work for AISTATS.
+
+- [ ] Write a one-page proposed claim with explicit assumptions, intended
+  conclusion, and closest antecedents. Starting from the two-feature model
+  and exact moment recurrences, target a risk approximation with a
+  controlled remainder that explains when faster rare-feature learning
+  outweighs additional noise as prevalence and training budget change. It
+  should explain observed reversals and why rate adjustment can remove them,
+  with conclusions beyond the existing certified parameter boxes. Compare
+  the precise statement with Su–Zou–Wu, AdaBatch, and target-risk
+  preconditioning before committing to a substantial proof effort. Build on
+  the [existing audit](notes/normalization-risk-audit.md) and [target-risk
+  comparison](notes/target-risk-comparison.md); novelty remains to be
+  established.
+- [ ] Resolve the Mushroom rate-search boundary in a separate declared
+  follow-up. Every large-sample unscaled aggregate selection chose the
+  largest available rate factor. Specify a broader search with comparable
+  tuning effort, retain failed candidates, and report original-scale
+  coefficient paths and both aggregate and rare-subgroup risks alongside
+  selected endpoints. Deliver a comparison that identifies which
+  normalization effects persist, disappear, or remain unresolved. Preserve
+  the [frozen practical study](notes/practical-selection.md) and its
+  artifacts.
+- [ ] Develop and verify the theorem if the proposed claim offers a substantive
+  advance over its closest antecedents. Separate mathematical correctness
+  from novelty, and obtain human review of the final result.
+- [ ] Once the theory predicts a concrete regime where scaling should help or
+  hurt, test that prediction on synthetic configurations held out from claim
+  development and an additional sparse categorical task. Declare the
+  prediction and evaluation protocol before running the tests. Retain the
+  failure caused by missing rare validation observations as a limitation of
+  normalization selection.
 
 ## AISTATS 2027 preparation
 
@@ -29,11 +66,6 @@ conference draft. The report's positive novelty assessment remains provisional.
 - [x] Reorganize the main text around normalization, quantitative risk
   comparisons, retuning, and validation selection. Retain disappearing
   comparisons and numerical failures.
-- [ ] State and substantiate the central contribution beyond the closest
-  preconditioning and target-risk results. Complete the theorem-level
-  novelty comparison for the claims actually retained in the paper.
-- [ ] Resolve the practical rate-boundary comparison through a separate declared
-  follow-up with comparable tuning effort; preserve the frozen study.
 - [ ] Obtain human review of final mathematical claims, certificates, source
   comparisons, and experimental interpretation.
 - [ ] Finalize title, abstract, author list, profiles, and reciprocal-reviewer
