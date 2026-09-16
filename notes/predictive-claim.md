@@ -16,6 +16,12 @@ human review, and publication-level novelty remain open. The leading
 approximation alone gets the small C2 aggregate contrast wrong; that failure is
 retained below.
 
+The subsequent [predictive-regime note](predictive-regime.md) derives explicit
+rare- and common-signal families with opposite oracle rare-risk orderings over
+continuous rate and stopping sets. It covers independent features,
+$0<q\leq10^{-4}$, and $1\leq Mq(1-q)\leq4$. Its source comparison retains the
+result as a supporting specialization, pending mathematical and novelty review.
+
 ## Model and intended statement
 
 Use the feasible binary law
@@ -86,7 +92,8 @@ $$
 
 This bounds the same finite remainder $E_{W,k}$ defined below. The constants are
 sufficient rather than optimal; the proof is pending independent and human
-review. Predictive regimes after calibration remain a separate milestone.
+review. A subsequent [local comparison](predictive-regime.md) supplies explicit
+predictive regimes after calibration for independent features.
 
 ## Approximation from the exact recurrence
 
@@ -362,16 +369,16 @@ comparison inequality are supporting calculations within established moment
 analysis. The additional scientific target couples the uniform $q^2$ error bound
 to explicit sign and rate-adjustment conditions over a declared parameter
 family. The local feasibility proof now supplies the stable domain and explicit
-constants. A sign-resolving prevalence/budget regime using (P6), and useful
-bounds on declared rate-adjusted comparisons using (P8), remain open. Recovering
-existing anchor signs alone does not complete those steps.
+constants. The subsequent [predictive-regime note](predictive-regime.md) uses
+the expansion to give explicit prevalence/budget and signal families with
+opposite orderings over continuous rate/stopping sets. Its finite-prevalence
+bounds and rational certificate extend beyond the anchor checks.
 
-**The bounded stability and remainder proof is complete locally; the central
-contribution decision remains open.** Compare a resulting predictive statement
-with the antecedents before committing to a broader theorem effort. If it
-reduces to a direct specialization or fails to resolve informative calibrated
-comparisons, retain the expansion as an explanatory calculation and reconsider
-the central contribution.
+**The stability, remainder, and bounded predictive comparison are complete
+locally; the central contribution decision remains open.** The comparison's
+five-source audit retains the independent-feature result as a supporting
+specialization. Its explicit oracle separations do not yet establish a
+substantive novelty case for expanding the theorem effort.
 
 Independent proof review, human mathematical and novelty review, and prediction
 on held-out configurations remain later milestones. The separate [four-rule

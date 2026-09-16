@@ -34,9 +34,12 @@ baselines.
   stability and uniform quadratic remainder locally, with explicit constants.
   `experiments/check_predictive_feasibility.py` independently constructs
   rational moment operators and checks the proof inequalities and finite
-  remainders. Independent proof review, human review, novelty, and predictive
-  comparisons over tuning sets remain open; do not promote this feasibility
-  result into a general normalization recommendation.
+  remainders. `notes/predictive-regime.md` derives opposite oracle rare-risk
+  orderings for independent-feature signal families over continuous rates and
+  all earlier stops. `experiments/check_predictive_regime.py` verifies its
+  rational certificate and finite bounds. Independent proof review, human
+  review, and novelty remain open; do not promote these local results into a
+  general normalization recommendation.
 - `notes/joint-interactions.md` specifies the first joint training comparison;
   `notes/joint-interactions-results.md` records its numerical findings and
   pending independent proof review. `experiments/run_joint_interactions.py`

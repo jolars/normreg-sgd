@@ -310,7 +310,9 @@ resolve the adjusted rare-risk contrast or C2. The finite bound remains needed
 for those examples. Its smallest displayed values can lie below floating-point
 evaluation error, as already recorded in the development note.
 
-The next scientific step is an explicit predictive regime and a comparison over
-declared rate/stopping sets. The uniform bound alone does not establish a tuned
-advantage, a deployable normalization rule, or publication-level novelty.
-Independent proof review and human review remain pending.
+The subsequent [predictive-regime note](predictive-regime.md) combines the
+expansion with scalar bounds and a rational certificate to give opposite oracle
+orderings over continuous rate/stopping sets for two independent-feature signal
+families. The uniform bound alone does not establish those orderings, a
+deployable normalization rule, or publication-level novelty. Independent proof
+review and human review remain pending.

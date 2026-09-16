@@ -68,12 +68,15 @@ records development checks of fixed and adjusted comparisons. A separate
 [feasibility proof](predictive-claim-feasibility.md) now establishes stability
 and the uniform envelope with $K=104/3$, with sharper constants by objective and
 error component. It resolves C1's fixed rare-risk reversal, while C2 and
-adjusted C1 rare risk still need the sharper finite recurrence bound.
-Independent proof review and human review remain pending. The next theory step
-is an explicit predictive regime and an informative rate-adjusted comparison.
-This local proof does not settle the central novelty claim. The separate
-practical rate expansion changes which empirical normalization advantages remain
-resolved; it does not prove the population claim.
+adjusted C1 rare risk still need the sharper finite recurrence bound. The
+[predictive comparison](predictive-regime.md) now covers independent features,
+$0<q\leq10^{-4}$, and $1\leq Mq(1-q)\leq4$, with opposite oracle rare-risk
+orderings for explicit rare- and common-signal families over continuous
+rate/stopping sets. Its five-source comparison retains it as a supporting
+specialization. Independent proof review, human review, and a substantive case
+for expanding the central theorem effort remain pending. The separate practical
+rate expansion changes which empirical normalization advantages remain resolved;
+it does not prove the population claim.
 
 ## Implications of the literature report
 

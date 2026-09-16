@@ -20,9 +20,11 @@ categorical benchmark. It retains scaling effects and exposes missing-group
 failures and tuning boundaries. The **central theorem candidate and separate
 rate-search experiment** are now available for the normalization-focused draft.
 A [bounded feasibility proof](notes/predictive-claim-feasibility.md) now
-establishes stability and the uniform quadratic remainder. The next theory step
-is a predictive regime and an informative rate-adjusted comparison. The report's
-positive novelty assessment remains provisional.
+establishes stability and the uniform quadratic remainder. The [predictive
+comparison](notes/predictive-regime.md) now gives opposite oracle orderings for
+rare- and common-signal families over continuous rate/stopping sets. It remains
+a supporting specialization; the central contribution and the report's positive
+novelty assessment remain unresolved.
 
 ## Next milestone: predictive theory and a resolved rate comparison
 
@@ -95,10 +97,17 @@ the central contribution and the remaining work for AISTATS.
   fixed rare-risk reversal, but C2 and adjusted C1 rare risk still need the
   sharper finite bound. Independent proof review and human review remain
   pending.
-- [ ] Derive an explicit predictive prevalence/budget regime and an informative
+- [x] Derive an explicit predictive prevalence/budget regime and an informative
   comparison over declared rate/stopping sets from the expansion. Existing
   anchor checks do not establish this result. Compare the precise conclusion
-  with the closest antecedents before expanding the theorem effort.
+  with the closest antecedents before expanding the theorem effort. The
+  [local result](notes/predictive-regime.md) covers independent features,
+  $0<q\leq10^{-4}$, and $1\leq Mq(1-q)\leq4$, with every U/S rate in the
+  expansion domain and every earlier stop. Explicit signal families give
+  opposite oracle rare-risk orderings. A 3,197-rectangle rational
+  certificate and 2,718 finite checks support the derivation. The
+  five-source comparison retains it as a supporting specialization; novelty,
+  independent proof review, and human review remain open.
 - [ ] Develop and verify the theorem if the proposed claim offers a substantive
   advance over its closest antecedents. Separate mathematical correctness
   from novelty, and obtain human review of the final result.

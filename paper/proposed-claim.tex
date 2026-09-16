@@ -9,7 +9,7 @@
 \newcommand{\diag}{\operatorname{diag}}
 \begin{document}
 \begin{center}
-  {\large\bfseries Predictive risk expansion: a bounded feasibility result}\\[2pt]
+  {\large\bfseries Predictive risk expansion and bounded tuning regimes}\\[2pt]
   September 16, 2026. Local proof; independent and human review pending
 \end{center}
 
@@ -29,8 +29,9 @@ $D=\eta P=\diag(u/a,v/b)$. The proposed domain is
   0\leq\delta\leq1/2,\quad \theta=\frac{v}{bB}\leq1.
 \]
 Here feature divisors are $(a^\delta,b^\delta)$ and
-$\eta=u a^{2\delta-1}$; $\delta=0$ is unscaled and $\delta=1/2$ is SD scaling.
-Each risk comparison fixes the test law and $M=kB$ processed observations.
+$\eta=u a^{2\delta-1}$; $\delta=0$ is unscaled U and $\delta=1/2$ is SD scaling S.
+Pointwise comparisons match $M=kB$ observations; tuning sets use a common cap
+$kB\leq M$. Each comparison fixes the test law.
 
 \textbf{Approximation.}
 Write $s_k=(\E e_C^2,\E e_Ce_R,\E e_R^2)^\top$ for coefficient error
@@ -70,16 +71,20 @@ $\inf_{\mathcal A}(\widehat R-E)\leq\inf_{\mathcal A}R
 \leq\inf_{\mathcal A}(\widehat R+E)$; overlapping intervals remain unresolved.
 
 \textbf{Prediction and scope.}
-Rare learning exposure is $kv=Mb\theta$, whereas its direct stationary
+At $kB=M$, rare learning exposure is $kv=Mb\theta$, whereas its direct stationary
 coefficient-noise term is
 $\sigma^2\theta/[2-v-\theta(1-4b)]$.
 Thus faster learning can win early and lose after bias decays; reducing the
 rate as $M$ grows can remove that late penalty. Matching $v$ leaves common
 learning and dependence effects, so neither path equivalence nor universal
-tuned superiority follows. The bound covers prevalence, dependence, and rate
-ranges beyond C1/C2's boxes. Development checks recover their fixed and adjusted
-anchor signs after the correction. The uniform envelope resolves C1's fixed
-reversal; C2 and adjusted C1 rare risk still need the sharper finite bound.
+tuned superiority follows. The \href{../notes/predictive-regime.md}{predictive comparison}
+now covers independent features, $\sigma^2>0$, $B=1$, $0<q\leq10^{-4}$,
+and $1\leq Mb\leq4$.
+Over all U/S rates in the domain and all $k\leq M$, SD's oracle rare risk is
+at least $0.007\sigma^2$ lower when $(\beta_R^*)^2=\sigma^2$ and
+$(\beta_C^*)^2\leq\sigma^2/100$. Unscaled wins by at least $0.005\sigma^2$ under the
+swapped signal conditions. A rational certificate and finite-prevalence bounds
+give these local results; they are not validation-selection guarantees.
 
 \textbf{Closest antecedents and decision.}
 \href{https://arxiv.org/html/2403.08585v3}{Su--Zou--Wu, Theorem 4.2 and Appendix A.1}
@@ -89,8 +94,9 @@ already connect frequency scaling, noise, batches, and step restrictions.
 \href{https://arxiv.org/html/2502.09047v1}{Liu et al., Theorems 2--4}, and
 \href{https://proceedings.mlr.press/v139/lei21a/lei21a.pdf}{Lei et al., Theorem 3.4 and Remark 3.1},
 already establish target-aware preconditioning and strict tuned separations.
-The candidate advance is a sign-resolving, prevalence-uniform expansion along
-training and declared tuning sets. Its novelty is unresolved. Pursue a bounded
-predictive regime and rate-adjusted consequence next; the remainder proof alone
-does not settle the contribution. Human review remains necessary.
+The continuous-tuning comparison now supplies explicit predictive regimes,
+but its source audit retains the independent-feature result as a supporting
+specialization. It does not yet establish a substantive novelty case for
+expanding the theorem effort. Independent proof review and human review remain
+necessary.
 \end{document}
