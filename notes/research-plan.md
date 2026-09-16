@@ -72,11 +72,14 @@ adjusted C1 rare risk still need the sharper finite recurrence bound. The
 [predictive comparison](predictive-regime.md) now covers independent features,
 $0<q\leq10^{-4}$, and $1\leq Mq(1-q)\leq4$, with opposite oracle rare-risk
 orderings for explicit rare- and common-signal families over continuous
-rate/stopping sets. Its five-source comparison retains it as a supporting
-specialization. Independent proof review, human review, and a substantive case
-for expanding the central theorem effort remain pending. The separate practical
-rate expansion changes which empirical normalization advantages remain resolved;
-it does not prove the population claim.
+rate/stopping sets. The [self-contained theorem](predictive-theorem.md) supplies
+a shorter direct proof and a separately implemented rational certificate. Its
+five-source comparison identifies the precise added conclusion while retaining
+the result as supporting theory. Independent proof review, human review, and a
+decision about its role in the paper remain pending. Familiar proof tools alone
+do not settle the contribution assessment. The separate practical rate expansion
+changes which empirical normalization advantages remain resolved; it does not
+prove the population claim.
 
 ## Implications of the literature report
 

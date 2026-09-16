@@ -8,6 +8,12 @@ rational certificate, with independent proof review and human review still
 pending. The accompanying calculations are claim development, not held-out
 tests. The conference manuscript and frozen experiments retain their claims.
 
+The subsequent [self-contained theorem](predictive-theorem.md) gives a shorter
+direct proof of the same advertised guarantees, with a separately implemented
+rational certificate. It also separates mathematical completion from the
+decision about the result's role in the paper. The original expansion-based
+derivation and certificate below remain available.
+
 **At budgets proportional to inverse prevalence, SD scaling wins throughout one
 signal family and loses throughout another, even after each method chooses its
 constant rate and stopping time.** The statement covers independent binary
@@ -384,4 +390,6 @@ and target-risk analysis, and the source comparison does not establish a
 substantive publication-level advance. Do not expand the theorem program or
 promote the result into the main contribution on this basis alone. Independent
 proof review, human mathematical and novelty review, and a decision about a
-stronger dependence-sensitive statement remain the next milestone.
+stronger dependence-sensitive statement remain the next milestone. The later
+[assessment](predictive-theorem.md) clarifies that this is a decision about
+expanding and positioning the result, not a reason to defer checking it.

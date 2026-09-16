@@ -7,7 +7,7 @@ include Makefile
 .PHONY: check-mushroom-sensitivity reproduce-mushroom-sensitivity
 .PHONY: prepare-results check-scripts format-scripts
 .PHONY: check-variance-scaling reproduce-variance-scaling
-.PHONY: check-predictive-regime
+.PHONY: check-predictive-regime check-predictive-theorem
 
 prepare-results:
 	python scripts/prepare_results.py
@@ -45,7 +45,7 @@ reproduce-variance-scaling: prepare-results
 	OPENBLAS_NUM_THREADS=1 python experiments/summarize_variance_scaling.py
 	OPENBLAS_NUM_THREADS=1 python experiments/check_variance_scaling.py --write-audit
 
-check-predictive-claim: check-predictive-feasibility check-predictive-regime
+check-predictive-claim: check-predictive-feasibility check-predictive-regime check-predictive-theorem
 	python experiments/check_predictive_claim.py
 
 check-predictive-feasibility:
@@ -53,6 +53,9 @@ check-predictive-feasibility:
 
 check-predictive-regime:
 	python experiments/check_predictive_regime.py
+
+check-predictive-theorem:
+	python experiments/check_predictive_theorem.py
 
 check-practical-selection:
 	python experiments/check_practical_selection.py

@@ -83,8 +83,9 @@ and $1\leq Mb\leq4$.
 Over all U/S rates in the domain and all $k\leq M$, SD's oracle rare risk is
 at least $0.007\sigma^2$ lower when $(\beta_R^*)^2=\sigma^2$ and
 $(\beta_C^*)^2\leq\sigma^2/100$. Unscaled wins by at least $0.005\sigma^2$ under the
-swapped signal conditions. A rational certificate and finite-prevalence bounds
-give these local results; they are not validation-selection guarantees.
+swapped signal conditions. A \href{../notes/predictive-theorem.md}{self-contained theorem}
+now gives a shorter direct proof and a separate rational certificate for these
+same guarantees. They concern population oracles, not validation selectors.
 
 \textbf{Closest antecedents and decision.}
 \href{https://arxiv.org/html/2403.08585v3}{Su--Zou--Wu, Theorem 4.2 and Appendix A.1}
@@ -94,9 +95,9 @@ already connect frequency scaling, noise, batches, and step restrictions.
 \href{https://arxiv.org/html/2502.09047v1}{Liu et al., Theorems 2--4}, and
 \href{https://proceedings.mlr.press/v139/lei21a/lei21a.pdf}{Lei et al., Theorem 3.4 and Remark 3.1},
 already establish target-aware preconditioning and strict tuned separations.
-The continuous-tuning comparison now supplies explicit predictive regimes,
-but its source audit retains the independent-feature result as a supporting
-specialization. It does not yet establish a substantive novelty case for
-expanding the theorem effort. Independent proof review and human review remain
-necessary.
+The comparison supplies explicit regimes where scalar rate and stopping choices
+do not remove a normalization-risk separation. The source assessment identifies
+this precise addition but does not settle publication-level novelty. Local
+mathematical completion and the choice of a central contribution are separate
+decisions. Independent proof review and human review remain necessary.
 \end{document}

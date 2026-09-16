@@ -22,6 +22,14 @@ continuous rate and stopping sets. It covers independent features,
 $0<q\leq10^{-4}$, and $1\leq Mq(1-q)\leq4$. Its source comparison retains the
 result as a supporting specialization, pending mathematical and novelty review.
 
+A subsequent [self-contained theorem](predictive-theorem.md) proves those same
+predictive guarantees directly from the independent-feature moment recurrence.
+Its separate checker verifies the continuous certificate without importing the
+earlier implementations. The general stability and remainder theorem remains
+useful for dependence and batches. Mathematical correctness, the precise
+addition to prior work, and the result's role in the paper are tracked
+separately; independent proof review and human review remain open.
+
 ## Model and intended statement
 
 Use the feasible binary law

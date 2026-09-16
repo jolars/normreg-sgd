@@ -22,9 +22,11 @@ rate-search experiment** are now available for the normalization-focused draft.
 A [bounded feasibility proof](notes/predictive-claim-feasibility.md) now
 establishes stability and the uniform quadratic remainder. The [predictive
 comparison](notes/predictive-regime.md) now gives opposite oracle orderings for
-rare- and common-signal families over continuous rate/stopping sets. It remains
-a supporting specialization; the central contribution and the report's positive
-novelty assessment remain unresolved.
+rare- and common-signal families over continuous rate/stopping sets. A
+[self-contained theorem](notes/predictive-theorem.md) now gives a shorter direct
+proof and a separate rational certificate. It remains a supporting result;
+independent proof review, human review, the central contribution, and the
+report's positive novelty assessment remain unresolved.
 
 ## Next milestone: predictive theory and a resolved rate comparison
 
@@ -64,7 +66,7 @@ the central contribution and the remaining work for AISTATS.
   resolved, while damping's advantage persists. Its uncentered early-stop
   boundaries are addressed by the four-rule follow-up below; missing
   subgroup coverage remains a limitation.
-- [x] Include variance scaling ($s_j=v_j$, $\delta=1$) as a fourth arm in a
+- [x] Include variance scaling ($s_j = v_j$, $\delta = 1$) as a fourth arm in a
   separately declared practical/Mushroom follow-up. It was included in
   `../normreg` and the earlier pilot; its omission from the practical study
   leaves its tuned performance unanswered. Compare against none, SD, and
@@ -91,26 +93,44 @@ the central contribution and the remaining work for AISTATS.
 - [x] Complete a bounded feasibility proof for the proposed stability domain and
   uniform quadratic remainder. The
   [proof](notes/predictive-claim-feasibility.md) establishes
-  $\rho(|L|)<1-v/4$ and $K=104/3$, with sharper constants by objective and
-  error component. A separate checker verifies 1,125 exact rational operator
-  cases and 7,200 finite remainders. The uniform envelope resolves C1's
-  fixed rare-risk reversal, but C2 and adjusted C1 rare risk still need the
-  sharper finite bound. Independent proof review and human review remain
+  $\rho(|L|) < 1 - v/4$ and $K = 104/3$, with sharper constants by objective
+  and error component. A separate checker verifies 1,125 exact rational
+  operator cases and 7,200 finite remainders. The uniform envelope resolves
+  C1's fixed rare-risk reversal, but C2 and adjusted C1 rare risk still need
+  the sharper finite bound. Independent proof review and human review remain
   pending.
 - [x] Derive an explicit predictive prevalence/budget regime and an informative
   comparison over declared rate/stopping sets from the expansion. Existing
   anchor checks do not establish this result. Compare the precise conclusion
   with the closest antecedents before expanding the theorem effort. The
   [local result](notes/predictive-regime.md) covers independent features,
-  $0<q\leq10^{-4}$, and $1\leq Mq(1-q)\leq4$, with every U/S rate in the
-  expansion domain and every earlier stop. Explicit signal families give
-  opposite oracle rare-risk orderings. A 3,197-rectangle rational
+  $0 < q \leq 10^{-4}$, and $1 \leq Mq(1 - q) \leq 4$, with every U/S rate
+  in the expansion domain and every earlier stop. Explicit signal families
+  give opposite oracle rare-risk orderings. A 3,197-rectangle rational
   certificate and 2,718 finite checks support the derivation. The
   five-source comparison retains it as a supporting specialization; novelty,
   independent proof review, and human review remain open.
-- [ ] Develop and verify the theorem if the proposed claim offers a substantive
-  advance over its closest antecedents. Separate mathematical correctness
-  from novelty, and obtain human review of the final result.
+- [x] Complete the bounded theorem and local verification, stating assumptions,
+  tuning sets, and quantitative risk gaps explicitly. The [self-contained
+  proof](notes/predictive-theorem.md) recovers both predictive orderings
+  directly from exact moments. A separate implementation certifies 5,035
+  rational rectangles and checks 30 tensor reductions and 882 finite bounds.
+  The general stability and remainder theorem remains separate. These checks
+  do not constitute independent proof review or human review.
+- [x] State what the theorem adds to the closest published results, separately
+  from its correctness. The [contribution
+  assessment](notes/predictive-theorem.md) identifies opposite oracle-risk
+  separations, uniform in prevalence and over continuous rate/stopping sets.
+  The five inspected sources establish the underlying mechanisms but do not
+  directly supply these inequalities. This bounded comparison does not
+  settle priority or publication significance.
+- [ ] Obtain independent proof review and human review of the
+  stability/remainder result and the final predictive theorem, including the
+  continuous certificates and the source comparison.
+- [ ] Decide whether the quantitative prediction warrants a main contribution or
+  should remain supporting theory. Assess the useful conclusion beyond prior
+  work and its restrictions before expanding the theorem program. Familiar
+  proof tools alone do not settle this decision.
 - [ ] Once the theory predicts a concrete regime where scaling should help or
   hurt, test that prediction on synthetic configurations held out from claim
   development and an additional sparse categorical task. Declare the
