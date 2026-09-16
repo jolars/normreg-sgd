@@ -21,3 +21,6 @@ paper/*.pdf
 paper/*.synctex.gz
 paper/*.toc
 
+# Recreated with make prepare-results and checked against frozen hashes.
+/results/normalization-robustness/paths.npz
+/results/normalization-robustness/summary.json

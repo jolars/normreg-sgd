@@ -82,6 +82,12 @@ The development environment supplies Python, NumPy, SciPy, Matplotlib, Ruff,
 LaTeX, and the repository checks. Nix inputs are pinned in `devenv.lock`, and
 Python dependencies are pinned in `uv.lock`.
 
+The large robustness moment archive and detailed summary are local generated
+files, excluded from Git. `make prepare-results` recreates missing copies and
+verifies their frozen SHA-256 hashes. The checks that require them run this step
+automatically, including CI. The first run needs additional time and disk space;
+later runs reuse the verified local files. Git LFS is not required.
+
 ```sh
 devenv shell
 make paper
@@ -140,7 +146,11 @@ uncertainty, and provenance checks. The
 [report](notes/normalization-robustness-results.md) retains disappearing
 comparisons, unresolved unrestricted envelopes, and one investigated Monte Carlo
 covariance diagnostic. Both preceding studies remain unchanged. The full moment
-archive is about 441 MiB.
+archive is about 441 MiB, and its detailed summary is about 203 MiB. Both are
+excluded from Git. The tracked reports, figures, simulation archive, and frozen
+hashes remain available. See the [storage migration](notes/generated-results.md)
+for the preservation checks used after removing these files from unpublished
+history.
 
 To reproduce the controlled pilot inside `devenv shell`:
 

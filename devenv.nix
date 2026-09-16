@@ -35,6 +35,14 @@
   };
 
   git-hooks.hooks = {
+    check-added-large-files = {
+      enable = true;
+      args = [
+        "--maxkb=102400"
+        "--enforce-all"
+      ];
+      stages = [ "pre-commit" ];
+    };
     nixfmt.enable = true;
     actionlint.enable = true;
     panache-format = {
@@ -53,7 +61,7 @@
       enable = true;
       name = "Check experiment formatting and lint";
       entry = "make check-python";
-      files = "^(experiments/.*\\.py|pyproject\\.toml)$";
+      files = "^((experiments|scripts)/.*\\.py|pyproject\\.toml)$";
       pass_filenames = false;
     };
   };

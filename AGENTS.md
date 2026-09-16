@@ -106,6 +106,15 @@ NixOS.
 
 ## Generated files and releases
 
+The robustness `paths.npz` and `summary.json` are ignored local artifacts. Use
+`make prepare-results` to recreate missing copies and verify their frozen
+SHA-256 hashes; dependent checks run it automatically. Do not add them to Git or
+use Git LFS. The unpublished history was cleaned on September 16, 2026. Use the
+Make targets for the later studies: `scripts/frozen_experiment.py` checks their
+recorded preserved-file hashes in place of the removed commit references,
+without changing frozen source files or declarations. See
+`notes/generated-results.md` for details.
+
 `build/` contains generated LaTeX output and is ignored. Regenerate
 `results/two-feature-check.json` with `make reproduce`; do not hand-edit the
 numerical values or provenance. `make verify` validates without rewriting it.
