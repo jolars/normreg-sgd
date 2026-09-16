@@ -1,0 +1,117 @@
+\section{Variance scaling across practical preprocessing arms}
+\label{sec:variance-scaling-followup}
+
+A separately declared follow-up adds variance scaling, $s_j=v_j$
+($\delta=1$), to every preprocessing arm of the sampled binary and Mushroom
+studies. It reuses all eight binary laws and 128 replications per law, both
+Mushroom sizes and 32 partitions per size, and the original training,
+validation, and test samples. Population variances are used only in the
+synthetic known-preprocessing arm; other arms use training variances with
+denominator $n$. Constant-column, unknown-category, centering, initialization,
+and intercept policies are inherited unchanged.
+
+Each of none, SD, damping $.01$, and variance scaling receives the same 25
+curvature-relative factors: the earlier 17-factor Mushroom grid, two smaller
+factors $10^{-5}$ and $10^{-4}$, and six successive doublings from $12.8$
+through $409.6$. With two batch sizes, each rule costs nominally $50M$
+processed observations per arm and split at cap $M$. Aggregate or rare
+validation jointly selects rate, batch, and stopping. The primary search uses
+the original checkpoints; a secondary search adds intermediate checkpoints.
+Nested five-factor practical and 17-factor Mushroom searches retain comparisons
+at their earlier tuning effort. Test outcomes never select a configuration or
+alter the grid. Initialization, empty-group fallbacks, numerical failures, and
+extreme finite selections are retained.
+
+The original motivation for variance scaling under lasso concerns penalty
+weights on the original coefficient scale. In this experiment there is no
+explicit penalty. The active-coordinate SGD multiplier is
+$\eta/s_j^2=\eta/v_j^2$, and empirical curvature calibration changes $\eta$
+as well. The comparison therefore concerns relative learning, noise, and
+stability under a finite budget; a shrinkage motivation supplies no tuned
+prediction ordering.
+
+\paragraph{Mushroom results and boundaries.}
+At $n=2048$, $M=8192$, aggregate selection, and original stops, the
+centered/fitted variance-scaled predictor has aggregate loss $.311988$
+(MCSE $.201772$) and rare loss $.051586$ ($.008319$). Its rare-loss
+differences against none, SD, and damping are $.045630$ ($.008323$),
+$.046822$ ($.008189$), and $.050904$ ($.008322$), respectively. Each
+exceeds two paired MCSE. The aggregate differences do not. Variance's
+aggregate median is $.069802$ and maximum $6.505207$; rare selection
+raises its aggregate mean to $25.5720$ (MCSE $8.0453$).
+
+The two primary selections at factor $6.4$ have finite, worse validation
+scores at the newly tested neighbor $12.8$. Across both Mushroom sizes,
+all arms, caps, objectives, and the two expanded stopping searches, no
+positive-budget selection uses either grid edge. At original stops, all
+selected predictors match the nested 17-factor search. Sixty candidate
+indices change only because the same initialization is assigned a lower
+factor under the deterministic tie rule. Refined stops do select some added
+rates, up to $102.4$, and remain separate comparisons.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{rlrrrr}
+\toprule
+$n$ & Preprocessing & None & SD & Damped & Variance \\
+\midrule
+256 & Centered, fixed & .101062 & .075937 & .077910 & .079580 \\
+256 & Centered, fitted & .098799 & .076035 & .078161 & .079579 \\
+256 & Uncentered, fitted & .136151 & .076391 & .082727 & .079542 \\
+2048 & Centered, fixed & .005647 & .004722 & .000652 & .051601 \\
+2048 & Centered, fitted & .005955 & .004764 & .000682 & .051586 \\
+2048 & Uncentered, fitted & .043284 & .005060 & .007037 & .049465 \\
+\bottomrule
+\end{tabular}
+\caption{Mean Mushroom rare-group loss under aggregate validation, cap
+$8192$, and original stops, with the same 25-factor search for every rule.
+The artifacts report both risks, paired uncertainty, and tails for every arm.}
+\end{table}
+
+At $n=256$ in the centered/fitted arm, variance-minus-none aggregate loss
+is $.007047$ (MCSE $.000555$), while the rare contrast $-.019220$
+($.012351$) is unresolved. Five training partitions and thirteen validation
+partitions lack green observations; all are retained. Variance's uncentered
+aggregate means are $.179701$ (MCSE $.150890$) and $13.787223$
+($12.294085$) at the two sizes. These partition-level MCSEs concern one
+fixed, previously studied dataset.
+
+\paragraph{Synthetic tails and unresolved cases.}
+All eight laws and five arms are evaluated at equal effort. In the
+centered/fitted rarer C2 law at cap $2048$ under aggregate selection,
+variance scaling's exact rare-risk median is $.6836$, mean
+$1.727\times10^{30}$, MCSE $1.552\times10^{30}$, and maximum
+$1.974\times10^{32}$. These tail-dominated means, including those for SD
+and damping, are not precise expected-risk estimates. Empty rare validation
+groups can still conceal severe prediction error. For rare-only signal,
+variance's aggregate mean is $.01065$ ($.00311$), but its rare mean is
+$.4122$ ($.1467$), versus $.2326$ ($.0319$) for none.
+
+Across the two expanded stopping searches, the synthetic study retains
+106 lower-edge and 52 upper-edge decisions, counting repeated queries on
+the same replications. Upper selections occur only for variance scaling
+under known preprocessing in the two rarer anchor laws. The Mushroom
+boundary conclusion does not resolve these cases. The archives retain
+6,451,200 endpoints and 387,072 choices across both stages, including
+1,031,540 failed endpoints on 330,918 failed paths.
+
+\paragraph{Independent audit and numerical limits.}
+The audit reconstructs every loss and selection, verifies all 179 preserved
+files, and replays 100,271 paths in explicitly transformed coordinates.
+Overlapping frozen coefficient paths reproduce exactly. Reconstructed losses
+have maximum normwise discrepancy $1.36\times10^{-14}$ and leave all
+selections unchanged. Mushroom passes the declared trajectory and prediction
+gates. Synthetic data retain 63 discrepancy records in twelve replications,
+all with empty rare validation groups: 60 selected-prediction checks,
+two first-failure times, and one trajectory check. Repeated queries can
+refer to the same selected path. Maximum normwise coefficient and prediction
+discrepancies are $.003747$ and $.004184$, exceeding the declared gates
+$2\times10^{-9}$ and $10^{-8}$. All stored checkpoint statuses agree.
+These extreme synthetic paths are not certified by the transformed replay;
+the original candidates and selections remain archived. The result note
+records the affected configurations and the extension of the checker to
+retain failure-time disagreements rather than stopping at the first one.
+
+See \path{notes/variance-scaling-followup-results.md}
+for the protocol, archives, and reproduction commands.
+All earlier studies retain their frozen file hashes.

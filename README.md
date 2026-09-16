@@ -69,6 +69,12 @@ and Jonas Wallin.
   arm, with equal tuning effort per rule and preserved preceding studies.
   Reproduce with `make reproduce-mushroom-sensitivity` and audit with
   `make check-mushroom-sensitivity` inside `devenv shell`.
+- [Four-rule practical protocol](notes/variance-scaling-followup.md) and
+  [results](notes/variance-scaling-followup-results.md): variance scaling across
+  all synthetic and Mushroom preprocessing arms, with a common 25-factor rate
+  grid and nested replications of the earlier searches. Reproduce with
+  `make reproduce-variance-scaling` and audit with `make check-variance-scaling`
+  inside `devenv shell`.
 - [Controlled pilot](notes/rare-subgroup-pilot.md): protocol, results, and
   limits of the fixed-data subgroup-risk comparison.
 - [Initial investigation](notes/two-feature-investigation.md): detailed

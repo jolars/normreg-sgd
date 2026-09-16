@@ -144,9 +144,12 @@ unscaled aggregate selections choose the upper rate factor $.8$.
 A separately declared follow-up expands to 17 factors from $.001$ to
 $6.4$ for every scaling and arm, retaining the same splits, index streams,
 and stopping checkpoints. Each scaling now receives 34 trajectories,
-costing $34M$ observations at cap $M$. Table~\ref{tab:conference-mushroom}
-reports this expanded comparison. Appendix~\ref{sec:mushroom-rate-search}
-retains paths, failures, and a separate stopping-resolution check.
+costing $34M$ observations at cap $M$. A further declared comparison adds
+variance scaling, $s_j=v_j$, and gives all four rules 25 factors from $10^{-5}$
+to $409.6$, costing $50M$ per rule. Table~\ref{tab:conference-mushroom}
+reports this four-rule comparison. Appendices~\ref{sec:mushroom-rate-search}
+and~\ref{sec:variance-scaling-followup} retain paths, failures, nested searches,
+and separate stopping-resolution checks.
 
 \begin{table}[t]
 \centering
@@ -157,14 +160,16 @@ Selection & Scaling & Aggregate & Rare \\
 Aggregate & None & .001341 & .005955 \\
  & SD & .004476 & .004764 \\
  & Damped & .000810 & .000682 \\
+ & Variance & .311988 & .051586 \\
 Rare & None & .039395 & .003678 \\
  & SD & .141068 & .002257 \\
  & Damped & .002611 & .000499 \\
+ & Variance & 25.572030 & .019374 \\
 \bottomrule
 \end{tabular}
 \caption{Mean held-out half squared loss for Mushroom, with $n=2048$,
 1024 validation records, a fitted intercept, and cap $M=8192$.
-Expanded rate search with 34 trajectories per scaling and the original
+Expanded rate search with 50 trajectories per scaling and the original
 stopping checkpoints. Paired uncertainty is reported in the text.}
 \label{tab:conference-mushroom}
 \end{table}
@@ -179,14 +184,23 @@ both aggregate loss, $-.000532$ ($.000056$), and rare loss, $-.005273$
 persists at $-.001421$ ($.000470$), with highly variable aggregate loss.
 Its aggregate-loss median is $.004357$ and maximum is $2.36513$.
 
+Variance scaling's rare disadvantage against none is $.045630$ (paired MCSE
+$.008323$), whereas its aggregate difference $.310647$ ($.201754$) is
+unresolved by the two-MCSE convention. Its aggregate median is $.069802$ and
+maximum $6.505207$. The wider grid leaves all original-stop Mushroom selected
+predictors unchanged from the nested 17-factor search, while placing every
+positive-budget selection away from both rate edges, including in the refined
+stopping search. This is a finite-grid conclusion, not continuous optimality.
+
 All 32 unscaled aggregate selections now use interior factors $.6$--$1.8$,
 with worse validation scores at their immediate higher tested neighbors.
 This resolves the original upper edge within the finite grid, not a
 continuous optimum. The expanded mean green coefficients are $.5999$,
 $.7763$, and $.9126$ for none, SD, and damping; other features partly
-offset these contributions. Across both sizes and all arms, 2950 failed
-endpoints remain archived. A secondary uncentered rare-objective search
-still selects the upper edge when extra early stops are allowed.
+offset these contributions. Across both sizes and all arms, the 17-factor study
+retains 2950 failed endpoints. Its secondary uncentered rare-objective search
+selected the upper edge when extra early stops were allowed; the four-rule
+extension resolves that finite-grid boundary.
 The small-sample experiment has no
 green training observations in five partitions and none in validation
 in thirteen. MCSEs describe partition and optimization variation within
@@ -201,6 +215,6 @@ and stopping searches per rule. At $n=2048$, $M=8192$, and aggregate validation,
 the tested offsets $.003$, $.01$, $.03$, and $.1$ retain both risk improvements
 over none beyond two paired MCSE; at $.001$, the aggregate improvement is
 unresolved. At $n=256$, rare validation selects an extreme finite path at
-$\tau=.03$, so damping does not prevent selection failures. Variance scaling
-is also included, but its rate search retains upper-edge selections.
+$\tau=.03$, so damping does not prevent selection failures. That study also
+includes variance scaling; the four-rule extension above addresses its rate edge.
 Appendix~\ref{sec:mushroom-sensitivity} gives the results and their limits.

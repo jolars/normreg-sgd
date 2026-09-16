@@ -51,6 +51,15 @@ validation selection in sampled binary models and a sparse categorical task. It
 retains relative-learning effects while exposing missing-group failures and
 rate-grid limitations.
 
+The [four-rule follow-up](variance-scaling-followup-results.md) now includes
+variance scaling in all five synthetic and all three Mushroom preprocessing
+arms, with 25 rate factors per rule. The Mushroom search moves off both rate
+edges while retaining every original-stop predictor from the nested 17-factor
+search. Variance's primary rare-risk disadvantage persists; its aggregate
+contrast remains tail dominated. Synthetic failures, numerical discrepancies,
+and remaining rate boundaries limit broader tuned-ordering claims. The earlier
+lasso motivation does not supply a prediction ordering for these SGD procedures.
+
 The [one-page proposed claim](../paper/proposed-claim.tex) now targets a
 prevalence-uniform risk approximation with a controlled quadratic remainder. Its
 [supporting note](predictive-claim.md) retains dependence and the first feedback

@@ -1,0 +1,524 @@
+{
+  "preserved_files": 179,
+  "manifests": {
+    "synthetic": "0de6d94e9de4d283f96eb10fb6a575a99130c79e1098b2f1f5ae7f9847b2d56c",
+    "mushroom": "7db2a4acafd0f6f22befada4c9abc25ea58da8a4a12b7c4e288fbbc99cc76b56"
+  },
+  "max_path_error": 0.0037469095900544524,
+  "max_prediction_error": 0.0041841004184100415,
+  "max_frozen_path_error": 0.0,
+  "max_loss_error": 1.3597086714548789e-14,
+  "gate_violations": [
+    {
+      "stage": 0,
+      "case": 1,
+      "rep": 29,
+      "query": 271,
+      "kind": "selected_prediction",
+      "error": 3.899484546635203e-07
+    },
+    {
+      "stage": 0,
+      "case": 1,
+      "rep": 29,
+      "query": 272,
+      "kind": "selected_prediction",
+      "error": 3.899484546635203e-07
+    },
+    {
+      "stage": 0,
+      "case": 1,
+      "rep": 29,
+      "query": 274,
+      "kind": "selected_prediction",
+      "error": 3.899484546635203e-07
+    },
+    {
+      "stage": 0,
+      "case": 1,
+      "rep": 29,
+      "query": 275,
+      "kind": "selected_prediction",
+      "error": 3.899484546635203e-07
+    },
+    {
+      "stage": 0,
+      "case": 1,
+      "rep": 29,
+      "query": 280,
+      "kind": "selected_prediction",
+      "error": 3.899484546635203e-07
+    },
+    {
+      "stage": 0,
+      "case": 1,
+      "rep": 29,
+      "query": 281,
+      "kind": "selected_prediction",
+      "error": 3.899484546635203e-07
+    },
+    {
+      "stage": 0,
+      "case": 1,
+      "rep": 29,
+      "query": 283,
+      "kind": "selected_prediction",
+      "error": 3.899484546635203e-07
+    },
+    {
+      "stage": 0,
+      "case": 1,
+      "rep": 29,
+      "query": 284,
+      "kind": "selected_prediction",
+      "error": 3.899484546635203e-07
+    },
+    {
+      "stage": 0,
+      "case": 1,
+      "rep": 82,
+      "query": 242,
+      "kind": "selected_prediction",
+      "error": 4.230509604542277e-08
+    },
+    {
+      "stage": 0,
+      "case": 1,
+      "rep": 82,
+      "query": 251,
+      "kind": "selected_prediction",
+      "error": 4.230509604542277e-08
+    },
+    {
+      "stage": 0,
+      "case": 1,
+      "rep": 82,
+      "query": 275,
+      "kind": "selected_prediction",
+      "error": 9.86628946977238e-08
+    },
+    {
+      "stage": 0,
+      "case": 1,
+      "rep": 82,
+      "query": 284,
+      "kind": "selected_prediction",
+      "error": 9.86628946977238e-08
+    },
+    {
+      "stage": 0,
+      "case": 1,
+      "rep": 103,
+      "query": 256,
+      "kind": "selected_prediction",
+      "error": 0.0009999176279226803
+    },
+    {
+      "stage": 0,
+      "case": 1,
+      "rep": 103,
+      "query": 259,
+      "kind": "selected_prediction",
+      "error": 0.0009999176279226803
+    },
+    {
+      "stage": 0,
+      "case": 1,
+      "rep": 103,
+      "query": 265,
+      "kind": "selected_prediction",
+      "error": 0.0009999176279226803
+    },
+    {
+      "stage": 0,
+      "case": 1,
+      "rep": 103,
+      "query": 268,
+      "kind": "selected_prediction",
+      "error": 0.0009999176279226803
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 0,
+      "batch": 1,
+      "kind": "failure_update",
+      "configuration": 342,
+      "archived": 198,
+      "reference": 206
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 0,
+      "batch": 1,
+      "kind": "failure_update",
+      "configuration": 343,
+      "archived": 177,
+      "reference": 179
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 0,
+      "batch": 1,
+      "kind": "transformed_path",
+      "error": 0.0037469095900544524
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 16,
+      "query": 241,
+      "kind": "selected_prediction",
+      "error": 8.306586126007589e-07
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 16,
+      "query": 242,
+      "kind": "selected_prediction",
+      "error": 8.306586126007589e-07
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 16,
+      "query": 250,
+      "kind": "selected_prediction",
+      "error": 8.306586126007589e-07
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 16,
+      "query": 251,
+      "kind": "selected_prediction",
+      "error": 8.306586126007589e-07
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 17,
+      "query": 278,
+      "kind": "selected_prediction",
+      "error": 0.0041841004184100415
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 17,
+      "query": 287,
+      "kind": "selected_prediction",
+      "error": 0.0041841004184100415
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 52,
+      "query": 240,
+      "kind": "selected_prediction",
+      "error": 0.00032804406942227695
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 52,
+      "query": 241,
+      "kind": "selected_prediction",
+      "error": 0.00032804406942227695
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 52,
+      "query": 242,
+      "kind": "selected_prediction",
+      "error": 0.00032804406942227695
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 52,
+      "query": 249,
+      "kind": "selected_prediction",
+      "error": 0.00032804406942227695
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 52,
+      "query": 250,
+      "kind": "selected_prediction",
+      "error": 0.00032804406942227695
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 52,
+      "query": 251,
+      "kind": "selected_prediction",
+      "error": 0.00032804406942227695
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 52,
+      "query": 258,
+      "kind": "selected_prediction",
+      "error": 4.922642586112996e-08
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 52,
+      "query": 259,
+      "kind": "selected_prediction",
+      "error": 4.922642586112996e-08
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 52,
+      "query": 260,
+      "kind": "selected_prediction",
+      "error": 4.922642586112996e-08
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 52,
+      "query": 267,
+      "kind": "selected_prediction",
+      "error": 4.922642586112996e-08
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 52,
+      "query": 268,
+      "kind": "selected_prediction",
+      "error": 4.922642586112996e-08
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 52,
+      "query": 269,
+      "kind": "selected_prediction",
+      "error": 4.922642586112996e-08
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 68,
+      "query": 277,
+      "kind": "selected_prediction",
+      "error": 0.0019453429199957758
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 68,
+      "query": 278,
+      "kind": "selected_prediction",
+      "error": 0.0019453429199957758
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 68,
+      "query": 286,
+      "kind": "selected_prediction",
+      "error": 0.0019453429199957758
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 68,
+      "query": 287,
+      "kind": "selected_prediction",
+      "error": 0.0019453429199957758
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 100,
+      "query": 274,
+      "kind": "selected_prediction",
+      "error": 1.4542188634290713e-07
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 100,
+      "query": 275,
+      "kind": "selected_prediction",
+      "error": 1.4542188634290713e-07
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 100,
+      "query": 277,
+      "kind": "selected_prediction",
+      "error": 1.4542188634290713e-07
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 100,
+      "query": 278,
+      "kind": "selected_prediction",
+      "error": 1.4542188634290713e-07
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 100,
+      "query": 283,
+      "kind": "selected_prediction",
+      "error": 1.4542188634290713e-07
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 100,
+      "query": 284,
+      "kind": "selected_prediction",
+      "error": 1.4542188634290713e-07
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 100,
+      "query": 286,
+      "kind": "selected_prediction",
+      "error": 1.4542188634290713e-07
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 100,
+      "query": 287,
+      "kind": "selected_prediction",
+      "error": 1.4542188634290713e-07
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 108,
+      "query": 274,
+      "kind": "selected_prediction",
+      "error": 0.001090780067480765
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 108,
+      "query": 275,
+      "kind": "selected_prediction",
+      "error": 0.001090780067480765
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 108,
+      "query": 277,
+      "kind": "selected_prediction",
+      "error": 0.001090780067480765
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 108,
+      "query": 278,
+      "kind": "selected_prediction",
+      "error": 0.001090780067480765
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 108,
+      "query": 283,
+      "kind": "selected_prediction",
+      "error": 0.001090780067480765
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 108,
+      "query": 284,
+      "kind": "selected_prediction",
+      "error": 0.001090780067480765
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 108,
+      "query": 286,
+      "kind": "selected_prediction",
+      "error": 0.001090780067480765
+    },
+    {
+      "stage": 0,
+      "case": 3,
+      "rep": 108,
+      "query": 287,
+      "kind": "selected_prediction",
+      "error": 0.001090780067480765
+    },
+    {
+      "stage": 0,
+      "case": 5,
+      "rep": 72,
+      "query": 256,
+      "kind": "selected_prediction",
+      "error": 1.9658678407666215e-08
+    },
+    {
+      "stage": 0,
+      "case": 5,
+      "rep": 72,
+      "query": 257,
+      "kind": "selected_prediction",
+      "error": 1.9658678407666215e-08
+    },
+    {
+      "stage": 0,
+      "case": 5,
+      "rep": 72,
+      "query": 265,
+      "kind": "selected_prediction",
+      "error": 1.9658678407666215e-08
+    },
+    {
+      "stage": 0,
+      "case": 5,
+      "rep": 72,
+      "query": 266,
+      "kind": "selected_prediction",
+      "error": 1.9658678407666215e-08
+    },
+    {
+      "stage": 0,
+      "case": 7,
+      "rep": 75,
+      "query": 242,
+      "kind": "selected_prediction",
+      "error": 1.6159433292318408e-06
+    },
+    {
+      "stage": 0,
+      "case": 7,
+      "rep": 75,
+      "query": 251,
+      "kind": "selected_prediction",
+      "error": 1.6159433292318408e-06
+    }
+  ],
+  "endpoints": 6451200,
+  "decisions": 387072,
+  "replayed_paths": 100271
+}

@@ -62,6 +62,13 @@ baselines.
   `results/mushroom-scaling-sensitivity/` preserve the earlier studies. Treat
   0.01 as a prespecified heuristic; a fixed-offset sensitivity comparison does
   not select a deployable damping rule or establish an optimal offset.
+- `notes/variance-scaling-followup.md` declares the four-rule comparison across
+  all practical synthetic and Mushroom preprocessing arms, with 25 rate factors
+  per rule. The four `*variance_scaling*.py` scripts and separate artifacts
+  under `results/variance-scaling-followup/` retain the nested earlier searches,
+  failures, absence strata, and numerical audit gates. Preserve the declaration
+  and preceding studies. Results belong in
+  `notes/variance-scaling-followup-results.md`.
 - The paper and optimization checks use the averaged loss and
   $C = X_c^\top X_c/n$ for empirical designs, while the shrinkage script uses
   $G = nC$. Keep $\lambda_1 = nt$ and $\lambda_2 = nr$ consistent. Report
@@ -151,6 +158,13 @@ variance-scaling comparison, and `make check-mushroom-sensitivity` for its
 focused audit. Keep its protocol and specification declaration fixed, retain
 failures and tuning boundaries, and compare each fixed offset at equal tuning
 effort. The five-offset family has greater total work than one fixed rule.
+
+Use `make reproduce-variance-scaling` for the four-rule practical extension and
+`make check-variance-scaling` for its focused audit. The new declaration uses
+file hashes directly, without historical commit lookups. Summaries are separated
+by law or sample size, and neighbor diagnostics use compressed arrays. Retain
+numerical gate violations in `audit.json`; successful structural checks do not
+erase those limitations or change the frozen selection rule.
 
 Versionary manages the version in `pyproject.toml`, its lockfile update, and
 `CHANGELOG.md` once releases are enabled. Do not hand-edit that changelog. The

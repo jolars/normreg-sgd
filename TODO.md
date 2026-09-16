@@ -56,9 +56,10 @@ the central contribution and the remaining work for AISTATS.
   to 17 rate factors at equal effort across scalings and retains all 156,672
   endpoints. The primary unscaled selections move off the upper edge; the
   large-sample SD rare advantage under aggregate selection is no longer
-  resolved, while damping's advantage persists. Uncentered early-stop
-  boundaries and missing subgroup coverage remain explicit limitations.
-- [ ] Include variance scaling ($s_j=v_j$, $\delta=1$) as a fourth arm in a
+  resolved, while damping's advantage persists. Its uncentered early-stop
+  boundaries are addressed by the four-rule follow-up below; missing
+  subgroup coverage remains a limitation.
+- [x] Include variance scaling ($s_j=v_j$, $\delta=1$) as a fourth arm in a
   separately declared practical/Mushroom follow-up. It was included in
   `../normreg` and the earlier pilot; its omission from the practical study
   leaves its tuned performance unanswered. Compare against none, SD, and
@@ -66,12 +67,14 @@ the central contribution and the remaining work for AISTATS.
   Report aggregate and rare-subgroup risks, failed paths, and tuning
   boundaries. Distinguish its original lasso shrinkage motivation from its
   SGD learning and stability tradeoffs, and preserve the frozen studies. The
-  [primary centered/fitted
-  comparison](notes/mushroom-scaling-sensitivity-results.md) is complete at
-  both Mushroom sizes. Variance scaling has larger losses on the declared
-  grid, but upper-rate selections remain unresolved. Extend its rate search
-  before claiming a tuned ordering; other preprocessing arms and the
-  synthetic practical comparisons remain open.
+  [four-rule follow-up](notes/variance-scaling-followup-results.md) covers
+  all five synthetic and three Mushroom preprocessing arms, with 25 factors
+  per rule and 6,451,200 saved endpoints. Mushroom rate edges disappear
+  while all original-stop predictors match the nested 17-factor search.
+  Variance retains a primary rare-risk disadvantage; its aggregate contrast
+  remains unresolved. Synthetic boundaries, extreme selections, and 63
+  numerical gate violations remain explicit limits. All 179 preserved files
+  and overlapping paths verify.
 - [x] Describe damping 0.01 as a prespecified heuristic and check sensitivity in
   a separate declared comparison. The
   [protocol](notes/mushroom-scaling-sensitivity.md) evaluates five fixed

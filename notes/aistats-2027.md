@@ -22,12 +22,15 @@ declared oracle adjustments. Estimated preprocessing and validation selection
 retain scaling effects. The separate [rate
 expansion](mushroom-rate-search-results.md) now resolves the primary categorical
 upper edge: the large-sample SD rare advantage under aggregate selection is no
-longer resolved, while damping's advantage persists. Secondary rate boundaries,
-a single dataset, and validation coverage still limit the conclusions. These
-findings belong in the paper. They do not yet establish a contribution beyond
-the closest preconditioning and target-risk results. The template conversion is
-a concrete draft, not a decision that the present contribution is ready for
-submission.
+longer resolved, while damping's advantage persists. The separate [four-rule
+extension](variance-scaling-followup-results.md) includes variance scaling
+across all practical arms and resolves the remaining Mushroom rate edges. Its
+primary rare disadvantage persists, with an unresolved aggregate contrast.
+Synthetic rate boundaries and numerical discrepancies, a single categorical
+dataset, and validation coverage still limit the conclusions. These findings
+belong in the paper. They do not yet establish a contribution beyond the closest
+preconditioning and target-risk results. The template conversion is a concrete
+draft, not a decision that the present contribution is ready for submission.
 
 ## Draft organization
 

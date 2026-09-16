@@ -6,6 +6,7 @@ include Makefile
 .PHONY: check-mushroom-rate-search reproduce-mushroom-rate-search
 .PHONY: check-mushroom-sensitivity reproduce-mushroom-sensitivity
 .PHONY: prepare-results check-scripts format-scripts
+.PHONY: check-variance-scaling reproduce-variance-scaling
 
 prepare-results:
 	python scripts/prepare_results.py
@@ -31,6 +32,17 @@ paper-claim:
 	cd paper && latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error -outdir=../build proposed-claim.tex
 
 check-optimization: check-practical-selection check-predictive-claim check-mushroom-rate-search check-mushroom-sensitivity
+check-optimization: check-variance-scaling
+
+check-variance-scaling: prepare-results
+	OPENBLAS_NUM_THREADS=1 python experiments/check_variance_scaling.py
+
+reproduce-variance-scaling: prepare-results
+	OPENBLAS_NUM_THREADS=1 python experiments/check_variance_scaling.py --numerics-only
+	python experiments/variance_scaling_spec.py --declare
+	OPENBLAS_NUM_THREADS=1 python experiments/run_variance_scaling.py
+	OPENBLAS_NUM_THREADS=1 python experiments/summarize_variance_scaling.py
+	OPENBLAS_NUM_THREADS=1 python experiments/check_variance_scaling.py --write-audit
 
 check-predictive-claim:
 	python experiments/check_predictive_claim.py
