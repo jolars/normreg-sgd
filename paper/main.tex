@@ -7,7 +7,10 @@
 \renewcommand{\bibsection}{\subsubsection*{References}}
 \usepackage{microtype}
 \usepackage[hidelinks]{hyperref}
-\hypersetup{pdftitle={Feature Normalization under Finite Training Budgets},pdfauthor={}}
+\hypersetup{
+  pdftitle={Feature Normalization under Finite Training Budgets},
+  pdfauthor={}
+}
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{proposition}[theorem]{Proposition}
@@ -35,25 +38,24 @@
 ]
 
 \begin{abstract}
-Feature normalization changes the relative rates at which stochastic gradient
-descent learns different coordinates. We study its consequences for prediction
-under finite training budgets, using common and rare binary features as a
-controlled setting. Exact error moments separate incomplete learning,
-randomness in feature sampling, and observation noise. With a declared
-common-coordinate rate calibration, we certify parameter regions where
-standard-deviation scaling reverses its rare-subgroup risk ordering as training
-continues, and where aggregate and rare-subgroup risk favor opposite scaling
-rules. These are comparisons of specified training procedures: both original
-anchor comparisons disappear under a subsequent learning-rate and stopping
-search. Experiments with estimated preprocessing and validation selection
-retain differences in relative learning. On a sparse categorical task,
-expanding the rate search removes a resolved standardization advantage
-under aggregate selection, while a damped scaling retains lower risks.
-Selection also exposes severe failures when rare cases are absent from
-validation. Together, the results
-describe how normalization interacts with the training budget and prediction
-objective, while delimiting what fixed-configuration comparisons establish
-about a tuned procedure.
+  Feature normalization changes the relative rates at which stochastic gradient
+  descent learns different coordinates. We study its consequences for prediction
+  under finite training budgets, using common and rare binary features as a
+  controlled setting. Exact error moments separate incomplete learning,
+  randomness in feature sampling, and observation noise. With a declared
+  common-coordinate rate calibration, we certify parameter regions where
+  standard-deviation scaling reverses its rare-subgroup risk ordering as
+  training continues, and where aggregate and rare-subgroup risk favor opposite
+  scaling rules. These are comparisons of specified training procedures: both
+  original anchor comparisons disappear under a subsequent learning-rate and
+  stopping search. Experiments with estimated preprocessing and validation
+  selection retain differences in relative learning. On a sparse categorical
+  task, expanding the rate search removes a resolved standardization advantage
+  under aggregate selection, while a damped scaling retains lower risks.
+  Selection also exposes severe failures when rare cases are absent from
+  validation. Together, the results describe how normalization interacts with
+  the training budget and prediction objective, while delimiting what
+  fixed-configuration comparisons establish about a tuned procedure.
 \end{abstract}
 
 \input{sections/conference-introduction}
@@ -66,7 +68,8 @@ about a tuned procedure.
 \clearpage
 \typeout{AISTATS-MAIN-PAGES: \number\numexpr\value{page}-1\relax}
 \ifnum\value{page}>9
-  \PackageError{normreg-multi}{AISTATS main text exceeds eight pages}{Shorten the main text without changing the official formatting.}
+\PackageError{normreg-multi}{AISTATS main text exceeds eight pages}{Shorten the
+  main text without changing the official formatting.}
 \fi
 \input{sections/ai-use}
 \bibliographystyle{plainnat}
@@ -78,7 +81,8 @@ about a tuned procedure.
 \appendix
 \onecolumn
 \thispagestyle{empty}
-\aistatstitle{Feature Normalization under Finite Training Budgets:\\Supplementary Materials}
+\aistatstitle{Feature Normalization under Finite Training
+  Budgets:\\Supplementary Materials}
 \input{sections/comparison-proofs}
 \input{sections/practical-selection}
 \input{sections/mushroom-rate-search}
