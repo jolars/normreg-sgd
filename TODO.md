@@ -9,10 +9,13 @@ retains SGD and implicit regularization as the follow-up's ML direction.
 The completed calculations and experiments below provide a foundation. Johan's
 [research report](deep-research-report.md) now informs the plan. The [comparison
 proofs](notes/normalization-risk-theorem.md) establish C1's stopping reversal
-and C2's aggregate/subgroup disagreement under declared budgets. The next
-milestone is **to test whether the comparisons survive a declared range of
-learning-rate and stopping adjustments**, alongside the expanded novelty audit.
-The report's positive novelty assessment remains provisional.
+and C2's aggregate/subgroup disagreement under declared budgets. The [robustness
+study](notes/normalization-robustness-results.md) now shows that both original
+anchor comparisons disappear after declared rate and stopping adjustments, while
+other laws retain reversals and objective disagreements. The next milestone is
+**practical preprocessing and validation-based selection**, alongside the
+expanded novelty audit. The report's positive novelty assessment remains
+provisional.
 
 ## Current priorities: comparative results and their limits
 
@@ -57,11 +60,17 @@ comparison. The research plan gives the completion criteria.
   existing studies. The [declared
   protocol](notes/normalization-robustness.md) specifies 228 data laws, a
   16-law resolution check, both budget conventions, paired simulations, and
-  separate artifacts. Execution remains the next task.
-- [ ] Determine which conclusions survive learning-rate and stopping adjustments
+  separate artifacts. Execution is recorded below.
+- [x] Determine which conclusions survive learning-rate and stopping adjustments
   over a declared range at comparable budgets. Retain fixed-configuration
   results and report reversals that disappear. Add tail averaging if needed
-  for the closest literature comparison.
+  for the closest literature comparison. The
+  [results](notes/normalization-robustness-results.md) retain all 228 laws
+  and 2,571,800 endpoints. Both original anchor comparisons disappear after
+  retuning; other laws retain reversals or produce objective disagreement.
+  Grid refinements, paired uncertainty, the investigated covariance
+  diagnostic, and unresolved unrestricted comparisons are reported. Tail
+  averaging remains deferred under the declared final-iterate protocol.
 - [ ] After the controlled result, test estimated preprocessing, intercepts,
   absent rare observations, and validation-based selection. Then evaluate
   one stated sparse linear-model task with equal tuning effort and both risk

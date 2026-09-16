@@ -31,6 +31,13 @@ baselines.
   pending independent proof review. `experiments/run_joint_interactions.py`
   computes fresh-sample paths, and `experiments/check_joint_interactions.py`
   independently checks them against enumerated updates and prior operators.
+- `notes/normalization-robustness.md` is the frozen robustness protocol;
+  `notes/normalization-robustness-results.md` records its execution and limits.
+  `experiments/robustness_spec.py` defines its sets. The runner, simulator,
+  summarizer, plotter, and independent checker use the
+  `*_normalization_robustness.py` filenames. Their separate artifacts live in
+  `results/normalization-robustness/`. Preserve the reported Monte Carlo
+  covariance gate violation and its conditional-absence investigation.
 - The paper and optimization checks use the averaged loss and
   $C = X_c^\top X_c/n$ for empirical designs, while the shrinkage script uses
   $G = nC$. Keep $\lambda_1 = nt$ and $\lambda_2 = nr$ consistent. Report
@@ -80,10 +87,14 @@ numerical values or provenance. `make verify` validates without rewriting it.
 Use `make reproduce-joint-interactions` inside `devenv shell` to regenerate the
 joint-interaction JSON, compressed moment archive, and SVG/PDF figures. Its
 focused checks verify source and archive hashes; regenerate after changing its
-scripts or `uv.lock`. Keep the frozen fixed-data pilot separate. Refresh
-`uv.lock` with uv and `devenv.lock` with devenv when changing inputs. Keep the
-Panache version in the Markdown CI job aligned with the devenv package when
-updating the Nix inputs.
+scripts or `uv.lock`. Keep the frozen fixed-data pilot separate. Use
+`make reproduce-normalization-robustness` to regenerate the robustness extension
+and `make check-normalization-robustness` to verify it. Its source, archive,
+figure, and preserved-study hashes are checked. Regenerate after changing its
+sources or locked dependencies, and retain invalid candidates in unrestricted
+envelope reports. Refresh `uv.lock` with uv and `devenv.lock` with devenv when
+changing inputs. Keep the Panache version in the Markdown CI job aligned with
+the devenv package when updating the Nix inputs.
 
 Versionary manages the version in `pyproject.toml`, its lockfile update, and
 `CHANGELOG.md` once releases are enabled. Do not hand-edit that changelog. The

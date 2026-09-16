@@ -28,10 +28,12 @@ The comparative milestone asks a narrower question: **Under a declared training
 budget, when does relative feature scaling change the ordering of prediction
 risks, and how do rarity, stopping, stochastic variance, and dependence explain
 that ordering?** The [C1 and C2 proofs](normalization-risk-theorem.md) now
-provide two bounded answers. The next milestone tests their robustness to
-declared learning-rate and stopping adjustments before expanding the joint
-configuration grid. A complete characterization of every training regime remains
-a longer-term research objective.
+provide two bounded answers. The [robustness
+study](normalization-robustness-results.md) now tests their sensitivity to
+declared learning-rate and stopping adjustments: both original anchor
+comparisons disappear, while other laws retain reversals or produce objective
+disagreements. A complete characterization of every training regime remains a
+longer-term research objective.
 
 ## Implications of the literature report
 
@@ -307,9 +309,11 @@ note. The associated [expanded audit](normalization-risk-audit.md) finds no
 direct statement of these comparisons in its inspected sources, while
 identifying substantial overlap in their mechanisms.
 
-The next scientific decision is whether C2's objective disagreement survives a
-declared range of learning-rate and stopping adjustments, and what conditions on
-prevalence, dependence, signal, and noise explain its production during training
+The [declared robustness study](normalization-robustness-results.md) shows that
+C2's original anchor disagreement does not survive rate adjustment on either
+grid. Other signals produce disagreements after adjustment. The next scientific
+decisions concern their practical consequences and the conditions on prevalence,
+dependence, signal, and noise that explain their production during training
 beyond the target-weight identity. Retain C1 as the controlled bias-versus-noise
 comparison and preserve both fixed configurations and failures. The steps below
 retain the milestone criteria that led to these results; mathematical completion
@@ -384,8 +388,15 @@ milestone.
 The [focused robustness protocol](normalization-robustness.md) now specifies
 this extension: 228 data laws, rate and stopping refinement on 16 declared laws,
 global-rescaling and common-learning controls, both budget conventions, paired
-simulations, and failure reporting. This completes the specification item in the
-checklist. Execution and the robustness conclusions below remain pending.
+simulations, and failure reporting. Its
+[execution](normalization-robustness-results.md) is complete: all 2,571,800
+moment endpoints, 465,600 oracle comparisons, paired uncertainty, failure
+reporting, and preserved-study checksums are retained. Both original anchor
+comparisons disappear after retuning, but other laws retain reversals or produce
+objective disagreement. One tail-dominated covariance diagnostic exceeds the
+simulation gate and is investigated explicitly; unrestricted comparisons with
+unresolved overflow remain incomplete. These are finite-grid numerical findings,
+with refinement conclusions restricted to 16 laws.
 
 Declare a focused extension to the retained grid around the proposed result.
 Vary prevalence, feasible dependence, signal signs and magnitudes, noise, rate

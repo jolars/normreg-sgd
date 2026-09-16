@@ -36,8 +36,10 @@ Larsson and Jonas Wallin.
   review of the new analytical deductions remains pending.
 - [Robustness protocol](notes/normalization-robustness.md): the declared
   follow-up to C1 and C2, including parameter slices, rate and stopping
-  adjustments, controls, paired uncertainty, and failure reporting. Execution is
-  pending.
+  adjustments, controls, paired uncertainty, and failure reporting. The
+  [results](notes/normalization-robustness-results.md) show that both original
+  anchor comparisons disappear after retuning, while other laws retain reversals
+  and objective disagreements.
 - [Joint-budget theorem](notes/joint-budget-limits.md) and [independent
   review](notes/joint-budget-review.md): the scoped fresh-sample limit.
 - [Literature audit](notes/novelty-audit.md): theorem-level overlap and
@@ -97,6 +99,21 @@ and figures under `results/figures/`. Run `make check-joint-interactions` for
 its focused numerical and provenance checks. The
 [specification](notes/joint-interactions.md) records the complete comparison and
 distinguishes it from the fixed-data pilot.
+
+To reproduce the declared robustness extension inside `devenv shell`:
+
+```sh
+make reproduce-normalization-robustness
+```
+
+This writes the complete grid, paired simulations, summaries, and six SVG/PDF
+figures under `results/normalization-robustness/`. Run
+`make check-normalization-robustness` for independent numerical, selection,
+uncertainty, and provenance checks. The
+[report](notes/normalization-robustness-results.md) retains disappearing
+comparisons, unresolved unrestricted envelopes, and one investigated Monte Carlo
+covariance diagnostic. Both preceding studies remain unchanged. The full moment
+archive is about 441 MiB.
 
 To reproduce the controlled pilot inside `devenv shell`:
 
