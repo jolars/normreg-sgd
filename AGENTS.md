@@ -56,6 +56,12 @@ baselines.
   `results/mushroom-rate-search/`. The four `*mushroom_rate*.py` scripts retain
   all candidate paths, failures, and nested selections. Preserve the declaration
   hashes and the earlier practical study.
+- `notes/mushroom-scaling-sensitivity.md` declares five fixed damping offsets
+  and a variance-scaling comparator in the primary centered/fitted Mushroom arm.
+  Its four `*mushroom*sensitivity*.py` scripts and separate artifacts under
+  `results/mushroom-scaling-sensitivity/` preserve the earlier studies. Treat
+  0.01 as a prespecified heuristic; a fixed-offset sensitivity comparison does
+  not select a deployable damping rule or establish an optimal offset.
 - The paper and optimization checks use the averaged loss and
   $C = X_c^\top X_c/n$ for empirical designs, while the shrinkage script uses
   $G = nC$. Keep $\lambda_1 = nt$ and $\lambda_2 = nr$ consistent. Report
@@ -130,6 +136,12 @@ transformed coordinates, and verifies the nested original search against the
 frozen archive. The declaration freezes the protocol and specification before
 execution; source changes require regenerating the new artifacts, not the
 earlier study.
+
+Use `make reproduce-mushroom-sensitivity` to regenerate the separate damping and
+variance-scaling comparison, and `make check-mushroom-sensitivity` for its
+focused audit. Keep its protocol and specification declaration fixed, retain
+failures and tuning boundaries, and compare each fixed offset at equal tuning
+effort. The five-offset family has greater total work than one fixed rule.
 
 Versionary manages the version in `pyproject.toml`, its lockfile update, and
 `CHANGELOG.md` once releases are enabled. Do not hand-edit that changelog. The

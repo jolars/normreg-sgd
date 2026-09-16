@@ -63,9 +63,11 @@ The sampled-data stage uses eight binary laws, 128 independent replications
 per law, $n=256$ training observations, and 128 validation observations.
 It compares known preprocessing, estimated scales, training centering with
 a fixed or fitted intercept, and an uncentered fitted-intercept arm.
-The feature divisors are $1$, $\sqrt{v_j}$, and $\sqrt{v_j+.01}$, with
-training variances using denominator $n$. Constant training columns are
-frozen at zero coefficient with divisor one. Fitted intercepts start at
+The feature divisors are $1$ for no scaling, $\sqrt{v_j}$ for SD scaling,
+and $\sqrt{v_j+0.01}$ for damped scaling
+\eqref{eq:conference-damped}. Estimated variances use denominator $n$.
+Constant training columns are frozen at zero coefficient with divisor one.
+Fitted intercepts start at
 the training response mean. Appendix~\ref{sec:practical} gives further
 protocol details.
 
@@ -191,3 +193,14 @@ in thirteen. MCSEs describe partition and optimization variation within
 this dataset. The source comprises hypothetical descriptions derived
 from a field guide, so random-record performance does not establish
 generalization to new species or field data.
+
+\paragraph{Sensitivity to the damping offset.}
+A separately declared comparison in the centered, fitted-intercept arm tests
+$s_j=\sqrt{v_j+\tau}$ at five fixed positive offsets, with equal rate, batch,
+and stopping searches per rule. At $n=2048$, $M=8192$, and aggregate validation,
+the tested offsets $.003$, $.01$, $.03$, and $.1$ retain both risk improvements
+over none beyond two paired MCSE; at $.001$, the aggregate improvement is
+unresolved. At $n=256$, rare validation selects an extreme finite path at
+$\tau=.03$, so damping does not prevent selection failures. Variance scaling
+is also included, but its rate search retains upper-edge selections.
+Appendix~\ref{sec:mushroom-sensitivity} gives the results and their limits.

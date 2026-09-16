@@ -78,3 +78,18 @@ at $h$. Under independence, they match its entire mean trajectory. Under
 dependence, cross-coordinate drift generally prevents that match. This
 declared calibration is a controlled comparison, without rate selection or
 iterate averaging.
+
+\paragraph{Damped scaling.}
+The sampled-data experiments also include damped scaling, with
+\begin{equation}
+ s_j=\sqrt{v_j+0.01},\qquad P_{jj}=\frac{1}{v_j+0.01},
+ \label{eq:conference-damped}
+\end{equation}
+where $v_j$ is the population variance when known and the training variance
+when estimated. The offset $0.01$ is a prespecified heuristic, inherited from
+the controlled pilot and fixed in variance units before evaluation. It is not
+a theoretically derived or validation-selected value. At a common learning
+rate, damping multiplies the SD original-coordinate update by
+$v_j/(v_j+0.01)$: approximately one half at binary prevalence $0.01$, but
+$0.96$ for a balanced binary feature. This describes its effect, rather than
+establishing an optimal damping level.

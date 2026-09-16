@@ -17,6 +17,10 @@ the categorical rate search removes the resolved large-sample SD rare-risk
 advantage under aggregate selection, while damping's advantage persists.
 The primary unscaled search moves off its upper edge; some uncentered
 early-stop comparisons remain at the boundary.
+A separate fixed-offset comparison retains the main damping benefit at several
+tested offsets, while exposing an extreme small-sample failure under rare
+validation. The original offset $0.01$ remains a heuristic, and selecting a
+damping level would require accounting for the additional tuning effort.
 A rare-objective selection rule cannot directly assess
 performance on rare observations that never appear in validation.
 

@@ -58,6 +58,28 @@ the central contribution and the remaining work for AISTATS.
   large-sample SD rare advantage under aggregate selection is no longer
   resolved, while damping's advantage persists. Uncentered early-stop
   boundaries and missing subgroup coverage remain explicit limitations.
+- [ ] Include variance scaling ($s_j=v_j$, $\delta=1$) as a fourth arm in a
+  separately declared practical/Mushroom follow-up. It was included in
+  `../normreg` and the earlier pilot; its omission from the practical study
+  leaves its tuned performance unanswered. Compare against none, SD, and
+  damping with comparable learning-rate, batch-size, and stopping searches.
+  Report aggregate and rare-subgroup risks, failed paths, and tuning
+  boundaries. Distinguish its original lasso shrinkage motivation from its
+  SGD learning and stability tradeoffs, and preserve the frozen studies. The
+  [primary centered/fitted
+  comparison](notes/mushroom-scaling-sensitivity-results.md) is complete at
+  both Mushroom sizes. Variance scaling has larger losses on the declared
+  grid, but upper-rate selections remain unresolved. Extend its rate search
+  before claiming a tuned ordering; other preprocessing arms and the
+  synthetic practical comparisons remain open.
+- [x] Describe damping 0.01 as a prespecified heuristic and check sensitivity in
+  a separate declared comparison. The
+  [protocol](notes/mushroom-scaling-sensitivity.md) evaluates five fixed
+  offsets with equal tuning effort per rule. At the primary large-sample
+  setting, tested offsets 0.003 through 0.1 retain improvements in both
+  risks; 0.001 has an unresolved aggregate contrast. Preserve the extreme
+  small-sample rare-validation failure at 0.03. No damping level is selected
+  from test results, and no optimality is claimed.
 - [ ] Develop and verify the theorem if the proposed claim offers a substantive
   advance over its closest antecedents. Separate mathematical correctness
   from novelty, and obtain human review of the final result.

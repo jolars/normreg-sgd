@@ -1,0 +1,62 @@
+\section{Sensitivity to damping and variance scaling}
+\label{sec:mushroom-sensitivity}
+
+The offset $0.01$ in \eqref{eq:conference-damped} is a prespecified heuristic
+inherited from the controlled pilot. A separate follow-up declares five offsets
+$\tau\in\{0.001,0.003,0.01,0.03,0.1\}$ for $s_j=\sqrt{v_j+\tau}$,
+alongside none, SD ($\tau=0$), and variance scaling ($s_j=v_j$).
+It reuses both sample sizes and all 32 partitions per size, restricting the
+comparison to centered predictors with a fitted intercept. Each fixed rule
+receives the same 17 rate factors, two batches, and stopping searches from
+Appendix~\ref{sec:mushroom-rate-search}. The five positive offsets together
+cost five times the work of one fixed rule; no offset is selected by test loss.
+The earlier protocols and artifacts remain unchanged.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{lrr}
+\toprule
+Scaling & Aggregate loss & Rare-group loss \\
+\midrule
+None & .001341 (.000074) & .005955 (.000888) \\
+SD & .004476 (.001498) & .004764 (.001079) \\
+Variance & .311988 (.201772) & .051586 (.008319) \\
+$\tau=.001$ & .001282 (.000054) & .001543 (.000323) \\
+$\tau=.003$ & .001075 (.000031) & .001149 (.000165) \\
+$\tau=.01$ & .000810 (.000039) & .000682 (.000133) \\
+$\tau=.03$ & .000727 (.000044) & .000911 (.000277) \\
+$\tau=.1$ & .000812 (.000053) & .001858 (.000525) \\
+\bottomrule
+\end{tabular}
+\caption{Fixed-offset sensitivity: mean held-out half squared loss (MCSE) at
+$n=2048$, $M=8192$, under aggregate validation and the original stopping
+checkpoints. Each row receives 34 training paths per split.}
+\label{tab:mushroom-sensitivity}
+\end{table}
+
+Every tested positive offset reduces rare loss relative to none by more than
+two paired MCSE. Both risk improvements satisfy that criterion at the tested
+offsets $.003$, $.01$, $.03$, and $.1$, including with extra stopping
+checkpoints. At $.001$, the aggregate difference is $-.000059$ ($.000069$).
+The predeclared criterion requiring both improvements at every positive offset
+is therefore not met. Offset $.03$ improves aggregate loss over $.01$ by
+$.000083$ ($.000019$), while their rare-loss difference is unresolved.
+These results do not establish an optimal offset or cover untested values.
+
+At $n=256$, all five positive offsets retain both improvements over none at
+$M=8192$ under aggregate validation. Rare-objective selection has a severe
+failure at $\tau=.03$: aggregate mean loss is $42.6229$, median $.004108$,
+and maximum $1356.8142$; rare mean loss is $4.7479$ and maximum $150.2734$.
+The dominant split has two green training examples and one green validation
+example. It selects a finite path at $B=16$, $M=2048$, and rate factor $1.4$,
+with rare validation loss $.000893$. Independent replay passes the declared
+numerical gate. The failure remains in all summaries.
+
+Variance scaling has larger losses on the stated grid, but two primary
+large-sample selections reach rate factor $6.4$. Across caps and objectives it
+has 31 upper-edge decisions, counting repeated splits. Other rules have no rate
+boundary selections in this arm. Its tuned ordering therefore remains limited
+by the search boundary. The archive retains 139,264 endpoints, 6,144 selections,
+1,501 failed paths, and 2,403 failed endpoints. Full paired contrasts, selected
+paths, and absence strata are recorded in
+\texttt{notes/mushroom-scaling-sensitivity-results.md}.

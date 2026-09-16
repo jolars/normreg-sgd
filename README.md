@@ -63,6 +63,12 @@ and Jonas Wallin.
   resolved, while damping's advantage persists.
 - [Literature audit](notes/novelty-audit.md): theorem-level overlap and
   unresolved novelty comparisons.
+- [Damping and variance-scaling protocol](notes/mushroom-scaling-sensitivity.md)
+  and [results](notes/mushroom-scaling-sensitivity-results.md): five fixed
+  damping offsets and variance scaling in the primary centered/fitted Mushroom
+  arm, with equal tuning effort per rule and preserved preceding studies.
+  Reproduce with `make reproduce-mushroom-sensitivity` and audit with
+  `make check-mushroom-sensitivity` inside `devenv shell`.
 - [Controlled pilot](notes/rare-subgroup-pilot.md): protocol, results, and
   limits of the fixed-data subgroup-risk comparison.
 - [Initial investigation](notes/two-feature-investigation.md): detailed
