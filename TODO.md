@@ -27,7 +27,7 @@ remains provisional.
 Prioritize the first two deliverables over the next two or three days. Use them
 to decide the central contribution and the remaining work for AISTATS.
 
-- [ ] Write a one-page proposed claim with explicit assumptions, intended
+- [x] Write a one-page proposed claim with explicit assumptions, intended
   conclusion, and closest antecedents. Starting from the two-feature model
   and exact moment recurrences, target a risk approximation with a
   controlled remainder that explains when faster rare-feature learning
@@ -38,7 +38,12 @@ to decide the central contribution and the remaining work for AISTATS.
   preconditioning before committing to a substantial proof effort. Build on
   the [existing audit](notes/normalization-risk-audit.md) and [target-risk
   comparison](notes/target-risk-comparison.md); novelty remains to be
-  established.
+  established. The [proposed claim](paper/proposed-claim.tex) and
+  [supporting comparison](notes/predictive-claim.md) specify a
+  prevalence-uniform risk expansion, retain the feedback correction needed
+  for C2, and screen fixed and adjusted comparisons beyond the original
+  boxes. The uniform remainder is a conjecture; only a bounded feasibility
+  proof is recommended before a substantial theorem commitment.
 - [ ] Resolve the Mushroom rate-search boundary in a separate declared
   follow-up. Every large-sample unscaled aggregate selection chose the
   largest available rate factor. Specify a broader search with comparable

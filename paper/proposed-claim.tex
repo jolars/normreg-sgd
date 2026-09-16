@@ -1,0 +1,93 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=16mm]{geometry}
+\usepackage{amsmath,amssymb,microtype}
+\usepackage[hidelinks]{hyperref}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\diag}{\operatorname{diag}}
+\begin{document}
+\begin{center}
+  {\large\bfseries Proposed claim: a predictive risk expansion for normalization}\\[2pt]
+  September 16, 2026. Proposal, not an established theorem
+\end{center}
+
+\textbf{Assumptions.}
+Let $I,J$ be binary with $P(I=1)=1/2$, $P(J=1)=q$, and
+$P(I=1,J=1)=q(1+\ell)/2$. Set $x=(I-1/2,J-q)^\top$ and
+$y=x^\top\beta^*+\varepsilon$, with
+$\E(\varepsilon\mid x)=0$, $\E(\varepsilon^2\mid x)=\sigma^2$.
+Use known population centering and scales, a fixed zero intercept, zero
+initialization, the averaged squared loss, and $B$ fresh independent samples
+per SGD update. All errors are on the original feature scale; test samples
+are independent. Put $a=1/4$, $b=q(1-q)$, $c=q\ell/2$,
+$D=\eta P=\diag(u/a,v/b)$. The proposed domain is
+\[
+  0<q\leq1/16,\quad |\ell|\leq1,\quad B\in\mathbb N,\quad
+  0<u\leq1/4,\quad v=u(4b)^{1-2\delta},\quad
+  0\leq\delta\leq1/2,\quad \theta=\frac{v}{bB}\leq1.
+\]
+Here feature divisors are $(a^\delta,b^\delta)$ and
+$\eta=u a^{2\delta-1}$; $\delta=0$ is unscaled and $\delta=1/2$ is SD scaling.
+Each risk comparison fixes the test law and $M=kB$ processed observations.
+
+\textbf{Approximation.}
+Write $s_k=(\E e_C^2,\E e_Ce_R,\E e_R^2)^\top$ for coefficient error
+$e=\hat\beta-\beta^*$, so $s_{k+1}=Ls_k+\sigma^2g$ is the exact binary
+moment recurrence. Remove the rare-error term from the common update to obtain
+the triangular moment map $L_0$; retain its first feedback correction:
+\[
+ z_{k+1}=L_0z_k+\sigma^2g,\qquad
+ \xi_{k+1}=L_0\xi_k+(L-L_0)z_k,\qquad z_0=s_0,\quad \xi_0=0.
+\]
+The maps, scalar geometric sums, and computable error bound $E_{W,k}$ are
+specified in \texttt{notes/predictive-claim.md}. For $W=C=\E xx^\top$ or
+$W=C_R=\E[xx^\top\mid J=1]$, set
+$w_W=(W_{CC}/2,W_{CR},W_{RR}/2)^\top$ and
+$\widehat R_{W,k}=w_W^\top(z_k+\xi_k)$ and $R_{W,k}=w_W^\top s_k$.
+Risks exclude irreducible test noise.
+The surrogate retains common-to-rare learning and multiplicative noise;
+the correction retains effects that can determine a small aggregate-risk gap.
+
+\textbf{Intended conclusion.}
+Establish mean-square stability and an explicit universal constant $K$ such that,
+uniformly on this domain, for every $k\geq0$, signal, and $\sigma^2\geq0$,
+\[
+ |R_{W,k}-\widehat R_{W,k}|\leq E_{W,k}
+ \leq Kq^2\!\left[\|\beta^*\|_2^2 e^{-kv/4}
+       +\sigma^2\left(\frac{u}{B}+\theta\right)\right].
+\]
+The finite recurrence bound is elementary; its uniform $q^2$ envelope and useful
+constants are the proof target. For an S-minus-U contrast
+$\widehat\Delta=\widehat F+\sigma^2\widehat N$, the inequalities
+$\widehat\Delta\pm(E_S+E_U)$ give sufficient risk orderings and bracket a
+noise threshold when its denominator has a certified positive sign.
+For any declared rate/stopping set $\mathcal A$ with $kB\leq M$,
+$\inf_{\mathcal A}(\widehat R-E)\leq\inf_{\mathcal A}R
+\leq\inf_{\mathcal A}(\widehat R+E)$; overlapping intervals remain unresolved.
+
+\textbf{Prediction and scope.}
+Rare learning exposure is $kv=Mb\theta$, whereas its direct stationary
+coefficient-noise term is
+$\sigma^2\theta/[2-v-\theta(1-4b)]$.
+Thus faster learning can win early and lose after bias decays; reducing the
+rate as $M$ grows can remove that late penalty. Matching $v$ leaves common
+learning and dependence effects, so neither path equivalence nor universal
+tuned superiority follows. The target covers prevalence, dependence, and rate
+ranges beyond C1/C2's boxes. Development checks recover their fixed and adjusted
+anchor signs after the correction; these checks are not a uniform proof.
+
+\textbf{Closest antecedents and decision.}
+\href{https://arxiv.org/html/2403.08585v3}{Su--Zou--Wu, Theorem 4.2 and Appendix A.1}
+already supply preconditioned SGD moments and tail-averaged aggregate bounds.
+\href{https://arxiv.org/html/1711.01761v1}{AdaBatch, Table 1 and (7.21)--(7.23)}
+already connect frequency scaling, noise, batches, and step restrictions.
+\href{https://arxiv.org/html/2502.09047v1}{Liu et al., Theorems 2--4}, and
+\href{https://proceedings.mlr.press/v139/lei21a/lei21a.pdf}{Lei et al., Theorem 3.4 and Remark 3.1},
+already establish target-aware preconditioning and strict tuned separations.
+The candidate advance is a sign-resolving, prevalence-uniform expansion along
+training and declared tuning sets. Its novelty is unresolved. Pursue only a
+bounded feasibility proof first; a generic tradeoff or an uninformative remainder
+would not justify a substantial theorem effort. Human review remains necessary.
+\end{document}
