@@ -9,8 +9,8 @@
 \newcommand{\diag}{\operatorname{diag}}
 \begin{document}
 \begin{center}
-  {\large\bfseries Proposed claim: a predictive risk expansion for normalization}\\[2pt]
-  September 16, 2026. Proposal, not an established theorem
+  {\large\bfseries Predictive risk expansion: a bounded feasibility result}\\[2pt]
+  September 16, 2026. Local proof; independent and human review pending
 \end{center}
 
 \textbf{Assumptions.}
@@ -50,16 +50,18 @@ Risks exclude irreducible test noise.
 The surrogate retains common-to-rare learning and multiplicative noise;
 the correction retains effects that can determine a small aggregate-risk gap.
 
-\textbf{Intended conclusion.}
-Establish mean-square stability and an explicit universal constant $K$ such that,
-uniformly on this domain, for every $k\geq0$, signal, and $\sigma^2\geq0$,
+\textbf{Locally proved bound.}
+The moment map satisfies $\rho(|L|)<1-v/4<1$, establishing mean-square stability.
+Uniformly on this domain, for every $k\geq0$, signal, and $\sigma^2\geq0$,
 \[
  |R_{W,k}-\widehat R_{W,k}|\leq E_{W,k}
  \leq Kq^2\!\left[\|\beta^*\|_2^2 e^{-kv/4}
        +\sigma^2\left(\frac{u}{B}+\theta\right)\right].
 \]
-The finite recurrence bound is elementary; its uniform $q^2$ envelope and useful
-constants are the proof target. For an S-minus-U contrast
+This holds with $K=104/3$; sharper constants by objective and error component
+are proved in the \href{../notes/predictive-claim-feasibility.md}{feasibility note}. Weighted triangular
+resolvents bound each accumulated feedback insertion by $O(q)$.
+For an S-minus-U contrast
 $\widehat\Delta=\widehat F+\sigma^2\widehat N$, the inequalities
 $\widehat\Delta\pm(E_S+E_U)$ give sufficient risk orderings and bracket a
 noise threshold when its denominator has a certified positive sign.
@@ -74,9 +76,10 @@ $\sigma^2\theta/[2-v-\theta(1-4b)]$.
 Thus faster learning can win early and lose after bias decays; reducing the
 rate as $M$ grows can remove that late penalty. Matching $v$ leaves common
 learning and dependence effects, so neither path equivalence nor universal
-tuned superiority follows. The target covers prevalence, dependence, and rate
+tuned superiority follows. The bound covers prevalence, dependence, and rate
 ranges beyond C1/C2's boxes. Development checks recover their fixed and adjusted
-anchor signs after the correction; these checks are not a uniform proof.
+anchor signs after the correction. The uniform envelope resolves C1's fixed
+reversal; C2 and adjusted C1 rare risk still need the sharper finite bound.
 
 \textbf{Closest antecedents and decision.}
 \href{https://arxiv.org/html/2403.08585v3}{Su--Zou--Wu, Theorem 4.2 and Appendix A.1}
@@ -87,7 +90,7 @@ already connect frequency scaling, noise, batches, and step restrictions.
 \href{https://proceedings.mlr.press/v139/lei21a/lei21a.pdf}{Lei et al., Theorem 3.4 and Remark 3.1},
 already establish target-aware preconditioning and strict tuned separations.
 The candidate advance is a sign-resolving, prevalence-uniform expansion along
-training and declared tuning sets. Its novelty is unresolved. Pursue only a
-bounded feasibility proof first; a generic tradeoff or an uninformative remainder
-would not justify a substantial theorem effort. Human review remains necessary.
+training and declared tuning sets. Its novelty is unresolved. Pursue a bounded
+predictive regime and rate-adjusted consequence next; the remainder proof alone
+does not settle the contribution. Human review remains necessary.
 \end{document}

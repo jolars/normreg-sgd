@@ -30,6 +30,13 @@ baselines.
   `experiments/check_multivariate_stability.py` check the corresponding block,
   finite-update, and stability extensions. This is a script project, not an
   installable Python library.
+- `notes/predictive-claim-feasibility.md` proves the proposed population
+  stability and uniform quadratic remainder locally, with explicit constants.
+  `experiments/check_predictive_feasibility.py` independently constructs
+  rational moment operators and checks the proof inequalities and finite
+  remainders. Independent proof review, human review, novelty, and predictive
+  comparisons over tuning sets remain open; do not promote this feasibility
+  result into a general normalization recommendation.
 - `notes/joint-interactions.md` specifies the first joint training comparison;
   `notes/joint-interactions-results.md` records its numerical findings and
   pending independent proof review. `experiments/run_joint_interactions.py`

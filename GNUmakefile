@@ -2,7 +2,7 @@
 .DEFAULT_GOAL := all
 include Makefile
 
-.PHONY: check-practical-selection reproduce-practical-selection paper-notes paper-claim check-predictive-claim
+.PHONY: check-practical-selection reproduce-practical-selection paper-notes paper-claim check-predictive-claim check-predictive-feasibility
 .PHONY: check-mushroom-rate-search reproduce-mushroom-rate-search
 .PHONY: check-mushroom-sensitivity reproduce-mushroom-sensitivity
 .PHONY: prepare-results check-scripts format-scripts
@@ -44,8 +44,11 @@ reproduce-variance-scaling: prepare-results
 	OPENBLAS_NUM_THREADS=1 python experiments/summarize_variance_scaling.py
 	OPENBLAS_NUM_THREADS=1 python experiments/check_variance_scaling.py --write-audit
 
-check-predictive-claim:
+check-predictive-claim: check-predictive-feasibility
 	python experiments/check_predictive_claim.py
+
+check-predictive-feasibility:
+	python experiments/check_predictive_feasibility.py
 
 check-practical-selection:
 	python experiments/check_practical_selection.py

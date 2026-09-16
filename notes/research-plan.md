@@ -64,12 +64,16 @@ The [one-page proposed claim](../paper/proposed-claim.tex) now targets a
 prevalence-uniform risk approximation with a controlled quadratic remainder. Its
 [supporting note](predictive-claim.md) retains dependence and the first feedback
 correction, compares the precise statement with the closest antecedents, and
-records development checks of fixed and adjusted comparisons. The finite
-recurrence bound is available; its uniform envelope remains a conjecture. The
-next theory step is a bounded feasibility proof with useful constants and
-rate-adjustment conditions. This proposal does not settle the central novelty
-claim. The separate practical rate expansion changes which empirical
-normalization advantages remain resolved; it does not prove this proposal.
+records development checks of fixed and adjusted comparisons. A separate
+[feasibility proof](predictive-claim-feasibility.md) now establishes stability
+and the uniform envelope with $K=104/3$, with sharper constants by objective and
+error component. It resolves C1's fixed rare-risk reversal, while C2 and
+adjusted C1 rare risk still need the sharper finite recurrence bound.
+Independent proof review and human review remain pending. The next theory step
+is an explicit predictive regime and an informative rate-adjusted comparison.
+This local proof does not settle the central novelty claim. The separate
+practical rate expansion changes which empirical normalization advantages remain
+resolved; it does not prove the population claim.
 
 ## Implications of the literature report
 

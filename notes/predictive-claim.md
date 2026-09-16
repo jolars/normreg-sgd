@@ -8,11 +8,13 @@ comparison](target-risk-comparison.md), and exact moments in [Proposition
 1](normalization-risk-theorem.md). It does not promote the proposal into the
 conference manuscript or alter the frozen studies.
 
-**Propose a prevalence-uniform risk expansion with the first feedback
-correction.** The elementary finite-time error bound below is available now. The
-proposed uniform quadratic remainder, its explicit constants, and its
-publication-level novelty remain unestablished. The leading approximation alone
-gets the small C2 aggregate contrast wrong; that failure is retained below.
+**A prevalence-uniform risk expansion with the first feedback correction now has
+a local feasibility proof.** The [proof note](predictive-claim-feasibility.md)
+establishes stability and the uniform quadratic remainder with $K=104/3$, with
+sharper constants by objective and error component. Independent proof review,
+human review, and publication-level novelty remain open. The leading
+approximation alone gets the small C2 aggregate contrast wrong; that failure is
+retained below.
 
 ## Model and intended statement
 
@@ -49,8 +51,9 @@ Unscaled U has $(u,v)=(h_U,4bh_U)$; SD-scaled S has $(u,v)=(h_S,h_S)$. The
 common-learning calibration is $h_U=h_S$, and adjusted comparisons allow them to
 differ. Rates outside (P1), schedules, averaging, estimated preprocessing, and
 fitted intercepts are outside this proposed theorem. The zero-step predictor is
-included separately and has exact zero approximation error. The proof must
-establish stability on (P1); empirical stability checks are not that proof.
+included separately and has exact zero approximation error. The feasibility
+proof establishes $\rho(|L|)<1-v/4$ throughout (P1), independently of numerical
+eigenvalue checks.
 
 Let $W=C$ or $C_R$, where
 
@@ -68,11 +71,22 @@ $$
         +\sigma^2\{u/B+\theta\}\right],\qquad k\geq0. \tag{P2}
 $$
 
-$K$ is to be an explicit numerical constant independent of every parameter in
-(P1), $k$, the signal, and the noise. Its existence with this decay rate and
-domain is a **conjecture**, not a fitted constant. Proving a pointwise expansion
-for fixed $k$, or an error with hidden $q^{-1}$ constants, would not establish
-(P2). The finite bound $E_{W,k}$ is defined below without any unknown constant.
+The original proposal conjectured the existence of an explicit $K$ independent
+of every parameter in (P1), $k$, the signal, and the noise. The [feasibility
+proof](predictive-claim-feasibility.md) now establishes (P2) with $K=104/3$,
+without restricting $k$ or introducing hidden $q^{-1}$ constants. Its sharper
+bound is
+
+$$
+  E_{W,k}\leq\frac{8\mu_Wq^2}{1-4q}
+  \left[\|\beta^*\|_2^2(1-v/4)^k
+        +2\sigma^2\{u/B+\theta\}\right],\qquad
+  \mu_W=|w_W|^\top(1,1,2)^\top.
+$$
+
+This bounds the same finite remainder $E_{W,k}$ defined below. The constants are
+sufficient rather than optimal; the proof is pending independent and human
+review. Predictive regimes after calibration remain a separate milestone.
 
 ## Approximation from the exact recurrence
 
@@ -161,7 +175,7 @@ Keep the additional signed correction separate when reporting those three
 components; do not call the whole homogeneous term squared bias or interpret
 $V_{CR}$ as centered covariance alone.
 
-## An explicit finite remainder and the unproved uniform step
+## An explicit finite remainder and its uniform envelope
 
 The following is an elementary consequence of (P3)–(P4), not the proposed new
 theorem. All absolute values in this paragraph are entrywise. Set $Q=|L_0|$,
@@ -180,15 +194,15 @@ $|d_j|\leq r_j$. Separate runs with $(\sigma^2,s_0)=(0,s_0)$ and $(1,0)$ give
 $E_{W,k}=E^F_{W,k}+\sigma^2E^N_{W,k}$. These are real-arithmetic bounds;
 floating-point evaluations in the checker are not outward-rounded certificates.
 
-The scientific proof target is to replace this finite propagation by the
-explicit, interpretable envelope (P2), while retaining (P5) when it is sharper.
-An appropriate route is to bound triangular geometric kernels on the two
-learning scales, show that each integrated feedback costs $O(q)$ uniformly, and
-control the residual after two insertions. The entry $d_R^2t_B$ need not be
-negligible relative to rare contraction. Dropping it, bounding all entries by a
-single unweighted norm, or fixing $k$ before taking $q\to0$ can lose the desired
-uniformity. Constants must remain useful near $u=v$, with small $u$, and across
-$Bq\to0$, finite $Bq$, and large $Bq$ within (P1).
+The feasibility proof controls the accumulation of each feedback insertion by
+$O(q)$ through a weighted triangular resolvent. Feedback enters only the two
+faster equations, whose contraction deficits are proportional to $u$; this
+avoids an artificial $u/v$ factor over the rare learning time. It retains
+$d_R^2t_B$, covers $u=v$, arbitrarily small positive $u$, and all batch-rarity
+regimes within (P1). The uniform envelope resolves the fixed C1 rare-risk
+reversal at the existing anchors. It is too loose for C2 and the adjusted C1
+rare-risk comparison, for which (P5) remains useful. These arithmetic checks do
+not establish a new predictive regime or an ordering over tuned families.
 
 ## Risk thresholds, budgets, and rate adjustment
 
@@ -305,18 +319,19 @@ These are post-development numerical examples, not held-out predictions, uniform
 certificates, or comparisons of two optimized procedures. Their corrected gaps
 have the same displayed signs, with computed bounds below $2.5\times10^{-10}$.
 
-The proposed scale in (P2) was also screened on 14,688 endpoints: six
-prevalences $\{0.0006,0.002,0.006,0.02,0.06,1/16\}$, four dependence values
-$\{-1,0,0.7,1\}$, $B\in\{1,10,100\}$, $\delta\in\{0,1/4,1/2\}$, four signals
-$\{(1,1),(2,1),(1,-1),(0,1)\}$, and rate fractions $\{0.1,0.5,1\}$ of the
-maximum allowed by (P1). Each configuration uses distinct counts in
-$\{0,1,\lfloor1/u\rfloor,\lfloor1/v\rfloor,
+Before the feasibility proof, the proposed scale in (P2) was also screened on
+14,688 endpoints: six prevalences $\{0.0006,0.002,0.006,0.02,0.06,1/16\}$, four
+dependence values $\{-1,0,0.7,1\}$, $B\in\{1,10,100\}$,
+$\delta\in\{0,1/4,1/2\}$, four signals $\{(1,1),(2,1),(1,-1),(0,1)\}$, and rate
+fractions $\{0.1,0.5,1\}$ of the maximum allowed by (P1). Each configuration
+uses distinct counts in $\{0,1,\lfloor1/u\rfloor,\lfloor1/v\rfloor,
 \lfloor10/v\rfloor,\lfloor100/v\rfloor\}$. The largest error-to-proposed-scale
 ratios are 0.196627 for the homogeneous part and 0.230118 for unit noise. For
 (P5) itself the respective maxima are 0.626888 and 0.924497. These diagnostics
-support investigating the conjecture; they do not prove it, supply $K=1$, cover
-all rates, or validate tuned envelopes. The checker reports these ratios without
-treating them as theorem assertions.
+supported investigating the conjecture; they did not prove it, supply $K=1$,
+cover all rates, or validate tuned envelopes. The checker reports these ratios
+without treating them as theorem assertions. The separate feasibility checker
+tests the now-proved envelope and its rational vector inequalities.
 
 ## Precise antecedent comparison
 
@@ -344,27 +359,27 @@ distinguish this proposal from that literature.
 
 The exact recurrence, scalar geometric sums, feedback expansion, and finite
 comparison inequality are supporting calculations within established moment
-analysis. The proposed additional result is the useful, uniform $q^2$ error
-bound, coupled to explicit sign and rate-adjustment conditions over a declared
-parameter family. It includes dependence and shrinking prevalence, and retains
-the correction needed for a small aggregate gap. The current Proposition 2 in
-the C1 note already has a general scalar remainder under independence; merely
-rewriting that bound would not satisfy this milestone's scientific aim.
+analysis. The additional scientific target couples the uniform $q^2$ error bound
+to explicit sign and rate-adjustment conditions over a declared parameter
+family. The local feasibility proof now supplies the stable domain and explicit
+constants. A sign-resolving prevalence/budget regime using (P6), and useful
+bounds on declared rate-adjusted comparisons using (P8), remain open. Recovering
+existing anchor signs alone does not complete those steps.
 
-**Proceed to a bounded feasibility proof, not yet a substantial theorem
-commitment.** Its decision criteria are: an explicit stable domain and constants
-in (P2), a sign-resolving prevalence/budget regime using (P6), and useful bounds
-on declared rate-adjusted comparisons using (P8). If this reduces to a direct
-specialization of an antecedent or yields only vacuous constants, retain it as
-an explanatory calculation and reconsider the central contribution. Numerical
-accuracy does not settle that decision.
+**The bounded stability and remainder proof is complete locally; the central
+contribution decision remains open.** Compare a resulting predictive statement
+with the antecedents before committing to a broader theorem effort. If it
+reduces to a direct specialization or fails to resolve informative calibrated
+comparisons, retain the expansion as an explanatory calculation and reconsider
+the central contribution.
 
-The full proof, independent verification, human mathematical and novelty review,
-and any prediction on held-out configurations remain later milestones. The
-Mushroom rate-search boundary is a separate task and remains unresolved. The
-frozen practical study's missing-group failures and numerical investigation
-remain limitations. This proposal does not prescribe a new practical selection
-rule or claim that the population assumptions cover those failures.
+Independent proof review, human mathematical and novelty review, and prediction
+on held-out configurations remain later milestones. The separate [four-rule
+follow-up](variance-scaling-followup-results.md) has resolved the Mushroom rate
+edges within its finite grid. The frozen practical study's missing-group
+failures and numerical investigation remain limitations. This proposal does not
+prescribe a new practical selection rule or claim that the population
+assumptions cover those failures.
 
 Build the one-page review copy with `make paper-claim` inside `devenv shell`;
 the generated PDF is `build/proposed-claim.pdf`. The official conference files

@@ -19,8 +19,10 @@ intercepts, absent rare groups, and validation selection, followed by a sparse
 categorical benchmark. It retains scaling effects and exposes missing-group
 failures and tuning boundaries. The **central theorem candidate and separate
 rate-search experiment** are now available for the normalization-focused draft.
-The next theory step is a bounded feasibility proof. The report's positive
-novelty assessment remains provisional.
+A [bounded feasibility proof](notes/predictive-claim-feasibility.md) now
+establishes stability and the uniform quadratic remainder. The next theory step
+is a predictive regime and an informative rate-adjusted comparison. The report's
+positive novelty assessment remains provisional.
 
 ## Next milestone: predictive theory and a resolved rate comparison
 
@@ -42,8 +44,9 @@ the central contribution and the remaining work for AISTATS.
   [supporting comparison](notes/predictive-claim.md) specify a
   prevalence-uniform risk expansion, retain the feedback correction needed
   for C2, and screen fixed and adjusted comparisons beyond the original
-  boxes. The uniform remainder is a conjecture; only a bounded feasibility
-  proof is recommended before a substantial theorem commitment.
+  boxes. The uniform remainder was proposed as a conjecture; the bounded
+  local proof below now establishes it, without settling the central
+  contribution.
 - [x] Resolve the Mushroom rate-search boundary in a separate declared
   follow-up. Every large-sample unscaled aggregate selection chose the
   largest available rate factor. Specify a broader search with comparable
@@ -83,6 +86,19 @@ the central contribution and the remaining work for AISTATS.
   risks; 0.001 has an unresolved aggregate contrast. Preserve the extreme
   small-sample rare-validation failure at 0.03. No damping level is selected
   from test results, and no optimality is claimed.
+- [x] Complete a bounded feasibility proof for the proposed stability domain and
+  uniform quadratic remainder. The
+  [proof](notes/predictive-claim-feasibility.md) establishes
+  $\rho(|L|)<1-v/4$ and $K=104/3$, with sharper constants by objective and
+  error component. A separate checker verifies 1,125 exact rational operator
+  cases and 7,200 finite remainders. The uniform envelope resolves C1's
+  fixed rare-risk reversal, but C2 and adjusted C1 rare risk still need the
+  sharper finite bound. Independent proof review and human review remain
+  pending.
+- [ ] Derive an explicit predictive prevalence/budget regime and an informative
+  comparison over declared rate/stopping sets from the expansion. Existing
+  anchor checks do not establish this result. Compare the precise conclusion
+  with the closest antecedents before expanding the theorem effort.
 - [ ] Develop and verify the theorem if the proposed claim offers a substantive
   advance over its closest antecedents. Separate mathematical correctness
   from novelty, and obtain human review of the final result.
