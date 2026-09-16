@@ -50,11 +50,14 @@ comparison. The research plan gives the completion criteria.
   intervals. Scaling increases both coefficient MSEs while improving
   rare-presence prediction; the cross moment of the coefficient errors
   explains the difference.
-- [ ] Specify a focused robustness experiment varying prevalence, dependence,
+- [x] Specify a focused robustness experiment varying prevalence, dependence,
   signal, noise, rates, and stopping resolution. Include global-rescaling
   and common-learning controls, fixed-update and fixed-observation
   comparisons, paired simulation uncertainty, and failures. Preserve both
-  existing studies.
+  existing studies. The [declared
+  protocol](notes/normalization-robustness.md) specifies 228 data laws, a
+  16-law resolution check, both budget conventions, paired simulations, and
+  separate artifacts. Execution remains the next task.
 - [ ] Determine which conclusions survive learning-rate and stopping adjustments
   over a declared range at comparable budgets. Retain fixed-configuration
   results and report reversals that disappear. Add tail averaging if needed

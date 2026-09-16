@@ -34,6 +34,10 @@ Larsson and Jonas Wallin.
   results](notes/joint-interactions-results.md): exact fresh-sample training
   paths, risk decompositions, figures, and paired simulations. Independent
   review of the new analytical deductions remains pending.
+- [Robustness protocol](notes/normalization-robustness.md): the declared
+  follow-up to C1 and C2, including parameter slices, rate and stopping
+  adjustments, controls, paired uncertainty, and failure reporting. Execution is
+  pending.
 - [Joint-budget theorem](notes/joint-budget-limits.md) and [independent
   review](notes/joint-budget-review.md): the scoped fresh-sample limit.
 - [Literature audit](notes/novelty-audit.md): theorem-level overlap and

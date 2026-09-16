@@ -1,7 +1,7 @@
 # Research plan
 
 Working direction: **Normalization and Implicit Regularization in Stochastic
-Learning**. Revised September 15, 2026. The task checklist is in
+Learning**. Revised September 16, 2026. The task checklist is in
 [TODO.md](../TODO.md). The immediate focus is **feature scaling, finite-time
 SGD, and rare-subgroup prediction**.
 
@@ -380,6 +380,12 @@ useful outcome. The existing algebraic controls alone do not complete this
 milestone.
 
 ### 3. Test the comparison's robustness and limits
+
+The [focused robustness protocol](normalization-robustness.md) now specifies
+this extension: 228 data laws, rate and stopping refinement on 16 declared laws,
+global-rescaling and common-learning controls, both budget conventions, paired
+simulations, and failure reporting. This completes the specification item in the
+checklist. Execution and the robustness conclusions below remain pending.
 
 Declare a focused extension to the retained grid around the proposed result.
 Vary prevalence, feasible dependence, signal signs and magnitudes, noise, rate
