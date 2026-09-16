@@ -17,8 +17,10 @@ The broader program studies how these choices jointly determine the fitted model
 and its statistical properties. The AISTATS paper needs a quantitative
 conclusion about normalization that is distinct from the closest preconditioning
 results. The current comparisons and their limits supply the draft's evidence; a
-defensible central novelty claim and practical rate-boundary follow-up remain
-necessary before submission.
+defensible central novelty claim remains necessary before submission. The
+[rate-boundary follow-up](mushroom-rate-search-results.md) now resolves the
+primary Mushroom edge within a broader finite grid, while retaining secondary
+boundaries and missing-group limits.
 
 The project studies the interaction among all four choices: which features are
 learned, how their coefficients evolve, how training noise enters the model, and
@@ -57,7 +59,8 @@ records development checks of fixed and adjusted comparisons. The finite
 recurrence bound is available; its uniform envelope remains a conjecture. The
 next theory step is a bounded feasibility proof with useful constants and
 rate-adjustment conditions. This proposal does not settle the central novelty
-claim or the separate practical rate boundary.
+claim. The separate practical rate expansion changes which empirical
+normalization advantages remain resolved; it does not prove this proposal.
 
 ## Implications of the literature report
 
@@ -460,11 +463,17 @@ Relative-learning effects remain observable, and Mushroom retains a rare-risk
 scaling advantage on the declared grid. Some controlled objective disagreements
 disappear. Missing validation groups can conceal explosive rare coefficients,
 and noisy rare-objective selection can worsen aggregate loss. The unscaled
-Mushroom fits frequently select the maximum rate, so equal search effort does
-not establish equally resolved optima. These results delimit the conclusion by
-task, objective, data, and budget. A further study could test whether explicit
-stability restrictions and better subgroup validation coverage address the
-observed failures; that would require a new protocol.
+Mushroom fits in that frozen study frequently select the maximum rate. The
+separately declared [rate expansion](mushroom-rate-search-results.md) now moves
+the primary large-sample unscaled aggregate selections into the grid interior.
+The SD rare advantage under aggregate selection falls within two paired MCSE of
+zero, while damping retains lower aggregate and rare losses. Shorter budgets,
+the smaller sample under aggregate selection, and large-sample rare-objective
+selection retain SD advantages. The secondary uncentered rare-objective search
+with extra early stops retains upper-edge selections. These results delimit the
+conclusion by task, objective, data, and budget. A further study could test
+whether explicit stability restrictions and better subgroup validation coverage
+address the observed failures; that would require a new protocol.
 
 The categorical task reports both held-out prediction objectives and the
 green-spore dummy's original-scale learning path, including other-feature and

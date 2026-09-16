@@ -137,8 +137,14 @@ We use 32 random partitions at each training/validation size $(256,128)$
 and $(2048,1024)$, with remaining records reserved for testing. Candidates
 share partitions and replacement index streams. Each scaling receives the
 same five rate factors and $B\in\{16,128\}$, with
-$M\in\{512,2048,8192\}$. Table~\ref{tab:conference-mushroom} reports the
-largest sample and cap with joint rate, batch, and stopping selection.
+$M\in\{512,2048,8192\}$. In that frozen study, all 32 large-sample
+unscaled aggregate selections choose the upper rate factor $.8$.
+A separately declared follow-up expands to 17 factors from $.001$ to
+$6.4$ for every scaling and arm, retaining the same splits, index streams,
+and stopping checkpoints. Each scaling now receives 34 trajectories,
+costing $34M$ observations at cap $M$. Table~\ref{tab:conference-mushroom}
+reports this expanded comparison. Appendix~\ref{sec:mushroom-rate-search}
+retains paths, failures, and a separate stopping-resolution check.
 
 \begin{table}[t]
 \centering
@@ -146,32 +152,40 @@ largest sample and cap with joint rate, batch, and stopping selection.
 \toprule
 Selection & Scaling & Aggregate & Rare \\
 \midrule
-Aggregate & None & .001754 & .012482 \\
- & SD & .004617 & .005912 \\
- & Damped & .001175 & .004151 \\
-Rare & None & .001878 & .012465 \\
- & SD & .123905 & .003158 \\
- & Damped & .014966 & .003984 \\
+Aggregate & None & .001341 & .005955 \\
+ & SD & .004476 & .004764 \\
+ & Damped & .000810 & .000682 \\
+Rare & None & .039395 & .003678 \\
+ & SD & .141068 & .002257 \\
+ & Damped & .002611 & .000499 \\
 \bottomrule
 \end{tabular}
 \caption{Mean held-out half squared loss for Mushroom, with $n=2048$,
 1024 validation records, a fitted intercept, and cap $M=8192$.
-Each scaling receives ten trajectories. Paired uncertainty is reported
-in the text; marginal MCSEs appear in Appendix~\ref{sec:practical}.}
+Expanded rate search with 34 trajectories per scaling and the original
+stopping checkpoints. Paired uncertainty is reported in the text.}
 \label{tab:conference-mushroom}
 \end{table}
 
-Under aggregate selection, the SD-minus-none rare gap is $-.00657$
-(paired MCSE $.00153$), with aggregate gap $+.002863$ ($.00213$).
-Selecting SD by rare loss instead reduces its rare loss by $.002754$
-($.000967$), with a variable aggregate penalty of $.11929$ ($.0756$).
-The mean green coefficient under aggregate selection is $.4822$ for
-none, $.7462$ for SD, and $.7678$ for damped scaling. Other coefficients
-partly offset this larger contribution to rare predictions.
+Rate expansion reduces the unscaled aggregate-selected rare loss from
+$.012482$ to $.005955$. The SD-minus-none rare gap shrinks from
+$-.006570$ (paired MCSE $.001526$) to $-.001192$ ($.001318$), within
+two MCSE of zero. The original SD advantage is no longer resolved;
+this does not establish equivalence. Damping retains an advantage in
+both aggregate loss, $-.000532$ ($.000056$), and rare loss, $-.005273$
+($.000797$). Under rare-objective selection, the SD rare advantage
+persists at $-.001421$ ($.000470$), with highly variable aggregate loss.
+Its aggregate-loss median is $.004357$ and maximum is $2.36513$.
 
-The result is conditional on the declared search. All 32 large-sample
-unscaled aggregate selections choose the largest rate factor, so its
-continuous optimum is unresolved. The small-sample experiment has no
+All 32 unscaled aggregate selections now use interior factors $.6$--$1.8$,
+with worse validation scores at their immediate higher tested neighbors.
+This resolves the original upper edge within the finite grid, not a
+continuous optimum. The expanded mean green coefficients are $.5999$,
+$.7763$, and $.9126$ for none, SD, and damping; other features partly
+offset these contributions. Across both sizes and all arms, 2950 failed
+endpoints remain archived. A secondary uncentered rare-objective search
+still selects the upper edge when extra early stops are allowed.
+The small-sample experiment has no
 green training observations in five partitions and none in validation
 in thirteen. MCSEs describe partition and optimization variation within
 this dataset. The source comprises hypothetical descriptions derived

@@ -55,6 +55,12 @@ and Jonas Wallin.
   [results](notes/practical-selection-results.md): training-estimated
   preprocessing, intercepts, missing rare groups, validation-based selection,
   and a sparse categorical linear-model evaluation on UCI Mushroom.
+- [Mushroom rate-search protocol](notes/mushroom-rate-search.md) and
+  [results](notes/mushroom-rate-search-results.md): a separately declared,
+  equally allocated expansion with paired comparisons, original-scale paths, and
+  retained failures. The primary unscaled search moves off its upper edge; the
+  large-sample SD rare advantage under aggregate selection is no longer
+  resolved, while damping's advantage persists.
 - [Literature audit](notes/novelty-audit.md): theorem-level overlap and
   unresolved novelty comparisons.
 - [Controlled pilot](notes/rare-subgroup-pilot.md): protocol, results, and
@@ -153,6 +159,19 @@ vendored under `data/mushroom/`, so reproduction requires no download. Run
 `make check-practical-selection` for independent transformed-design updates,
 loss and selection reconstruction, paired uncertainty, and provenance checks.
 The earlier studies and the robustness covariance diagnostic are preserved.
+
+To reproduce the separate Mushroom rate-search follow-up inside `devenv shell`:
+
+```sh
+make reproduce-mushroom-rate-search
+```
+
+This verifies the existing declaration, expands the rate grid on the same splits
+and index streams, and writes paths, selections, paired summaries, and figures
+under `results/mushroom-rate-search/`. `make check-mushroom-rate-search` checks
+the independent transformed-design replay and reconstructs the nested original
+search against the frozen practical archive. Both focused audits also run in the
+integrated validation.
 
 To regenerate the numerical reference results for the shrinkage baselines:
 

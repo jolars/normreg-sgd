@@ -19,11 +19,15 @@ useful.
 The existing C1 and C2 comparisons establish bounded statements about specified
 training procedures. Both original anchor comparisons disappear after the
 declared oracle adjustments. Estimated preprocessing and validation selection
-retain scaling effects, but the categorical result is limited by its rate grid,
-single dataset, and validation coverage. These findings belong in the paper.
-They do not yet establish a contribution beyond the closest preconditioning and
-target-risk results. The template conversion is a concrete draft, not a decision
-that the present contribution is ready for submission.
+retain scaling effects. The separate [rate
+expansion](mushroom-rate-search-results.md) now resolves the primary categorical
+upper edge: the large-sample SD rare advantage under aggregate selection is no
+longer resolved, while damping's advantage persists. Secondary rate boundaries,
+a single dataset, and validation coverage still limit the conclusions. These
+findings belong in the paper. They do not yet establish a contribution beyond
+the closest preconditioning and target-risk results. The template conversion is
+a concrete draft, not a decision that the present contribution is ready for
+submission.
 
 ## Draft organization
 
@@ -53,11 +57,11 @@ Preserve the frozen experiment protocols, results, and diagnostic failures.
   theorem by theorem with the closest source. In particular, distinguish this
   work from preconditioned least squares, sparse aggregation, and target-aware
   prediction. A change in terminology or a two-feature example is insufficient.
-- Resolve the rate-boundary issue in the practical comparison under a declared
-  follow-up protocol. Match meaningful calibration and tuning effort across
-  scaling rules, retain failed candidates, and report when a ranking disappears.
-  Extend the search only through a separate study; do not rewrite the frozen
-  one.
+- Use the completed [rate-search follow-up](mushroom-rate-search-results.md) to
+  distinguish the disappearing primary SD rare advantage from persistent damping
+  and shorter-budget effects. It matches tuning effort across scalings, retains
+  failures and original-scale paths, and preserves the frozen study. Keep the
+  unresolved secondary uncentered boundaries explicit.
 - Decide whether the main contribution is a quantitative comparison that remains
   informative after calibration, or a characterization of the limits of
   normalization selection under rare-group coverage. Neither is established by

@@ -1,0 +1,130 @@
+\section{A separate Mushroom rate-search follow-up}
+\label{sec:mushroom-rate-search}
+
+The frozen experiment in Appendix~\ref{sec:practical} leaves an upper-rate
+boundary: all 32 large-sample unscaled aggregate selections use factor $.8$.
+The follow-up declares 17 factors before evaluating the new candidates:
+\[
+ a_0\in\{.001,.01,.05,.2,.4,.6,.8,1,1.2,1.4,1.6,1.8,2,2.4,3.2,4.8,6.4\},
+ \qquad \eta=a_0/\max(L,10^{-12}).
+\]
+All scalings receive this same search, with the original batches 16 and 128,
+both sample sizes, all three empirical preprocessing/intercept arms, and the
+same partitions and replacement index streams. The old five factors remain
+eligible. The primary expansion uses the original stopping checkpoints
+$\{0,512,2048,8192\}$; a secondary search adds $\{128,256,1024,4096\}$.
+The primary arm centers predictors and fits an intercept. Both aggregate and
+rare validation objectives are evaluated, with the original fallback when the
+rare validation group is empty. Models are not refitted on validation data.
+
+Each expanded scaling/arm uses 34 paths, or nominal work $34M$ at cap $M$,
+versus $10M$ in the nested original search. This is equal effort across scalings
+within each search, with greater effort than the original grid. Additional
+stopping checkpoints reuse these paths but increase validation scoring.
+Curvature calibration, preprocessing, and scoring costs are outside $M$.
+The original study and its artifacts are preserved. This is a declared follow-up
+on already studied data, not independent confirmation on new data.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{rllrrr}
+\toprule
+$n$ & Validation & Scaling & Original rare gap & Expanded rare gap & Extra stops \\
+\midrule
+256 & Aggregate & SD & $-.027793\ (.006479)$ & $-.022763\ (.007829)$ & $-.020067\ (.005373)$ \\
+256 & Aggregate & Damped & $-.023451\ (.006277)$ & $-.020637\ (.007882)$ & $-.018331\ (.005449)$ \\
+256 & Rare & SD & $-.020538\ (.005816)$ & $-.023897\ (.014940)$ & $-.002463\ (.006956)$ \\
+256 & Rare & Damped & $-.018312\ (.005436)$ & $-.024033\ (.014674)$ & $-.003186\ (.005178)$ \\
+2048 & Aggregate & SD & $-.006570\ (.001526)$ & $-.001192\ (.001318)$ & $-.000597\ (.001204)$ \\
+2048 & Aggregate & Damped & $-.008331\ (.001158)$ & $-.005273\ (.000797)$ & $-.004649\ (.000519)$ \\
+2048 & Rare & SD & $-.009307\ (.001315)$ & $-.001421\ (.000470)$ & $-.001309\ (.000342)$ \\
+2048 & Rare & Damped & $-.008481\ (.001122)$ & $-.003179\ (.000312)$ & $-.002730\ (.000298)$ \\
+\bottomrule
+\end{tabular}
+\caption{Scaling-minus-none rare half squared loss at cap $M=8192$, with
+paired MCSE in parentheses, for the centered/fitted arm. Each column retains all
+32 partitions per size. The expanded search keeps the original stops; the last
+column changes stopping resolution separately. These MCSEs describe partition
+and optimizer variation conditional on the dataset, not population intervals.}
+\label{tab:mushroom-expanded-gaps}
+\end{table}
+
+Table~\ref{tab:mushroom-expanded-gaps} separates effects that persist from
+those no longer resolved after rate adjustment. At the larger size, aggregate
+selection gives unscaled aggregate loss $.001341\ (.000074)$ and rare loss
+$.005955\ (.000888)$, compared with $.001754\ (.000060)$ and
+$.012482\ (.001386)$ in the original search. SD's rare advantage is now
+within two MCSE of zero. Damping retains lower aggregate and rare loss,
+$.000810\ (.000039)$ and $.000682\ (.000133)$. At the smaller size,
+aggregate-selected rare losses are $.098799\ (.032694)$, $.076035\ (.028437)$,
+and $.078161\ (.028979)$ for none, SD, and damping. Pairing resolves
+differences that marginal error bars alone do not describe.
+
+Rare-objective selection still has costs. At $n=2048$, switching the expanded
+SD search from aggregate to rare validation reduces rare loss by
+$.002507\ (.000951)$ but raises aggregate loss by $.136592\ (.079298)$.
+The rare-selected aggregate mean is $.141068$, median $.004357$, and maximum
+$2.36513$. The corresponding unscaled mean is $.039395$, median $.002703$,
+and maximum $.509963$. Extreme finite outcomes remain in every mean.
+
+\begin{figure}[tp]
+\centering
+\includegraphics[width=\textwidth]{../results/mushroom-rate-search/paths-n2048-aggregate.pdf}
+\caption{Original-scale paths and selected endpoints under aggregate validation
+at $n=2048$. Dotted curves follow original-grid selected rates and batches;
+solid curves follow expanded-grid choices. Crosses and circles at the separate
+right-hand position show their selected endpoints, not a later training budget.
+Continuation after each selected stop is descriptive. Means use all 32
+partitions. Risk axes are logarithmic; coefficient and contribution axes use a
+symmetric logarithmic scale with a linear region within $.1$ of zero.
+Other feature contributions offset part of the larger green coefficient.
+The artifact also includes the smaller size and rare-objective paths.}
+\label{fig:mushroom-expanded-paths}
+\end{figure}
+
+The expanded unscaled green coefficient averages $.59990$, versus $.48216$
+before expansion; SD and damping average $.77633$ and $.91262$.
+Figure~\ref{fig:mushroom-expanded-paths} shows both risks alongside these
+coefficient paths. The centered green contributions are $.59460$, $.76948$,
+and $.90456$, while other subgroup contributions are $-.14755$, $-.30233$,
+and $-.40205$. Centered intercepts are approximately $.485$.
+Full one-hot coefficients remain optimizer-dependent in a rank-deficient design.
+
+All 32 expanded unscaled aggregate selections in this primary comparison use
+$B=16$, $M=8192$, and factors $.6$--$1.8$. Every immediate higher tested
+neighbor at the same batch and stop has worse validation loss; the smallest
+gap is $9.57\times10^{-7}$. No primary selection uses the new upper factor
+$6.4$. This resolves the original edge within the declared grid. It does not
+prove a continuous optimum or equal approximation error across scaling rules.
+The separate uncentered rare-objective search with extra early stops retains
+49 upper-edge decisions across sample sizes and budget caps, so those
+comparisons remain unresolved at the boundary.
+
+Shorter budgets retain stronger SD rare advantages. At large-sample caps 512
+and 2048, the primary aggregate-selected gaps are
+$-.072857\ (.011815)$ and $-.012679\ (.004061)$.
+At cap 8192, fixing the centered intercept gives a gap
+$-.000925\ (.001250)$, while uncentered fitted-intercept training gives
+$-.038224\ (.004383)$ under the original stopping grid.
+The longest-budget centered result does not extend to all training geometries.
+
+The archives retain 156,672 endpoints and 20,736 selection decisions.
+There are 2950 failed saved endpoints from 1798 trajectories, with first-failure
+updates recorded. Failure means nonfinite arithmetic or a coefficient/centered
+intercept exceeding $10^{100}$; all later endpoints remain flagged. Finite
+unstable candidates stay eligible. No all-failed selection fallback is needed.
+Five small-sample training sets lack the green category, and thirteen validation
+sets lack it. The corresponding aggregate fallback is explicit and does not
+provide subgroup information. Under expanded aggregate selection, mean rare
+loss on the five absent-training splits is $.51233$, $.43994$, and $.44841$
+for none, SD, and damping.
+
+The protocol, declaration, and complete summaries are stored separately from
+the frozen study. Independent checks reconstruct all losses, selections,
+paired summaries, coefficient contributions, and boundary diagnostics; replay
+all paths for replication zero of each size and every selected path for the
+remaining splits in transformed coordinates; and verify the nested original
+grid against the frozen archive. Source, dependency, data, archive, figure,
+and preservation hashes are checked. Human review of interpretation remains
+part of manuscript preparation.

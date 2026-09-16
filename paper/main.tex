@@ -46,9 +46,11 @@ continues, and where aggregate and rare-subgroup risk favor opposite scaling
 rules. These are comparisons of specified training procedures: both original
 anchor comparisons disappear under a subsequent learning-rate and stopping
 search. Experiments with estimated preprocessing and validation selection
-retain differences in relative learning, including a rare-subgroup benefit on
-a sparse categorical task, but also expose tuning boundaries and severe
-failures when rare cases are absent from validation. Together, the results
+retain differences in relative learning. On a sparse categorical task,
+expanding the rate search removes a resolved standardization advantage
+under aggregate selection, while a damped scaling retains lower risks.
+Selection also exposes severe failures when rare cases are absent from
+validation. Together, the results
 describe how normalization interacts with the training budget and prediction
 objective, while delimiting what fixed-configuration comparisons establish
 about a tuned procedure.
@@ -79,4 +81,5 @@ about a tuned procedure.
 \aistatstitle{Feature Normalization under Finite Training Budgets:\\Supplementary Materials}
 \input{sections/comparison-proofs}
 \input{sections/practical-selection}
+\input{sections/mushroom-rate-search}
 \end{document}

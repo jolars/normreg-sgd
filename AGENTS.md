@@ -50,6 +50,12 @@ baselines.
   `results/practical-selection/`; attributed source data live in
   `data/mushroom/`. Preserve missing-group failures, boundary selections, and
   the post hoc decimal investigation.
+- `notes/mushroom-rate-search.md` declares the separate rate expansion of the
+  frozen categorical study. Its results belong in
+  `notes/mushroom-rate-search-results.md`, with artifacts under
+  `results/mushroom-rate-search/`. The four `*mushroom_rate*.py` scripts retain
+  all candidate paths, failures, and nested selections. Preserve the declaration
+  hashes and the earlier practical study.
 - The paper and optimization checks use the averaged loss and
   $C = X_c^\top X_c/n$ for empirical designs, while the shrinkage script uses
   $G = nC$. Keep $\lambda_1 = nt$ and $\lambda_2 = nr$ consistent. Report
@@ -116,6 +122,14 @@ regenerate after changing those inputs. Keep post-result numerical diagnostics
 separate from primary selection rules. `GNUmakefile` includes the original
 `Makefile` and adds these targets to integrated validation. Keep the original
 file unchanged while its hash remains part of the preserved robustness study.
+
+Use `make reproduce-mushroom-rate-search` for the separately declared rate
+expansion and `make check-mushroom-rate-search` for its focused audit. The
+latter reconstructs all losses and selections, replays selected paths in
+transformed coordinates, and verifies the nested original search against the
+frozen archive. The declaration freezes the protocol and specification before
+execution; source changes require regenerating the new artifacts, not the
+earlier study.
 
 Versionary manages the version in `pyproject.toml`, its lockfile update, and
 `CHANGELOG.md` once releases are enabled. Do not hand-edit that changelog. The

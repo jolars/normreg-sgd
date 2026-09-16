@@ -12,8 +12,12 @@ The experiments also show why a fixed comparison cannot establish an
 advantage for a tuned method. Both original anchor comparisons disappear
 under the declared oracle adjustments. Estimated preprocessing and
 validation selection retain relative-learning effects, but introduce
-additional uncertainty from absent features, noisy selection, and the
-search boundary. A rare-objective selection rule cannot directly assess
+additional uncertainty from absent features and noisy selection. Expanding
+the categorical rate search removes the resolved large-sample SD rare-risk
+advantage under aggregate selection, while damping's advantage persists.
+The primary unscaled search moves off its upper edge; some uncentered
+early-stop comparisons remain at the boundary.
+A rare-objective selection rule cannot directly assess
 performance on rare observations that never appear in validation.
 
 The scope remains limited to linear prediction, conventional diagonal

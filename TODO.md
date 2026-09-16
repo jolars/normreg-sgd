@@ -17,15 +17,15 @@ other laws retain reversals and objective disagreements. The [practical
 study](notes/practical-selection-results.md) now tests estimated preprocessing,
 intercepts, absent rare groups, and validation selection, followed by a sparse
 categorical benchmark. It retains scaling effects and exposes missing-group
-failures and tuning boundaries. The next milestone is **one central theorem
-candidate and one decisive rate-search experiment** for the
-normalization-focused conference draft. The report's positive novelty assessment
-remains provisional.
+failures and tuning boundaries. The **central theorem candidate and separate
+rate-search experiment** are now available for the normalization-focused draft.
+The next theory step is a bounded feasibility proof. The report's positive
+novelty assessment remains provisional.
 
 ## Next milestone: predictive theory and a resolved rate comparison
 
-Prioritize the first two deliverables over the next two or three days. Use them
-to decide the central contribution and the remaining work for AISTATS.
+The first two deliverables are complete. Use their claims and limits to decide
+the central contribution and the remaining work for AISTATS.
 
 - [x] Write a one-page proposed claim with explicit assumptions, intended
   conclusion, and closest antecedents. Starting from the two-feature model
@@ -44,7 +44,7 @@ to decide the central contribution and the remaining work for AISTATS.
   for C2, and screen fixed and adjusted comparisons beyond the original
   boxes. The uniform remainder is a conjecture; only a bounded feasibility
   proof is recommended before a substantial theorem commitment.
-- [ ] Resolve the Mushroom rate-search boundary in a separate declared
+- [x] Resolve the Mushroom rate-search boundary in a separate declared
   follow-up. Every large-sample unscaled aggregate selection chose the
   largest available rate factor. Specify a broader search with comparable
   tuning effort, retain failed candidates, and report original-scale
@@ -52,7 +52,12 @@ to decide the central contribution and the remaining work for AISTATS.
   selected endpoints. Deliver a comparison that identifies which
   normalization effects persist, disappear, or remain unresolved. Preserve
   the [frozen practical study](notes/practical-selection.md) and its
-  artifacts.
+  artifacts. The [follow-up](notes/mushroom-rate-search-results.md) expands
+  to 17 rate factors at equal effort across scalings and retains all 156,672
+  endpoints. The primary unscaled selections move off the upper edge; the
+  large-sample SD rare advantage under aggregate selection is no longer
+  resolved, while damping's advantage persists. Uncentered early-stop
+  boundaries and missing subgroup coverage remain explicit limitations.
 - [ ] Develop and verify the theorem if the proposed claim offers a substantive
   advance over its closest antecedents. Separate mathematical correctness
   from novelty, and obtain human review of the final result.
