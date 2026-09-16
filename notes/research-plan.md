@@ -1,14 +1,24 @@
 # Research plan
 
-Working direction: **Normalization and Implicit Regularization in Stochastic
-Learning**. Revised September 16, 2026. The task checklist is in
-[TODO.md](../TODO.md). The immediate focus is **feature scaling, finite-time
-SGD, and rare-subgroup prediction**.
+Target: **AISTATS 2027**. Working title: **Feature Normalization under Finite
+Training Budgets**. Revised September 16, 2026. The task checklist is in
+[TODO.md](../TODO.md), and the [conference plan](aistats-2027.md) records the
+paper structure and submission requirements. Normalization is the central
+subject; finite-time SGD and rare-subgroup prediction provide the analytical and
+empirical setting.
 
 ## Central question
 
-**How do normalization, learning rate, batch size, and stopping time jointly
-determine the fitted model and its statistical properties?**
+**How does feature normalization change prediction at a finite training budget,
+and which effects remain after learning-rate, batch-size, and stopping
+calibration?**
+
+The broader program studies how these choices jointly determine the fitted model
+and its statistical properties. The AISTATS paper needs a quantitative
+conclusion about normalization that is distinct from the closest preconditioning
+results. The current comparisons and their limits supply the draft's evidence; a
+defensible central novelty claim and practical rate-boundary follow-up remain
+necessary before submission.
 
 The project studies the interaction among all four choices: which features are
 learned, how their coefficients evolve, how training noise enters the model, and
@@ -33,7 +43,11 @@ study](normalization-robustness-results.md) now tests their sensitivity to
 declared learning-rate and stopping adjustments: both original anchor
 comparisons disappear, while other laws retain reversals or produce objective
 disagreements. A complete characterization of every training regime remains a
-longer-term research objective.
+longer-term research objective. A separate [practical
+study](practical-selection-results.md) now tests estimated preprocessing and
+validation selection in sampled binary models and a sparse categorical task. It
+retains relative-learning effects while exposing missing-group failures and
+rate-grid limitations.
 
 ## Implications of the literature report
 
@@ -312,12 +326,12 @@ identifying substantial overlap in their mechanisms.
 The [declared robustness study](normalization-robustness-results.md) shows that
 C2's original anchor disagreement does not survive rate adjustment on either
 grid. Other signals produce disagreements after adjustment. The next scientific
-decisions concern their practical consequences and the conditions on prevalence,
-dependence, signal, and noise that explain their production during training
-beyond the target-weight identity. Retain C1 as the controlled bias-versus-noise
-comparison and preserve both fixed configurations and failures. The steps below
-retain the milestone criteria that led to these results; mathematical completion
-does not settle novelty or empirical value.
+decisions concern the scope of their practical consequences and the conditions
+on prevalence, dependence, signal, and noise that explain their production
+during training beyond the target-weight identity. Retain C1 as the controlled
+bias-versus-noise comparison and preserve both fixed configurations and
+failures. The steps below retain the milestone criteria that led to these
+results; mathematical completion does not settle novelty or empirical value.
 
 ### 1. Formulate a candidate result and check its closest prior work
 
@@ -422,19 +436,34 @@ explains its limits. Broader grids should answer these questions.
 
 ### 4. Test practical consequences
 
-After the controlled comparisons, study training-estimated centering and scales,
-intercept handling, and samples with no rare observations. Compare fixed
-stopping with a stated validation rule. Evaluate joint normalization and
-optimization tuning with separate validation and test data and comparable search
-effort.
+The [declared protocol](practical-selection.md) and
+[execution](practical-selection-results.md) complete this bounded milestone.
+Eight sampled binary laws and a sparse categorical linear-model task on UCI
+Mushroom retain all 637,440 endpoints. They test training-estimated centering
+and scales, fixed and fitted intercepts, absent rare groups, fixed stopping, and
+separate aggregate/subgroup validation rules with equal tuning effort. Training,
+validation, and test information remain separate. Independent checks reconstruct
+losses and selections; a decimal investigation confirms 24 extreme selections
+without changing the primary results.
 
-Choose a sparse text or categorical task with an interpretable rare-feature
-definition, first using linear models. Report aggregate and subgroup prediction
-alongside the feature-level mechanism. Add a small neural model or adaptive
-optimizers only with an explicit hypothesis connecting them to the controlled
-study. Record momentum, clipping, schedules, stabilizing constants, and weight
-decay when applicable; fixed diagonal preconditioning does not describe their
-complete dynamics.
+Relative-learning effects remain observable, and Mushroom retains a rare-risk
+scaling advantage on the declared grid. Some controlled objective disagreements
+disappear. Missing validation groups can conceal explosive rare coefficients,
+and noisy rare-objective selection can worsen aggregate loss. The unscaled
+Mushroom fits frequently select the maximum rate, so equal search effort does
+not establish equally resolved optima. These results delimit the conclusion by
+task, objective, data, and budget. A further study could test whether explicit
+stability restrictions and better subgroup validation coverage address the
+observed failures; that would require a new protocol.
+
+The categorical task reports both held-out prediction objectives and the
+green-spore dummy's original-scale learning path, including other-feature and
+intercept contributions. Its hypothetical field-guide records do not establish
+performance on new species or field observations. A small neural model or
+adaptive optimizer remains conditional on an explicit hypothesis connecting it
+to the controlled study. Record momentum, clipping, schedules, stabilizing
+constants, and weight decay when applicable; fixed diagonal preconditioning does
+not describe their complete dynamics.
 
 **Completion criterion:** determine whether the controlled mechanism remains
 observable with practical preprocessing and training choices, and delimit any

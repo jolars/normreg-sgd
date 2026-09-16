@@ -1,0 +1,206 @@
+\section{Proofs of the normalization-risk comparisons}
+\label{sec:comparison-proofs}
+
+This appendix gives the finite-moment formulas, approximation bounds, and
+interval-certificate construction for Theorems~\ref{thm:conference-c1}
+and~\ref{thm:conference-c2}. All calculations use the binary model,
+fresh sampling, and population preprocessing of
+Section~\ref{sec:conference-setting}. The implementation is
+\texttt{experiments/check\_normalization\_risk\_theorem.py}; inside the
+locked project environment, \texttt{make check-normalization-risk} runs
+both the certificates and independent numerical checks. Packaging an
+anonymized reproducibility archive remains a submission task.
+
+\subsection{Exact moments and the variance decomposition}
+
+Write $D=\eta P=\diag(d_C,d_R)$ and
+$s_k=(V_{CC,k},V_{CR,k},V_{RR,k})^\top$. Set
+\[
+ t_B=c^2+\frac{ab-c^2}{B},\qquad
+ m_B=c\left(b+\frac{1-4b}{B}\right).
+\]
+The exact recurrence is $s_{k+1}=L_Ds_k+\sigma^2g_D$, where
+\[
+ L_D=\begin{pmatrix}
+ (1-d_Ca)^2 & -2d_C(1-d_Ca)c & d_C^2t_B\\
+ -d_R(1-d_Ca)c & (1-d_Ca)(1-d_Rb)+d_Cd_Rt_B & -d_Cc+d_Cd_Rm_B\\
+ d_R^2t_B & -2d_Rc+2d_R^2m_B & (1-d_Rb)^2+d_R^2b(1-4b)/B
+ \end{pmatrix},
+\]
+\[
+ g_D=\frac1B(d_C^2a,d_Cd_Rc,d_R^2b)^\top,\qquad
+ s_0=((\beta_C^*)^2,\beta_C^*\beta_R^*,(\beta_R^*)^2)^\top.
+\]
+To verify this, let $\widehat C$ be the averaged batch second moment.
+The common squared coordinate is the constant $a$, and the binary law gives
+\[
+ \E x_R^4=b(1-3b),\quad \E x_C^2x_R^2=ab,\quad
+ \E x_Cx_R^3=c(1-3b).
+\]
+Consequently, $\E\widehat c^2=t_B$,
+$\E(\widehat c\widehat b)=m_B$, and
+$\E\widehat b^2=b^2+b(1-4b)/B$.
+Expanding $\E[(I-D\widehat C)V_k(I-\widehat CD)]$ yields $L_D$.
+The conditional mean-zero noise assumption removes cross terms, and the
+noise injection has covariance $\sigma^2DCD/B$. Fresh sampling makes the
+new update independent of the previous error.
+
+For \eqref{eq:conference-decomposition}, run the noiseless recursion on
+the same feature stream. Its mean error is
+$e_k=-(I-DC)^k\beta^*$ and its covariance is $A_k\succeq0$.
+Conditional on all sampled features, the noise-driven component has mean
+zero, so its cross moment with the noiseless component vanishes.
+Its covariance is $\sigma^2N_k\succeq0$. This proves the decomposition.
+Equivalently, if $\mathcal T_D(V)=\E[(I-D\widehat C)V(I-\widehat CD)]$,
+then
+\[
+ V_k=\mathcal T_D^k(\beta^*\beta^{*\top})+
+ \frac{\sigma^2}{B}\sum_{j=0}^{k-1}\mathcal T_D^j(DCD).
+\]
+
+\subsection{A scalar approximation with a controlled remainder}
+
+Under independence, the diagonal moments close under
+\[
+ K_D=\begin{pmatrix}A&e\\f&D_0\end{pmatrix},\quad
+ A=(1-h)^2,\quad e=\frac{d_C^2ab}{B},\quad f=\frac{d_R^2ab}{B},\quad
+ D_0=(1-d_Rb)^2+\frac{d_R^2b(1-4b)}B.
+\]
+Here $D_0$ is a scalar, distinct from $D$. All entries are nonnegative.
+Define
+\[
+ w=\tfrac12(a,(1-q)^2)^\top,\quad
+ v_0=((\beta_C^*)^2,(\beta_R^*)^2)^\top,\quad
+ g=(d_C^2a,d_R^2b)^\top/B,
+\]
+and let $E_0=\max(e,f)$ and $\|K_D\|_\infty\leq\rho<1$.
+For $\phi_k(z)=\sum_{j=0}^{k-1}z^j$, define
+\[
+ \widetilde R_{R,k}=
+ w_C\{A^k(\beta_C^*)^2+\sigma^2g_C\phi_k(A)\}
+ +w_R\{D_0^k(\beta_R^*)^2+\sigma^2g_R\phi_k(D_0)\}.
+\]
+For every $k\geq1$,
+\begin{equation}
+ 0\leq R_{R,k}-\widetilde R_{R,k}\leq E_F+\sigma^2E_N,\qquad
+ E_F=\|w\|_1\|v_0\|_\infty E_0k\rho^{k-1},\quad
+ E_N=\frac{\|w\|_1\|g\|_\infty E_0}{(1-\rho)^2}.
+ \label{eq:comparison-remainder}
+\end{equation}
+Indeed, with $K_0=\diag(A,D_0)$ and $E=K_D-K_0\geq0$ entrywise,
+\[
+ K_D^k-K_0^k=\sum_{j=0}^{k-1}K_D^{k-1-j}EK_0^j\geq0.
+\]
+Its infinity norm is at most $E_0k\rho^{k-1}$. Multiplication by $w$
+and $v_0$ proves the homogeneous bound. Applying the same identity to the
+noise sum and using $\sum_{j=1}^{k-1}j\rho^{j-1}\leq(1-\rho)^{-2}$
+proves the noise bound.
+
+The common terms cancel between the U and S proxies. Write
+\[
+ \widetilde F=w_R(\beta_R^*)^2(D_S^k-D_U^k),\qquad
+ \widetilde N=w_R\{g_{R,S}\phi_k(D_S)-g_{R,U}\phi_k(D_U)\},
+\]
+where $D_S,D_U$ are the respective scalar $D_0$ values. For the exact
+contrast $F+\sigma^2N$, subtracting the two nonnegative remainders gives
+\[
+ F_-:=\widetilde F-E_{F,U}\leq F\leq\widetilde F+E_{F,S}=:F_+,
+\]
+\[
+ N_-:=\widetilde N-E_{N,U}\leq N\leq\widetilde N+E_{N,S}=:N_+.
+\]
+When $F_+<0<N_-$, division by positive denominators gives
+\eqref{eq:conference-threshold}. In particular,
+$F_++\sigma^2N_+<0$ guarantees lower rare risk for S, whereas
+$F_-+\sigma^2N_->0$ guarantees lower rare risk for U. The homogeneous
+proxy already includes rare-feature update variance through $D_0$;
+it is not simply the squared mean error.
+
+\subsection{Certificate for Theorem~\ref{thm:conference-c1}}
+
+Partition each of the $q$ and $h$ intervals into eight equal closed
+pieces. On each of the resulting 64 rectangles, evaluate the preceding
+bounds with interval arithmetic and
+$(\beta_C^*)^2,(\beta_R^*)^2\in[.9025,1.1025]$.
+For each configuration use upper bounds on
+$\rho=\max(A+e,D_0+f)$ and $E_0=\max(e,f)$.
+The certificate obtains $\rho<.999719$ throughout. The remaining
+cross moment propagates by
+\[
+ \gamma=(1-d_Ca)(1-d_Rb)+d_Cd_Rab/B
+\]
+with zero noise injection. The certificate checks $0\leq\gamma<1$
+on every rectangle. Thus the full homogeneous second-moment map is
+stable, and the fixed finite noise injection gives bounded noisy moments.
+
+Every rectangle satisfies $F_+<0<N_-$. The hulls of the resulting
+$F+\sigma^2N$ intervals give Table~\ref{tab:conference-c1}. The respective
+noise-threshold enclosures, in its row order, are
+$[10.46,17.76]$, $[.53,1.405]$, $[112.61,184.22]$, and $[5.69,14.49]$.
+They imply the four signs uniformly whenever
+$1.405<\sigma^2<5.69$. The narrower interval in the theorem gives its
+displayed risk-gap bounds. Closed rectangles cover their shared boundaries.
+
+\subsection{Outward-rounded arithmetic}
+
+Each interval endpoint is represented by an integer multiple of
+$10^{-60}$. Inputs are rational strings or integers. Addition is exact;
+products use the minimum and maximum of all four endpoint products and
+round outward using integer division. If $[l,u]$ stores the integer
+endpoints of a positive denominator interval, its reciprocal is enclosed by
+\[
+ \left[\frac{\lfloor10^{120}/u\rfloor}{10^{60}},
+ \frac{\lceil10^{120}/l\rceil}{10^{60}}\right].
+\]
+Negative denominators are reduced to this case. Powers and finite sums
+use repeated squaring and addition. Induction over the arithmetic
+operations gives enclosure of each exact rational expression. All
+acceptance checks compare integer endpoints, including containment in
+the reported decimal bounds. Floating-point conversions are used only
+for display. Thus the parameter boxes are covered by finite enclosure
+calculations, not by testing isolated parameter values.
+
+\subsection{Proof of Theorem~\ref{thm:conference-c2}}
+
+For stability, a feature vector with $\|z\|^2\leq L$ satisfies
+\[
+ \E[(I-\eta zz^\top)^2]\preceq I-\eta(2-\eta L)H,
+ \qquad H=\E[zz^\top].
+\]
+If $H\succ0$ and $0<\eta<2/L$, this contracts expected squared
+error. For U, take $L=.25+.98^2=1.2104$, $\eta=.04$, and use
+$\lambda_{\min}(C)\geq.0196-.01=.0096$. For S, $L=50$,
+$\eta=.01$, and
+\[
+ H=\begin{pmatrix}1&\ell/7\\\ell/7&1\end{pmatrix},\qquad
+ \lambda_{\min}(H)\geq6/7.
+\]
+These sufficient stability bounds hold throughout the claimed interval.
+
+For the risks, augment $L_D$ by the unit-noise column $g_D$ and a final
+row $(0,0,0,1)$. Its $100$th power gives the homogeneous map and finite
+noise sum. The aggregate and rare risk weights on $s_k$ are
+\[
+ w_A=(a/2,c,b/2)^\top,\qquad
+ w_R=(a/2,\ell(1-q)/2,(1-q)^2/2)^\top.
+\]
+Partition $[.9,1]$ into 128 equal closed intervals. On each interval,
+the same integer arithmetic encloses the two augmented powers, their
+action on $s_0=(4,2,1)^\top$, and the contrasts
+$F_W+\sigma^2N_W$ for $\sigma^2\in[3.8,4.1]$.
+Signed matrix entries use all four endpoint products; no entrywise
+positivity is assumed. The union satisfies both risk enclosures in the
+theorem. Before risk weighting, the same powers certify positive
+diagonal contrasts and a negative cross-moment contrast throughout.
+This proves the coefficient MSE inequalities as well.
+
+\subsection{Checks distinct from the certificates}
+
+Independent ordered-batch and short-path enumeration checks the
+three-moment formulas against actual gradient updates. Comparisons
+with a separate full moment operator cover 64 endpoints, including
+mixed-sign signals, dependence boundaries, an interior law, and
+$B=1,2$. These floating-point checks validate implementations; the
+interval arithmetic above supplies the continuous-box certificates.
+Neither form of verification establishes priority or robustness to
+procedures outside the stated comparison.

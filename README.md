@@ -1,31 +1,40 @@
-# Normalization and Implicit Regularization
+# Feature Normalization under Finite Training Budgets
 
-Working direction: *Normalization and Implicit Regularization in Stochastic
-Learning*. The project studies how normalization, learning rate, batch size, and
-stopping jointly determine the fitted model and its statistical properties.
-Common and rare features provide the initial controlled setting.
+Target: **AISTATS 2027**. The paper asks how feature normalization changes
+prediction under a finite training budget, and which effects remain after
+learning-rate, batch-size, and stopping calibration. Common and rare features
+provide the controlled setting. The [conference plan](notes/aistats-2027.md)
+records the scope, contribution work, and submission dates: September 29, 2026,
+for the abstract and October 6 for the paper and all supplementary material
+(23:59 AoE).
 
-The manuscript begins with two elementary calculations: a transient dependence
-effect in population gradient flow and a scalar SGD stability bound for rare
-binary observations. It extends these to a fixed common block, exact
-finite-update GD and fresh-sample SGD error moments, and batch-rarity stability
-under a bounded common-block assumption. A matched-covariance binary comparison
-isolates higher update moments, while conditional identities and counterexamples
-distinguish replacement sampling and reshuffling from fresh observations.
-Population centering and feature scales are known. An independently reviewed
-joint-budget theorem gives a rare-coefficient error limit under specified
-decreasing steps. A controlled fixed-data pilot finds subgroup-risk differences
-that reverse across signals and training budgets. Broader sampling limits,
-adaptive-optimizer comparisons, real-data validation, and standalone novelty
-remain research objectives. Earlier correlated-feature shrinkage results are
-retained as explicit-regularization baselines in the appendices, following *The
-Choice of Normalization Influences Shrinkage in Regularized Regression* by Johan
-Larsson and Jonas Wallin.
+The broader research manuscript begins with two elementary calculations: a
+transient dependence effect in population gradient flow and a scalar SGD
+stability bound for rare binary observations. It extends these to a fixed common
+block, exact finite-update GD and fresh-sample SGD error moments, and
+batch-rarity stability under a bounded common-block assumption. A
+matched-covariance binary comparison isolates higher update moments, while
+conditional identities and counterexamples distinguish replacement sampling and
+reshuffling from fresh observations. Population centering and feature scales are
+known. An independently reviewed joint-budget theorem gives a rare-coefficient
+error limit under specified decreasing steps. A controlled fixed-data pilot
+finds subgroup-risk differences that reverse across signals and training
+budgets. Broader sampling limits, adaptive-optimizer comparisons, generalization
+beyond the categorical benchmark, and standalone novelty remain research
+objectives. Earlier correlated-feature shrinkage results are retained as
+explicit-regularization baselines in the appendices, following *The Choice of
+Normalization Influences Shrinkage in Regularized Regression* by Johan Larsson
+and Jonas Wallin.
 
 ## Start here
 
-- [Manuscript](paper/main.tex): the working paper, with proofs and explicit
-  scope conditions.
+- [Conference manuscript](paper/main.tex): an anonymous AISTATS 2027 draft
+  centered on normalization-risk comparisons, retuning, and validation
+  selection.
+- [Full research manuscript](paper/research-notes.tex): the preserved longer
+  treatment, including earlier theory and shrinkage baselines.
+- [AISTATS plan](notes/aistats-2027.md): paper organization, remaining
+  contribution work, conference requirements, and artifact preparation.
 - [Research tasks](TODO.md): the consolidated checklist for theory, novelty
   comparisons, experiments, and manuscript development.
 - [Research plan](notes/research-plan.md): the proposed contribution, current
@@ -42,6 +51,10 @@ Larsson and Jonas Wallin.
   and objective disagreements.
 - [Joint-budget theorem](notes/joint-budget-limits.md) and [independent
   review](notes/joint-budget-review.md): the scoped fresh-sample limit.
+- [Practical-selection protocol](notes/practical-selection.md) and
+  [results](notes/practical-selection-results.md): training-estimated
+  preprocessing, intercepts, missing rare groups, validation-based selection,
+  and a sparse categorical linear-model evaluation on UCI Mushroom.
 - [Literature audit](notes/novelty-audit.md): theorem-level overlap and
   unresolved novelty comparisons.
 - [Controlled pilot](notes/rare-subgroup-pilot.md): protocol, results, and
@@ -60,15 +73,17 @@ Python dependencies are pinned in `uv.lock`.
 ```sh
 devenv shell
 make paper
+make paper-notes
 make check
 ```
 
-The manuscript builds to `build/main.pdf`. `make check` checks formatting and
-configuration, verifies the optimization formulas against an independent ODE
-solution and exact batch enumeration, validates the shrinkage baselines against
-coordinate descent and Monte Carlo, and builds the manuscript.
-`make check-quick` uses fewer Monte Carlo draws for iteration. `make format`
-formats Markdown, Nix, and Python.
+The conference draft builds to `build/main.pdf`, with an eight-page main-text
+limit enforced during compilation. The longer manuscript builds separately to
+`build/research-notes.pdf`. `make check` checks formatting and configuration,
+verifies the optimization formulas against an independent ODE solution and exact
+batch enumeration, validates the shrinkage baselines against coordinate descent
+and Monte Carlo, and builds the manuscript. `make check-quick` uses fewer Monte
+Carlo draws for iteration. `make format` formats Markdown, Nix, and Python.
 
 To check just the optimization calculations inside `devenv shell`:
 
@@ -125,6 +140,19 @@ This writes `results/rare-subgroup-pilot.json`. The [pilot
 report](notes/rare-subgroup-pilot.md) records the frozen tuning grid, seeds,
 uncertainty convention, and interpretation. Its reported excess squared
 prediction errors omit the factor of one half in the training loss.
+
+To reproduce the practical-selection extension inside `devenv shell`:
+
+```sh
+make reproduce-practical-selection
+```
+
+This writes all candidate paths, validation selections, summaries, and SVG/PDF
+figures under `results/practical-selection/`. The attributed Mushroom input is
+vendored under `data/mushroom/`, so reproduction requires no download. Run
+`make check-practical-selection` for independent transformed-design updates,
+loss and selection reconstruction, paired uncertainty, and provenance checks.
+The earlier studies and the robustness covariance diagnostic are preserved.
 
 To regenerate the numerical reference results for the shrinkage baselines:
 

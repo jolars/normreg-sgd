@@ -1,18 +1,22 @@
 # Project guidance
 
-This is a research manuscript with supporting Python calculations. It studies
-rare-feature learning under normalization, early stopping, and stochastic
-optimization, with an emphasis on rare-subgroup prediction. Elementary
-population-flow and scalar SGD results are extended to a fixed common block,
-exact finite-update moments, and batch-rarity stability under explicit
+This is an AISTATS 2027 research manuscript with supporting Python calculations.
+The conference paper centers feature normalization under finite training
+budgets. It studies rare-feature learning under normalization, early stopping,
+and stochastic optimization, with an emphasis on rare-subgroup prediction.
+Elementary population-flow and scalar SGD results are extended to a fixed common
+block, exact finite-update moments, and batch-rarity stability under explicit
 population assumptions. Joint sampling guarantees, novelty, and empirical
 usefulness remain research objectives. Earlier shrinkage results are supporting
 baselines.
 
 ## Sources and mathematical conventions
 
-- `paper/main.tex` and `paper/sections/` are the working manuscript.
-  `paper/references.bib` contains the bibliography.
+- `paper/main.tex` is the anonymous AISTATS 2027 draft; its main sections use
+  the `conference-` prefix. `paper/research-notes.tex` preserves the longer
+  manuscript and earlier section files. `paper/references.bib` is shared.
+  `notes/aistats-2027.md` records the conference scope and preparation tasks.
+  Keep the official files under `paper/vendor/aistats2027/` unmodified.
 - `notes/research-plan.md` records the research program and the scope of
   candidate claims. `TODO.md` is the consolidated task checklist, with earlier
   shrinkage extensions marked as deferred. `notes/two-feature-investigation.md`
@@ -38,6 +42,14 @@ baselines.
   `*_normalization_robustness.py` filenames. Their separate artifacts live in
   `results/normalization-robustness/`. Preserve the reported Monte Carlo
   covariance gate violation and its conditional-absence investigation.
+- `notes/practical-selection.md` freezes the estimated-preprocessing and
+  validation-selection protocol; `notes/practical-selection-results.md` reports
+  the sampled binary and sparse categorical evaluations. The six
+  `*practical*.py` scripts define, run, summarize, independently check, and
+  investigate numerical precision for this study. Separate artifacts live in
+  `results/practical-selection/`; attributed source data live in
+  `data/mushroom/`. Preserve missing-group failures, boundary selections, and
+  the post hoc decimal investigation.
 - The paper and optimization checks use the averaged loss and
   $C = X_c^\top X_c/n$ for empirical designs, while the shrinkage script uses
   $G = nC$. Keep $\lambda_1 = nt$ and $\lambda_2 = nr$ consistent. Report
@@ -61,6 +73,7 @@ Enter `devenv shell` before running these commands:
 
 ```sh
 make paper
+make paper-notes
 make check-python
 make check-optimization
 make check-quick
@@ -95,6 +108,14 @@ sources or locked dependencies, and retain invalid candidates in unrestricted
 envelope reports. Refresh `uv.lock` with uv and `devenv.lock` with devenv when
 changing inputs. Keep the Panache version in the Markdown CI job aligned with
 the devenv package when updating the Nix inputs.
+
+Use `make reproduce-practical-selection` for its offline regeneration and
+`make check-practical-selection` for the focused audit. Its protocol, six
+scripts, locked dependencies, input data, and earlier-study hashes are checked;
+regenerate after changing those inputs. Keep post-result numerical diagnostics
+separate from primary selection rules. `GNUmakefile` includes the original
+`Makefile` and adds these targets to integrated validation. Keep the original
+file unchanged while its hash remains part of the preserved robustness study.
 
 Versionary manages the version in `pyproject.toml`, its lockfile update, and
 `CHANGELOG.md` once releases are enabled. Do not hand-edit that changelog. The

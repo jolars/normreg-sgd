@@ -1,10 +1,11 @@
 # Research tasks
 
-The active direction is **Normalization and Implicit Regularization in
-Stochastic Learning**. The [research plan](notes/research-plan.md) studies how
-normalization, learning rate, batch size, and stopping time jointly determine
-the fitted model and its statistical properties. It builds on `../normreg` and
-retains SGD and implicit regularization as the follow-up's ML direction.
+The target is **AISTATS 2027**, with working title **Feature Normalization under
+Finite Training Budgets**. The [research plan](notes/research-plan.md) centers
+normalization and its interaction with learning rate, batch size, and stopping.
+The [conference plan](notes/aistats-2027.md) records the paper structure,
+requirements, and deadlines. The project builds on `../normreg` and retains SGD
+and implicit regularization as the follow-up's ML direction.
 
 The completed calculations and experiments below provide a foundation. Johan's
 [research report](deep-research-report.md) now informs the plan. The [comparison
@@ -12,10 +13,35 @@ proofs](notes/normalization-risk-theorem.md) establish C1's stopping reversal
 and C2's aggregate/subgroup disagreement under declared budgets. The [robustness
 study](notes/normalization-robustness-results.md) now shows that both original
 anchor comparisons disappear after declared rate and stopping adjustments, while
-other laws retain reversals and objective disagreements. The next milestone is
-**practical preprocessing and validation-based selection**, alongside the
-expanded novelty audit. The report's positive novelty assessment remains
-provisional.
+other laws retain reversals and objective disagreements. The [practical
+study](notes/practical-selection-results.md) now tests estimated preprocessing,
+intercepts, absent rare groups, and validation selection, followed by a sparse
+categorical benchmark. It retains scaling effects and exposes missing-group
+failures and tuning boundaries. The next milestone is the **expanded novelty
+audit and central contribution decision** for the normalization-focused
+conference draft. The report's positive novelty assessment remains provisional.
+
+## AISTATS 2027 preparation
+
+- [x] Vendor the official 2027 template and create an anonymous conference draft
+  with the AI Use Statement, original checklist questions, and single-column
+  supplement. Preserve the longer manuscript separately.
+- [x] Reorganize the main text around normalization, quantitative risk
+  comparisons, retuning, and validation selection. Retain disappearing
+  comparisons and numerical failures.
+- [ ] State and substantiate the central contribution beyond the closest
+  preconditioning and target-risk results. Complete the theorem-level
+  novelty comparison for the claims actually retained in the paper.
+- [ ] Resolve the practical rate-boundary comparison through a separate declared
+  follow-up with comparable tuning effort; preserve the frozen study.
+- [ ] Obtain human review of final mathematical claims, certificates, source
+  comparisons, and experimental interpretation.
+- [ ] Finalize title, abstract, author list, profiles, and reciprocal-reviewer
+  nomination by September 29, 2026, 23:59 AoE.
+- [ ] Package anonymous reproducibility artifacts, document hardware and
+  licenses, finalize the disclosure and checklist, and inspect the
+  submission PDF before October 6, 2026, 23:59 AoE. Supplementary material
+  shares this deadline.
 
 ## Current priorities: comparative results and their limits
 
@@ -71,11 +97,17 @@ comparison. The research plan gives the completion criteria.
   Grid refinements, paired uncertainty, the investigated covariance
   diagnostic, and unresolved unrestricted comparisons are reported. Tail
   averaging remains deferred under the declared final-iterate protocol.
-- [ ] After the controlled result, test estimated preprocessing, intercepts,
+- [x] After the controlled result, test estimated preprocessing, intercepts,
   absent rare observations, and validation-based selection. Then evaluate
   one stated sparse linear-model task with equal tuning effort and both risk
   objectives. Broader optimizer and neural-model comparisons follow a
-  specific hypothesis.
+  specific hypothesis. The [protocol](notes/practical-selection.md) and
+  [results](notes/practical-selection-results.md) retain 637,440 endpoints
+  across eight sampled laws and UCI Mushroom, with equal tuning effort, both
+  objectives, independent reconstruction, and a decimal precision
+  investigation. Missing validation groups can hide explosive rare error;
+  benchmark gains remain limited by the declared grid and task. Broader
+  comparisons are not needed for this hypothesis and remain deferred.
 
 ## Completed first comparison and remaining review
 
@@ -149,7 +181,9 @@ comparison. The research plan gives the completion criteria.
   intercept remain known and fixed.
 - [ ] Analyze estimated feature scales, training centering, and intercept
   handling. State what happens when a training sample has no rare
-  observations.
+  observations. The [practical study](notes/practical-selection-results.md)
+  now supplies numerical evidence and an explicit absent-column policy;
+  finite-sample theoretical guarantees remain open.
 - [ ] Identify conditions recovering the independent-feature trajectory and a
   useful approximation bound when dependence is weak relative to feature
   variance. Avoid relying on Pearson correlation alone.

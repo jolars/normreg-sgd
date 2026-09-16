@@ -1,12 +1,13 @@
-\documentclass[11pt]{article}
-\usepackage[T1]{fontenc}
-\usepackage{lmodern}
-\usepackage[margin=1in]{geometry}
+\documentclass[letterpaper,twoside]{article}
+\usepackage{aistats2027}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{booktabs}
+\usepackage{graphicx}
 \usepackage[round,authoryear]{natbib}
+\renewcommand{\bibsection}{\subsubsection*{References}}
 \usepackage{microtype}
-\usepackage[colorlinks=true,allcolors=blue]{hyperref}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={Feature Normalization under Finite Training Budgets},pdfauthor={}}
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{proposition}[theorem]{Proposition}
@@ -22,53 +23,60 @@
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\soft}{S}
 
-\title{Learning Rare Features: Normalization, Stochastic Optimization, and Early Stopping}
-\author{Johan Larsson}
-\date{Working manuscript --- September 15, 2026}
-
 \begin{document}
-\maketitle
+\runningtitle{Feature Normalization under Finite Training Budgets}
+\twocolumn[
+
+\aistatstitle{Feature Normalization under Finite Training Budgets}
+
+\aistatsauthor{Anonymous Authors}
+
+\aistatsaddress{Anonymous Affiliations}
+]
 
 \begin{abstract}
-This working investigation asks how normalization changes the learning of rare
-binary features under a finite training budget. For a fixed block of common
-predictors and one rare binary feature, we derive a population gradient-flow
-limit in which incomplete common-feature learning contributes to the rare
-coefficient even as common--rare Pearson correlations vanish. Exact finite-update
-formulas for gradient descent and fresh-sample stochastic gradient descent
-separate initial uncertainty, multiplicative update variance, and observation
-noise. Under a bounded common-block assumption, an exact second-moment operator
-criterion yields stability thresholds across small, intermediate, and large
-products of batch size and rare prevalence. The results use known population
-centering and fixed scales. For two binary features and prevalence
-$q_n=n^{-1/2}$, a specified decreasing-step schedule using $n$ fresh
-observations attains rare-coefficient mean squared error asymptotic to
-$4\sigma^2/(3nq_n)$. A controlled fixed-data pilot finds substantial
-rare-subgroup prediction differences whose direction changes with signal,
-dependence, batch size, and budget under separate oracle step-size tuning.
-Broader finite-sample guarantees, comparisons with adaptive optimizers, and
-real-data usefulness remain research objectives. Earlier weighted-lasso and
-ridge results are retained as explicit-regularization baselines; no standalone
-novelty claim is made for these calculations.
+Feature normalization changes the relative rates at which stochastic gradient
+descent learns different coordinates. We study its consequences for prediction
+under finite training budgets, using common and rare binary features as a
+controlled setting. Exact error moments separate incomplete learning,
+randomness in feature sampling, and observation noise. With a declared
+common-coordinate rate calibration, we certify parameter regions where
+standard-deviation scaling reverses its rare-subgroup risk ordering as training
+continues, and where aggregate and rare-subgroup risk favor opposite scaling
+rules. These are comparisons of specified training procedures: both original
+anchor comparisons disappear under a subsequent learning-rate and stopping
+search. Experiments with estimated preprocessing and validation selection
+retain differences in relative learning, including a rare-subgroup benefit on
+a sparse categorical task, but also expose tuning boundaries and severe
+failures when rare cases are absent from validation. Together, the results
+describe how normalization interacts with the training budget and prediction
+objective, while delimiting what fixed-configuration comparisons establish
+about a tuned procedure.
 \end{abstract}
 
-\input{sections/introduction}
-\input{sections/setup}
-\input{sections/gradient-flow}
-\input{sections/discrete-dynamics}
-\input{sections/stochastic-gradient}
-\input{sections/joint-budget}
-\input{sections/sampling-schemes}
-\input{sections/controlled-pilot}
-\input{sections/research-program}
+\input{sections/conference-introduction}
+\input{sections/conference-normalization}
+\input{sections/conference-comparisons}
+\input{sections/conference-experiments}
+\input{sections/conference-discussion}
 
+% Flush main-text floats before counting the pages subject to the limit.
+\clearpage
+\typeout{AISTATS-MAIN-PAGES: \number\numexpr\value{page}-1\relax}
+\ifnum\value{page}>9
+  \PackageError{normreg-multi}{AISTATS main text exceeds eight pages}{Shorten the main text without changing the official formatting.}
+\fi
+\input{sections/ai-use}
 \bibliographystyle{plainnat}
 \bibliography{references}
+\clearpage
+\input{sections/checklist}
 
+\clearpage
 \appendix
-\input{sections/regularization}
-\input{sections/two-features}
-\input{sections/binary}
-\input{sections/rare-features}
-\input{sections/formal-limit}
+\onecolumn
+\thispagestyle{empty}
+\aistatstitle{Feature Normalization under Finite Training Budgets:\\Supplementary Materials}
+\input{sections/comparison-proofs}
+\input{sections/practical-selection}
 \end{document}

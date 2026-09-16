@@ -1,0 +1,27 @@
+\section{Discussion}
+
+Normalization changes how a finite training budget is distributed across
+features. In the controlled binary setting, standardization can reduce
+rare-feature bias while increasing propagated noise, and dependence can
+make aggregate and rare-presence prediction favor different rules. The
+same error moments explain both comparisons. Their interpretation requires
+the rate, batch size, stopping count, and prediction objective to be stated
+alongside the normalization rule.
+
+The experiments also show why a fixed comparison cannot establish an
+advantage for a tuned method. Both original anchor comparisons disappear
+under the declared oracle adjustments. Estimated preprocessing and
+validation selection retain relative-learning effects, but introduce
+additional uncertainty from absent features, noisy selection, and the
+search boundary. A rare-objective selection rule cannot directly assess
+performance on rare observations that never appear in validation.
+
+The scope remains limited to linear prediction, conventional diagonal
+scalings, final iterates, and the stated finite searches. The population
+theorems do not provide guarantees for estimated scales or selected
+configurations. Fixed diagonal scaling is also distinct from the evolving
+preconditioners of adaptive optimizers. A stronger normalization
+recommendation would require a comparison that remains informative under
+meaningful rate calibration and a selection analysis that accounts for
+rare-group coverage. These are the principal unresolved steps beyond
+the present comparisons.

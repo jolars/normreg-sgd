@@ -33,13 +33,15 @@ early-stopping regularization, and selection among interpolating solutions
 are separate questions.
 
 The initial experiment holds binary cell counts and population preprocessing
-fixed. Its finite learning-rate grid and oracle tuning leave robustness and
-practical tuning unresolved. Follow-up experiments should examine wider rate
-ranges, sampled designs with growing rare counts, and validation-based tuning.
-Vary $Bq$ beyond the pilot grid, and add AdaGrad and Adam as empirical
-comparators, explicitly recording momentum, stabilizing constants, clipping,
-schedules, and weight decay. A fixed diagonal
-preconditioner is not a model of their complete dynamics.
+fixed. Section~\ref{sec:practical} adds sampled designs, estimated preprocessing,
+intercept ablations, and validation selection, followed by a sparse categorical
+benchmark. It retains effects of relative learning but also exposes missing-group
+failures and rate-grid boundaries. Wider rate ranges and group-coverage-aware
+selection are hypotheses for a further, separately declared study. AdaGrad,
+Adam, or a neural model should be added only to test a specific mechanism,
+with momentum, stabilizing constants, clipping, schedules, and weight decay
+recorded. A fixed diagonal preconditioner is not a model of their complete
+dynamics.
 
 Report performance against processed observations as well as update count;
 changing batch size changes the cost of an update. Measure original-scale
@@ -60,8 +62,9 @@ Existing coordinate-descent and Gaussian integration
 checks validate the explicit-penalty baselines. The pilot additionally
 checks conditional moments and subgroup risks by exact path and support
 enumeration. These checks validate the calculations, while the pilot provides
-a bounded comparison under its declared tuning protocol. A later empirical
-study should use sparse text or categorical data, starting with linear models and then a
-small neural model. The novelty assessment must identify a conclusion beyond
+a bounded comparison under its declared tuning protocol. The practical study
+adds independent preprocessing, transformed-coordinate update, held-out loss,
+selection, uncertainty, and precision checks. Its categorical evidence remains
+specific to the task and search grid. The novelty assessment must identify a conclusion beyond
 known early-stopping, adaptive-gradient, and preconditioning theory before
 the paper makes a practical recommendation.
