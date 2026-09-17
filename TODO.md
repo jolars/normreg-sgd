@@ -24,9 +24,12 @@ establishes stability and the uniform quadratic remainder. The [predictive
 comparison](notes/predictive-regime.md) now gives opposite oracle orderings for
 rare- and common-signal families over continuous rate/stopping sets. A
 [self-contained theorem](notes/predictive-theorem.md) now gives a shorter direct
-proof and a separate rational certificate. It remains a supporting result;
-independent proof review, human review, the central contribution, and the
-report's positive novelty assessment remain unresolved.
+proof and a separate rational certificate. A separate [Codex proof
+review](notes/predictive-proof-review.md) passes the stability/remainder and
+predictive proofs and supplies an addendum removing the predictive rate cap. The
+addendum has local checks and still needs independent review. Human review, the
+central contribution, and the report's positive novelty assessment remain
+unresolved.
 
 ## Next milestone: predictive theory and a resolved rate comparison
 
@@ -97,8 +100,8 @@ the central contribution and the remaining work for AISTATS.
   and error component. A separate checker verifies 1,125 exact rational
   operator cases and 7,200 finite remainders. The uniform envelope resolves
   C1's fixed rare-risk reversal, but C2 and adjusted C1 rare risk still need
-  the sharper finite bound. Independent proof review and human review remain
-  pending.
+  the sharper finite bound. The subsequent Codex proof review passes this
+  result; human review remains pending.
 - [x] Derive an explicit predictive prevalence/budget regime and an informative
   comparison over declared rate/stopping sets from the expansion. Existing
   anchor checks do not establish this result. Compare the precise conclusion
@@ -108,8 +111,9 @@ the central contribution and the remaining work for AISTATS.
   in the expansion domain and every earlier stop. Explicit signal families
   give opposite oracle rare-risk orderings. A 3,197-rectangle rational
   certificate and 2,718 finite checks support the derivation. The
-  five-source comparison retains it as a supporting specialization; novelty,
-  independent proof review, and human review remain open.
+  five-source comparison retains it as a supporting specialization. The
+  subsequent Codex review checks the mathematics; novelty, source-comparison
+  review, and human review remain open.
 - [x] Complete the bounded theorem and local verification, stating assumptions,
   tuning sets, and quantitative risk gaps explicitly. The [self-contained
   proof](notes/predictive-theorem.md) recovers both predictive orderings
@@ -124,9 +128,21 @@ the central contribution and the remaining work for AISTATS.
   The five inspected sources establish the underlying mechanisms but do not
   directly supply these inequalities. This bounded comparison does not
   settle priority or publication significance.
-- [ ] Obtain independent proof review and human review of the
-  stability/remainder result and the final predictive theorem, including the
-  continuous certificates and the source comparison.
+- [x] Complete a separate Codex proof review of the stability/remainder result
+  and the final predictive theorem, including the continuous certificates.
+  The [review](notes/predictive-proof-review.md) finds no mathematical error
+  and reconstructs a 3,925-leaf rational certificate without importing the
+  existing checkers. A new addendum proves the same gaps over all
+  nonnegative constant rates; its proof and local checks are retained
+  separately from the reviewed original statements.
+- [x] Formalize the two large-rate lower bounds in Lean, conditional on the
+  exact predictive moment recurrence. The [Lean pilot](lean/README.md)
+  proves both bounds for every finite stop, constructs sequences satisfying
+  the recurrence, and audits the proofs' axiom dependencies. It does not
+  formalize the probabilistic derivation or the complete predictive theorem.
+- [ ] Obtain human mathematical review of the reviewed proofs and certificates,
+  independent review of the new unrestricted-rate addendum, and review of
+  the source comparison. The Codex review does not complete these tasks.
 - [ ] Decide whether the quantitative prediction warrants a main contribution or
   should remain supporting theory. Assess the useful conclusion beyond prior
   work and its restrictions before expanding the theorem program. Familiar

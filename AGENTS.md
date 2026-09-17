@@ -41,9 +41,12 @@ baselines.
   self-contained direct proof of the same predictive guarantees and separates
   mathematical completion from the contribution assessment.
   `experiments/check_predictive_theorem.py` supplies a separate rational
-  certificate and tensor moment checks. Independent proof review, human review,
-  and novelty remain open; do not promote these local results into a general
-  normalization recommendation.
+  certificate and tensor moment checks. `notes/predictive-proof-review.md`
+  records a separate Codex mathematical review, with an independent checker in
+  `experiments/check_predictive_review.py`. Its new addendum removes the
+  predictive rate cap but still needs independent review. Human review,
+  source-comparison review, and novelty remain open; do not promote these
+  results into a general normalization recommendation.
 - `notes/joint-interactions.md` specifies the first joint training comparison;
   `notes/joint-interactions-results.md` records its numerical findings and
   pending independent proof review. `experiments/run_joint_interactions.py`
@@ -101,6 +104,13 @@ baselines.
   satisfy the joint-cell probability bounds.
 
 ## Development and validation
+
+`lean/` contains a Lean v4.30.0/Mathlib proof pilot for the two large-rate lower
+bounds, conditional on the predictive moment recurrence. Its README maps the
+formal statements to the notes and records the scope. Inside `devenv shell`, run
+`make prepare-lean` to fetch dependencies and `make check-lean` to build the
+proofs and check their axiom dependencies. Keep `.lake/` ignored and commit the
+Lake manifest. These targets are separate from numerical and manuscript checks.
 
 Enter `devenv shell` before running these commands:
 

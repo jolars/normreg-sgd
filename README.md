@@ -37,6 +37,9 @@ and Jonas Wallin.
   contribution work, conference requirements, and artifact preparation.
 - [Research tasks](TODO.md): the consolidated checklist for theory, novelty
   comparisons, experiments, and manuscript development.
+- [Lean proof pilot](lean/README.md): formal large-rate lower bounds conditional
+  on the predictive moment recurrence, with pinned dependencies and an axiom
+  audit. Run `make prepare-lean` and `make check-lean` inside `devenv shell`.
 - [Research plan](notes/research-plan.md): the proposed contribution, current
   evidence, mathematical setup, and first milestone.
 - [Joint-interaction specification](notes/joint-interactions.md) and [first

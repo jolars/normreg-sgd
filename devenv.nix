@@ -7,6 +7,7 @@
     nixfmt
     actionlint
     ruff
+    lean4
   ];
 
   languages.python = {

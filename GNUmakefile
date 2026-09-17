@@ -8,6 +8,14 @@ include Makefile
 .PHONY: prepare-results check-scripts format-scripts
 .PHONY: check-variance-scaling reproduce-variance-scaling
 .PHONY: check-predictive-regime check-predictive-theorem
+.PHONY: check-predictive-review
+.PHONY: prepare-lean check-lean
+
+prepare-lean:
+	cd lean && lake exe cache get Mathlib.Data.Real.Basic Mathlib.Tactic.FieldSimp Mathlib.Tactic.Linarith Mathlib.Tactic.Positivity Mathlib.Tactic.Ring
+
+check-lean:
+	cd lean && lake build
 
 prepare-results:
 	python scripts/prepare_results.py
@@ -45,7 +53,7 @@ reproduce-variance-scaling: prepare-results
 	OPENBLAS_NUM_THREADS=1 python experiments/summarize_variance_scaling.py
 	OPENBLAS_NUM_THREADS=1 python experiments/check_variance_scaling.py --write-audit
 
-check-predictive-claim: check-predictive-feasibility check-predictive-regime check-predictive-theorem
+check-predictive-claim: check-predictive-feasibility check-predictive-regime check-predictive-theorem check-predictive-review
 	python experiments/check_predictive_claim.py
 
 check-predictive-feasibility:
@@ -56,6 +64,9 @@ check-predictive-regime:
 
 check-predictive-theorem:
 	python experiments/check_predictive_theorem.py
+
+check-predictive-review:
+	python experiments/check_predictive_review.py
 
 check-practical-selection:
 	python experiments/check_practical_selection.py
