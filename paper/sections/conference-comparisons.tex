@@ -3,110 +3,110 @@
 
 \subsection{Learning the rare signal versus fitting noise}
 
-Under independence, SD scaling changes the rare mean contraction from
-$1-4hb$ to $1-h$. Its per-update rare-coordinate noise injection changes
-from $16h^2b\sigma^2/B$ to $h^2\sigma^2/(bB)$. It therefore accelerates
-learning while increasing the injection of observation noise. Random
-feature sampling contributes additional variance to both procedures.
+Under independence, SD scaling changes the rare mean contraction from $1 - 4hb$
+to $1 - h$. Its per-update rare-coordinate noise injection changes from
+$16h^2b\sigma^2/B$ to $h^2\sigma^2/(bB)$. It therefore accelerates learning
+while increasing the injection of observation noise. Random feature sampling
+contributes additional variance to both procedures.
 
-The diagonal moments form a nonnegative two-dimensional recurrence. Dropping
-its off-diagonal coupling yields a scalar approximation to rare risk with
-an explicit nonnegative remainder. If $F$ and $N$ denote the noiseless and
-unit-noise parts of the SD-minus-U risk contrast, the approximation gives
-bounds $F_-\leq F\leq F_+$ and $N_-\leq N\leq N_+$.
-When $F_+<0<N_-$, the noise-variance threshold $\tau=-F/N$ satisfies
+The diagonal moments form a nonnegative two-dimensional recurrence. Dropping its
+off-diagonal coupling yields a scalar approximation to rare risk with an
+explicit nonnegative remainder. If $F$ and $N$ denote the noiseless and
+unit-noise parts of the SD-minus-U risk contrast, the approximation gives bounds
+$F_- \leq F \leq F_+$ and $N_- \leq N \leq N_+$. When $F_+ < 0 < N_-$, the
+noise-variance threshold $\tau = -F/N$ satisfies
 \begin{equation}
- \frac{-F_+}{N_+}\leq\tau\leq\frac{-F_-}{N_-}.
- \label{eq:conference-threshold}
+ \frac{-F_+}{N_+} \leq \tau
+                  \leq \frac{-F_-}{N_-}. \label{eq:conference-threshold}
 \end{equation}
-The remainder accounts for coupling through sampled updates even when
-the population coordinates are independent. Its derivation and all
-quantities are given in Appendix~\ref{sec:comparison-proofs}.
+The remainder accounts for coupling through sampled updates even when the
+population coordinates are independent. Its derivation and all quantities are
+given in Appendix~\ref{sec:comparison-proofs}.
 
 \begin{theorem}[Stopping and batch reversal]
-\label{thm:conference-c1}
-In the binary model with $\ell=0$, suppose
-\begin{gather*}
- q\in[0.019,0.021],\quad h\in[0.0019,0.0021],\\
- \beta_C^*,\beta_R^*\in[0.95,1.05],\quad\sigma^2\in[1.5,5].
-\end{gather*}
-Both U and S are mean-square stable for $B\in\{1,10\}$. Their rare-risk
-contrast $\Delta_{B,k}=R_{R,k}^S-R_{R,k}^U$ lies in the intervals in
-Table~\ref{tab:conference-c1} throughout this parameter box.
+ \label{thm:conference-c1}
+ In the binary model with $\ell = 0$, suppose
+ \begin{gather*}
+  q \in[0.019,0.021] ,\quad h \in[0.0019,0.0021] ,               \\
+  \beta_C^*,\beta_R^* \in[0.95,1.05] ,\quad\sigma^2 \in[1.5,5] .
+ \end{gather*}
+ Both U and S are mean-square stable for $B \in \{1,10\}$. Their rare-risk
+ contrast $\Delta_{B,k} = R_{R,k}^S - R_{R,k}^U$ lies in the intervals in
+ Table~\ref{tab:conference-c1} throughout this parameter box.
 \end{theorem}
 
 \begin{table}[t]
-\centering
-\begin{tabular}{rrrr}
-\toprule
-$B$ & $k$ & $M=kB$ & $\Delta_{B,k}$ \\
-\midrule
-1 & 1,000 & 1,000 & $[-.353,-.160]$ \\
-1 & 10,000 & 10,000 & $[.0021,.125]$ \\
-10 & 1,000 & 10,000 & $[-.386,-.286]$ \\
-10 & 10,000 & 100,000 & $[-.0281,-.0016]$ \\
-\bottomrule
-\end{tabular}
-\caption{Uniform rare-risk gap bounds for Theorem~\ref{thm:conference-c1}.
-Negative values favor SD scaling. These are certified enclosures, not
-Monte Carlo intervals.}
-\label{tab:conference-c1}
+ \centering
+ \begin{tabular}{rrrr}
+  \toprule
+  $B$ &    $k$ & $M = kB$ &    $\Delta_{B,k}$ \\
+  \midrule
+    1 &  1,000 &    1,000 &   $[-.353,-.160]$ \\
+    1 & 10,000 &   10,000 &    $[.0021,.125]$ \\
+   10 &  1,000 &   10,000 &   $[-.386,-.286]$ \\
+   10 & 10,000 &  100,000 & $[-.0281,-.0016]$ \\
+  \bottomrule
+ \end{tabular}
+ \caption{
+  Uniform rare-risk gap bounds for Theorem~\ref{thm:conference-c1}. Negative
+  values favor SD scaling. These are certified enclosures, not Monte Carlo
+  intervals.
+ }
+ \label{tab:conference-c1}
 \end{table}
 
-At $B=1$, the normalization ordering reverses as training continues.
-At $M=10{,}000$, it also differs between $B=1$ and $B=10$.
-This compares normalization rules within each budget configuration; it
-does not order batch sizes within either rule.
+At $B = 1$, the normalization ordering reverses as training continues. At
+$M = 10{,}000$, it also differs between $B = 1$ and $B = 10$. This compares
+normalization rules within each budget configuration; it does not order batch
+sizes within either rule.
 
-For the anchor $q=.02$, $h=.002$, $\beta^*=(1,1)^\top$, and
-$\sigma^2=3$, the early $B=1$ rare risk is $.356678$ for U and
-$.090407$ for S. The squared-bias contributions are $.353207$ and
-$.011040$, respectively. At $k=10{,}000$, U has learned enough of the
-rare signal to attain risk $.028145$, whereas S has risk $.078788$,
-almost entirely from observation noise. The exact calculation includes
-feature-sampling variance throughout.
+For the anchor $q = .02$, $h = .002$, $\beta^* = (1,1)^\top$, and
+$\sigma^2 = 3$, the early $B = 1$ rare risk is $.356678$ for U and $.090407$ for
+S. The squared-bias contributions are $.353207$ and $.011040$, respectively. At
+$k = 10{,}000$, U has learned enough of the rare signal to attain risk
+$.028145$, whereas S has risk $.078788$, almost entirely from observation noise.
+The exact calculation includes feature-sampling variance throughout.
 
 \subsection{Aggregate and rare-presence objectives}
 
 Dependence can change the ordering across prediction objectives. Let
-$\Delta V=V_k^S-V_k^U$. Direct substitution into
-\eqref{eq:conference-risks} gives
+$\Delta V = V_k^S - V_k^U$. Direct substitution into \eqref{eq:conference-risks}
+gives
 \begin{equation}
- \Delta_R-\Delta_A
- =\frac{1-2q}{2}\bigl\{(1-q)\Delta V_{RR}+\ell\Delta V_{CR}\bigr\},
- \label{eq:conference-objectives}
+ \Delta_R - \Delta_A = \frac{1 - 2q}{2}\bigl\{(1 - q)\Delta V_{RR} + \ell\Delta V_{CR}\bigr\}, \label{eq:conference-objectives}
 \end{equation}
-where $\Delta_A$ and $\Delta_R$ denote aggregate and rare-risk gaps.
-The cross moment includes both the product of coefficient biases and
-their centered covariance.
+where $\Delta_A$ and $\Delta_R$ denote aggregate and rare-risk gaps. The cross
+moment includes both the product of coefficient biases and their centered
+covariance.
 
 \begin{theorem}[Objective disagreement]
-\label{thm:conference-c2}
-Take $q=.02$, $\ell\in[.9,1]$, $\beta^*=(2,1)^\top$, $h=.01$,
-$B=1$, $k=M=100$, and $\sigma^2\in[3.8,4.1]$. Both U and S are
-mean-square stable, and uniformly over these intervals,
-\begin{align*}
- .00077&\leq R_k^S-R_k^U\leq .00194,\\
- -.0983&\leq R_{R,k}^S-R_{R,k}^U\leq -.0233.
-\end{align*}
-Moreover, $V_{CC,k}^S>V_{CC,k}^U$ and $V_{RR,k}^S>V_{RR,k}^U$.
+ \label{thm:conference-c2}
+ Take $q = .02$, $\ell \in[.9,1]$, $\beta^* = (2,1)^\top$, $h = .01$, $B = 1$,
+ $k = M = 100$, and $\sigma^2 \in[3.8,4.1]$. Both U and S are mean-square
+ stable, and uniformly over these intervals,
+ \begin{align*}
+  .00077 & \leq R_k^S - R_k^U \leq .00194,         \\
+  -.0983 & \leq R_{R,k}^S - R_{R,k}^U \leq -.0233.
+ \end{align*}
+ Moreover, $V_{CC,k}^S > V_{CC,k}^U$ and $V_{RR,k}^S > V_{RR,k}^U$.
 \end{theorem}
 
 SD scaling increases each coefficient's mean squared error but improves
-rare-presence prediction. At $\ell=1$ and $\sigma^2=4$,
+rare-presence prediction. At $\ell = 1$ and $\sigma^2 = 4$,
 \[
- \Delta V\approx\begin{pmatrix}
- .022743&-.615146\\-.615146&.470335
- \end{pmatrix}.
+ \Delta V \approx \begin{pmatrix}
+                   .022743  & -.615146 \\
+                   -.615146 & .470335
+                  \end{pmatrix}.
 \]
-The much smaller joint error product offsets the larger individual errors
-for rare predictions. The aggregate risk assigns the cross moment weight
-$.01$, whereas rare risk assigns weight $.49$. This explains why separate
-coefficient error rankings can miss the prediction benefit.
+The much smaller joint error product offsets the larger individual errors for
+rare predictions. The aggregate risk assigns the cross moment weight $.01$,
+whereas rare risk assigns weight $.49$. This explains why separate coefficient
+error rankings can miss the prediction benefit.
 
-Both theorems use outward-rounded rational interval certificates over
-continuous parameter boxes. Appendix~\ref{sec:comparison-proofs} supplies
-the recurrences and enclosure arguments. The results establish finite-budget
-comparisons for stated procedures. They do not compare continuously optimized
-rates, all stopping rules, or optimal normalization, and the target-risk
-identity itself is elementary.
+Both theorems use outward-rounded rational interval certificates over continuous
+parameter boxes. Appendix~\ref{sec:comparison-proofs} supplies the recurrences
+and enclosure arguments. The results establish finite-budget comparisons for
+stated procedures. They do not compare continuously optimized rates, all
+stopping rules, or optimal normalization, and the target-risk identity itself is
+elementary.

@@ -1,13 +1,13 @@
 \section{Introduction}
 
-Feature normalization is part of the learning procedure. Dividing a predictor
-by its standard deviation changes how quickly gradient methods learn its
+Feature normalization is part of the learning procedure. Dividing a predictor by
+its standard deviation changes how quickly gradient methods learn its
 coefficient and how strongly individual observations perturb that coefficient.
-Under a finite training budget, these changes can affect the predictor even
-when the unregularized least-squares solution is invariant to scaling. The
+Under a finite training budget, these changes can affect the predictor even when
+the unregularized least-squares solution is invariant to scaling. The
 statistical question is therefore how normalization changes prediction at the
-available budget, and which effects remain after calibrating the other
-training choices.
+available budget, and which effects remain after calibrating the other training
+choices.
 
 Rare features make this question concrete. Without scaling, a rare binary
 feature has small curvature and can remain poorly learned when common features
@@ -20,41 +20,42 @@ ordering of individual coefficient errors need not determine the ordering of
 subgroup prediction risks.
 
 We analyze squared-loss linear regression with a common and a rare binary
-predictor. The first comparisons use known population centering and scales,
-zero initialization, a fixed intercept, and fresh observations at each update.
-An exact second-moment calculation yields two uniform comparisons. First,
+predictor. The first comparisons use known population centering and scales, zero
+initialization, a fixed intercept, and fresh observations at each update. An
+exact second-moment calculation yields two uniform comparisons. First,
 standard-deviation scaling has lower rare-presence risk at an early stop and
 higher risk later under a specified rate calibration; a larger batch changes
 that ordering. Second, the same pair of stable training procedures can favor
-opposite normalization rules under aggregate and rare-presence risk, even
-when scaling increases both individual coefficient mean squared errors.
+opposite normalization rules under aggregate and rare-presence risk, even when
+scaling increases both individual coefficient mean squared errors.
 
-The experiments examine the limits of these comparisons. A broader search
-over rates and stopping removes both original anchor comparisons, although
-other laws retain reversals or objective disagreements. Sampled-data
-experiments then replace population preprocessing by estimated centering and
-scales, fit an intercept, and select configurations on validation data. A
-sparse categorical task shows a rare-subgroup benefit within the declared
-search, alongside rate-boundary selections and a tradeoff with aggregate
-prediction. Missing rare validation observations can conceal extreme subgroup
-error. These findings motivate evaluating normalization as part of the full
-training and selection procedure.
+The experiments examine the limits of these comparisons. A broader search over
+rates and stopping removes both original anchor comparisons, although other laws
+retain reversals or objective disagreements. Sampled-data experiments then
+replace population preprocessing by estimated centering and scales, fit an
+intercept, and select configurations on validation data. A sparse categorical
+task shows a rare-subgroup benefit within the declared search, alongside
+rate-boundary selections and a tradeoff with aggregate prediction. Missing rare
+validation observations can conceal extreme subgroup error. These findings
+motivate evaluating normalization as part of the full training and selection
+procedure.
 
 \paragraph{Relation to prior work.}
+
 The connection between preconditioning and statistical performance is
-established \citep{amari2020preconditioning,su2024preconditioning}. Early
+established \citep{amari2020preconditioning, su2024preconditioning}. Early
 stopping changes least-squares regularization \citep{ali2019early};
 least-mean-squares analyses already separate bias and variance and study
-sampling and batching \citep{defossez2015averaged,jain2018parallelizing}.
+sampling and batching \citep{defossez2015averaged, jain2018parallelizing}.
 AdaBatch relates sparse mini-batch aggregation to coordinate rescaling
 \citep{defossez2017adabatch}, and exact mean-square stability can be expressed
-through moment operators \citep{mulayoff2024exact}. Target-aware
-preconditioning under covariate shift also studies the dependence on the test
-objective \citep{liu2025precondition}. For explicit regularization,
+through moment operators \citep{mulayoff2024exact}. Target-aware preconditioning
+under covariate shift also studies the dependence on the test objective
+\citep{liu2025precondition}. For explicit regularization,
 \citet{larsson2025normalization} analyze the influence of feature scaling on
 shrinkage. Our comparisons specialize these broader mechanisms to conventional
 normalization, final iterates, original-scale coefficients, and rare-presence
 prediction. Neither diagonal preconditioning nor the existence of a
 bias--variance tradeoff is a new mechanism here. The question is what
-quantitative comparisons they yield, and how those comparisons change when
-the entire training procedure is tuned.
+quantitative comparisons they yield, and how those comparisons change when the
+entire training procedure is tuned.

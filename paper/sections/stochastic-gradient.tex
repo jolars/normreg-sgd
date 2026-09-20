@@ -1,321 +1,304 @@
-\section{Rare observations and stochastic stability}\label{sec:sgd}
+\section{Rare observations and stochastic stability}
+\label{sec:sgd}
 
 Unit marginal variance does not control the size of individual stochastic
 updates. Throughout this section, centering and positive diagonal scales are
-known and fixed, the intercept is fixed at its population value, and each
-batch contains fresh independent observations independent of the past. The
-loss is averaged squared loss. These assumptions exclude empirical scaling,
-fixed-data resampling, and adaptive preconditioners.
+known and fixed, the intercept is fixed at its population value, and each batch
+contains fresh independent observations independent of the past. The loss is
+averaged squared loss. These assumptions exclude empirical scaling, fixed-data
+resampling, and adaptive preconditioners.
 
-\begin{proposition}[Scalar batch stability]\label{prop:sgd-stability}
-Let $X\sim\operatorname{Bernoulli}(q)$ with $0<q<1$, and set
-\[
- Z=\frac{X-q}{\sqrt{q(1-q)}},\qquad
- \mu_4=\E Z^4=\frac{(1-q)^3+q^3}{q(1-q)}.
-\]
-Fit the noiseless model $Y=Z\theta^*$ by SGD on squared loss
-$(Z\theta-Y)^2/2$, with constant step size $\eta$ and batches of size
-$B\ge1$. Each batch consists of fresh independent observations and is
-independent of the previous iterates. For a deterministic initial error
-$e_0=\theta_0-\theta^*$,
-\[
- \E e_k^2=
- \left[1-2\eta+\eta^2\left\{1+\frac{\mu_4-1}{B}\right\}\right]^k e_0^2.
-\]
-For $e_0\ne0$, the expected squared error tends to zero precisely when
-\begin{equation}\label{eq:sgd-stability}
- 0<\eta<\frac{2}{1+(\mu_4-1)/B}.
-\end{equation}
+\begin{proposition}[Scalar batch stability]
+ \label{prop:sgd-stability}
+ Let $X \sim \operatorname{Bernoulli}(q)$ with $0 < q < 1$, and set
+ \[
+  Z = \frac{X - q}{\sqrt{q(1 - q)}},\qquad \mu_4
+    = \E Z^4
+    = \frac{(1 - q)^3 + q^3}{q(1 - q)}.
+ \]
+ Fit the noiseless model $Y = Z\theta^*$ by SGD on squared loss
+ $(Z\theta - Y)^2/2$, with constant step size $\eta$ and batches of size
+ $B \ge 1$. Each batch consists of fresh independent observations and is
+ independent of the previous iterates. For a deterministic initial error
+ $e_0 = \theta_0 - \theta^*$,
+ \[
+  \E e_k^2 = \left[ 1 - 2\eta + \eta^2\left\{ 1 + \frac{\mu_4 - 1}{B} \right\} \right]^k e_0^2.
+ \]
+ For $e_0 \ne 0$, the expected squared error tends to zero precisely when
+ \begin{equation}
+  \label{eq:sgd-stability}
+  0 < \eta < \frac{2}{1 + (\mu_4 - 1)/B}.
+ \end{equation}
 \end{proposition}
 \begin{proof}
-Write $H_k=B^{-1}\sum_{i=1}^B Z_{ki}^2$. The update gives
-$e_{k+1}=(1-\eta H_k)e_k$.
-Since $\E Z^2=1$, independence within each batch gives
-$\E H_k=1$ and $\E H_k^2=1+(\mu_4-1)/B$.
-Independence from the past yields the displayed recurrence for the second
-moment. Its nonnegative multiplicative factor is less than one exactly
-under \eqref{eq:sgd-stability}.
+ Write $H_k = B^{-1}\sum_{i=1}^B Z_{ki}^2$. The update gives
+ $e_{k+1} = (1 - \eta H_k)e_k$. Since $\E Z^2 = 1$, independence within each
+ batch gives $\E H_k = 1$ and $\E H_k^2 = 1 + (\mu_4 - 1)/B$. Independence from
+ the past yields the displayed recurrence for the second moment. Its nonnegative
+ multiplicative factor is less than one exactly under \eqref{eq:sgd-stability}.
 \end{proof}
 
 \subsection{Scalar rates and observation cost}
 
-Write $a_{q,B}=1+(\mu_4-1)/B$. Completing the square in the recurrence gives
-the unique optimal constant step size and its mean-square factor:
+Write $a_{q,B} = 1 + (\mu_4 - 1)/B$. Completing the square in the recurrence
+gives the unique optimal constant step size and its mean-square factor:
 \[
- \eta_* = a_{q,B}^{-1},\qquad
- r_* = 1-a_{q,B}^{-1},\qquad
- r(\eta)=r_*+a_{q,B}(\eta-\eta_*)^2.
+ \eta_* = a_{q,B}^{-1},\qquad r_*
+        = 1 - a_{q,B}^{-1},\qquad r(\eta)
+        = r_* + a_{q,B}(\eta - \eta_*)^2.
 \]
-For $q\ne1/2$, the exact exponential contraction per processed observation
-at this step size is
-\begin{equation}\label{eq:scalar-observation-rate}
- \ell_{q,B}=-\frac{\log r_*}{B}
- =\frac1B\log\left(1+\frac{B}{\mu_4-1}\right),\qquad
- \E e_k^2=e^{-kB\ell_{q,B}}e_0^2.
+For $q \ne 1/2$, the exact exponential contraction per processed observation at
+this step size is
+\begin{equation}
+ \label{eq:scalar-observation-rate}
+ \ell_{q,B} = -\frac{\log r_*}{B}
+            = \frac1B\log\left( 1 + \frac{B}{\mu_4 - 1} \right),\qquad \E e_k^2
+            = e^{-kB\ell_{q,B}}e_0^2.
 \end{equation}
-The special case $q=1/2$ has $Z^2=1$ almost surely and reaches zero error in
-one update with $\eta=1$. As $q\downarrow0$, $\mu_4\sim q^{-1}$, so
+The special case $q = 1/2$ has $Z^2 = 1$ almost surely and reaches zero error in
+one update with $\eta = 1$. As $q \downarrow 0$, $\mu_4 \sim q^{-1}$, so
 \[
-\begin{array}{c|c|c|c|c}
- Bq & \eta_{\max}=2/a_{q,B} & \eta_* & r_* & \ell_{q,B}\\ \hline
- \to0 & \sim2Bq & \sim Bq & 1-Bq(1+o(1)) & \sim q\\
- \to\gamma\in(0,\infty)
- & \to\frac{2\gamma}{1+\gamma}
- & \to\frac{\gamma}{1+\gamma}
- & \to\frac1{1+\gamma}
- & \sim q\frac{\log(1+\gamma)}{\gamma}\\
- \to\infty & \to2 & \to1 & \sim(Bq)^{-1}
- & \sim\frac{\log(Bq)}{B}
-\end{array}
+ \begin{array}{c|c|c|c|c}
+             Bq             &    \eta_{\max} = 2/a_{q,B}     &            \eta_*             &          r_*           &              \ell_{q,B}               \\
+  \hline
+            \to 0           &            \sim 2Bq            &            \sim Bq            &    1 - Bq(1 + o(1))    &                \sim q                 \\
+  \to \gamma \in (0,\infty) & \to \frac{2\gamma}{1 + \gamma} & \to \frac{\gamma}{1 + \gamma} & \to \frac1{1 + \gamma} & \sim q\frac{\log(1 + \gamma)}{\gamma} \\
+         \to \infty         &             \to 2              &             \to 1             &     \sim (Bq)^{-1}     &        \sim \frac{\log(Bq)}{B}
+ \end{array}
 \]
-For fixed $q\ne1/2$, $\ell_{q,B}$ decreases with $B$: differentiate
-$\log(1+t)/t$ and use $\log(1+t)>t/(1+t)$ for $t>0$.
-Thus larger batches improve this scalar noiseless contraction per update,
-but do not improve its optimized exponential rate per observation. This
-comparison concerns whole batches and constant step sizes, with no claim
-about wall-clock time or optimal tuning under observation noise. The
-original coefficient is $\beta=\theta/\sqrt{q(1-q)}$, so its squared error
-is $e_k^2/[q(1-q)]$ and has the same contraction factor.
+For fixed $q \ne 1/2$, $\ell_{q,B}$ decreases with $B$: differentiate
+$\log(1 + t)/t$ and use $\log(1 + t) > t/(1 + t)$ for $t > 0$. Thus larger
+batches improve this scalar noiseless contraction per update, but do not improve
+its optimized exponential rate per observation. This comparison concerns whole
+batches and constant step sizes, with no claim about wall-clock time or optimal
+tuning under observation noise. The original coefficient is
+$\beta = \theta/\sqrt{q(1 - q)}$, so its squared error is $e_k^2/[q(1 - q)]$ and
+has the same contraction factor.
 
 This calculation also distinguishes mean convergence from mean-square
-convergence: $\E e_k=(1-\eta)^k e_0$, which can converge while the second
+convergence: $\E e_k = (1 - \eta)^k e_0$, which can converge while the second
 moment grows. A covariance-only description of the population loss therefore
 does not determine stochastic stability.
 
 \subsection{An exact multivariate criterion}
 
-The generalized-eigenvalue criterion below is the stochastic least-squares
-form of the general criterion of
-\citet[Theorems~5 and~14]{mulayoff2024exact}. Their independent batches
-contain distinct examples from a fixed dataset and use the correction
-$(n-B)/\{B(n-1)\}$; independent draws here use $1/B$.
-Our strict interval concerns decay for every initialization, whereas
-boundedness at the endpoint is a different conclusion. The subsequent
-rare-prevalence limits evaluate this established criterion.
+The generalized-eigenvalue criterion below is the stochastic least-squares form
+of the general criterion of \citet[Theorems~5 and~14]{mulayoff2024exact}. Their
+independent batches contain distinct examples from a fixed dataset and use the
+correction $(n - B)/\{B(n - 1)\}$; independent draws here use $1/B$. Our strict
+interval concerns decay for every initialization, whereas boundedness at the
+endpoint is a different conclusion. The subsequent rare-prevalence limits
+evaluate this established criterion.
 
 In one dimension, rescaling a feature can be absorbed into the learning rate.
-Several feature frequencies instead impose constraints on relative updates.
-Let $z=S^{-1}x$, $H=\E zz^\top\succ0$, and
-$u_k=S(\beta_k-\beta^*)$, assuming $\E\|z\|^4<\infty$.
-For a generic batch put $\widehat H=B^{-1}\sum_{i=1}^Bz_i z_i^\top$.
-On the real symmetric matrices, with Frobenius inner product, define
+Several feature frequencies instead impose constraints on relative updates. Let
+$z = S^{-1}x$, $H = \E zz^\top \succ 0$, and $u_k = S(\beta_k - \beta^*)$,
+assuming $\E\|z\|^4 < \infty$. For a generic batch put
+$\widehat H = B^{-1}\sum_{i=1}^Bz_i z_i^\top$. On the real symmetric matrices,
+with Frobenius inner product, define
 \begin{align*}
- \mathcal M(U)&=\E[zz^\top Uzz^\top],&
- \mathcal A(U)&=HU+UH,\\
- \mathcal B_B(U)&=\E[\widehat H U\widehat H]
-       =(1-B^{-1})HUH+B^{-1}\mathcal M(U),&
- \mathcal T_B(U)&=U-\eta\mathcal A(U)+\eta^2\mathcal B_B(U).
+ \mathcal M(U)   & = \E[zz^\top Uzz^\top],                                               & \mathcal A(U)   & = HU + UH,                                       \\
+ \mathcal B_B(U) & = \E[\widehat H U\widehat H] = (1 - B^{-1})HUH + B^{-1}\mathcal M(U), & \mathcal T_B(U) & = U - \eta\mathcal A(U) + \eta^2\mathcal B_B(U).
 \end{align*}
-Equivalently, with $R=I-\eta H$,
-$\mathcal T_B(U)=RUR+\eta^2\{\mathcal M(U)-HUH\}/B$.
-These are the second-moment operators for fresh-batch SGD. All operator
-eigenvalues below refer to this symmetric-matrix space, not just diagonal
-matrices.
+Equivalently, with $R = I - \eta H$,
+$\mathcal T_B(U) = RUR + \eta^2\{\mathcal M(U) - HUH\}/B$. These are the
+second-moment operators for fresh-batch SGD. All operator eigenvalues below
+refer to this symmetric-matrix space, not just diagonal matrices.
 
-\begin{proposition}[Multivariate mean-square stability]\label{prop:matrix-stability}
-For noiseless SGD, convergence $\E\|u_k\|^2\to0$ for every deterministic
-initial error is equivalent to $\rho(\mathcal T_B)<1$. More explicitly,
-the exact interval is $0<\eta<\eta_{\mathrm{crit}}$, where
-\begin{equation}\label{eq:operator-critical-step}
- \eta_{\mathrm{crit}}=
- \frac{1}{\lambda_{\max}
-  (\mathcal A^{-1/2}\mathcal B_B\mathcal A^{-1/2})}.
-\end{equation}
-If a coordinate of $z$ is the standardized Bernoulli variable of
-Proposition~\ref{prop:sgd-stability}, then, with
-$K_B=\E\widehat H^2=(1-B^{-1})H^2+B^{-1}\E[\|z\|^2zz^\top]$,
-\begin{equation}\label{eq:matrix-step-bounds}
- \frac{2\lambda_{\min}(H)}{\lambda_{\max}(K_B)}
- \ \le\ \eta_{\mathrm{crit}}
- \ \le\ \frac{2}{1+(\mu_4-1)/B}.
-\end{equation}
-The left endpoint is a sufficient strict upper bound on a chosen step
-size; the right endpoint is a necessary strict upper bound. Equality in
-either bound does not itself establish stability.
+\begin{proposition}[Multivariate mean-square stability]
+ \label{prop:matrix-stability}
+ For noiseless SGD, convergence $\E\|u_k\|^2 \to 0$ for every deterministic
+ initial error is equivalent to $\rho(\mathcal T_B) < 1$. More explicitly, the
+ exact interval is $0 < \eta < \eta_{\mathrm{crit}}$, where
+ \begin{equation}
+  \label{eq:operator-critical-step}
+  \eta_{\mathrm{crit}} = \frac{1}{\lambda_{\max} (\mathcal A^{-1/2}\mathcal B_B\mathcal A^{-1/2})}.
+ \end{equation}
+ If a coordinate of $z$ is the standardized Bernoulli variable of
+ Proposition~\ref{prop:sgd-stability}, then, with
+ $K_B = \E\widehat H^2 = (1 - B^{-1})H^2 + B^{-1}\E[\|z\|^2zz^\top]$,
+ \begin{equation}
+  \label{eq:matrix-step-bounds}
+  \frac{2\lambda_{\min}(H)}{\lambda_{\max}(K_B)} \ 
+  \le \ \eta_{\mathrm{crit}} \ 
+  \le \ \frac{2}{1 + (\mu_4 - 1)/B}.
+ \end{equation}
+ The left endpoint is a sufficient strict upper bound on a chosen step size; the
+ right endpoint is a necessary strict upper bound. Equality in either bound does
+ not itself establish stability.
 \end{proposition}
 \begin{proof}
-Independence yields $\E[u_k u_k^\top]=\mathcal T_B^k(u_0u_0^\top)$.
-Rank-one positive semidefinite matrices span the symmetric matrices, so
-decay for every $u_0$ is equivalent to decay of powers of this
-finite-dimensional operator, or $\rho(\mathcal T_B)<1$.
-The operator is self-adjoint. For symmetric $U$, let $|U|$ replace its
-eigenvalues by their absolute values. In an eigenbasis of $U$, for each
-symmetric update matrix $F=I-\eta\widehat H$,
-\[
- |\langle U,FUF\rangle|
- =\left|\sum_{i,j}\lambda_i(U)\lambda_j(U)F_{ij}^2\right|
- \le\langle |U|,F|U|F\rangle.
-\]
-Averaging and maximizing Rayleigh quotients shows
-$\rho(\mathcal T_B)=\lambda_{\max}(\mathcal T_B)$.
-Further, $\mathcal A$ is positive definite because
-$\langle U,\mathcal A(U)\rangle=2\operatorname{tr}(HU^2)>0$ for
-$U\ne0$, while $\mathcal B_B$ is positive semidefinite because
-$\langle U,\mathcal B_B(U)\rangle=
-\E\|\widehat H^{1/2}U\widehat H^{1/2}\|_F^2\ge0$.
-For $\eta>0$, $I-\mathcal T_B$ is positive definite precisely when
-$\mathcal A-\eta\mathcal B_B$ is, which gives
-\eqref{eq:operator-critical-step}.
+ Independence yields $\E[u_k u_k^\top] = \mathcal T_B^k(u_0u_0^\top)$. Rank-one
+ positive semidefinite matrices span the symmetric matrices, so decay for every
+ $u_0$ is equivalent to decay of powers of this finite-dimensional operator, or
+ $\rho(\mathcal T_B) < 1$. The operator is self-adjoint. For symmetric $U$, let
+ $|U|$ replace its eigenvalues by their absolute values. In an eigenbasis of
+ $U$, for each symmetric update matrix $F = I - \eta\widehat H$,
+ \[
+  |\langle U,FUF\rangle| = \left| \sum_{i,j}\lambda_i(U)\lambda_j(U)F_{ij}^2 \right|
+                         \le \langle |U|,F|U|F\rangle.
+ \]
+ Averaging and maximizing Rayleigh quotients shows
+ $\rho(\mathcal T_B) = \lambda_{\max}(\mathcal T_B)$. Further, $\mathcal A$ is
+ positive definite because
+ $\langle U,\mathcal A(U)\rangle = 2\operatorname{tr}(HU^2) > 0$ for $U \ne 0$,
+ while $\mathcal B_B$ is positive semidefinite because
+ $\langle U,\mathcal B_B(U)\rangle = \E\|\widehat H^{1/2}U\widehat H^{1/2}\|_F^2 \ge 0$.
+ For $\eta > 0$, $I - \mathcal T_B$ is positive definite precisely when
+ $\mathcal A - \eta\mathcal B_B$ is, which gives
+ \eqref{eq:operator-critical-step}.
 
-For the sufficient bound, conditional on $u_k=u$,
-\[
- \E[\|u_{k+1}\|^2\mid u_k=u]
- =u^\top(I-2\eta H+\eta^2K_B)u
- \le[1-2\eta\lambda_{\min}(H)+\eta^2\lambda_{\max}(K_B)]\|u\|^2.
-\]
-For necessity use $U=e_re_r^\top$, where $r$ is the rare coordinate.
-Its Rayleigh quotient for $\mathcal T_B$ equals
-$\E(1-\eta\widehat H_{rr})^2=1-2\eta+\eta^2a_{q,B}$.
-It must be strictly less than one. This proves the bounds without assuming
-that the rare coordinate evolves independently.
+ For the sufficient bound, conditional on $u_k = u$,
+ \[
+  \E[\|u_{k+1}\|^2\mid u_k=u]
+  = u^\top(I - 2\eta H + \eta^2K_B)u
+  \le[1-2\eta\lambda_{\min}(H)+\eta^2\lambda_{\max}(K_B)] \|u\|^2.
+ \]
+ For necessity use $U = e_re_r^\top$, where $r$ is the rare coordinate. Its
+ Rayleigh quotient for $\mathcal T_B$ equals
+ $\E(1 - \eta\widehat H_{rr})^2 = 1 - 2\eta + \eta^2a_{q,B}$. It must be
+ strictly less than one. This proves the bounds without assuming that the rare
+ coordinate evolves independently.
 \end{proof}
 
 Dependence enters through both $H$ and $\mathcal M$: its entries include
-$\E[z_i z_j z_l z_m]$. For a common coordinate $U_i$ and rare coordinate
-$Z$, these include $\E[U_iU_jZ^2]$ and $\E[U_iZ^3]$, as well as
-$\mu_4=\E Z^4$. Covariance and the scalar fourth moment do not specify
-the full operator. For example, if $X$ has common prevalence $p$, $J$ has
-rare prevalence $q$, and $J\le X$ almost surely, put
-$U=(X-p)/\sqrt{p(1-p)}$ and $Z=(J-q)/\sqrt{q(1-q)}$. Then
-\begin{equation}\label{eq:nested-mixed-fourth}
- \E[UZ^3]=
- \frac{(1-p)\{(1-q)^3+q^3\}}
- {\sqrt{p(1-p)}\sqrt q\,(1-q)^{3/2}},\qquad
- \E[U^2Z^2]\longrightarrow\frac{1-p}{p}.
+$\E[z_i z_j z_l z_m]$. For a common coordinate $U_i$ and rare coordinate $Z$,
+these include $\E[U_iU_jZ^2]$ and $\E[U_iZ^3]$, as well as $\mu_4 = \E Z^4$.
+Covariance and the scalar fourth moment do not specify the full operator. For
+example, if $X$ has common prevalence $p$, $J$ has rare prevalence $q$, and
+$J \le X$ almost surely, put $U = (X - p)/\sqrt{p(1 - p)}$ and
+$Z = (J - q)/\sqrt{q(1 - q)}$. Then
+\begin{equation}
+ \label{eq:nested-mixed-fourth}
+ \E[UZ^3] = \frac{(1 - p)\{(1 - q)^3 + q^3\}}
+ {\sqrt{p(1 - p)}\sqrt q\,(1 - q)^{3/2}},\qquad \E[U^2Z^2]
+          \longrightarrow \frac{1 - p}{p}.
 \end{equation}
-The identity follows from
-$(J-q)^3=(1-3q+3q^2)J-q^3$, $\E U=0$, and
-$\E[UJ]=q(1-p)/\sqrt{p(1-p)}$. The limit follows by conditioning on $J$:
-rare observations have $X=1$, while the $J=0$ contribution tends to zero.
-In particular, $\E[UZ^3]$ is of order $q^{-1/2}$ even though
-$\E UZ=O(\sqrt q)$.
-The finite-support checks verify the exact expression. These examples
-illustrate mixed moments. Section~\ref{sec:sampling} gives a separate
-matched-covariance binary comparison.
+The identity follows from $(J - q)^3 = (1 - 3q + 3q^2)J - q^3$, $\E U = 0$, and
+$\E[UJ] = q(1 - p)/\sqrt{p(1 - p)}$. The limit follows by conditioning on $J$:
+rare observations have $X = 1$, while the $J = 0$ contribution tends to zero. In
+particular, $\E[UZ^3]$ is of order $q^{-1/2}$ even though $\E UZ = O(\sqrt q)$.
+The finite-support checks verify the exact expression. These examples illustrate
+mixed moments. Section~\ref{sec:sampling} gives a separate matched-covariance
+binary comparison.
 
 \subsection{A bounded common block and a rare binary feature}
 
-\begin{proposition}[Batch-rarity orders]\label{prop:block-stability-orders}
-Let $x_q=(x_{c,q}^\top,J_q-q)^\top$ be centered, with a fixed number of
-common coordinates, $J_q\sim\operatorname{Bernoulli}(q)$, and
-$q\downarrow0$. Assume $\Cov(x_{c,q})\to A\succ0$ and
-$\|x_{c,q}\|\le L$ almost surely, uniformly in $q$. Use population
-standard-deviation scales in every coordinate. Then, uniformly over
-integers $B\ge1$, constants independent of $q,B$ give
-\begin{equation}\label{eq:batch-rarity-order}
- \eta_{\mathrm{crit}}=\Theta\bigl(\min\{1,Bq\}\bigr).
-\end{equation}
-There are constants $c,c'>0$ such that
-$\eta=c\min\{1,Bq\}$ gives
-\[
- \E\|u_k\|^2\le
- (1-c'\min\{1,Bq\})^k\|u_0\|^2
-\]
-in the noiseless model. Thus a fixed relative reduction in this squared
-norm is achievable in $O(1/\min\{1,Bq\})$ updates or
-$O(\max\{B,q^{-1}\})$ processed observations.
+\begin{proposition}[Batch-rarity orders]
+ \label{prop:block-stability-orders}
+ Let $x_q = (x_{c,q}^\top,J_q - q)^\top$ be centered, with a fixed number of
+ common coordinates, $J_q \sim \operatorname{Bernoulli}(q)$, and
+ $q \downarrow 0$. Assume $\Cov(x_{c,q}) \to A \succ 0$ and $\|x_{c,q}\| \le L$
+ almost surely, uniformly in $q$. Use population standard-deviation scales in
+ every coordinate. Then, uniformly over integers $B \ge 1$, constants
+ independent of $q,B$ give
+ \begin{equation}
+  \label{eq:batch-rarity-order}
+  \eta_{\mathrm{crit}} = \Theta\bigl(\min\{1,Bq\}\bigr).
+ \end{equation}
+ There are constants $c,c' > 0$ such that $\eta = c\min\{1,Bq\}$ gives
+ \[
+  \E\|u_k\|^2 \le (1 - c'\min\{1,Bq\})^k\|u_0\|^2
+ \]
+ in the noiseless model. Thus a fixed relative reduction in this squared norm is
+ achievable in $O(1/\min\{1,Bq\})$ updates or $O(\max\{B,q^{-1}\})$ processed
+ observations.
 \end{proposition}
 \begin{proof}
-The common scales are bounded above and away from zero. Write the scaled
-vector as $z=(U^\top,Z)^\top$, so $\|U\|\le L_0$ uniformly.
-Since $\E U=0$,
-$\E UZ=\sqrt{q/(1-q)}\E[U\mid J_q=1]=O(\sqrt q)$.
-The common covariance after scaling has a positive definite limit, hence
-$h\le\lambda_{\min}(H)\le\lambda_{\max}(H)\le h_1$ for some
-$h,h_1>0$ and small $q$. Also
-\[
- \E\|z\|^4\le L_0^4+2L_0^2+\mu_4=O(q^{-1}),\qquad
- \lambda_{\max}(K_B)\le h_1^2+B^{-1}\E\|z\|^4
- \le C\{1+(Bq)^{-1}\}.
-\]
-The bounds in \eqref{eq:matrix-step-bounds} prove the order statement.
-Choose $c$ small enough that $\eta\lambda_{\max}(K_B)\le h$.
-The conditional energy inequality in the preceding proof then gives a
-factor at most $1-h\eta$. Iteration proves the rate and its observation
-cost.
+ The common scales are bounded above and away from zero. Write the scaled vector
+ as $z = (U^\top,Z)^\top$, so $\|U\| \le L_0$ uniformly. Since $\E U = 0$,
+ $\E UZ = \sqrt{q/(1 - q)}\E[U\mid J_q=1] = O(\sqrt q)$. The common covariance
+ after scaling has a positive definite limit, hence
+ $h \le \lambda_{\min}(H) \le \lambda_{\max}(H) \le h_1$ for some $h,h_1 > 0$
+ and small $q$. Also
+ \[
+  \E\|z\|^4 \le L_0^4 + 2L_0^2 + \mu_4
+            = O(q^{-1}),\qquad \lambda_{\max}(K_B)
+            \le h_1^2 + B^{-1}\E\|z\|^4
+            \le C\{1 + (Bq)^{-1}\}.
+ \]
+ The bounds in \eqref{eq:matrix-step-bounds} prove the order statement. Choose
+ $c$ small enough that $\eta\lambda_{\max}(K_B) \le h$. The conditional energy
+ inequality in the preceding proof then gives a factor at most $1 - h\eta$.
+ Iteration proves the rate and its observation cost.
 \end{proof}
 
-This assumption class includes any fixed binary common block whose
-covariance has a positive definite limit, with arbitrary feasible
-dependence on the rare indicator. If additionally
-$c_q/\{q(1-q)\}\to\kappa$, it is consistent with the population
-rare-feature limit in Section~\ref{sec:flow}; that limit alone does not
-control stochastic fourth moments for unbounded common features.
-The order statement gives $\eta_{\mathrm{crit}}=\Theta(Bq)$ when
-$Bq\to0$ and $\Theta(1)$ in the other two regimes. Boundedness also
-permits exact threshold limits. Define
+This assumption class includes any fixed binary common block whose covariance
+has a positive definite limit, with arbitrary feasible dependence on the rare
+indicator. If additionally $c_q/\{q(1 - q)\} \to \kappa$, it is consistent with
+the population rare-feature limit in Section~\ref{sec:flow}; that limit alone
+does not control stochastic fourth moments for unbounded common features. The
+order statement gives $\eta_{\mathrm{crit}} = \Theta(Bq)$ when $Bq \to 0$ and
+$\Theta(1)$ in the other two regimes. Boundedness also permits exact threshold
+limits. Define
 \[
- H_c=D^{-1}AD^{-1},\qquad H_0=\diag(H_c,1),\qquad
- D=\diag(\sqrt{A_{11}},\ldots,\sqrt{A_{dd}}).
+ H_c = D^{-1}AD^{-1},\qquad H_0
+     = \diag(H_c,1),\qquad D
+     = \diag(\sqrt{A_{11}},\ldots,\sqrt{A_{dd}}).
 \]
 Then the three regimes satisfy
-\begin{equation}\label{eq:block-threshold-limits}
+\begin{equation}
+ \label{eq:block-threshold-limits}
  \begin{array}{c|c}
- Bq & \eta_{\mathrm{crit}}\\ \hline
- \to0 & \sim2Bq\\
- \to\gamma\in(0,\infty)
- & \displaystyle\longrightarrow
- \min\left\{\frac{2}{\lambda_{\max}(H_c)},
-                   \frac{2\gamma}{1+\gamma}\right\}\\
- \to\infty & \displaystyle\longrightarrow\frac{2}{\lambda_{\max}(H_0)}
+             Bq             &                                             \eta_{\mathrm{crit}}                                             \\
+  \hline
+            \to 0           &                                                   \sim 2Bq                                                   \\
+  \to \gamma \in (0,\infty) & \displaystyle \longrightarrow \min\left\{ \frac{2}{\lambda_{\max}(H_c)}, \frac{2\gamma}{1 + \gamma} \right\} \\
+         \to \infty         &                         \displaystyle \longrightarrow \frac{2}{\lambda_{\max}(H_0)}
  \end{array}
 \end{equation}
-To prove these limits, let
-$\Pi_r(U)=U_{rr}e_re_r^\top$. Every entry of $\mathcal M$ with at most
-two rare factors is $O(1)$, and those with three are $O(q^{-1/2})$,
-whereas $q\mu_4\to1$. Thus $q\mathcal M\to\Pi_r$ in operator norm.
-Also $H\to H_0$, so $\mathcal A$ converges to the positive definite
-operator $\mathcal A_0(U)=H_0U+UH_0$. If $Bq\to0$,
-$Bq\mathcal B_B\to\Pi_r$, and the largest eigenvalue of
+To prove these limits, let $\Pi_r(U) = U_{rr}e_re_r^\top$. Every entry of
+$\mathcal M$ with at most two rare factors is $O(1)$, and those with three are
+$O(q^{-1/2})$, whereas $q\mu_4 \to 1$. Thus $q\mathcal M \to \Pi_r$ in operator
+norm. Also $H \to H_0$, so $\mathcal A$ converges to the positive definite
+operator $\mathcal A_0(U) = H_0U + UH_0$. If $Bq \to 0$,
+$Bq\mathcal B_B \to \Pi_r$, and the largest eigenvalue of
 $\mathcal A_0^{-1/2}\Pi_r\mathcal A_0^{-1/2}$ is $1/2$.
-Equation~\eqref{eq:operator-critical-step} proves the first limit.
-If $Bq\to\gamma$, then $B\to\infty$ and
-$\mathcal B_B(U)\to H_0UH_0+\Pi_r(U)/\gamma$. In an eigenbasis
-of $H_c$, the rare diagonal mode has threshold $2\gamma/(1+\gamma)$.
-The common modes have thresholds $1/\lambda_i+1/\lambda_j$,
-minimized by $2/\lambda_{\max}(H_c)$, and common--rare modes have
-thresholds $1+1/\lambda_i$. These last thresholds cannot decrease
-the displayed minimum: if $\lambda_i\ge1$ they exceed
-$2/\lambda_{\max}(H_c)$, and otherwise they exceed two.
-Finally, $Bq\to\infty$ makes $\mathcal M/B\to0$ and yields the
-population threshold $2/\lambda_{\max}(H_0)$.
-Mixed moments affect finite-$q$ stability even though their contributions
-vanish in these particular threshold limits.
+Equation~\eqref{eq:operator-critical-step} proves the first limit. If
+$Bq \to \gamma$, then $B \to \infty$ and
+$\mathcal B_B(U) \to H_0UH_0 + \Pi_r(U)/\gamma$. In an eigenbasis of $H_c$, the
+rare diagonal mode has threshold $2\gamma/(1 + \gamma)$. The common modes have
+thresholds $1/\lambda_i + 1/\lambda_j$, minimized by $2/\lambda_{\max}(H_c)$,
+and common--rare modes have thresholds $1 + 1/\lambda_i$. These last thresholds
+cannot decrease the displayed minimum: if $\lambda_i \ge 1$ they exceed
+$2/\lambda_{\max}(H_c)$, and otherwise they exceed two. Finally, $Bq \to \infty$
+makes $\mathcal M/B \to 0$ and yields the population threshold
+$2/\lambda_{\max}(H_0)$. Mixed moments affect finite-$q$ stability even though
+their contributions vanish in these particular threshold limits.
 
-A shared stable step size can therefore slow the common coordinates.
-For $Bq\to0$, every stable $\eta$ is $O(Bq)$. In the noiseless or
-conditionally mean-zero noise model, $\E u_k=R^ku_0$. For a nonzero
-common-only initial error $u_0=(v^\top,0)^\top$ and small $q$,
-$\|R\|\le1$ and telescoping gives
+A shared stable step size can therefore slow the common coordinates. For
+$Bq \to 0$, every stable $\eta$ is $O(Bq)$. In the noiseless or conditionally
+mean-zero noise model, $\E u_k = R^ku_0$. For a nonzero common-only initial
+error $u_0 = (v^\top,0)^\top$ and small $q$, $\|R\| \le 1$ and telescoping gives
 \[
- \|[\E u_k]_c-v\|\le k\eta\|H\|\|v\|=O(kBq)\|v\|.
+ \|[\E u_k]_c - v\| \le k\eta\|H\|\|v\| = O(kBq)\|v\|.
 \]
-Thus $kB=o(q^{-1})$ cannot remove a fixed fraction of this common mean
-error. The common scales stay bounded, so this statement also holds for
-original-scale common coefficients. For example, with an independent
-centered Bernoulli$(1/2)$ common feature, its mean error is exactly
-$(1-\eta)^k$ times its initial error; common-only SGD would permit a
-constant step, whereas joint mean-square stability requires $\eta=O(Bq)$.
-The upper contraction bound concerns $\|S(\beta_k-\beta^*)\|^2$.
-Although stability is equivalent in original coordinates for each fixed
-$q$, its comparison constants for the rare coefficient depend on $q$.
+Thus $kB = o(q^{-1})$ cannot remove a fixed fraction of this common mean error.
+The common scales stay bounded, so this statement also holds for original-scale
+common coefficients. For example, with an independent centered Bernoulli$(1/2)$
+common feature, its mean error is exactly $(1 - \eta)^k$ times its initial
+error; common-only SGD would permit a constant step, whereas joint mean-square
+stability requires $\eta = O(Bq)$. The upper contraction bound concerns
+$\|S(\beta_k - \beta^*)\|^2$. Although stability is equivalent in original
+coordinates for each fixed $q$, its comparison constants for the rare
+coefficient depend on $q$.
 
 \subsection{Observation noise and scope}
 
-If $y=x^\top\beta^*+\varepsilon$, $\E(\varepsilon\mid x)=0$, and
-$Q=\E[\varepsilon^2zz^\top]$ is finite, independence and conditional
-centering remove the noise cross terms. At a stable constant step,
+If $y = x^\top\beta^* + \varepsilon$, $\E(\varepsilon \mid x) = 0$, and
+$Q = \E[\varepsilon^2zz^\top]$ is finite, independence and conditional centering
+remove the noise cross terms. At a stable constant step,
 \[
- \E[u_ku_k^\top]=\mathcal T_B^k(u_0u_0^\top)
-       +\frac{\eta^2}{B}\sum_{j=0}^{k-1}\mathcal T_B^j(Q)
- \longrightarrow\frac{\eta^2}{B}(I-\mathcal T_B)^{-1}(Q).
+ \E[u_ku_k^\top] = \mathcal T_B^k(u_0u_0^\top)
+                   + \frac{\eta^2}{B}\sum_{j=0}^{k-1}\mathcal T_B^j(Q)
+                 \longrightarrow \frac{\eta^2}{B}(I - \mathcal T_B)^{-1}(Q).
 \]
-For $Q\ne0$ this limit is nonzero, so noiseless contraction must not be
-reported as noisy error converging to zero. In the scalar homoscedastic
-case it is $\eta\sigma_\varepsilon^2/[B(2-\eta a_{q,B})]$ in scaled
-coordinates, divided by $q(1-q)$ for the original coefficient. Optimizing
-finite-budget noisy prediction, unbounded or growing common blocks,
-and estimated scales require further assumptions. Section~\ref{sec:sampling}
-derives the conditional identities needed for fixed-data sampling.
-The deterministic checks enumerate feasible binary supports and batches
-to verify the operators, mixed moments, bounds, and batch-rarity limits.
+For $Q \ne 0$ this limit is nonzero, so noiseless contraction must not be
+reported as noisy error converging to zero. In the scalar homoscedastic case it
+is $\eta\sigma_\varepsilon^2/[B(2 - \eta a_{q,B})]$ in scaled coordinates,
+divided by $q(1 - q)$ for the original coefficient. Optimizing finite-budget
+noisy prediction, unbounded or growing common blocks, and estimated scales
+require further assumptions. Section~\ref{sec:sampling} derives the conditional
+identities needed for fixed-data sampling. The deterministic checks enumerate
+feasible binary supports and batches to verify the operators, mixed moments,
+bounds, and batch-rarity limits.

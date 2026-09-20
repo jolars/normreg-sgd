@@ -1,83 +1,95 @@
 \section{What binary structure preserves}
-For binary features, write $q_j=\Prob(X_j=1)$ and $p_{11}=\Prob(X_1=X_2=1)$,
-or use their empirical counterparts for a fixed design. Then
+
+For binary features, write $q_j = \Prob(X_j = 1)$ and
+$p_{11} = \Prob(X_1 = X_2 = 1)$, or use their empirical counterparts for a fixed
+design. Then
 \[
- a=q_1(1-q_1),\quad b=q_2(1-q_2),\quad c=p_{11}-q_1q_2,
- \qquad \max(0,q_1+q_2-1)\le p_{11}\le\min(q_1,q_2).
+ a = q_1(1 - q_1),\quad b
+   = q_2(1 - q_2),\quad c
+   = p_{11} - q_1q_2, \qquad \max(0,q_1 + q_2 - 1)
+   \le p_{11}
+   \le \min(q_1,q_2).
 \]
 The conditional mean identities
-\begin{equation}\label{eq:conditional-differences}
- \frac ca=\E(X_2\mid X_1=1)-\E(X_2\mid X_1=0),\qquad
- \frac cb=\E(X_1\mid X_2=1)-\E(X_1\mid X_2=0)
+\begin{equation}
+ \label{eq:conditional-differences}
+ \frac ca = \E(X_2 \mid X_1 = 1) - \E(X_2 \mid X_1 = 0),\qquad \frac cb
+          = \E(X_1 \mid X_2 = 1) - \E(X_1 \mid X_2 = 0)
 \end{equation}
-give $|c|\le\min(a,b)$. Equality in either bound forces identical or
+give $|c| \le \min(a,b)$. Equality in either bound forces identical or
 complementary columns, so both inequalities are strict when $C$ is positive
 definite.
 
-\begin{theorem}[Exact single-signal shrinkage]\label{thm:single}
-In the noiseless two-binary-feature lasso, let $u=(a,b)$, $r=0$, and
-$\beta^*=(B,0)$. For every $t\ge0$, the unique minimizer is
-$\hat\beta=(\soft_t(B),0)$.
+\begin{theorem}[Exact single-signal shrinkage]
+ \label{thm:single}
+ In the noiseless two-binary-feature lasso, let $u = (a,b)$, $r = 0$, and
+ $\beta^* = (B,0)$. For every $t \ge 0$, the unique minimizer is
+ $\hat\beta = (\soft_t(B),0)$.
 \end{theorem}
 \begin{proof}
-The first coordinate satisfies its scalar KKT condition. The inactive residual
-has absolute value $|c(B-\soft_t(B))|\le |c|t\le bt$, so the second KKT
-condition also holds. Strict convexity gives uniqueness.
+ The first coordinate satisfies its scalar KKT condition. The inactive residual
+ has absolute value $|c(B - \soft_t(B))| \le |c|t \le bt$, so the second KKT
+ condition also holds. Strict convexity gives uniqueness.
 \end{proof}
-The result also holds with coordinates exchanged. Noise can still produce
-false selections, so this is a statement about noiseless shrinkage.
+The result also holds with coordinates exchanged. Noise can still produce false
+selections, so this is a statement about noiseless shrinkage.
 
 For two active coefficients with signs $h$, \eqref{eq:both-active} gives
-\begin{equation}\label{eq:binary-shrinkage}
- \hat\beta_1=\beta_1^*-\frac{t\{h_1-(c/a)h_2\}}{1-\rho^2},\qquad
- \hat\beta_2=\beta_2^*-\frac{t\{h_2-(c/b)h_1\}}{1-\rho^2},\qquad
- \rho=\frac{c}{\sqrt{ab}}.
+\begin{equation}
+ \label{eq:binary-shrinkage}
+ \hat\beta_1 = \beta_1^*
+               - \frac{t\{h_1 - (c/a)h_2\}}{1 - \rho^2},\qquad \hat\beta_2
+             = \beta_2^* - \frac{t\{h_2 - (c/b)h_1\}}{1 - \rho^2},\qquad \rho
+             = \frac{c}{\sqrt{ab}}.
 \end{equation}
-The resulting coefficients must have the stipulated signs. For a nested
-design with $q_1=1/2$, $q_2=p_{11}=1/10$, we have
-$(a,b,c)=(.25,.09,.05)$. At $t=.1$, the exact solutions are
+The resulting coefficients must have the stipulated signs. For a nested design
+with $q_1 = 1/2$, $q_2 = p_{11} = 1/10$, we have $(a,b,c) = (.25,.09,.05)$. At
+$t = .1$, the exact solutions are
 \begin{center}
-\begin{tabular}{lll}
-\toprule
-$\beta^*$ & Orthogonal, same marginals & Nested design \\
-\midrule
-$(1,1)$ & $(.9,.9)$ & $(.91,.95)$ \\
-$(1,-1)$ & $(.9,-.9)$ & $(.865,-.825)$ \\
-$(1,0)$ & $(.9,0)$ & $(.9,0)$ \\
-\bottomrule
-\end{tabular}
+ \begin{tabular}{lll}
+  \toprule
+  $\beta^*$ & Orthogonal, same marginals & Nested design  \\
+  \midrule
+  $(1,1)$   & $(.9,.9)$                  & $(.91,.95)$    \\
+  $(1,-1)$  & $(.9,-.9)$                 & $(.865,-.825)$ \\
+  $(1,0)$   & $(.9,0)$                   & $(.9,0)$       \\
+  \bottomrule
+ \end{tabular}
 \end{center}
-Thus correlation can increase or decrease shrinkage depending on the signs.
-Both designs can be realized with integer cell counts, using sample sizes
-that are multiples of twenty for the orthogonal comparison.
+Thus correlation can increase or decrease shrinkage depending on the signs. Both
+designs can be realized with integer cell counts, using sample sizes that are
+multiples of twenty for the orthogonal comparison.
 
-\begin{proposition}[No universal diagonal correction]\label{prop:no-diagonal}
-If $c\ne0$ and $t>0$, no positive design-dependent weights $u$ make the
-noiseless lasso equal $(\soft_t(\beta_1^*),\soft_t(\beta_2^*))$ for every
-$\beta^*\in\R^2$.
+\begin{proposition}[No universal diagonal correction]
+ \label{prop:no-diagonal}
+ If $c \ne 0$ and $t > 0$, no positive design-dependent weights $u$ make the
+ noiseless lasso equal $(\soft_t(\beta_1^*),\soft_t(\beta_2^*))$ for every
+ $\beta^* \in \R^2$.
 \end{proposition}
 \begin{proof}
-For $(B,0)$ with $B>t$, the desired active KKT equation forces $u_1=a$.
-Exchanging coordinates forces $u_2=b$. For $(B,B)$ with $B>t$, the desired
-solution would then require $C(1,1)^\top=(a,b)^\top$, which forces $c=0$.
+ For $(B,0)$ with $B > t$, the desired active KKT equation forces $u_1 = a$.
+ Exchanging coordinates forces $u_2 = b$. For $(B,B)$ with $B > t$, the desired
+ solution would then require $C(1,1)^\top = (a,b)^\top$, which forces $c = 0$.
 \end{proof}
-If active signs were known, the weights $u_1=a+ch_1h_2$ and $u_2=b+ch_1h_2$
-would instead produce $\hat\beta=\beta^*-th$ whenever $\beta^*$ has signs $h$
-and $\min_j|\beta_j^*|>t$. Binary feasibility makes these weights positive.
-Their dependence on unknown signs prevents a universal preprocessing rule.
+If active signs were known, the weights $u_1 = a + ch_1h_2$ and
+$u_2 = b + ch_1h_2$ would instead produce $\hat\beta = \beta^* - th$ whenever
+$\beta^*$ has signs $h$ and $\min_j|\beta_j^*| > t$. Binary feasibility makes
+these weights positive. Their dependence on unknown signs prevents a universal
+preprocessing rule.
 
-\begin{proposition}[An approximation condition]\label{prop:bound}
-Let $D=\diag(a,b)$ and $\eta=\max(|c|/a,|c|/b)<1$. On a valid noiseless
-both-active sign region with variance weights,
-\[
- \|\hat\beta-(\beta^*-th)\|_\infty\le t\frac{\eta}{1-\eta}.
-\]
+\begin{proposition}[An approximation condition]
+ \label{prop:bound}
+ Let $D = \diag(a,b)$ and $\eta = \max(|c|/a,|c|/b) < 1$. On a valid noiseless
+ both-active sign region with variance weights,
+ \[
+  \|\hat\beta - (\beta^* - th)\|_\infty \le t\frac{\eta}{1 - \eta}.
+ \]
 \end{proposition}
 \begin{proof}
-Write $C=D(I+F)$, where $\|F\|_\infty=\eta$. The Neumann series gives
-$\|(I+F)^{-1}-I\|_\infty\le\eta/(1-\eta)$, and
-$\hat\beta=\beta^*-tC^{-1}Dh$.
+ Write $C = D(I + F)$, where $\|F\|_\infty = \eta$. The Neumann series gives
+ $\|(I + F)^{-1} - I\|_\infty \le \eta/(1 - \eta)$, and
+ $\hat\beta = \beta^* - tC^{-1}Dh$.
 \end{proof}
 Small conditional mean differences in \eqref{eq:conditional-differences}
-therefore control the approximation. Small Pearson correlation alone does
-not provide this control when variances differ greatly.
+therefore control the approximation. Small Pearson correlation alone does not
+provide this control when variances differ greatly.

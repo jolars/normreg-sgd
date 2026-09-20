@@ -1,40 +1,39 @@
 \section{Setup and conventions}
 
-For a fixed sample, profile out an unpenalized intercept and let $X_c$ and
-$y_c$ denote the centered design and response. Write
+For a fixed sample, profile out an unpenalized intercept and let $X_c$ and $y_c$
+denote the centered design and response. Write
 \[
- C=X_c^\top X_c/n,\qquad z=X_c^\top y_c/n,\qquad
- y_c=X_c\beta^*+\varepsilon_c.
+ C = X_c^\top X_c/n,\qquad z
+   = X_c^\top y_c/n,\qquad y_c
+   = X_c\beta^* + \varepsilon_c.
 \]
-The empirical loss is $\beta^\top C\beta/2-z^\top\beta$, up to a constant.
-Unless stated otherwise, $C$ is positive definite. Independent Gaussian
-errors with variance $\sigma_\varepsilon^2>0$ give, conditional on the design,
-\begin{equation}\label{eq:score-law}
- z\sim N(C\beta^*,\tau^2C),\qquad \tau^2=\sigma_\varepsilon^2/n.
+The empirical loss is $\beta^\top C\beta/2 - z^\top\beta$, up to a constant.
+Unless stated otherwise, $C$ is positive definite. Independent Gaussian errors
+with variance $\sigma_\varepsilon^2 > 0$ give, conditional on the design,
+\begin{equation}
+ \label{eq:score-law}
+ z \sim N(C\beta^*,\tau^2C),\qquad \tau^2 = \sigma_\varepsilon^2/n.
 \end{equation}
 
-Population calculations instead use a centered random feature vector $x$
-with covariance $C=\E xx^\top$ and response
-$y=x^\top\beta^*+\varepsilon$, where $\E(\varepsilon\mid x)=0$ and
-$\E\varepsilon^2<\infty$.
-The population excess squared loss is
-$\E\{x^\top(\beta-\beta^*)\}^2/2$.
-We state explicitly whether an argument uses this population model, a fixed
-empirical design, or fresh independent observations for stochastic updates.
-Population centering and scales are known in the initial stochastic
-calculation. Estimating them and updating an intercept require separate
-analysis.
+Population calculations instead use a centered random feature vector $x$ with
+covariance $C = \E xx^\top$ and response $y = x^\top\beta^* + \varepsilon$,
+where $\E(\varepsilon \mid x) = 0$ and $\E\varepsilon^2 < \infty$. The
+population excess squared loss is $\E\{x^\top(\beta - \beta^*)\}^2/2$. We state
+explicitly whether an argument uses this population model, a fixed empirical
+design, or fresh independent observations for stochastic updates. Population
+centering and scales are known in the initial stochastic calculation. Estimating
+them and updating an intercept require separate analysis.
 
-Let $S=\diag(s_1,\ldots,s_p)$ with positive scales fixed during training.
-Dividing features by their scales gives $\widetilde x=S^{-1}x$ and
-coefficient $\theta=S\beta$. All reported coefficients are $\beta$, on the
-original scale. Write $P=S^{-2}$ for the induced preconditioner. No scaling,
+Let $S = \diag(s_1,\ldots,s_p)$ with positive scales fixed during training.
+Dividing features by their scales gives $\widetilde x = S^{-1}x$ and coefficient
+$\theta = S\beta$. All reported coefficients are $\beta$, on the original scale.
+Write $P = S^{-2}$ for the induced preconditioner. No scaling,
 standard-deviation scaling, and variance scaling correspond to
-$s_j=C_{jj}^{\delta}$ for $\delta=0,1/2,1$, respectively.
+$s_j = C_{jj}^{\delta}$ for $\delta = 0,1/2,1$, respectively.
 
-We use $T\ge0$ for gradient-flow time, $k$ for update count, $B$ for batch
-size, and $\eta>0$ for a constant learning rate in stochastic updates.
-For discrete gradient descent, $T=k\eta$ is its continuous-time calibration,
-not a measure of processed observations. An online run of $k$ batches uses
-$kB$ observations. The symbols $t=\lambda_1/n$ and $r=\lambda_2/n$ remain
+We use $T \ge 0$ for gradient-flow time, $k$ for update count, $B$ for batch
+size, and $\eta > 0$ for a constant learning rate in stochastic updates. For
+discrete gradient descent, $T = k\eta$ is its continuous-time calibration, not a
+measure of processed observations. An online run of $k$ batches uses $kB$
+observations. The symbols $t = \lambda_1/n$ and $r = \lambda_2/n$ remain
 reserved for the averaged lasso and ridge penalties in the appendices.

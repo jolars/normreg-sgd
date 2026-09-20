@@ -1,70 +1,76 @@
 \section{Research program and evaluation}
 
-The first milestone is a finite-time theory for one rare binary feature and
-a fixed block of common predictors, supported by a controlled experiment
-and a comparison with the closest prior theorems. Write
+The first milestone is a finite-time theory for one rare binary feature and a
+fixed block of common predictors, supported by a controlled experiment and a
+comparison with the closest prior theorems. Write
 \[
- C_n=\begin{pmatrix}A_n&c_n\\c_n^\top&b_n\end{pmatrix},\qquad
- A_n\to A\succ0,\quad b_n\downarrow0,\quad c_n/b_n\to\kappa.
+ C_n = \begin{pmatrix}
+        A_n      & c_n \\
+        c_n^\top & b_n
+       \end{pmatrix},\qquad A_n
+     \to A
+     \succ 0,\quad b_n
+     \downarrow 0,\quad c_n/b_n
+     \to \kappa.
 \]
 Sections~\ref{sec:flow}--\ref{sec:sgd} establish the population block-flow
 limit, exact finite-update GD and fresh-SGD error moments, and stability
-thresholds for a bounded common block across the three $Bq$ regimes. The
-mean trajectory separates incomplete common-feature learning from direct
-rare-feature learning, while the covariance formulas separate initial
-uncertainty, multiplicative update variance, and observation noise. These
-results use known population centering and fixed scales.
-Section~\ref{sec:sampling} supplies a matched-covariance binary comparison,
-conditional fixed-data replacement identities, and exact reshuffling epoch
-recurrences. Counterexamples delimit their relation to fresh sampling.
-Section~\ref{sec:budget} supplies a joint observation-budget limit for a
-specified decreasing-step last iterate with one common and one rare binary
-feature. Section~\ref{sec:pilot} supplies a controlled fixed-data
-comparison with consequential rare-subgroup risk differences and reversals.
-Broader joint sampling and stopping-time limits remain open.
+thresholds for a bounded common block across the three $Bq$ regimes. The mean
+trajectory separates incomplete common-feature learning from direct rare-feature
+learning, while the covariance formulas separate initial uncertainty,
+multiplicative update variance, and observation noise. These results use known
+population centering and fixed scales. Section~\ref{sec:sampling} supplies a
+matched-covariance binary comparison, conditional fixed-data replacement
+identities, and exact reshuffling epoch recurrences. Counterexamples delimit
+their relation to fresh sampling. Section~\ref{sec:budget} supplies a joint
+observation-budget limit for a specified decreasing-step last iterate with one
+common and one rare binary feature. Section~\ref{sec:pilot} supplies a
+controlled fixed-data comparison with consequential rare-subgroup risk
+differences and reversals. Broader joint sampling and stopping-time limits
+remain open.
 
-For empirical samples, specify $n\to\infty$, rare prevalence $q_n\downarrow0$,
-and whether $nq_n\to\infty$ or rare counts remain bounded. Compare error
-contributions with statistical uncertainty, typically of order
+For empirical samples, specify $n \to \infty$, rare prevalence
+$q_n \downarrow 0$, and whether $nq_n \to \infty$ or rare counts remain bounded.
+Compare error contributions with statistical uncertainty, typically of order
 $(nq_n)^{-1/2}$ under suitable regularity conditions. Analyze the effects of
 estimating centering and scales, and distinguish a stopping time fixed in
 advance from one chosen by validation. Full-rank convergence to OLS,
-early-stopping regularization, and selection among interpolating solutions
-are separate questions.
+early-stopping regularization, and selection among interpolating solutions are
+separate questions.
 
 The initial experiment holds binary cell counts and population preprocessing
-fixed. Section~\ref{sec:practical} adds sampled designs, estimated preprocessing,
-intercept ablations, and validation selection, followed by a sparse categorical
-benchmark. It retains effects of relative learning but also exposes missing-group
-failures and rate-grid boundaries. Wider rate ranges and group-coverage-aware
-selection are hypotheses for a further, separately declared study. AdaGrad,
-Adam, or a neural model should be added only to test a specific mechanism,
-with momentum, stabilizing constants, clipping, schedules, and weight decay
-recorded. A fixed diagonal preconditioner is not a model of their complete
+fixed. Section~\ref{sec:practical} adds sampled designs, estimated
+preprocessing, intercept ablations, and validation selection, followed by a
+sparse categorical benchmark. It retains effects of relative learning but also
+exposes missing-group failures and rate-grid boundaries. Wider rate ranges and
+group-coverage-aware selection are hypotheses for a further, separately declared
+study. AdaGrad, Adam, or a neural model should be added only to test a specific
+mechanism, with momentum, stabilizing constants, clipping, schedules, and weight
+decay recorded. A fixed diagonal preconditioner is not a model of their complete
 dynamics.
 
 Report performance against processed observations as well as update count;
 changing batch size changes the cost of an update. Measure original-scale
-coefficient error, aggregate excess prediction risk, and excess risk
-conditional on rare-feature presence. An isolated rare-coefficient error of
-constant size contributes only $O(q_n)$ to population risk. To assess a
-consequence beyond aggregate averages, also consider a specified test
-prevalence shift that preserves the conditional response model and uses the
-training centering and scales at prediction time. New intercept or centering
-errors must not be confused with coefficient effects.
+coefficient error, aggregate excess prediction risk, and excess risk conditional
+on rare-feature presence. An isolated rare-coefficient error of constant size
+contributes only $O(q_n)$ to population risk. To assess a consequence beyond
+aggregate averages, also consider a specified test prevalence shift that
+preserves the conditional response model and uses the training centering and
+scales at prediction time. New intercept or centering errors must not be
+confused with coefficient effects.
 
 The repository's optimization checks compare matrix exponentials and block
 limits with independent ODE solutions, stochastic moment formulas with exact
 batch and short-trajectory enumeration, and stability thresholds with operator
 eigenvalues on feasible binary supports. Rational path enumeration also checks
 first-pass sampling equivalence and the effects of reusing observations.
-Existing coordinate-descent and Gaussian integration
-checks validate the explicit-penalty baselines. The pilot additionally
-checks conditional moments and subgroup risks by exact path and support
-enumeration. These checks validate the calculations, while the pilot provides
-a bounded comparison under its declared tuning protocol. The practical study
-adds independent preprocessing, transformed-coordinate update, held-out loss,
-selection, uncertainty, and precision checks. Its categorical evidence remains
-specific to the task and search grid. The novelty assessment must identify a conclusion beyond
-known early-stopping, adaptive-gradient, and preconditioning theory before
-the paper makes a practical recommendation.
+Existing coordinate-descent and Gaussian integration checks validate the
+explicit-penalty baselines. The pilot additionally checks conditional moments
+and subgroup risks by exact path and support enumeration. These checks validate
+the calculations, while the pilot provides a bounded comparison under its
+declared tuning protocol. The practical study adds independent preprocessing,
+transformed-coordinate update, held-out loss, selection, uncertainty, and
+precision checks. Its categorical evidence remains specific to the task and
+search grid. The novelty assessment must identify a conclusion beyond known
+early-stopping, adaptive-gradient, and preconditioning theory before the paper
+makes a practical recommendation.

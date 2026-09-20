@@ -1,31 +1,35 @@
-\section{Exact moments at a finite update count}\label{sec:discrete}
+\section{Exact moments at a finite update count}
+\label{sec:discrete}
 
-These identities specialize the stochastic least-squares operator framework
-of \citet[Section~2.1]{defossez2015averaged} and
+These identities specialize the stochastic least-squares operator framework of
+\citet[Section~2.1]{defossez2015averaged} and
 \citet[Appendix~A.4]{jain2018parallelizing}. We state the conditional-noise
 assumptions explicitly and separate centered covariance from second moments.
 
 This section uses the population response model
-$y=x^\top\beta^*+\varepsilon$ in a fixed dimension, with known population
-centering $\E x=0$ and fixed positive diagonal scales $S$. There is no
+$y = x^\top\beta^* + \varepsilon$ in a fixed dimension, with known population
+centering $\E x = 0$ and fixed positive diagonal scales $S$. There is no
 intercept update. Assume
 \[
- C=\E xx^\top\succ0,\qquad \E\|x\|^4<\infty,\qquad
- \E(\varepsilon\mid x)=0,\qquad
- \E\varepsilon^2<\infty,\qquad
- \E[\varepsilon^2\|x\|^2]<\infty.
+ C = \E xx^\top
+   \succ 0,\qquad \E\|x\|^4
+   < \infty,\qquad \E(\varepsilon \mid x)
+   = 0,\qquad \E\varepsilon^2
+   < \infty,\qquad \E[\varepsilon^2\|x\|^2]
+   < \infty.
 \]
-The last condition controls gradient noise and does not follow from finite
-noise variance alone. It permits heteroscedastic noise and does not require
-Gaussian errors or independence of $x$ and $\varepsilon$.
-Write $P=S^{-2}$, and use the scaled random feature $z=S^{-1}x$ and
-scaled coefficient error
+The last condition controls gradient noise and does not follow from finite noise
+variance alone. It permits heteroscedastic noise and does not require Gaussian
+errors or independence of $x$ and $\varepsilon$. Write $P = S^{-2}$, and use the
+scaled random feature $z = S^{-1}x$ and scaled coefficient error
 \[
- H=\E zz^\top=S^{-1}CS^{-1},\qquad
- u_k=S(\beta_k-\beta^*),\qquad R=I-\eta H.
+ H = \E zz^\top
+   = S^{-1}CS^{-1},\qquad u_k
+   = S(\beta_k - \beta^*),\qquad R
+   = I - \eta H.
 \]
-Here $z$ denotes a random feature vector, rather than the fixed empirical
-score in the setup. Let the initialization have finite second moment and be
+Here $z$ denotes a random feature vector, rather than the fixed empirical score
+in the setup. Let the initialization have finite second moment and be
 independent of all training observations. Deterministic initialization,
 including zero, is a special case.
 
@@ -33,204 +37,207 @@ including zero, is a special case.
 
 Population gradient descent on the averaged squared loss obeys
 \[
- \beta_{k+1}=\beta_k-\eta PC(\beta_k-\beta^*),\qquad u_{k+1}=Ru_k.
+ \beta_{k+1} = \beta_k - \eta PC(\beta_k - \beta^*),\qquad u_{k+1} = Ru_k.
 \]
-Consequently, for deterministic $\beta_0$ and every integer $k\ge0$,
-\begin{equation}\label{eq:discrete-gd}
- \beta_k=\beta^*+(I-\eta PC)^k(\beta_0-\beta^*).
+Consequently, for deterministic $\beta_0$ and every integer $k \ge 0$,
+\begin{equation}
+ \label{eq:discrete-gd}
+ \beta_k = \beta^* + (I - \eta PC)^k(\beta_0 - \beta^*).
 \end{equation}
-For random initialization with scaled mean error $m_0$, covariance
-$\Sigma_0$, and second moment $U_0$, its mean error is $R^km_0$, its covariance
-is $R^k\Sigma_0R^k$, and its second moment is $R^kU_0R^k$.
-Thus both matrix moments obey $V_{k+1}=RV_kR$ in population GD.
-There is no observation-noise contribution in this
-population update. These identities hold for every $\eta>0$ at finite $k$.
-Convergence for every initial value holds precisely when
-$0<\eta<2/\lambda_{\max}(H)$, since $H$ is symmetric positive definite.
+For random initialization with scaled mean error $m_0$, covariance $\Sigma_0$,
+and second moment $U_0$, its mean error is $R^km_0$, its covariance is
+$R^k\Sigma_0R^k$, and its second moment is $R^kU_0R^k$. Thus both matrix moments
+obey $V_{k+1} = RV_kR$ in population GD. There is no observation-noise
+contribution in this population update. These identities hold for every
+$\eta > 0$ at finite $k$. Convergence for every initial value holds precisely
+when $0 < \eta < 2/\lambda_{\max}(H)$, since $H$ is symmetric positive definite.
 
-For fresh-batch SGD, let $(x_{ki},\varepsilon_{ki})$, $1\le i\le B$, be
+For fresh-batch SGD, let $(x_{ki},\varepsilon_{ki})$, $1 \le i \le B$, be
 independent copies of $(x,\varepsilon)$, independently across updates and
 independently of the initialization. Define
 \[
- \widehat H_k=\frac1B\sum_{i=1}^B z_{ki}z_{ki}^\top,\qquad
- \xi_k=\frac1B\sum_{i=1}^B z_{ki}\varepsilon_{ki}.
+ \widehat H_k = \frac1B\sum_{i=1}^B z_{ki}z_{ki}^\top,\qquad \xi_k
+              = \frac1B\sum_{i=1}^B z_{ki}\varepsilon_{ki}.
 \]
 The averaged stochastic gradient gives
-\begin{equation}\label{eq:discrete-sgd-update}
- u_{k+1}=(I-\eta\widehat H_k)u_k+\eta\xi_k,
- \qquad m_k:=\E u_k=R^km_0.
+\begin{equation}
+ \label{eq:discrete-sgd-update}
+ u_{k+1} = (I - \eta\widehat H_k)u_k + \eta\xi_k, \qquad m_k := \E u_k = R^km_0.
 \end{equation}
-Thus SGD has exactly the population GD mean at every finite update count.
-This identity uses fresh sampling and fixed centering and scaling; it does
-not describe repeated passes through a fixed noisy sample. Comparing batch
-sizes at a fixed observation budget $N$ requires $k=\lfloor N/B\rfloor$
-in these formulas, not a common update count.
+Thus SGD has exactly the population GD mean at every finite update count. This
+identity uses fresh sampling and fixed centering and scaling; it does not
+describe repeated passes through a fixed noisy sample. Comparing batch sizes at
+a fixed observation budget $N$ requires $k = \lfloor N/B\rfloor$ in these
+formulas, not a common update count.
 
 \subsection{Second moments and centered covariance}
 
 For symmetric matrices $U$, define
 \begin{align}
- \mathcal M(U)&=\E[zz^\top Uzz^\top],\qquad
- \mathcal V(U)=\mathcal M(U)-HUH,
- \qquad Q=\E[\varepsilon^2zz^\top],\label{eq:discrete-operators}\\
- \mathcal T_B(U)&=RUR+\frac{\eta^2}{B}\mathcal V(U)
- =\E[(I-\eta\widehat H_k)U(I-\eta\widehat H_k)].\label{eq:discrete-T}
+ \mathcal M(U)   & = \E[zz^\top Uzz^\top],\qquad \mathcal V(U) = \mathcal M(U) - HUH, \qquad Q = \E[\varepsilon^2zz^\top],\label{eq:discrete-operators} \\
+ \mathcal T_B(U) & = RUR + \frac{\eta^2}{B}\mathcal V(U) = \E[(I-\eta\widehat H_k)U(I-\eta\widehat H_k)].\label{eq:discrete-T}
 \end{align}
-The identity
-$\mathcal V(U)=\E[(zz^\top-H)U(zz^\top-H)]$ shows that $\mathcal V$
-maps positive semidefinite matrices to positive semidefinite matrices.
-The same is true of $\mathcal T_B$. The fourth moments enter through
+The identity $\mathcal V(U) = \E[(zz^\top-H)U(zz^\top-H)]$ shows that
+$\mathcal V$ maps positive semidefinite matrices to positive semidefinite
+matrices. The same is true of $\mathcal T_B$. The fourth moments enter through
 $\mathcal M$, including mixed moments between common and rare coordinates.
 
-\begin{proposition}[Finite-update error moments]\label{prop:discrete-moments}
-Under the assumptions above, put
-$U_k=\E[u_ku_k^\top]$ and
-$\Sigma_k=\Cov(u_k)=U_k-m_km_k^\top$.
-For every integer $k\ge0$,
-\begin{align}
- U_{k+1}&=\mathcal T_B(U_k)+\frac{\eta^2}{B}Q,
- &U_k&=\mathcal T_B^k(U_0)
-       +\frac{\eta^2}{B}\sum_{j=0}^{k-1}\mathcal T_B^j(Q),
-       \label{eq:discrete-second}\\
- \Sigma_{k+1}&=\mathcal T_B(\Sigma_k)
-       +\frac{\eta^2}{B}\{\mathcal V(m_km_k^\top)+Q\}.
-       \label{eq:discrete-covariance}
-\end{align}
-In particular, the centered covariance has the finite-sum decomposition
-\begin{equation}\label{eq:discrete-covariance-sum}
- \Sigma_k=\mathcal T_B^k(\Sigma_0)
- +\frac{\eta^2}{B}\sum_{j=0}^{k-1}
-    \mathcal T_B^{k-1-j}\{\mathcal V(R^jm_0m_0^\top R^j)\}
- +\frac{\eta^2}{B}\sum_{j=0}^{k-1}\mathcal T_B^j(Q).
-\end{equation}
-Empty sums are zero, and the zeroth operator power is the identity.
-Original-scale quantities are
-\begin{equation}\label{eq:discrete-original-moments}
- \E\beta_k-\beta^*=S^{-1}m_k,\qquad
- \Cov(\beta_k)=S^{-1}\Sigma_kS^{-1},\qquad
- \E[(\beta_k-\beta^*)(\beta_k-\beta^*)^\top]=S^{-1}U_kS^{-1}.
-\end{equation}
+\begin{proposition}[Finite-update error moments]
+ \label{prop:discrete-moments}
+ Under the assumptions above, put $U_k = \E[u_ku_k^\top]$ and
+ $\Sigma_k = \Cov(u_k) = U_k - m_km_k^\top$. For every integer $k \ge 0$,
+ \begin{align}
+  U_{k+1}      & = \mathcal T_B(U_k) + \frac{\eta^2}{B}Q,                                                                   & U_k & = \mathcal T_B^k(U_0) + \frac{\eta^2}{B}\sum_{j=0}^{k-1}\mathcal T_B^j(Q), \label{eq:discrete-second} \\
+  \Sigma_{k+1} & = \mathcal T_B(\Sigma_k) + \frac{\eta^2}{B}\{\mathcal V(m_km_k^\top) + Q\}. \label{eq:discrete-covariance}
+ \end{align}
+ In particular, the centered covariance has the finite-sum decomposition
+ \begin{equation}
+  \label{eq:discrete-covariance-sum}
+  \Sigma_k
+  = \mathcal T_B^k(\Sigma_0)
+    + \frac{\eta^2}{B}\sum_{j=0}^{k-1} \mathcal T_B^{k-1-j}\{\mathcal V(R^jm_0m_0^\top R^j)\}
+    + \frac{\eta^2}{B}\sum_{j=0}^{k-1}\mathcal T_B^j(Q).
+ \end{equation}
+ Empty sums are zero, and the zeroth operator power is the identity.
+ Original-scale quantities are
+ \begin{equation}
+  \label{eq:discrete-original-moments}
+  \E\beta_k - \beta^*
+  = S^{-1}m_k,\qquad \Cov(\beta_k)
+  = S^{-1}\Sigma_kS^{-1},\qquad \E[(\beta_k-\beta^*)(\beta_k-\beta^*)^\top]
+  = S^{-1}U_kS^{-1}.
+ \end{equation}
 \end{proposition}
 \begin{proof}
-Conditional on all features in a batch, $\E(\xi_k\mid z_{k1},\ldots,z_{kB})=0$.
-Independence of the sampled pairs and the conditional noise-mean assumption
-therefore eliminate both cross terms in the second moment of
-\eqref{eq:discrete-sgd-update}, even though $\xi_k$ and $\widehat H_k$
-need not be independent. They also give
-$\E\xi_k\xi_k^\top=Q/B$.
-Independence within a batch yields
-\[
- \E[\widehat H_kU\widehat H_k]
-   =\left(1-\frac1B\right)HUH+\frac1B\mathcal M(U).
-\]
-Expanding the two update factors proves \eqref{eq:discrete-T}.
-Independence from the past then proves the second-moment recurrence.
-Subtract $m_{k+1}m_{k+1}^\top=Rm_km_k^\top R$ to obtain
-\eqref{eq:discrete-covariance}. Iteration gives both finite sums. The stated
-moment assumptions and independence ensure finite moments at every fixed
-$k$ by induction. Conjugation by $S^{-1}$ proves the original-scale formulas.
+ Conditional on all features in a batch,
+ $\E(\xi_k \mid z_{k1},\ldots,z_{kB}) = 0$. Independence of the sampled pairs
+ and the conditional noise-mean assumption therefore eliminate both cross terms
+ in the second moment of \eqref{eq:discrete-sgd-update}, even though $\xi_k$ and
+ $\widehat H_k$ need not be independent. They also give
+ $\E\xi_k\xi_k^\top = Q/B$. Independence within a batch yields
+ \[
+  \E[\widehat H_kU\widehat H_k] = \left( 1 - \frac1B \right)HUH
+                                  + \frac1B\mathcal M(U).
+ \]
+ Expanding the two update factors proves \eqref{eq:discrete-T}. Independence
+ from the past then proves the second-moment recurrence. Subtract
+ $m_{k+1}m_{k+1}^\top = Rm_km_k^\top R$ to obtain
+ \eqref{eq:discrete-covariance}. Iteration gives both finite sums. The stated
+ moment assumptions and independence ensure finite moments at every fixed $k$ by
+ induction. Conjugation by $S^{-1}$ proves the original-scale formulas.
 \end{proof}
 
 Equation~\eqref{eq:discrete-covariance-sum} separates propagated initial
 uncertainty, multiplicative update variance caused by mean error, and
-observation noise. The operator $\mathcal T_B$ also propagates existing
-variance through random updates, so the final noise contribution includes
-that amplification. With deterministic initialization, $\Sigma_0=0$;
-nevertheless $U_0=m_0m_0^\top$ usually is nonzero. In the noiseless case
-$Q=0$, SGD may still have positive covariance, whereas initialization at
-$\beta^*$ gives no subsequent error. With homoscedastic conditional noise
-variance $\sigma_\varepsilon^2$, $Q=\sigma_\varepsilon^2H$.
-For an independent test feature from the training population, expected
-excess squared loss is
+observation noise. The operator $\mathcal T_B$ also propagates existing variance
+through random updates, so the final noise contribution includes that
+amplification. With deterministic initialization, $\Sigma_0 = 0$; nevertheless
+$U_0 = m_0m_0^\top$ usually is nonzero. In the noiseless case $Q = 0$, SGD may
+still have positive covariance, whereas initialization at $\beta^*$ gives no
+subsequent error. With homoscedastic conditional noise variance
+$\sigma_\varepsilon^2$, $Q = \sigma_\varepsilon^2H$. For an independent test
+feature from the training population, expected excess squared loss is
 \[
  \frac12\E[(\beta_k-\beta^*)^\top C(\beta_k-\beta^*)]
- =\frac12\operatorname{tr}(HU_k)
- =\frac12m_k^\top Hm_k+\frac12\operatorname{tr}(H\Sigma_k).
+ = \frac12\operatorname{tr}(HU_k)
+ = \frac12m_k^\top Hm_k + \frac12\operatorname{tr}(H\Sigma_k).
 \]
 These formulas require no stability assumption or inversion of
-$I-\mathcal T_B$. For example, column vectorization gives the finite matrix
+$I - \mathcal T_B$. For example, column vectorization gives the finite matrix
 representation
 \[
- \operatorname{vec}\{\mathcal T_B(U)\}=K_B\operatorname{vec}(U),\qquad
- K_B=R\otimes R+\frac{\eta^2}{B}
-       \{\E[(zz^\top)\otimes(zz^\top)]-H\otimes H\},
+ \operatorname{vec}\{\mathcal T_B(U)\}
+ = K_B\operatorname{vec}(U),\qquad K_B
+ = R
+   \otimes R
+   + \frac{\eta^2}{B} \{\E[(zz^\top)\otimes(zz^\top)] - H \otimes H\},
 \]
 so \eqref{eq:discrete-second} is also an ordinary matrix-power and finite-sum
 formula. Mean convergence alone does not ensure bounded second moments.
 
 \subsection{A fixed-update rare-feature mean limit}
 
-The common-block population setup also gives a finite-$k$ limit for both
-GD and the mean of fresh-batch SGD. Index populations by $n$, not by the
-number of observed training samples, and suppose
+The common-block population setup also gives a finite-$k$ limit for both GD and
+the mean of fresh-batch SGD. Index populations by $n$, not by the number of
+observed training samples, and suppose
 \[
- C_n=\begin{pmatrix}A_n&c_n\\c_n^\top&b_n\end{pmatrix}\succ0,\quad
- A_n\to A\succ0,\quad b_n=q_n(1-q_n)\to0,\quad q_n\to0,
- \quad c_n/b_n\to\kappa.
+ C_n = \begin{pmatrix}
+        A_n      & c_n \\
+        c_n^\top & b_n
+       \end{pmatrix}
+     \succ 0,\quad A_n
+     \to A
+     \succ 0,\quad b_n
+     = q_n(1 - q_n)
+     \to 0,\quad q_n
+     \to 0, \quad c_n/b_n
+     \to \kappa.
 \]
 The rare feature is a centered Bernoulli variable. Let
-$S_n=\diag(S_{C,n},s_{R,n})$, where $S_{C,n}\to D$ is positive diagonal,
-and suppose $b_n/s_{R,n}^2\to\rho\in[0,\infty)$.
-Hold $\eta>0$ and $\beta^*$ fixed and take deterministic
-$\beta_{n,0}\to\beta^0$ on the original scale. Set
+$S_n = \diag(S_{C,n},s_{R,n})$, where $S_{C,n} \to D$ is positive diagonal, and
+suppose $b_n/s_{R,n}^2 \to \rho \in [0,\infty)$. Hold $\eta > 0$ and $\beta^*$
+fixed and take deterministic $\beta_{n,0} \to \beta^0$ on the original scale.
+Set
 \[
- G=D^{-2}A,\qquad F=I-\eta G,\qquad r_\eta=1-\eta\rho,
- \qquad d=\beta^*-\beta^0.
+ G = D^{-2}A,\qquad F
+   = I - \eta G,\qquad r_\eta
+   = 1 - \eta\rho, \qquad d
+   = \beta^* - \beta^0.
 \]
-\begin{proposition}[Rare-feature mean at fixed $k$]\label{prop:discrete-rare}
-For each fixed integer $k\ge0$, the original-scale mean coefficients obey
-\begin{align}
- \E\beta_{n,C,k}&\longrightarrow\beta_C^*-F^kd_C,\label{eq:discrete-rare-common}\\
- \E\beta_{n,R,k}&\longrightarrow\beta_R^*-r_\eta^kd_R
-  +\eta\rho\sum_{j=0}^{k-1}r_\eta^{k-1-j}\kappa^\top F^jd_C.
-  \label{eq:discrete-rare-coefficient}
-\end{align}
-For GD the expectation can be omitted. For SGD the assumptions of
-Proposition~\ref{prop:discrete-moments} hold separately in each population;
-any finite positive integer batch size $B_n$ gives the same mean.
+\begin{proposition}[Rare-feature mean at fixed $k$]
+ \label{prop:discrete-rare}
+ For each fixed integer $k \ge 0$, the original-scale mean coefficients obey
+ \begin{align}
+  \E\beta_{n,C,k} & \longrightarrow \beta_C^* - F^kd_C,\label{eq:discrete-rare-common}                                                                       \\
+  \E\beta_{n,R,k} & \longrightarrow \beta_R^* - r_\eta^kd_R + \eta\rho\sum_{j=0}^{k-1}r_\eta^{k-1-j}\kappa^\top F^jd_C. \label{eq:discrete-rare-coefficient}
+ \end{align}
+ For GD the expectation can be omitted. For SGD the assumptions of
+ Proposition~\ref{prop:discrete-moments} hold separately in each population; any
+ finite positive integer batch size $B_n$ gives the same mean.
 \end{proposition}
 \begin{proof}
-The original-scale generator converges to a block triangular matrix:
-\[
- P_nC_n\longrightarrow
- L=\begin{pmatrix}G&0\\\rho\kappa^\top&\rho\end{pmatrix}.
-\]
-For fixed $k$, matrix powering is continuous, so the mean error converges
-to $(I-\eta L)^k(\beta^0-\beta^*)$.
-The common block follows $F^k$, while solving the rare-coordinate scalar
-recurrence driven by the common block gives
-\eqref{eq:discrete-rare-coefficient}.
+ The original-scale generator converges to a block triangular matrix:
+ \[
+  P_nC_n \longrightarrow L
+         = \begin{pmatrix}
+            G               & 0    \\
+            \rho\kappa^\top & \rho
+           \end{pmatrix}.
+ \]
+ For fixed $k$, matrix powering is continuous, so the mean error converges to
+ $(I - \eta L)^k(\beta^0 - \beta^*)$. The common block follows $F^k$, while
+ solving the rare-coordinate scalar recurrence driven by the common block gives
+ \eqref{eq:discrete-rare-coefficient}.
 \end{proof}
 
 The term $F^jd_C$ is the remaining common-coefficient error with its sign
 reversed. Its convolution with $r_\eta^{k-1-j}$ transfers dependence through
 $\kappa$ into the rare mean. For one common feature and standard-deviation
-scaling, $G=1$ and $\rho=1$. From zero initialization, for $k\ge1$,
+scaling, $G = 1$ and $\rho = 1$. From zero initialization, for $k \ge 1$,
 \[
- \E\beta_{n,R,k}\longrightarrow
-   \{1-(1-\eta)^k\}\beta_R^*
-   +\eta\kappa k(1-\eta)^{k-1}\beta_C^*.
+ \E\beta_{n,R,k} \longrightarrow \{1 - (1 - \eta)^k\}\beta_R^*
+                                 + \eta\kappa k(1 - \eta)^{k-1}\beta_C^*.
 \]
-At $\eta=1,k=1$, the zeroth power is one; at $k=0$, the convolution is
-zero. For fixed $k$, the general formula also covers $\rho=0$ (including
-no rare-feature scaling), when the limiting rare coefficient stays at its
-initial value. Variance scaling of the rare coordinate has
-$b_n/s_{R,n}^2=1/b_n\to\infty$ and is outside this limit.
+At $\eta = 1,k = 1$, the zeroth power is one; at $k = 0$, the convolution is
+zero. For fixed $k$, the general formula also covers $\rho = 0$ (including no
+rare-feature scaling), when the limiting rare coefficient stays at its initial
+value. Variance scaling of the rare coordinate has
+$b_n/s_{R,n}^2 = 1/b_n \to \infty$ and is outside this limit.
 
-Binary feasibility is a distributional requirement, beyond specifying a
-positive definite covariance. For common binary vector $W$ and rare
-indicator $J$, one can choose distributions of $W\mid J=0$ and $W\mid J=1$
-on $\{0,1\}^{p-1}$ and mix them with probabilities $1-q_n$ and $q_n$.
-Then $c_n/b_n=\E(W\mid J=1)-\E(W\mid J=0)$ exactly, and nonnegative
-conditional cell probabilities ensure feasibility. The numerical checks use
-such supports, enumerate independent batches and short update trajectories,
-and compare original- and scaled-coordinate moments with the formulas above.
+Binary feasibility is a distributional requirement, beyond specifying a positive
+definite covariance. For common binary vector $W$ and rare indicator $J$, one
+can choose distributions of $W \mid J = 0$ and $W \mid J = 1$ on $\{0,1\}^{p-1}$
+and mix them with probabilities $1 - q_n$ and $q_n$. Then
+$c_n/b_n = \E(W \mid J = 1) - \E(W \mid J = 0)$ exactly, and nonnegative
+conditional cell probabilities ensure feasibility. The numerical checks use such
+supports, enumerate independent batches and short update trajectories, and
+compare original- and scaled-coordinate moments with the formulas above.
 
-The limit is only for each fixed update count (and hence any fixed finite
-set of update counts). It is not uniform over unbounded $k$, does not pass
-to an increasing stopping time or a fixed-data sampling theorem, and does
-not assert convergence of second moments as $q_n\to0$. In particular,
-fourth update moments and noise moments may grow with rarity despite a
-finite limiting mean. Taking $\eta\to0$ with $k\eta\to T$ in the limiting
-matrix power recovers the block population flow, a separate time-discretization
-limit that supplies no joint guarantee for changing $n$, $k$, and $B_n$.
+The limit is only for each fixed update count (and hence any fixed finite set of
+update counts). It is not uniform over unbounded $k$, does not pass to an
+increasing stopping time or a fixed-data sampling theorem, and does not assert
+convergence of second moments as $q_n \to 0$. In particular, fourth update
+moments and noise moments may grow with rarity despite a finite limiting mean.
+Taking $\eta \to 0$ with $k\eta \to T$ in the limiting matrix power recovers the
+block population flow, a separate time-discretization limit that supplies no
+joint guarantee for changing $n$, $k$, and $B_n$.

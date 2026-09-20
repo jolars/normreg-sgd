@@ -22,7 +22,10 @@
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\soft}{S}
 
-\title{Learning Rare Features: Normalization, Stochastic Optimization, and Early Stopping}
+\title{
+  Learning Rare Features: Normalization, Stochastic Optimization, and Early
+  Stopping
+}
 \author{Johan Larsson}
 \date{Working manuscript --- September 16, 2026}
 
@@ -30,29 +33,30 @@
 \maketitle
 
 \begin{abstract}
-This working investigation asks how normalization changes the learning of rare
-binary features under a finite training budget. For a fixed block of common
-predictors and one rare binary feature, we derive a population gradient-flow
-limit in which incomplete common-feature learning contributes to the rare
-coefficient even as common--rare Pearson correlations vanish. Exact finite-update
-formulas for gradient descent and fresh-sample stochastic gradient descent
-separate initial uncertainty, multiplicative update variance, and observation
-noise. Under a bounded common-block assumption, an exact second-moment operator
-criterion yields stability thresholds across small, intermediate, and large
-products of batch size and rare prevalence. The results use known population
-centering and fixed scales. For two binary features and prevalence
-$q_n=n^{-1/2}$, a specified decreasing-step schedule using $n$ fresh
-observations attains rare-coefficient mean squared error asymptotic to
-$4\sigma^2/(3nq_n)$. A controlled fixed-data pilot finds substantial
-rare-subgroup prediction differences whose direction changes with signal,
-dependence, batch size, and budget under separate oracle step-size tuning.
-A separate sampled-data and sparse categorical study finds that scaling effects
-remain under estimated preprocessing and validation selection, while missing
-rare validation observations can conceal explosive subgroup error. Broader
-finite-sample guarantees, adaptive-optimizer comparisons, and generalization
-beyond the categorical benchmark remain research objectives. Earlier weighted-lasso and
-ridge results are retained as explicit-regularization baselines; no standalone
-novelty claim is made for these calculations.
+  This working investigation asks how normalization changes the learning of rare
+  binary features under a finite training budget. For a fixed block of common
+  predictors and one rare binary feature, we derive a population gradient-flow
+  limit in which incomplete common-feature learning contributes to the rare
+  coefficient even as common--rare Pearson correlations vanish. Exact
+  finite-update formulas for gradient descent and fresh-sample stochastic
+  gradient descent separate initial uncertainty, multiplicative update variance,
+  and observation noise. Under a bounded common-block assumption, an exact
+  second-moment operator criterion yields stability thresholds across small,
+  intermediate, and large products of batch size and rare prevalence. The
+  results use known population centering and fixed scales. For two binary
+  features and prevalence $q_n = n^{-1/2}$, a specified decreasing-step schedule
+  using $n$ fresh observations attains rare-coefficient mean squared error
+  asymptotic to $4\sigma^2/(3nq_n)$. A controlled fixed-data pilot finds
+  substantial rare-subgroup prediction differences whose direction changes with
+  signal, dependence, batch size, and budget under separate oracle step-size
+  tuning. A separate sampled-data and sparse categorical study finds that
+  scaling effects remain under estimated preprocessing and validation selection,
+  while missing rare validation observations can conceal explosive subgroup
+  error. Broader finite-sample guarantees, adaptive-optimizer comparisons, and
+  generalization beyond the categorical benchmark remain research objectives.
+  Earlier weighted-lasso and ridge results are retained as
+  explicit-regularization baselines; no standalone novelty claim is made for
+  these calculations.
 \end{abstract}
 
 \input{sections/introduction}

@@ -1,89 +1,91 @@
 \section{Controlled rare-subgroup prediction pilot}
 \label{sec:pilot}
 
-We compare four fixed scalings on six feasible two-binary-feature designs.
-Each design has $n=400$ observations, common prevalence $p=1/2$, and rare
-prevalence $q\in\{0.05,0.01\}$. The joint law is independent, nested
-($J=1$ implies $W=1$), or negatively associated at the disjoint boundary
-$\Prob(W=1,J=1)=0$. Training cell counts equal their population expectations,
-giving 20 or 4 rare observations. The signals are $(1,0)$, $(0,1)$, $(1,1)$,
-and $(1,-1)$, with iid Gaussian observation noise of variance one. Population
-centering and scales are known, the centered-model intercept is fixed at zero,
-and coefficients start at zero. Repeated visits to a training observation reuse
-its noise. This experiment concerns fixed-data sampling, separate from the
-fresh-sample joint limit in Section~\ref{sec:budget}.
+We compare four fixed scalings on six feasible two-binary-feature designs. Each
+design has $n = 400$ observations, common prevalence $p = 1/2$, and rare
+prevalence $q \in \{0.05,0.01\}$. The joint law is independent, nested ($J = 1$
+implies $W = 1$), or negatively associated at the disjoint boundary
+$\Prob(W = 1,J = 1) = 0$. Training cell counts equal their population
+expectations, giving 20 or 4 rare observations. The signals are $(1,0)$,
+$(0,1)$, $(1,1)$, and $(1,-1)$, with iid Gaussian observation noise of variance
+one. Population centering and scales are known, the centered-model intercept is
+fixed at zero, and coefficients start at zero. Repeated visits to a training
+observation reuse its noise. This experiment concerns fixed-data sampling,
+separate from the fresh-sample joint limit in Section~\ref{sec:budget}.
 
 For coordinate variance $v_j$, the feature divisors are $1$, $\sqrt{v_j}$,
-$v_j$, and $\sqrt{v_j+0.01}$. We use full-batch GD and replacement SGD with
-$B\in\{1,20\}$. Budgets of $M\in\{400,2000,8000\}$ processed observations
+$v_j$, and $\sqrt{v_j + 0.01}$. We use full-batch GD and replacement SGD with
+$B \in \{1,20\}$. Budgets of $M \in \{400,2000,8000\}$ processed observations
 give $M/400$ GD updates and $M/B$ SGD updates. Every design, signal, method,
 scaling, and budget receives separate constant-step tuning over the same nine
-factors $a\in\{0.001,0.003,0.01,0.03,0.1,0.3,0.7,1.5,2.5\}$, with
-$\eta=a/\lambda_{\max}(S^{-1}CS^{-1})$. The objective is mean rare-subgroup
+factors $a \in \{0.001,0.003,0.01,0.03,0.1,0.3,0.7,1.5,2.5\}$, with
+$\eta = a/\lambda_{\max}(S^{-1}CS^{-1})$. The objective is mean rare-subgroup
 risk across 32 tuning noise realizations. Evaluation uses 256 disjoint noise
-realizations, paired across methods and scalings. This is oracle tuning with
-the true signal and test law, rather than validation-based tuning. Nominal
-tuning effort is $9\cdot32\cdot M$ processed observations per comparison.
+realizations, paired across methods and scalings. This is oracle tuning with the
+true signal and test law, rather than validation-based tuning. Nominal tuning
+effort is $9 \cdot 32 \cdot M$ processed observations per comparison.
 
-For original-scale error $e=\beta-\beta^*$, let $V_D=\E[ee^\top\mid D]$,
+For original-scale error $e = \beta - \beta^*$, let $V_D = \E[ee^\top\mid D]$,
 where $D$ is the fixed noisy training dataset and the expectation integrates
 replacement-index sampling. We report excess squared prediction errors
 \[
- R_D=\operatorname{tr}(CV_D),\qquad
- R_{D,R}=\operatorname{tr}(C_RV_D),\qquad
- C_R=\E[xx^\top\mid J=1].
+ R_D = \operatorname{tr}(CV_D),\qquad R_{D,R}
+     = \operatorname{tr}(C_RV_D),\qquad C_R
+     = \E[xx^\top\mid J=1].
 \]
 These reported risks omit the factor $1/2$ in the training loss and exclude
-irreducible test noise. The conditional second moment $C_R$ includes the
-nonzero conditional feature mean. An isolated rare-coefficient error of one
-therefore contributes $q(1-q)$ to aggregate risk and $(1-q)^2$ to rare risk,
-a ratio of 99 at $q=0.01$.
+irreducible test noise. The conditional second moment $C_R$ includes the nonzero
+conditional feature mean. An isolated rare-coefficient error of one therefore
+contributes $q(1 - q)$ to aggregate risk and $(1 - q)^2$ to rare risk, a ratio
+of 99 at $q = 0.01$.
 
-Conditional means and second moments are computed exactly by powering the
-affine replacement operator of Section~\ref{sec:sampling}, augmented by a
-constant coordinate. This retains the empirical score and curvature--noise
-cross terms. Independent enumeration of ordered batches and two-update paths,
-direct prediction-risk calculations, and a separate moment recurrence check
-agree to numerical precision. Monte Carlo standard errors (MCSEs) below concern
-training noise only, conditional on the fixed designs and selected steps. They
-exclude variation in tuning, random designs, and estimated preprocessing.
+Conditional means and second moments are computed exactly by powering the affine
+replacement operator of Section~\ref{sec:sampling}, augmented by a constant
+coordinate. This retains the empirical score and curvature--noise cross terms.
+Independent enumeration of ordered batches and two-update paths, direct
+prediction-risk calculations, and a separate moment recurrence check agree to
+numerical precision. Monte Carlo standard errors (MCSEs) below concern training
+noise only, conditional on the fixed designs and selected steps. They exclude
+variation in tuning, random designs, and estimated preprocessing.
 
 \begin{table}[t]
-\centering
-\small
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{lrllll}
-\toprule
-Method & $M$ & None & Std. dev. & Variance & Damped \\
-\midrule
-GD & 400 & .2954 (.0013) & .1565 (.0026) & .1948 (.0024) & .1704 (.0026) \\
-GD & 2000 & .2028 (.0023) & .1140 (.0031) & .1415 (.0037) & .1161 (.0035) \\
-GD & 8000 & .1022 (.0022) & .1152 (.0034) & .1308 (.0046) & .1190 (.0033) \\
-SGD, $B=1$ & 400 & .2275 (.0024) & .2119 (.0027) & .2554 (.0028) & .2228 (.0018) \\
-SGD, $B=1$ & 2000 & .1384 (.0035) & .1565 (.0045) & .1914 (.0045) & .1506 (.0033) \\
-SGD, $B=1$ & 8000 & .1257 (.0036) & .1795 (.0060) & .1995 (.0059) & .1662 (.0058) \\
-SGD, $B=20$ & 400 & .2145 (.0017) & .2213 (.0023) & .2594 (.0022) & .1916 (.0024) \\
-SGD, $B=20$ & 2000 & .1265 (.0022) & .1513 (.0035) & .1798 (.0030) & .1282 (.0029) \\
-SGD, $B=20$ & 8000 & .1058 (.0030) & .1290 (.0029) & .1522 (.0033) & .1180 (.0037) \\
-\bottomrule
-\end{tabular}
-\caption{Rare-presence excess squared prediction error, with MCSE in
-parentheses. Each entry averages equally over all six designs and four
-signals. MCSEs preserve the pairing across signals within a design. Equal
-weighting is a descriptive choice for this finite grid.}
-\label{tab:pilot}
+ \centering
+ \small
+ \setlength{\tabcolsep}{4pt}
+ \begin{tabular}{lrllll}
+  \toprule
+  Method        &  $M$ & None          & Std. dev.     & Variance      & Damped        \\
+  \midrule
+  GD            &  400 & .2954 (.0013) & .1565 (.0026) & .1948 (.0024) & .1704 (.0026) \\
+  GD            & 2000 & .2028 (.0023) & .1140 (.0031) & .1415 (.0037) & .1161 (.0035) \\
+  GD            & 8000 & .1022 (.0022) & .1152 (.0034) & .1308 (.0046) & .1190 (.0033) \\
+  SGD, $B = 1$  &  400 & .2275 (.0024) & .2119 (.0027) & .2554 (.0028) & .2228 (.0018) \\
+  SGD, $B = 1$  & 2000 & .1384 (.0035) & .1565 (.0045) & .1914 (.0045) & .1506 (.0033) \\
+  SGD, $B = 1$  & 8000 & .1257 (.0036) & .1795 (.0060) & .1995 (.0059) & .1662 (.0058) \\
+  SGD, $B = 20$ &  400 & .2145 (.0017) & .2213 (.0023) & .2594 (.0022) & .1916 (.0024) \\
+  SGD, $B = 20$ & 2000 & .1265 (.0022) & .1513 (.0035) & .1798 (.0030) & .1282 (.0029) \\
+  SGD, $B = 20$ & 8000 & .1058 (.0030) & .1290 (.0029) & .1522 (.0033) & .1180 (.0037) \\
+  \bottomrule
+ \end{tabular}
+ \caption{
+  Rare-presence excess squared prediction error, with MCSE in parentheses. Each
+  entry averages equally over all six designs and four signals. MCSEs preserve
+  the pairing across signals within a design. Equal weighting is a descriptive
+  choice for this finite grid.
+ }
+ \label{tab:pilot}
 \end{table}
 
 Table~\ref{tab:pilot} shows substantial differences and changes in their
-direction. At $q=0.01$ with independent features and $M=400$, standard-deviation
-scaling changes rare risk relative to no scaling by $-0.58017$ (paired MCSE
-$0.01517$) for the rare-only signal and $+0.14895$ ($0.01301$) for the
-common-only signal. This budget permits only one GD update. Dependence also
-reverses equal-sign and opposite-sign comparisons. Across all 24 cases, the
-average GD advantage of standard-deviation scaling at $M=400$ reverses by
-$M=8000$. The corresponding reversal for $B=1$ SGD occurs by $M=2000$.
-These are examples of finite-budget preconditioning and noise-fitting
-tradeoffs, without a general ordering of the scaling rules.
+direction. At $q = 0.01$ with independent features and $M = 400$,
+standard-deviation scaling changes rare risk relative to no scaling by
+$-0.58017$ (paired MCSE $0.01517$) for the rare-only signal and $+0.14895$
+($0.01301$) for the common-only signal. This budget permits only one GD update.
+Dependence also reverses equal-sign and opposite-sign comparisons. Across all 24
+cases, the average GD advantage of standard-deviation scaling at $M = 400$
+reverses by $M = 8000$. The corresponding reversal for $B = 1$ SGD occurs by
+$M = 2000$. These are examples of finite-budget preconditioning and
+noise-fitting tradeoffs, without a general ordering of the scaling rules.
 
 The finite tuning grid is a material limitation. Its smallest factor is selected
 in 195 of 864 evaluated settings and its largest in nine. All selected endpoints
@@ -93,8 +95,8 @@ homogeneous second-moment spectral radius at least one and 1028 have nonfinite
 or invalid moments; these categories overlap. All outcomes are retained. The
 grid was fixed before evaluation and was not expanded after observing these
 boundary selections. The repository's \texttt{notes/rare-subgroup-pilot.md}
-records the full protocol, aggregate risks, casewise contrasts, limitations,
-and reproduction commands. The generated JSON retains coefficients, covariance,
+records the full protocol, aggregate risks, casewise contrasts, limitations, and
+reproduction commands. The generated JSON retains coefficients, covariance,
 risks, counts, scales, selected rates, seeds, and software provenance. The
 experiment supplies a controlled illustration, without establishing robustness
 to a wider tuning search, estimated preprocessing, or real-data applications.
