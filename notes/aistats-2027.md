@@ -16,6 +16,16 @@ predictor. The main paper should support one quantitative conclusion about that
 interaction, with assumptions and resource accounting that make the comparison
 useful.
 
+The [September 20 contribution decision](predictive-contribution.md) adopts the
+opposite rare-risk orderings after oracle tuning as the main theoretical
+comparison. Each rule may choose every nonnegative constant rate and every
+deterministic stop within a common observation cap. The result is restricted to
+the stated two-feature independent model, signal families, and regime with
+roughly one to four expected rare observations. The unrestricted-rate extension
+still needs independent review, and human and source-comparison reviews remain
+open. The next scientific milestone is a [prospective
+evaluation](predictive-holdout.md).
+
 The existing C1 and C2 comparisons establish bounded statements about specified
 training procedures. Both original anchor comparisons disappear after the
 declared oracle adjustments. Estimated preprocessing and validation selection
@@ -28,9 +38,9 @@ across all practical arms and resolves the remaining Mushroom rate edges. Its
 primary rare disadvantage persists, with an unresolved aggregate contrast.
 Synthetic rate boundaries and numerical discrepancies, a single categorical
 dataset, and validation coverage still limit the conclusions. These findings
-belong in the paper. They do not yet establish a contribution beyond the closest
-preconditioning and target-risk results. The template conversion is a concrete
-draft, not a decision that the present contribution is ready for submission.
+belong in the paper as development evidence and limitations. They do not provide
+a prospective test of the oracle prediction. The contribution decision does not
+establish that the draft is ready for submission.
 
 ## Draft organization
 
@@ -41,14 +51,16 @@ style. Its main text contains:
    closest preconditioning and target-risk literature.
 2. Original-scale updates, resource accounting, and aggregate versus
    rare-presence prediction.
-3. C1's stopping reversal and C2's objective disagreement, with their exact
-   scope.
-4. What rate/stopping adjustment removes, followed by estimated preprocessing,
-   validation selection, and the sparse categorical study.
+3. Opposite oracle rare-risk orderings over all nonnegative constant rates and
+   deterministic stops, followed by C1's and C2's calibrated comparisons.
+4. What rate/stopping adjustment removes from the original anchors, followed by
+   estimated preprocessing, validation selection, and the sparse categorical
+   study.
 5. The conclusions these comparisons support and their limits.
 
-The single-column supplement contains the comparison proofs and additional
-practical-study details. The earlier full manuscript is preserved in
+The single-column supplement contains the oracle proof, including the rate-cap
+removal, the calibrated comparison proofs, and additional practical-study
+details. The earlier full manuscript is preserved in
 [research-notes.tex](../paper/research-notes.tex), including common-block
 theory, sampling distinctions, joint-budget limits, the controlled pilot, and
 shrinkage baselines. Its existing section files remain available for reuse.
@@ -65,10 +77,10 @@ Preserve the frozen experiment protocols, results, and diagnostic failures.
   and shorter-budget effects. It matches tuning effort across scalings, retains
   failures and original-scale paths, and preserves the frozen study. Keep the
   unresolved secondary uncentered boundaries explicit.
-- Decide whether the main contribution is a quantitative comparison that remains
-  informative after calibration, or a characterization of the limits of
-  normalization selection under rare-group coverage. Neither is established by
-  choosing the framing alone. Avoid treating unfilled scope as a theorem.
+- Execute the separately declared evaluation of the oracle prediction on new
+  synthetic configurations and an additional categorical task. Distinguish
+  checks inside the theorem's assumptions from directional extrapolations and
+  validation-selection outcomes. Keep empty-group failures visible.
 - Obtain human mathematical review of the final claims, interval certificates,
   literature comparisons, and interpretation. Existing agent reviews and
   independent numerical checks provide evidence, not human sign-off.

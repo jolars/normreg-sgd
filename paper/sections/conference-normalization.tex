@@ -70,16 +70,11 @@ and $c = q\ell/2$. Then
 where $R$ denotes the subgroup $J = 1$. A rare-coordinate error of one
 contributes $(1 - q)^2/2$ to rare risk and $q(1 - q)/2$ to aggregate risk.
 
-We compare unscaled features (U) with standard-deviation scaling (S):
-\begin{align*}
- P_U & = I_2,                  & \eta_U & = 4h, \\
- P_S & = \diag(a^{-1},b^{-1}), & \eta_S & = h,
-\end{align*}
-where $P = S^{-2}$. Both choices match the common-coordinate diagonal drift at
-$h$. Under independence, they match its entire mean trajectory. Under
-dependence, cross-coordinate drift generally prevents that match. This declared
-calibration is a controlled comparison, without rate selection or iterate
-averaging.
+We compare unscaled features (U), with $P_U = I_2$, and standard-deviation
+scaling (S), with $P_S = \diag(a^{-1},b^{-1})$, where $P = S^{-2}$. The main
+theorem allows each rule to choose its own constant learning rate and stopping
+count. The supporting comparisons specify a common-coordinate calibration.
+Neither setting averages iterates.
 
 \paragraph{Damped scaling.}
 

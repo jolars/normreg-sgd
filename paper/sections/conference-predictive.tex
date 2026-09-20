@@ -1,0 +1,63 @@
+\section{Opposite risk orderings after oracle tuning}
+\label{sec:conference-predictive}
+
+We compare attainable rare-presence risk after separate scalar retuning for
+independent features ($\ell = 0$), $B = 1$, and the population preprocessing,
+zero initialization, and fixed intercept of
+Section~\ref{sec:conference-setting}. Put $b = q(1-q)$. Parameterize the
+original-coordinate update matrices by
+\begin{equation}
+ D_U(\alpha) = \alpha I_2,\qquad
+ D_S(\alpha) = \diag(4b\alpha,\alpha),\quad \alpha\geq0.
+ \label{eq:conference-oracle-rates}
+\end{equation}
+Here $D=\eta P$, so $\eta_U=\alpha$ and $\eta_S=b\alpha$. Each
+parameterization covers every nonnegative constant learning rate for its rule.
+The shared parameter is a coordinate for the search, not a constraint that the
+selected rates match.
+
+For an observation cap $M\in\mathbb N$, define
+\begin{equation}
+ R_A^*(M)=\inf_{\substack{\alpha\geq0\\ k\in\{0,\ldots,M\}}}
+             R_{R,k}^{A}(\alpha),\qquad A\in\{U,S\}.
+ \label{eq:conference-oracle-risk}
+\end{equation}
+Rates and stops are deterministic oracle choices, based on the population risk
+averaged over training randomness. Initialization is eligible. The search
+includes finite stops at rates that need not be mean-square stable.
+
+\begin{theorem}[Opposite oracle rare-risk orderings]
+ \label{thm:conference-predictive}
+ Suppose $\sigma^2>0$, $0<q\leq10^{-4}$, and
+ $1\leq Mq(1-q)\leq4$ in the independent binary model above.
+ \begin{enumerate}
+  \item If $(\beta_R^*)^2=\sigma^2$ and
+        $(\beta_C^*)^2\leq\sigma^2/100$, then
+        $R_U^*(M)-R_S^*(M)\geq7\sigma^2/1000$.
+  \item If $(\beta_C^*)^2=\sigma^2$ and
+        $(\beta_R^*)^2\leq\sigma^2/100$, then
+        $R_S^*(M)-R_U^*(M)\geq\sigma^2/200$.
+ \end{enumerate}
+ Either sign is allowed for each coefficient. Both inequalities also hold if
+ each rule searches only its mean-square-stable nonnegative constant rates,
+ together with initialization.
+\end{theorem}
+
+The proof in Appendix~\ref{sec:predictive-proofs} bounds every rate and stop of
+the losing rule and supplies one stable candidate for the winning rule. The
+diagonal error moments obey an exact positive recurrence, even though stochastic
+updates couple the independent features. For a dominant rare signal, learning
+it with U also incurs common-coordinate noise; S can reduce that cost. For a
+dominant common signal, S must balance incomplete common learning against rare
+noise. U can learn the common coordinate while leaving the small rare signal
+largely unchanged. The bounds establish strict orderings over whole families of
+procedures without identifying their optimizers.
+
+The expected rare training count at the cap is $Mq=\tau/(1-q)$, where
+$\tau=Mq(1-q)\in[1,4]$. Thus the positive gaps concern a regime with roughly
+one to four rare observations, even as $M$ grows and $q$ decreases. Prevalence
+alone does not determine the preferred normalization. The two signal families
+give sufficient conditions, without locating a general transition between them.
+The theorem does not optimize batches, learning-rate schedules, or
+data-dependent stopping, and supplies no guarantee for estimated preprocessing
+or validation selection.

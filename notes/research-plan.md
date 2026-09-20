@@ -1,7 +1,7 @@
 # Research plan
 
 Target: **AISTATS 2027**. Working title: **Feature Normalization under Finite
-Training Budgets**. Revised September 16, 2026. The task checklist is in
+Training Budgets**. Revised September 20, 2026. The task checklist is in
 [TODO.md](../TODO.md), and the [conference plan](aistats-2027.md) records the
 paper structure and submission requirements. Normalization is the central
 subject; finite-time SGD and rare-subgroup prediction provide the analytical and
@@ -16,8 +16,10 @@ calibration?**
 The broader program studies how these choices jointly determine the fitted model
 and its statistical properties. The AISTATS paper needs a quantitative
 conclusion about normalization that is distinct from the closest preconditioning
-results. The current comparisons and their limits supply the draft's evidence; a
-defensible central novelty claim remains necessary before submission. The
+results. The [contribution decision](predictive-contribution.md) adopts the
+opposite rare-risk orderings after oracle tuning as the main theoretical
+comparison. Its contribution assessment, restrictions, and review status must
+remain explicit; priority and publication significance are not settled. The
 [rate-boundary follow-up](mushroom-rate-search-results.md) now resolves the
 primary Mushroom edge within a broader finite grid, while retaining secondary
 boundaries and missing-group limits.
@@ -74,12 +76,18 @@ $0<q\leq10^{-4}$, and $1\leq Mq(1-q)\leq4$, with opposite oracle rare-risk
 orderings for explicit rare- and common-signal families over continuous
 rate/stopping sets. The [self-contained theorem](predictive-theorem.md) supplies
 a shorter direct proof and a separately implemented rational certificate. Its
-five-source comparison identifies the precise added conclusion while retaining
-the result as supporting theory. Independent proof review, human review, and a
-decision about its role in the paper remain pending. Familiar proof tools alone
-do not settle the contribution assessment. The separate practical rate expansion
-changes which empirical normalization advantages remain resolved; it does not
-prove the population claim.
+five-source comparison identifies the precise added conclusion. The subsequent
+[Codex review](predictive-proof-review.md) passes the bounded-rate proof and
+adds a locally checked argument removing the rate cap. The September 20
+[decision](predictive-contribution.md) promotes that oracle comparison to the
+main theory and adds Amari et al.'s optimally stopped bias result to the focused
+source comparison. Independent review of the rate extension, human review, and
+review of the source comparison remain open. Familiar proof tools alone do not
+settle the contribution assessment. The next scientific milestone is the
+[prospective evaluation](predictive-holdout.md) on new configurations and an
+additional categorical task. The separate practical rate expansion changes which
+empirical normalization advantages remain resolved; it does not prove or
+prospectively validate the population claim.
 
 ## Implications of the literature report
 
@@ -509,12 +517,13 @@ recommendation by the task, objective, data, and budget.
 
 ### 5. Decide the manuscript's contribution and scope
 
-Use the theorem-level comparison and robustness results to choose the main
-claim. A promising account is how prevalence-based feature scaling allocates
-finite-time bias and stochastic variance, with consequences for rare-subgroup
-prediction. Use the controls and existing moment machinery to explain that
-result. The single-regime $4\sigma^2/(3nq_n)$ limit remains a foundation unless
-a new comparison gives it a distinct role.
+The September 20 [decision](predictive-contribution.md) completes the framing
+choice: lead with the opposite rare-risk orderings after oracle tuning, and use
+the calibrated comparisons and existing moment machinery to explain particular
+paths. The main text and proof appendix now state the unrestricted constant-rate
+comparison and its assumptions. The next evidence should test the prediction's
+reach beyond development configurations. The single-regime $4\sigma^2/(3nq_n)$
+limit remains a foundation unless a new comparison gives it a distinct role.
 
 **Completion criterion:** align the title, abstract, contribution statements,
 and literature discussion with the accepted result and its limits. If no

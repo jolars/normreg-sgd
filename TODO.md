@@ -27,14 +27,16 @@ rare- and common-signal families over continuous rate/stopping sets. A
 proof and a separate rational certificate. A separate [Codex proof
 review](notes/predictive-proof-review.md) passes the stability/remainder and
 predictive proofs and supplies an addendum removing the predictive rate cap. The
-addendum has local checks and still needs independent review. Human review, the
-central contribution, and the report's positive novelty assessment remain
-unresolved.
+addendum has local checks and still needs independent review. The September 20
+[contribution decision](notes/predictive-contribution.md) adopts the comparison
+after oracle tuning as a main theoretical contribution. Human review, priority,
+and publication significance remain unresolved; the next scientific milestone is
+prospective evaluation of the prediction.
 
 ## Next milestone: predictive theory and a resolved rate comparison
 
-The first two deliverables are complete. Use their claims and limits to decide
-the central contribution and the remaining work for AISTATS.
+The contribution decision is recorded, and the main theorem is in the conference
+draft. Complete the separate reviews and the held-out evaluation below.
 
 - [x] Write a one-page proposed claim with explicit assumptions, intended
   conclusion, and closest antecedents. Starting from the two-feature model
@@ -143,16 +145,24 @@ the central contribution and the remaining work for AISTATS.
 - [ ] Obtain human mathematical review of the reviewed proofs and certificates,
   independent review of the new unrestricted-rate addendum, and review of
   the source comparison. The Codex review does not complete these tasks.
-- [ ] Decide whether the quantitative prediction warrants a main contribution or
-  should remain supporting theory. Assess the useful conclusion beyond prior
-  work and its restrictions before expanding the theorem program. Familiar
-  proof tools alone do not settle this decision.
+- [x] Decide whether the quantitative prediction warrants a main contribution or
+  should remain supporting theory. The September 20
+  [decision](notes/predictive-contribution.md) promotes the opposite
+  oracle-risk orderings, including the unrestricted-rate argument, to the
+  main theory. The manuscript states the restrictions and compares the
+  conclusion with Amari et al.'s optimally stopped bias result. Review and
+  publication significance remain separate questions. Familiar proof tools
+  alone do not settle them.
 - [ ] Once the theory predicts a concrete regime where scaling should help or
   hurt, test that prediction on synthetic configurations held out from claim
   development and an additional sparse categorical task. Declare the
   prediction and evaluation protocol before running the tests. Retain the
   failure caused by missing rare validation observations as a limitation of
-  normalization selection.
+  normalization selection. The [protocol draft](notes/predictive-holdout.md)
+  separates theorem checks, extrapolation to new laws and preprocessing, and
+  an additional categorical task. Freezing the implementation and running
+  the evaluation remain open; earlier development experiments do not
+  complete this item.
 
 ## AISTATS 2027 preparation
 

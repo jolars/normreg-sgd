@@ -1,0 +1,260 @@
+\section{Proof of the comparison after oracle tuning}
+\label{sec:predictive-proofs}
+
+We prove Theorem~\ref{thm:conference-predictive} directly from exact moments.
+First restrict the rate coordinate in
+\eqref{eq:conference-oracle-rates} to $\alpha\in[0,1]$, then exclude every
+larger rate for the losing method in each signal family. The independent
+implementations \texttt{experiments/check\_predictive\_theorem.py} and
+\texttt{experiments/check\_predictive\_review.py} check the rational
+certificates and moment reductions. Run \texttt{make check-predictive-theorem}
+and \texttt{make check-predictive-review} in the locked environment.
+
+The bounded-rate proof has undergone a separate AI-assisted mathematical
+review. The unrestricted-rate extension has local algebraic checks and a Lean
+formalization of its lower bounds conditional on the moment recurrence;
+independent review of that extension and human verification of the complete
+theorem remain open in this working draft. These review limits are separate
+from the statement proved below.
+
+\subsection{Exact moments}
+
+By homogeneity, take $\sigma^2=1$ and put
+$s=(\beta_C^*)^2$, $r=(\beta_R^*)^2$, $Q=10^{-4}$, and $\tau=Mb$.
+Write $C_k=\E[(\beta_{C,k}-\beta_C^*)^2]$ and
+$H_k=\E[(\beta_{R,k}-\beta_R^*)^2]$. Independence gives
+\begin{equation}
+ R_{R,k}=C_k/8+(1-q)^2H_k/2.
+ \label{eq:predictive-risk}
+\end{equation}
+The required feature moments are $x_C^2=1/4$, $\E x_R^2=b$,
+$\E x_R^4=b(1-3b)$, and $\E x_C^2x_R^2=b/4$. Mixed moments with an odd
+power of $x_C$ vanish. Expanding the squared update and using the conditional
+noise assumptions therefore gives
+\begin{equation}
+ \binom{C_{k+1}}{H_{k+1}}
+ =\begin{pmatrix}
+    A&4u^2b\\ b\alpha^2/4&D_b
+   \end{pmatrix}\binom{C_k}{H_k}
+   +\binom{4u^2}{b\alpha^2},\qquad
+ \binom{C_0}{H_0}=\binom{s}{r},
+ \label{eq:predictive-moments}
+\end{equation}
+where $A=(1-u)^2$, $D_b=1-b\alpha(2-\alpha+3b\alpha)$, and
+$u=\alpha/4$ for U or $u=b\alpha$ for S. Cross error moments enter neither
+diagonal equation nor the risk, which proves invariance to the coefficient
+signs. Every matrix entry is nonnegative for every $\alpha\geq0$: the diagonal
+entries are expectations of squared update coefficients.
+
+For $0<\alpha\leq1$, the row sums are
+\[
+ 1-u\{2-u(1+4b)\}<1,\qquad
+ 1-b\alpha\{2-5\alpha/4+3b\alpha\}<1.
+\]
+Thus homogeneous moments contract, and the noise-driven moments stay bounded.
+The cross moment is bounded by $\sqrt{C_kH_k}$. All positive rates used as
+winning candidates below are consequently mean-square stable. At $\alpha=0$,
+the predictor stays at initialization.
+
+\subsection{Dominant rare signal on the bounded rate interval}
+
+Suppose $r=1$ and $s\leq1/100$. For U, $A\leq D_b$: the common deficit is
+at least $7\alpha/16$, whereas the rare deficit is at most $2b\alpha$.
+Dropping nonnegative terms in \eqref{eq:predictive-moments} and summing the
+noise terms gives, with $z=D_b^k$,
+\begin{equation}
+ R_{R,k}^U\geq\frac12\left[(1-q)^2z+
+   \left\{\frac{(1-q)^2\alpha}{2-\alpha+3b\alpha}
+                +\frac{\alpha}{8-\alpha}\right\}(1-z)\right].
+ \label{eq:predictive-u-lower}
+\end{equation}
+The common-noise bound uses $1-A^k\geq1-D_b^k$; the zero-rate case holds
+directly. The right side is affine in $z$, so its minimum over $k\leq M$ is
+bounded by the endpoint values at $z=1$ and $z=D_b^M$.
+
+Set $d(\alpha)=\alpha(2-\alpha)$, $Z=e^{-\tau d(\alpha)}$, and
+\[
+ N(\alpha)=\frac{\alpha}{2-\alpha}+\frac{\alpha}{8-\alpha},\qquad
+ F_U^-(\alpha,\tau)=\tfrac12[Z+N(\alpha)(1-Z)].
+\]
+Writing $d_b=d(\alpha)+3b\alpha^2$, the logarithm series yields
+\[
+ 0\leq-\frac{\log(1-bd_b)}b-d(\alpha)
+ \leq b\left[3+\frac{(1+3Q)^2}{2\{1-Q(1+3Q)\}}\right]<4b.
+\]
+Hence $|D_b^M-Z|\leq16q$. The initial and noise coefficients in
+\eqref{eq:predictive-u-lower} differ from $1$ and $N(\alpha)$ by at most
+$2q$ and $5q$, respectively, and $|1-N(\alpha)|\leq1$. It follows that
+\begin{equation}
+ R_{R,k}^U\geq\min\{1/2,F_U^-(\alpha,\tau)\}-11q,
+ \qquad 0\leq\alpha\leq1,\quad 0\leq k\leq M.
+ \label{eq:predictive-u-transfer}
+\end{equation}
+
+For S, use $Y_k=C_k/4+H_k$ and
+$\widetilde D=1-bd(\alpha)+b^2\alpha^2$. The exact recurrence gives
+\[
+ Y_{k+1}=\frac{\widetilde D}{4}C_k+
+          (D_b+b^3\alpha^2)H_k+b\alpha^2(1+b)
+ \leq\widetilde D Y_k+b\alpha^2(1+b),
+\]
+since $\widetilde D-(D_b+b^3\alpha^2)=b^2\alpha^2(4-b)\geq0$.
+Using $R_{R,M}^S\leq Y_M/2$ and geometric summation,
+\[
+ R_{R,M}^S\leq\frac12\left[(r+s/4)\widetilde D^M+
+       \frac{\alpha(1+b)}{2-\alpha-b\alpha}(1-\widetilde D^M)\right].
+\]
+Define
+\[
+ F_S(\alpha,\tau;s,r)=\tfrac12\left[(r+s/4)Z+
+                    \frac{\alpha}{2-\alpha}(1-Z)\right].
+\]
+The logarithm remainder and plateau difference satisfy
+\[
+ |\widetilde D^M-Z|\leq4b\left[1+\frac1{2(1-Q)}\right],\qquad
+ 0\leq\frac{\alpha(1+b)}{2-\alpha-b\alpha}
+       -\frac{\alpha}{2-\alpha}\leq\frac{2b}{1-Q}.
+\]
+Consequently, for the rare-signal family,
+\begin{equation}
+ R_{R,M}^S\leq F_S(\alpha,\tau;1/100,1)+5q.
+ \label{eq:predictive-s-transfer}
+\end{equation}
+The unrounded coefficient of $q$ is at most
+$\{(401/400)4[1+1/(2(1-Q))]+2/(1-Q)\}/2<5$.
+
+Choose the stable candidate $\alpha_S=2/(\tau+4)\in[1/4,2/5]$ and $k=M$.
+The following rational certificate establishes
+\begin{equation}
+ \min\{1/2,F_U^-(\alpha,\tau)\}
+ -F_S(2/(\tau+4),\tau;1/100,1)\geq1/100
+ \quad\text{on }[0,1]\times[1,4].
+ \label{eq:predictive-certificate}
+\end{equation}
+Both $d$ and $N$ increase on $[0,1]$. On a rectangle
+$[a_0,a_1]\times[t_0,t_1]$, put $N_0=N(a_0)$ and bound $Z$ between
+$e^{-t_1d(a_1)}$ and $e^{-t_0d(a_0)}$. The expression
+$(N+(1-N)Z)/2$ increases with $N$. Its lower bound uses $N_0$ and the lower
+$Z$ endpoint if $N_0\leq1$, and the upper endpoint otherwise; take the minimum
+with $1/2$. The S candidate has plateau $1/(\tau+3)$ and exponent
+$4\tau(\tau+3)/(\tau+4)^2$. Its risk decreases with $\tau$, so its upper
+bound on the rectangle is its value at $t_0$.
+
+For rational $x\in[0,4]$, put $P_{18}(x)=\sum_{j=0}^{18}x^j/j!$. Positivity
+and the ratio of successive omitted terms give
+\begin{equation}
+ P_{18}(x)\leq e^x\leq P_{18}(x)+\frac{x^{19}/19!}{1-x/20}.
+ \label{eq:predictive-exp-certificate}
+\end{equation}
+Reciprocating gives rational enclosures for $e^{-x}$. Starting from the whole
+rectangle, the theorem checker subdivides each unresolved rectangle into four
+equal rectangles and accepts a leaf only when its lower margin is at least
+$1/100$. The 5,035 accepted leaves have maximum depth nine and total area
+exactly three; the minimum rational margin exceeds $0.01000005$. The separate
+review checker uses a different exponential enclosure and subdivision, with
+3,925 leaves. These are interval certificates for the continuous domain.
+
+Combining \eqref{eq:predictive-u-transfer},
+\eqref{eq:predictive-s-transfer}, and \eqref{eq:predictive-certificate},
+every bounded-rate U competitor exceeds the S candidate by at least
+\[
+ 1/100-16q\geq0.0084>0.007.
+\]
+
+\subsection{Dominant common signal on the bounded rate interval}
+
+Suppose $s=1$ and $r\leq1/100$. For S, the common mean error is
+$-(1-b\alpha)^k\beta_C^*$. If $\alpha\leq1/4$, Jensen's inequality and the
+logarithm bound give
+\[
+ R_{R,k}^S\geq\tfrac18(1-b\alpha)^{2k}
+ \geq\tfrac18\exp\{-2/(1-Q/4)\}>1/60.
+\]
+If $1/4\leq\alpha\leq1$, put $z=(1-b\alpha)^k$. Since
+$D_b\leq1-b\alpha$ and $\alpha/(2-\alpha+3b\alpha)\geq\alpha/2$, common
+squared bias and direct rare observation noise yield
+\[
+ R_{R,k}^S\geq z^2/8+\frac{(1-q)^2\alpha}{4}(1-z)
+ \geq z^2/8+\frac3{50}(1-z)\geq\frac{33}{625}>\frac1{60}.
+\]
+The penultimate inequality follows by minimizing the quadratic over $[0,1]$.
+
+For U, put $h=\sqrt b\leq1/100$, choose $\alpha_U=4h$, and stop at $M$.
+Then $u=h$. Write $H_{\max}=\max_{0\leq j\leq M}H_j$. Geometric summation
+in the common equation of \eqref{eq:predictive-moments} gives
+\[
+ C_j\leq A^j+\frac{4h}{2-h}+\frac{4h^3}{2-h}H_{\max}.
+\]
+Drop rare contraction for an upper bound, sum this inequality, and use
+$M\leq4/h^2$ and $\sum_{j\geq0}A^j=1/\{h(2-h)\}$ to obtain
+\[
+ H_{\max}\leq r+\frac{68h^3}{2-h}+64h^2+
+                       \frac{64h^5}{2-h}H_{\max}.
+\]
+Thus
+\[
+ H_{\max}\leq H_*(h):=
+ \frac{1/100+68h^3/(2-h)+64h^2}{1-64h^5/(2-h)}.
+\]
+Using $M\geq1/h^2$ in the common bound now gives
+\[
+ R_{R,M}^U\leq\frac{e^{-2/h}}8+
+     \frac{h}{2(2-h)}+
+     \left\{\frac12+\frac{h^3}{2(2-h)}\right\}H_*(h)
+ <0.01072966<\frac{11}{1000}.
+\]
+Each term increases with $h$ on this interval. At $h=1/100$, the checker
+verifies the bound rationally using $e^{-200}\leq2^{-200}$. It verifies the
+lower exponential bound above using \eqref{eq:predictive-exp-certificate}.
+Every bounded-rate S competitor therefore exceeds the U candidate by more than
+$1/60-11/1000>1/200$.
+
+\subsection{Removing the rate cap}
+
+For the rare-signal family, $H_0=1$. Put $m_b=1/(1+3b)$. For every
+$\alpha\geq1$,
+\[
+ D_bm_b+b\alpha^2-m_b
+   =\frac{2b\alpha(\alpha-1)}{1+3b}\geq0.
+\]
+Dropping the nonnegative common-to-rare term in
+\eqref{eq:predictive-moments} and using induction gives $H_k\geq m_b$ at
+every finite stop. Hence
+\[
+ R_{R,k}^U(\alpha)\geq\frac{(1-q)^2}{2(1+3b)}
+ \geq\frac{(1-Q)^2}{2(1+3Q)}>\frac{49}{100}.
+\]
+The original S candidate remains below $1/3$, since
+\[
+ R_{R,M}^S(\alpha_S)
+ \leq F_S(2/(\tau+4),\tau;1/100,1)+5q
+ \leq F_S(2/5,1;1/100,1)+5Q<\frac13.
+\]
+The last bound is certified with rational exponential enclosures. All added U
+competitors therefore lose by more than $49/100-1/3>7/1000$.
+
+For the common-signal family, $C_0=1$ and $H_0\geq0$. Under S, let
+$A=(1-b\alpha)^2$. The identity
+$D_b-A=b\alpha^2(1-4b)\geq0$ and positivity imply
+\[
+ C_k\geq A^k,\qquad
+ H_k\geq b\alpha^2\sum_{j=0}^{k-1}D_b^j
+       \geq b\alpha^2\sum_{j=0}^{k-1}A^j.
+\]
+If $A\geq1$, the common error gives $R_{R,k}^S\geq1/8$. Otherwise
+$0<b\alpha<2$, and geometric summation gives
+\[
+ R_{R,k}^S\geq\frac{A^k}{8}
+       +\frac{(1-q)^2\alpha}{2(2-b\alpha)}(1-A^k).
+\]
+For $\alpha\geq1$, the second coefficient is at least $(1-q)^2/4>1/8$.
+Thus $R_{R,k}^S\geq1/8$ for every added rate and stop, including $k=0$.
+The stable U candidate remains below $11/1000$, giving a gap greater than
+$1/8-11/1000>1/200$.
+
+Every competitor in each losing family has now been bounded against one
+admissible stable candidate. Taking the enlarged infima proves both
+inequalities. Restricting each family to its stable rates preserves the same
+bounds and candidates. Multiplication by $\sigma^2$ restores the stated gaps.
+No claim of stability for all added rates, or attainment of an unrestricted
+infimum, is needed.

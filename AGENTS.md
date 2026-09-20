@@ -3,12 +3,14 @@
 This is an AISTATS 2027 research manuscript with supporting Python calculations.
 The conference paper centers feature normalization under finite training
 budgets. It studies rare-feature learning under normalization, early stopping,
-and stochastic optimization, with an emphasis on rare-subgroup prediction.
-Elementary population-flow and scalar SGD results are extended to a fixed common
-block, exact finite-update moments, and batch-rarity stability under explicit
-population assumptions. Joint sampling guarantees, novelty, and empirical
-usefulness remain research objectives. Earlier shrinkage results are supporting
-baselines.
+and stochastic optimization, with an emphasis on rare-subgroup prediction. The
+main theoretical comparison gives opposite rare-risk orderings after oracle
+tuning of all nonnegative constant rates and deterministic stops under a common
+observation cap, in the stated independent two-feature population model. Its
+unrestricted-rate extension still needs independent review. Supporting results
+cover a fixed common block, exact finite-update moments, and batch-rarity
+stability. Broader sampling guarantees, priority, and empirical usefulness
+remain research objectives. Earlier shrinkage results are supporting baselines.
 
 ## Sources and mathematical conventions
 
@@ -47,6 +49,16 @@ baselines.
   predictive rate cap but still needs independent review. Human review,
   source-comparison review, and novelty remain open; do not promote these
   results into a general normalization recommendation.
+- `notes/predictive-contribution.md` records the September 20 decision to make
+  the oracle comparison a main theoretical contribution, with an added
+  comparison to Amari et al.'s optimally stopped bias result. It supersedes the
+  earlier supporting-theory recommendation without changing the reviewed proof
+  notes or their hashes. The main statement and proof are in
+  `paper/sections/conference-predictive.tex` and
+  `paper/sections/predictive-proofs.tex`. `notes/predictive-holdout.md` is the
+  next evaluation's protocol draft; its implementation, frozen declaration, and
+  execution remain open. Existing experiments are development evidence, not a
+  prospective test of that prediction.
 - `notes/joint-interactions.md` specifies the first joint training comparison;
   `notes/joint-interactions-results.md` records its numerical findings and
   pending independent proof review. `experiments/run_joint_interactions.py`

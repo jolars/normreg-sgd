@@ -1,5 +1,10 @@
-\section{Two normalization-risk comparisons}
+\section{Supporting comparisons under a fixed calibration}
 \label{sec:conference-comparisons}
+
+For this section, set $\eta_U = 4h$ and $\eta_S = h$. Both rules have
+common-coordinate diagonal drift $h$; under independence, they have the same
+common mean trajectory. Dependence generally prevents that trajectory match.
+The rate $h$ is specified rather than selected separately for each rule.
 
 \subsection{Learning the rare signal versus fitting noise}
 
@@ -104,9 +109,10 @@ rare predictions. The aggregate risk assigns the cross moment weight $.01$,
 whereas rare risk assigns weight $.49$. This explains why separate coefficient
 error rankings can miss the prediction benefit.
 
-Both theorems use outward-rounded rational interval certificates over continuous
-parameter boxes. Appendix~\ref{sec:comparison-proofs} supplies the recurrences
+Both theorems in this section use outward-rounded rational interval certificates
+over continuous parameter boxes. Appendix~\ref{sec:comparison-proofs} supplies the recurrences
 and enclosure arguments. The results establish finite-budget comparisons for
-stated procedures. They do not compare continuously optimized rates, all
-stopping rules, or optimal normalization, and the target-risk identity itself is
-elementary.
+stated procedures. Unlike Theorem~\ref{thm:conference-predictive}, they do not
+compare continuously optimized constant rates and deterministic stops. None of
+these results orders adaptive stopping rules or optimal normalization, and the
+target-risk identity itself is elementary.

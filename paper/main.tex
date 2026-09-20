@@ -42,24 +42,27 @@
   descent learns different coordinates. We study its consequences for prediction
   under finite training budgets, using common and rare binary features as a
   controlled setting. Exact error moments separate incomplete learning,
-  randomness in feature sampling, and observation noise. With a declared
-  common-coordinate rate calibration, we certify parameter regions where
-  standard-deviation scaling reverses its rare-subgroup risk ordering as
-  training continues, and where aggregate and rare-subgroup risk favor opposite
-  scaling rules. These are comparisons of specified training procedures: both
-  original anchor comparisons disappear under a subsequent learning-rate and
-  stopping search. Experiments with estimated preprocessing and validation
-  selection retain differences in relative learning. On a sparse categorical
-  task, expanding the rate search removes a resolved standardization advantage
-  under aggregate selection, while a damped scaling retains lower risks.
-  Selection also exposes severe failures when rare cases are absent from
-  validation. Together, the results describe how normalization interacts with
-  the training budget and prediction objective, while delimiting what
-  fixed-configuration comparisons establish about a tuned procedure.
+  randomness in feature sampling, and observation noise. For two independent
+  features with known population preprocessing and one fresh observation per
+  update, we prove opposite rare-subgroup risk orderings on two signal families.
+  The gaps remain bounded away from zero as prevalence decreases, when the
+  observation budget permits roughly one to four rare observations in
+  expectation. Each normalization may choose any nonnegative constant learning
+  rate and any deterministic stop within the budget. Scalar retuning therefore
+  need not remove the prediction effect of relative feature scaling. Supporting
+  comparisons show how stopping, batching, and dependence change specified
+  procedures; both original anchor comparisons disappear after retuning.
+  Existing experiments with estimated preprocessing and validation selection
+  delimit practical conclusions. On a sparse categorical task, expanding the
+  rate search removes a resolved standardization advantage under aggregate
+  selection, while damped scaling retains lower risks. Missing rare validation
+  cases can conceal severe subgroup errors. These experiments motivated the
+  theory; a prospective evaluation of its predictions remains open.
 \end{abstract}
 
 \input{sections/conference-introduction}
 \input{sections/conference-normalization}
+\input{sections/conference-predictive}
 \input{sections/conference-comparisons}
 \input{sections/conference-experiments}
 \input{sections/conference-discussion}
@@ -83,6 +86,7 @@
 \thispagestyle{empty}
 \aistatstitle{Feature Normalization under Finite Training
   Budgets:\\Supplementary Materials}
+\input{sections/predictive-proofs}
 \input{sections/comparison-proofs}
 \input{sections/practical-selection}
 \input{sections/mushroom-rate-search}

@@ -1,7 +1,10 @@
 \section{From calibrated comparisons to selected procedures}
 \label{sec:conference-experiments}
 
-The experiments ask which effects remain when we change the comparison protocol.
+The existing experiments ask which effects remain when we change the comparison
+protocol. They preceded the formulation of
+Theorem~\ref{thm:conference-predictive} and do not provide a prospective test of
+its signal-dependent prediction.
 We distinguish three settings: exact fresh-sample moments, replacement SGD on
 sampled noisy training sets, and held-out evaluation on a fixed categorical
 dataset. An observation budget counts every sampled training row, including
@@ -26,8 +29,10 @@ configuration and after rate/stopping selection. The late $B = 1$ disadvantage
 for S disappears; the selected rates are $h_U = .004$ and $h_S = .0003125$. At
 the dependent anchor of Theorem~\ref{thm:conference-c2}, adjusted selection
 favors U under both objectives. Other laws retain reversals or produce objective
-disagreement. The theorems therefore describe a calibrated procedure, while the
-search answers a different question about the available family of procedures.
+disagreement. Theorems~\ref{thm:conference-c1} and~\ref{thm:conference-c2}
+therefore describe a calibrated procedure. Theorem~\ref{thm:conference-predictive}
+separately establishes comparisons that survive continuous rate and stopping
+optimization on its two signal families.
 
 \begin{table}[t]
  \centering

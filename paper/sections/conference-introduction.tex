@@ -20,30 +20,47 @@ ordering of individual coefficient errors need not determine the ordering of
 subgroup prediction risks.
 
 We analyze squared-loss linear regression with a common and a rare binary
-predictor. The first comparisons use known population centering and scales, zero
-initialization, a fixed intercept, and fresh observations at each update. An
-exact second-moment calculation yields two uniform comparisons. First,
-standard-deviation scaling has lower rare-presence risk at an early stop and
-higher risk later under a specified rate calibration; a larger batch changes
-that ordering. Second, the same pair of stable training procedures can favor
-opposite normalization rules under aggregate and rare-presence risk, even when
+predictor. The population comparisons use known centering and scales, zero
+initialization, a fixed intercept, and fresh observations at each update. Our
+main result compares the lowest rare-presence risk attainable by each
+normalization over all nonnegative constant learning rates and deterministic
+stops within a common observation budget. Standardization wins on a specified
+rare-signal family, and unscaled training wins on a common-signal family. Both
+gaps are uniform as prevalence decreases with the expected number of rare
+training observations held of order one. Thus relative scaling can change
+attainable prediction risk even after separate scalar retuning. The theorem
+concerns two independent features and one observation per update; it gives no
+ordering over learning-rate schedules or data-dependent selection rules.
+
+Supporting comparisons explain particular training paths. Standardization has
+lower rare-presence risk at an early stop and higher risk later under a specified
+rate calibration; a larger batch changes that ordering. Dependence can also make
+aggregate and rare-presence risk favor opposite normalizations, even when
 scaling increases both individual coefficient mean squared errors.
 
-The experiments examine the limits of these comparisons. A broader search over
-rates and stopping removes both original anchor comparisons, although other laws
-retain reversals or objective disagreements. Sampled-data experiments then
+The existing experiments motivated the main theorem and examine the limits of
+the supporting comparisons. A broader search over rates and stopping removes
+both original anchor comparisons, although other laws retain reversals or
+objective disagreements. Sampled-data experiments then
 replace population preprocessing by estimated centering and scales, fit an
 intercept, and select configurations on validation data. A sparse categorical
 task shows a rare-subgroup benefit within the declared search, alongside
 rate-boundary selections and a tradeoff with aggregate prediction. Missing rare
 validation observations can conceal extreme subgroup error. These findings
 motivate evaluating normalization as part of the full training and selection
-procedure.
+procedure. They do not constitute a held-out test of the subsequently developed
+oracle prediction.
 
 \paragraph{Relation to prior work.}
 
 The connection between preconditioning and statistical performance is
-established \citep{amari2020preconditioning, su2024preconditioning}. Early
+established \citep{amari2020preconditioning, su2024preconditioning}.
+\citet[Section 4.2, Proposition 7]{amari2020preconditioning} relate preferred
+preconditioning to signal alignment even after optimizing early-stopping bias
+in an overparameterized fixed-data model. Our comparison concerns total
+rare-subgroup risk, including stochastic-update variance, in a fixed-dimensional
+fresh-sample model with an equal observation cap. It separates both complete
+constant-rate and stopping families by explicit gaps. Early
 stopping changes least-squares regularization \citep{ali2019early};
 least-mean-squares analyses already separate bias and variance and study
 sampling and batching \citep{defossez2015averaged, jain2018parallelizing}.
