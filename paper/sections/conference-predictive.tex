@@ -1,11 +1,11 @@
 \section{Opposite risk orderings after oracle tuning}
 \label{sec:conference-predictive}
 
-We compare attainable rare-presence risk after separate scalar retuning for
-independent features ($\ell = 0$), $B = 1$, and the population preprocessing,
-zero initialization, and fixed intercept of
-Section~\ref{sec:conference-setting}. Put $b = q(1-q)$. Parameterize the
-original-coordinate update matrices by
+We now allow each normalization rule to choose its learning rate and stopping
+count to minimize rare-presence risk. We assume independent features
+($\ell = 0$), $B = 1$, and the population preprocessing, zero initialization,
+and fixed intercept of Section~\ref{sec:conference-setting}. Put $b = q(1-q)$.
+We parameterize the update matrices on the original coefficient scale as
 \begin{equation}
  D_U(\alpha) = \alpha I_2,\qquad
  D_S(\alpha) = \diag(4b\alpha,\alpha),\quad \alpha\geq0.
@@ -13,8 +13,8 @@ original-coordinate update matrices by
 \end{equation}
 Here $D=\eta P$, so $\eta_U=\alpha$ and $\eta_S=b\alpha$. Each
 parameterization covers every nonnegative constant learning rate for its rule.
-The shared parameter is a coordinate for the search, not a constraint that the
-selected rates match.
+We use the same parameter to describe both searches, but choose its value
+separately for each method.
 
 For an observation cap $M\in\mathbb N$, define
 \begin{equation}
@@ -22,9 +22,9 @@ For an observation cap $M\in\mathbb N$, define
              R_{R,k}^{A}(\alpha),\qquad A\in\{U,S\}.
  \label{eq:conference-oracle-risk}
 \end{equation}
-Rates and stops are deterministic oracle choices, based on the population risk
-averaged over training randomness. Initialization is eligible. The search
-includes finite stops at rates that need not be mean-square stable.
+The oracle chooses a deterministic rate and stop using population risk averaged
+over training randomness. It may also choose initialization. Because we evaluate
+finite stops, the search includes rates that need not be mean-square stable.
 
 \begin{theorem}[Opposite oracle rare-risk orderings]
  \label{thm:conference-predictive}
@@ -43,21 +43,22 @@ includes finite stops at rates that need not be mean-square stable.
  together with initialization.
 \end{theorem}
 
-The proof in Appendix~\ref{sec:predictive-proofs} bounds every rate and stop of
-the losing rule and supplies one stable candidate for the winning rule. The
-diagonal error moments obey an exact positive recurrence, even though stochastic
-updates couple the independent features. For a dominant rare signal, learning
-it with U also incurs common-coordinate noise; S can reduce that cost. For a
-dominant common signal, S must balance incomplete common learning against rare
-noise. U can learn the common coordinate while leaving the small rare signal
-largely unchanged. The bounds establish strict orderings over whole families of
-procedures without identifying their optimizers.
+We prove the theorem in Appendix~\ref{sec:predictive-proofs} by bounding every
+rate and stop for the method with higher risk and constructing one stable
+candidate for the other method. The diagonal error moments satisfy an exact
+positive recurrence, even though the stochastic updates couple the independent
+features. When the rare signal dominates, learning it with U also introduces
+noise in the common coefficient, and S can reduce this cost. When the common
+signal dominates, S must balance incomplete learning of that signal against
+noise in the rare coefficient. U can learn the common coefficient while leaving
+the small rare signal largely unchanged. These bounds compare the best
+attainable risks without identifying the minimizing rates and stops.
 
-The expected rare training count at the cap is $Mq=\tau/(1-q)$, where
-$\tau=Mq(1-q)\in[1,4]$. Thus the positive gaps concern a regime with roughly
-one to four rare observations, even as $M$ grows and $q$ decreases. Prevalence
-alone does not determine the preferred normalization. The two signal families
-give sufficient conditions, without locating a general transition between them.
-The theorem does not optimize batches, learning-rate schedules, or
-data-dependent stopping, and supplies no guarantee for estimated preprocessing
-or validation selection.
+At the observation cap, the expected number of rare training observations is
+$Mq=\tau/(1-q)$, where $\tau=Mq(1-q)\in[1,4]$. The positive gaps therefore
+persist with roughly one to four rare observations, even as $M$ grows and $q$
+decreases. Which normalization has lower risk depends on the signal as well as
+prevalence. The two families give sufficient conditions for opposite orderings,
+but do not locate a general transition between them. The theorem leaves batch
+selection, learning-rate schedules, and data-dependent stopping open. It also
+provides no guarantee for estimated preprocessing or validation selection.

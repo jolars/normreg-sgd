@@ -38,26 +38,26 @@
 ]
 
 \begin{abstract}
-  Feature normalization changes the relative rates at which stochastic gradient
-  descent learns different coordinates. We study its consequences for prediction
-  under finite training budgets, using common and rare binary features as a
-  controlled setting. Exact error moments separate incomplete learning,
-  randomness in feature sampling, and observation noise. For two independent
-  features with known population preprocessing and one fresh observation per
-  update, we prove opposite rare-subgroup risk orderings on two signal families.
-  The gaps remain bounded away from zero as prevalence decreases, when the
-  observation budget permits roughly one to four rare observations in
-  expectation. Each normalization may choose any nonnegative constant learning
-  rate and any deterministic stop within the budget. Scalar retuning therefore
-  need not remove the prediction effect of relative feature scaling. Supporting
-  comparisons show how stopping, batching, and dependence change specified
-  procedures; both original anchor comparisons disappear after retuning.
-  Existing experiments with estimated preprocessing and validation selection
-  delimit practical conclusions. On a sparse categorical task, expanding the
-  rate search removes a resolved standardization advantage under aggregate
-  selection, while damped scaling retains lower risks. Missing rare validation
-  cases can conceal severe subgroup errors. These experiments motivated the
-  theory; a prospective evaluation of its predictions remains open.
+  Feature normalization changes how quickly stochastic gradient descent learns
+  different coefficients. We study how this affects prediction under a finite
+  training budget, using common and rare binary features. We derive exact error
+  moments that separate incomplete learning from variation due to feature
+  sampling and observation noise. For two independent features with known
+  population preprocessing and one fresh observation per update, we show that
+  standardization gives lower rare-subgroup risk on one signal family, whereas
+  unscaled training gives lower risk on another. Each method may choose any
+  nonnegative constant learning rate and any deterministic stop within the same
+  budget. The risk gaps remain bounded away from zero as prevalence decreases,
+  provided that the expected number of rare observations stays between roughly
+  one and four. Thus tuning the learning rate and stopping time need not remove
+  the effect of relative feature scaling. Further comparisons show how stopping,
+  batching, and dependence affect risk under a fixed calibration, although
+  retuning removes both original anchor comparisons. We also study estimated
+  preprocessing and validation selection. On a sparse categorical task,
+  expanding the rate search removes the resolved advantage of standardization
+  under aggregate selection, while damped scaling retains lower risks. Missing
+  rare validation cases can conceal severe subgroup errors. These experiments
+  motivated the theory, whose predictions still require prospective evaluation.
 \end{abstract}
 
 \input{sections/conference-introduction}

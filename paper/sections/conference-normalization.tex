@@ -1,28 +1,30 @@
 \section{Normalization and the training procedure}
 \label{sec:conference-setting}
 
-Let $x$ be centered, $C = \E[xx^\top] \succ 0$, and
-$y = x^\top\beta^* + \varepsilon$, with $\E[\varepsilon\mid x] = 0$ and
-$\E[\varepsilon^2\mid x] = \sigma^2$. A diagonal matrix $S$ contains positive
-feature divisors. Training on $z = S^{-1}x$ with parameter $\theta = S\beta$
-gives the original-scale SGD update
+Let $x$ be a centered feature vector with $C = \E[xx^\top] \succ 0$, and suppose
+that $y = x^\top\beta^* + \varepsilon$, where $\E[\varepsilon\mid x] = 0$ and
+$\E[\varepsilon^2\mid x] = \sigma^2$. We divide each feature by a positive scale
+factor, collected in the diagonal matrix $S$. Training on $z = S^{-1}x$ with
+parameter $\theta = S\beta$ then gives the following SGD update on the original
+coefficient scale:
 \begin{equation}
  \beta_{k+1}
  = \beta_k
    - \frac{\eta S^{-2}}{B} \sum_{i=1}^B x_{k,i}(x_{k,i}^\top\beta_k - y_{k,i}). \label{eq:conference-update}
 \end{equation}
-The loss is averaged and has a factor $1/2$. The population comparisons fix the
-centered intercept at zero and initialize $\beta_0 = 0$. Each update draws $B$
-independent fresh observations, so $k$ updates use $M = kB$ observations.
-Section~\ref{sec:conference-experiments} separately studies replacement sampling
-from a fixed training set of size $n$; there, $M$ counts processed observations
-and can exceed $n$.
+We use the average squared loss with a factor $1/2$. In the population
+comparisons, we fix the centered intercept at zero and initialize $\beta_0 = 0$.
+Each update uses $B$ independent fresh observations, so $k$ updates require
+$M = kB$ observations. In Section~\ref{sec:conference-experiments}, we also
+sample with replacement from a fixed training set of size $n$. There, $M$ counts
+processed observations and can exceed $n$.
 
-Global rescaling has an exact scalar compensation: replacing $S$ by $gS$ and
-$\eta$ by $g^2\eta$ leaves every update unchanged on a shared data stream.
-Changing relative feature scales generally changes $\eta S^{-2}$ in a way that
-one scalar rate cannot undo. This algebraic distinction does not imply that a
-normalization rule has lower risk after rate selection.
+We can compensate exactly for global rescaling by adjusting the learning rate.
+Replacing $S$ by $gS$ and $\eta$ by $g^2\eta$ leaves every update unchanged when
+the methods use the same data stream. Changing the relative feature scales,
+however, generally changes $\eta S^{-2}$ in a way that a single learning rate
+cannot undo. Whether this leads to a risk difference after tuning requires a
+separate comparison.
 
 Write $e_k = \E[\beta_k-\beta^*]$ and
 $V_k = \E[(\beta_k-\beta^*)(\beta_k-\beta^*)^\top]$. Fresh sampling gives
@@ -30,33 +32,34 @@ $V_k = \E[(\beta_k-\beta^*)(\beta_k-\beta^*)^\top]$. Fresh sampling gives
  V_k = e_ke_k^\top + A_k + \sigma^2N_k, \label{eq:conference-decomposition}
 \end{equation}
 where $A_k \succeq 0$ is the covariance of the noiseless process under random
-feature sampling and $\sigma^2N_k \succeq 0$ is the propagated observation-noise
-covariance. Appendix~\ref{sec:comparison-proofs} derives the exact recurrence.
-This separation distinguishes incomplete learning from two sources of training
-variance.
+feature sampling and $\sigma^2N_k \succeq 0$ is the covariance contributed by
+observation noise. This decomposition separates incomplete learning from the two
+sources of variation in training. We derive the exact recurrence in
+Appendix~\ref{sec:comparison-proofs}.
 
-For a subgroup $G$, define excess half squared prediction risks
+For a subgroup $G$, we define the aggregate and subgroup excess prediction risks
+using half squared loss:
 \begin{equation}
  R_k = \tfrac12\operatorname{tr}(CV_k),\qquad R_{G,k}
      = \tfrac12\operatorname{tr}(C_GV_k), \label{eq:conference-risks}
 \end{equation}
-where $C_G = \E[xx^\top\mid G]$ is a conditional second moment, including the
-conditional feature mean. Both risks exclude irreducible test noise. The
-distribution of training data is unchanged when we evaluate either objective on
-the same trained predictor.
+Here $C_G = \E[xx^\top\mid G]$ is the conditional second moment, which includes
+the contribution of the conditional feature mean. Both risks exclude irreducible
+test noise. We evaluate both objectives for the same trained predictor, without
+changing the distribution of its training data.
 
-\paragraph{A feasible binary model.}
+\paragraph{Binary features.}
 
-Let $I$ be common and $J$ rare, with
+Let $I$ and $J$ be common and rare binary features, respectively, with
 \[
  \begin{gathered}
   \Prob(I = 1) = \tfrac12,\qquad \Prob(J = 1) = q, \\
   \Prob(I = 1,J = 1) = \tfrac{q(1+\ell)}2,
  \end{gathered}
 \]
-where $0 < q < 1/2$ and $-1 \leq \ell \leq 1$. All four cell probabilities are
-nonnegative. For $x = (I - 1/2,J - q)^\top$, write $a = 1/4$, $b = q(1 - q)$,
-and $c = q\ell/2$. Then
+where $0 < q < 1/2$ and $-1 \leq \ell \leq 1$. These ranges ensure that all four
+cell probabilities are nonnegative. For $x = (I - 1/2,J - q)^\top$, write
+$a = 1/4$, $b = q(1 - q)$, and $c = q\ell/2$. Then
 \[
  C = \begin{pmatrix}
       a & c \\
@@ -71,10 +74,10 @@ where $R$ denotes the subgroup $J = 1$. A rare-coordinate error of one
 contributes $(1 - q)^2/2$ to rare risk and $q(1 - q)/2$ to aggregate risk.
 
 We compare unscaled features (U), with $P_U = I_2$, and standard-deviation
-scaling (S), with $P_S = \diag(a^{-1},b^{-1})$, where $P = S^{-2}$. The main
-theorem allows each rule to choose its own constant learning rate and stopping
-count. The supporting comparisons specify a common-coordinate calibration.
-Neither setting averages iterates.
+scaling (S), with $P_S = \diag(a^{-1},b^{-1})$, where $P = S^{-2}$. In the main
+theorem, each rule chooses its own constant learning rate and stopping count.
+For the supporting comparisons, we calibrate the rates through the common
+coordinate. We use the final iterate in both settings.
 
 \paragraph{Damped scaling.}
 
@@ -83,11 +86,12 @@ The sampled-data experiments also include damped scaling, with
  s_j = \sqrt{v_j + 0.01},\qquad P_{jj}
      = \frac{1}{v_j + 0.01}, \label{eq:conference-damped}
 \end{equation}
-where $v_j$ is the population variance when known and the training variance when
-estimated. The offset $0.01$ is a prespecified heuristic, inherited from the
-controlled pilot and fixed in variance units before evaluation. It is not a
-theoretically derived or validation-selected value. At a common learning rate,
-damping multiplies the SD original-coordinate update by $v_j/(v_j + 0.01)$:
-approximately one half at binary prevalence $0.01$, but $0.96$ for a balanced
-binary feature. This describes its effect, rather than establishing an optimal
-damping level.
+where $v_j$ is either the known population variance or an estimate from the
+training data. We use the heuristic offset $0.01$ from the controlled pilot,
+fixed in variance units before evaluation. We neither derive this value from
+theory nor select it by validation. At the same learning rate, damping
+multiplies the SD update on the original coefficient scale by
+$v_j/(v_j + 0.01)$. This is approximately one half at binary prevalence $0.01$
+and $0.96$ for a balanced binary feature, illustrating how the offset reduces
+updates more strongly for rare features. The comparison does not establish an
+optimal damping level.
