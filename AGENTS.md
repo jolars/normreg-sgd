@@ -206,3 +206,10 @@ Versionary manages the version in `pyproject.toml`, its lockfile update, and
 `CHANGELOG.md` once releases are enabled. Do not hand-edit that changelog. The
 release job requires `ENABLE_RELEASES=true` and `RELEASE_TOKEN`; package
 publication and a license have not been configured.
+
+## Style, Formatting, and Figures
+
+### Figures
+
+- Never set width or height in the LaTeX `\includegraphics` command. Adapt
+  figure sizes in the Python scripts instead.

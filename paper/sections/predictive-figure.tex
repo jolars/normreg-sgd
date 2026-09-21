@@ -1,0 +1,30 @@
+\section{Numerical illustration of the oracle comparison}
+\label{sec:predictive-intro-figure}
+
+Figure~\ref{fig:conference-tuned-intro} illustrates the two signal families in
+Theorem~\ref{thm:conference-predictive} at $q=10^{-4}$ and $\sigma^2=1$. We
+set $(\beta_C^*,\beta_R^*)=(0.1,1)$ for the rare-signal panel and $(1,0.1)$ for
+the common-signal panel. All other assumptions match the theorem. We evaluate
+61 integer observation caps, evenly spaced up to rounding from $10{,}002$ to
+$40{,}004$, so $1\leq Mq(1-q)\leq4$. The horizontal axis reports the expected
+number of rare observations at the cap, $Mq$, rather than a realized count.
+
+For each rule, we use the parameterization in
+\eqref{eq:conference-oracle-rates} and a grid consisting of zero and 4097
+geometrically spaced positive values of $\alpha$ from $10^{-6}$ to $2$. We
+iterate the exact recurrence \eqref{eq:predictive-moments}, including both
+sources of training variance. At each cap, we select the rate and integer
+stopping count with the lowest population rare risk, searching every stop from
+zero through the cap. The curves connect these numerical minima; they are not
+trajectories of a single trained model. Selection uses population risk averaged
+over training randomness, rather than validation observations.
+
+We repeat the search with every second positive grid point and check all 244
+selected endpoints against a separate full tensor moment operator constructed
+by enumerating the four binary observations. The reproduction script requires
+the maximum risk change on grid refinement to be below $2\times10^{-6}$ and the
+maximum tensor replay discrepancy to be below $10^{-10}$. All selected rates
+are interior to the grid. These checks assess numerical accuracy within the
+stated search; the theorem supplies the separate comparison over all
+nonnegative constant rates. The figure illustrates an existing theoretical
+result and is not a prospective evaluation of its predictions.

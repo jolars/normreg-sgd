@@ -112,6 +112,15 @@ batch enumeration, validates the shrinkage baselines against coordinate descent
 and Monte Carlo, and builds the manuscript. `make check-quick` uses fewer Monte
 Carlo draws for iteration. `make format` formats Markdown, Nix, and Python.
 
+The introduction's two-panel figure illustrates the oracle signal families with
+exact moment risks, a finite rate grid, and every integer stop under each
+budget. Inside `devenv shell`, run `make reproduce-predictive-intro` to
+regenerate its PDF, SVG, and numerical summary under
+`results/predictive-intro/`, or `make check-predictive-intro` to verify them
+without rewriting. The check includes rate-grid refinement and independent
+tensor replay of every selected endpoint. This figure illustrates the existing
+theorem; it is not a held-out evaluation.
+
 To check just the optimization calculations inside `devenv shell`:
 
 ```sh

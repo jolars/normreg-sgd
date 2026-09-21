@@ -1,70 +1,73 @@
 \section{Introduction}
 
-Dividing a predictor by its standard deviation changes both how quickly gradient
-methods learn its coefficient and how strongly individual observations affect
-that coefficient. Although scaling leaves the full-rank least-squares solution
-unchanged, it can therefore affect predictions when training stops
-before convergence. In this paper, we study how normalization affects prediction
-under a finite training budget and whether these effects persist when we tune
-the learning rate and stopping time.
+A rare feature gives a model few opportunities to learn its effect. Without
+scaling, gradient descent may fit common features while leaving the rare feature
+largely unlearned. Dividing by the feature's standard deviation increases the
+influence of those few observations. This can help recover a useful rare signal,
+but it also makes the fitted coefficient more sensitive to noise.
 
-Rare binary features provide a simple setting in which to study this question.
-Without scaling, the loss has little curvature in the rare coordinate, so its
-coefficient can remain poorly learned after the common coefficients have
-already been fitted. Standardization increases its learning rate relative to
-the common features, but also amplifies the contribution of the few observations
-on which it is present. The balance depends on when we stop training and how
-many observations we use in each update. When features are dependent, their
-coefficient errors also contribute jointly to prediction. Comparing individual
-coefficient errors can then give a different ordering from comparing prediction
-risks for the rare subgroup.
+The consequences can be substantial for observations where the rare feature is
+present, even when their contribution to average prediction error is small.
+Normalization therefore raises a statistical question: how strongly should
+training respond to a feature for which evidence is scarce? Although scaling
+leaves the full-rank least-squares solution unchanged, it changes which signals
+we learn before training stops.
 
-We consider linear regression with squared loss, a common binary predictor, and
-a rare binary predictor. In the population comparisons, we use known centering
-and scales, initialize the coefficients at zero, fix the intercept, and draw
-fresh observations at each update. Our main result compares the lowest risk
-that each normalization can attain on observations where the rare feature is
-present. We allow each method to choose any nonnegative constant learning rate
-and any deterministic stop within the same observation budget. Standardization
-has lower risk on a specified family in which the rare signal dominates, whereas
-unscaled training has lower risk on a family in which the common signal
-dominates. Both gaps remain bounded away from zero as prevalence decreases with
-the expected number of rare training observations held of order one. The result
-therefore shows that separate tuning need not remove the effect of relative
-scaling. It applies to two independent features and one observation per update;
-learning-rate schedules and data-dependent selection rules fall outside its
-scope.
+Learning-rate and stopping-time tuning need not remove this effect.
+Figure~\ref{fig:conference-tuned-intro} illustrates the central comparison:
+standardization gives lower rare-subgroup risk when the rare signal dominates,
+whereas unscaled training gives lower risk when the common signal dominates.
+Each rule selects its own rate and stop under the same observation cap. Learning
+rare signals has a noise cost, and normalization changes that tradeoff.
 
-We also examine how these effects arise along particular training paths. Under
-a fixed rate calibration, standardization gives lower rare-presence risk early
-in training and higher risk later, and increasing the batch size changes this
-ordering. With dependent features, standardization can improve rare-presence
-prediction while increasing both aggregate risk and the mean squared error of
-each coefficient.
+\begin{figure*}[t]
+ \centering
+ \includegraphics[]{../results/predictive-intro/tuned-rare-risk.pdf}
+ \caption{
+  Tuning does not erase the effect of normalization. Independent binary features
+  have prevalences $1/2$ and $q = 10^{-4}$, with
+  $(\beta_C^*,\beta_R^*) = (0.1,1)$ (left) or $(1,0.1)$ (right) and noise
+  variance one. Under the stated population setup, curves show the lowest exact
+  rare risk over a finite rate grid and every integer stop within each cap,
+  including zero. Both panels use the same axes; lower is better. This
+  illustrates Theorem~\ref{thm:conference-predictive}, which covers all
+  nonnegative constant rates. See Appendix~\ref{sec:predictive-intro-figure} for
+  numerical details.
+ }
+ \label{fig:conference-tuned-intro}
+\end{figure*}
 
-Our experiments motivated the main theorem and show why the training and
-selection procedure matters. Searching over more rates and stopping times
-removes both original anchor comparisons, although reversals and disagreements
-between objectives remain for other laws. We then replace population
-preprocessing with estimated centering and scales, fit an intercept, and use
-validation data to select configurations. On a sparse categorical task, we find
-a rare-subgroup benefit within the declared search, together with selections at
-the rate boundary and a tradeoff with aggregate prediction. We also find that
-missing rare validation observations can conceal extreme subgroup errors. These
-experiments preceded the theorem, so a prospective test of its predicted
-orderings remains to be conducted.
+Our main theorem establishes both orderings for two independent binary
+predictors under squared loss, with known population centering and scales, zero
+initialization, a fixed zero intercept, and one fresh observation per update.
+Each method may choose any nonnegative constant learning rate and any
+deterministic stop within the budget. The risk gaps remain bounded away from
+zero as prevalence decreases while the expected number of rare observations
+stays between roughly one and four. Learning-rate schedules and data-dependent
+selection fall outside the theorem's scope.
+
+Supporting comparisons examine stopping, batching, and dependence. Under a fixed
+rate calibration, the preferred normalization can change with the stop or batch
+size; rare-subgroup and aggregate risk can also favor different rules. Tuning
+removes both original anchor comparisons, motivating the separate oracle
+theorem. Experiments with estimated preprocessing and validation selection
+expose a further difficulty: missing rare validation cases can conceal extreme
+subgroup errors. On a sparse categorical task, expanding the rate search removes
+the resolved SD advantage under aggregate selection, while damping retains lower
+risks. These experiments informed the theorem; prospective evaluation remains
+open.
 
 \paragraph{Relation to prior work.}
 
-Several authors have studied how preconditioning affects statistical
-performance \citep{amari2020preconditioning, su2024preconditioning}. In
-particular, \citet[Section 4.2, Proposition 7]{amari2020preconditioning} show
-that the preferred preconditioner depends on signal alignment even after
-optimizing early-stopping bias in an overparameterized model with fixed data.
-We instead compare total rare-subgroup risk, including variance from stochastic
-updates, in a fixed-dimensional model with fresh observations. Under the same
-observation cap, we obtain explicit gaps between the best risks attainable over
-all constant rates and deterministic stops.
+Several authors have studied how preconditioning affects statistical performance
+\citep{amari2020preconditioning, su2024preconditioning}. In particular,
+\citet[Section 4.2, Proposition 7]{amari2020preconditioning} show that the
+preferred preconditioner depends on signal alignment even after optimizing
+early-stopping bias in an overparameterized model with fixed data. We instead
+compare total rare-subgroup risk, including variance from stochastic updates, in
+a fixed-dimensional model with fresh observations. Under the same observation
+cap, we obtain explicit gaps between the best risks attainable over all constant
+rates and deterministic stops.
 
 Early stopping also changes least-squares regularization \citep{ali2019early},
 and analyses of least-mean-squares methods separate bias and variance while

@@ -9,6 +9,7 @@ include Makefile
 .PHONY: check-variance-scaling reproduce-variance-scaling
 .PHONY: check-predictive-regime check-predictive-theorem
 .PHONY: check-predictive-review
+.PHONY: reproduce-predictive-intro check-predictive-intro
 .PHONY: prepare-lean check-lean
 
 prepare-lean:
@@ -67,6 +68,14 @@ check-predictive-theorem:
 
 check-predictive-review:
 	python experiments/check_predictive_review.py
+
+reproduce-predictive-intro:
+	python experiments/plot_predictive_intro.py
+
+check-predictive-intro:
+	python experiments/plot_predictive_intro.py --check
+
+check-optimization: check-predictive-intro
 
 check-practical-selection:
 	python experiments/check_practical_selection.py
