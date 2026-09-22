@@ -37,6 +37,13 @@ observation noise. This decomposition separates incomplete learning from the two
 sources of variation in training. We derive the exact recurrence in
 Appendix~\ref{sec:comparison-proofs}.
 
+Under independence, $e_{k+1,j} = (1 - \eta C_{jj}/s_j^2)e_{k,j}$. SD scaling,
+with $s_j^2 = C_{jj}$, gives every coordinate the multiplier $1 - \eta$. For
+$0 < \eta \leq 1$ and zero initialization, early stopping thus gives every
+coefficient the same shrinkage factor in expectation. This equalizes one aspect
+of implicit regularization, but coefficient uncertainties also depend on the
+sampling and noise covariances in \eqref{eq:conference-decomposition}.
+
 For a subgroup $G$, we define the aggregate and subgroup excess prediction risks
 using half squared loss:
 \begin{equation}

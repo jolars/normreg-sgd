@@ -1,17 +1,24 @@
 \section{Introduction}
 
+Feature normalization is often motivated by placing predictors on a common
+scale. With binary and continuous predictors, a standard-deviation change
+measures population variation, whereas a binary change from absence to presence
+defines a specific contrast. These conventions can imply different
+regularization strengths. We study binary predictors to isolate prevalence:
+even with a shared absence-to-presence coding, standardization changes how
+strongly training responds to their effects.
+
 A rare feature gives a model few opportunities to learn its effect. Without
 scaling, gradient descent may fit common features while leaving the rare feature
 largely unlearned. Dividing by the feature's standard deviation increases the
 influence of those few observations. This can help recover a useful rare signal,
 but it also makes the fitted coefficient more sensitive to noise.
 
-The consequences can be substantial for observations where the rare feature is
-present, even when their contribution to average prediction error is small.
-Normalization therefore raises a statistical question: how strongly should
-training respond to a feature for which evidence is scarce? Although scaling
-leaves the full-rank least-squares solution unchanged, it changes which signals
-we learn before training stops.
+These effects can substantially change prediction where the rare feature is
+present, despite contributing little to average error. Normalization therefore
+raises a statistical question: how strongly should training respond to scarce
+evidence? Scaling leaves the full-rank least-squares solution unchanged but
+changes which signals we learn before stopping.
 
 Learning-rate and stopping-time tuning need not remove this effect.
 Figure~\ref{fig:conference-tuned-intro} illustrates the central comparison:
@@ -40,22 +47,19 @@ rare signals has a noise cost, and normalization changes that tradeoff.
 Our main theorem establishes both orderings for two independent binary
 predictors under squared loss, with known population centering and scales, zero
 initialization, a fixed zero intercept, and one fresh observation per update.
-Each method may choose any nonnegative constant learning rate and any
-deterministic stop within the budget. The risk gaps remain bounded away from
-zero as prevalence decreases while the expected number of rare observations
-stays between roughly one and four. Learning-rate schedules and data-dependent
-selection fall outside the theorem's scope.
+It covers all nonnegative constant rates and deterministic stops within the
+budget. The gaps stay bounded away from zero as prevalence decreases while the
+expected number of rare observations stays between roughly one and four.
+Learning-rate schedules and data-dependent selection remain outside its scope.
 
-Supporting comparisons examine stopping, batching, and dependence. Under a fixed
-rate calibration, the preferred normalization can change with the stop or batch
-size; rare-subgroup and aggregate risk can also favor different rules. Tuning
-removes both original anchor comparisons, motivating the separate oracle
-theorem. Experiments with estimated preprocessing and validation selection
-expose a further difficulty: missing rare validation cases can conceal extreme
-subgroup errors. On a sparse categorical task, expanding the rate search removes
-the resolved SD advantage under aggregate selection, while damping retains lower
-risks. These experiments informed the theorem; prospective evaluation remains
-open.
+Under a fixed rate calibration, supporting comparisons show that the preferred
+normalization can change with stopping, batching, and the prediction objective.
+Tuning removes both original anchor comparisons, motivating the oracle theorem.
+Experiments with estimated preprocessing and validation selection show that
+missing rare validation cases can conceal extreme subgroup errors. On a sparse
+categorical task, expanding the rate search removes the resolved SD advantage
+under aggregate selection, while damping retains lower risks. These experiments
+informed the theorem; prospective evaluation remains open.
 
 \paragraph{Relation to prior work.}
 
