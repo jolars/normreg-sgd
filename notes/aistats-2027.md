@@ -60,11 +60,12 @@ style. Its main text contains:
 
 The single-column supplement contains the oracle proof, including the rate-cap
 removal, the calibrated comparison proofs, and additional practical-study
-details. The earlier full manuscript is preserved in
-[research-notes.tex](../paper/research-notes.tex), including common-block
-theory, sampling distinctions, joint-budget limits, the controlled pilot, and
-shrinkage baselines. Its existing section files remain available for reuse.
-Preserve the frozen experiment protocols, results, and diagnostic failures.
+details. The main text and appendices are inline in `paper/main.tex`; only the
+checklist is a separate input. The earlier full manuscript is preserved in the
+[neighboring archive](archive.md), including common-block theory, sampling
+distinctions, joint-budget limits, the controlled pilot, and shrinkage
+baselines. Its existing section files remain available for reuse. Preserve the
+frozen experiment protocols, results, and diagnostic failures.
 
 ## Contribution work before submission
 
@@ -124,12 +125,12 @@ Inside `devenv shell`:
 
 ```sh
 make paper
-make paper-notes
 make check-quick
 ```
 
-The outputs are `build/main.pdf` and `build/research-notes.pdf`. The conference
-source flushes main-text floats before the excluded sections and fails the build
-if the main text exceeds eight pages. `AISTATS-MAIN-PAGES` in `build/main.log`
-records the count. The vendored style files are unchanged; source provenance is
-recorded in [the template README](../paper/vendor/aistats2027/README.md).
+The output is `build/main.pdf`. The historical `make paper-notes` target is
+available in the archive. The conference source flushes main-text floats before
+the excluded sections and fails the build if the main text exceeds eight pages.
+`AISTATS-MAIN-PAGES` in `build/main.log` records the count. The vendored style
+files are unchanged; source provenance is recorded in [the template
+README](../paper/vendor/aistats2027/README.md).

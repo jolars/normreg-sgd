@@ -35,8 +35,8 @@ Run a single generator while editing, for example:
 python scripts/figures/plot_predictive_intro.py
 ```
 
-`make paper` and `make paper-notes` rebuild their figures when the corresponding
-scripts, shared style, environment configuration, or saved summaries change.
+`make paper` rebuilds its three figures when the corresponding scripts, shared
+style, environment configuration, or saved summaries change.
 `make paper-figures` performs that step without compiling LaTeX.
 
 The original plotting code embedded in `experiments/` remains an archival input

@@ -87,12 +87,13 @@ interpretation.
 
 ## Manuscript role and remaining work
 
-The [main theorem](../paper/sections/conference-predictive.tex) now precedes C1
-and C2, with a [proof appendix](../paper/sections/predictive-proofs.tex) that
-includes the unrestricted-rate argument. The abstract, introduction, and
-discussion distinguish that oracle result from the earlier calibrated
-comparisons and finite-grid empirical studies. The former recommendation to
-retain the result only as supporting theory is superseded by this decision.
+The main theorem now precedes C1 and C2 in [the manuscript](../paper/main.tex),
+whose proof appendix includes the unrestricted-rate argument. Both are inline in
+the consolidated source; the earlier section files are in the
+[archive](archive.md). The abstract, introduction, and discussion distinguish
+that oracle result from the earlier calibrated comparisons and finite-grid
+empirical studies. The former recommendation to retain the result only as
+supporting theory is superseded by this decision.
 
 The following limits remain material:
 

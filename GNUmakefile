@@ -2,7 +2,7 @@
 .DEFAULT_GOAL := all
 include Makefile
 
-.PHONY: check-practical-selection reproduce-practical-selection paper-notes paper-claim check-predictive-claim check-predictive-feasibility
+.PHONY: check-practical-selection reproduce-practical-selection check-predictive-claim check-predictive-feasibility
 .PHONY: check-mushroom-rate-search reproduce-mushroom-rate-search
 .PHONY: check-mushroom-sensitivity reproduce-mushroom-sensitivity
 .PHONY: prepare-results check-scripts format-scripts
@@ -17,7 +17,7 @@ PAPER_FIGURES := build/figures/predictive-intro/tuned-rare-risk.pdf \
 	build/figures/practical-selection/practical-selection.pdf \
 	build/figures/mushroom-rate-search/paths-n2048-aggregate.pdf
 
-paper paper-notes: paper-figures
+paper: paper-figures
 
 paper-figures: $(PAPER_FIGURES)
 
@@ -63,12 +63,6 @@ format: format-scripts
 
 format-scripts:
 	ruff format scripts
-
-paper-notes:
-	cd paper && latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error -outdir=../build research-notes.tex
-
-paper-claim:
-	cd paper && latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error -outdir=../build proposed-claim.tex
 
 check-optimization: check-practical-selection check-predictive-claim check-mushroom-rate-search check-mushroom-sensitivity
 check-optimization: check-variance-scaling

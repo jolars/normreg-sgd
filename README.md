@@ -1,261 +1,114 @@
 # Feature Normalization under Finite Training Budgets
 
-Target: **AISTATS 2027**. The paper asks how feature normalization changes
-prediction under a finite training budget, and which effects remain after
-learning-rate, batch-size, and stopping calibration. Common and rare features
-provide the controlled setting. The [conference plan](notes/aistats-2027.md)
-records the scope, contribution work, and submission dates: September 29, 2026,
-for the abstract and October 6 for the paper and all supplementary material
-(23:59 AoE).
+This is an anonymous AISTATS 2027 manuscript with supporting Python
+calculations. The main theorem gives opposite rare-subgroup risk orderings for
+standardization and unscaled training after each chooses any nonnegative
+constant learning rate and deterministic stop under a common observation cap. It
+covers two independent binary features with known population preprocessing, one
+fresh observation per update, and the stated signal and rare-observation
+regimes.
 
-The broader research manuscript begins with two elementary calculations: a
-transient dependence effect in population gradient flow and a scalar SGD
-stability bound for rare binary observations. It extends these to a fixed common
-block, exact finite-update GD and fresh-sample SGD error moments, and
-batch-rarity stability under a bounded common-block assumption. A
-matched-covariance binary comparison isolates higher update moments, while
-conditional identities and counterexamples distinguish replacement sampling and
-reshuffling from fresh observations. Population centering and feature scales are
-known. An independently reviewed joint-budget theorem gives a rare-coefficient
-error limit under specified decreasing steps. A controlled fixed-data pilot
-finds subgroup-risk differences that reverse across signals and training
-budgets. Broader sampling limits, adaptive-optimizer comparisons, generalization
-beyond the categorical benchmark, and standalone novelty remain research
-objectives. Earlier correlated-feature shrinkage results are retained as
-explicit-regularization baselines in the appendices, following *The Choice of
-Normalization Influences Shrinkage in Regularized Regression* by Johan Larsson
-and Jonas Wallin.
+The bounded-rate proof has a separate Codex review. Independent review of the
+unrestricted-rate extension, human mathematical review, and source-comparison
+review remain open. The empirical studies informed the theory; the prospective
+evaluation is still a protocol draft. These results do not establish a general
+normalization recommendation.
 
 ## Start here
 
-- [Conference manuscript](paper/main.tex): an anonymous AISTATS 2027 draft
-  centered on normalization-risk comparisons, retuning, and validation
-  selection.
-- [Full research manuscript](paper/research-notes.tex): the preserved longer
-  treatment, including earlier theory and shrinkage baselines.
-- [AISTATS plan](notes/aistats-2027.md): paper organization, remaining
-  contribution work, conference requirements, and artifact preparation.
-- [Research tasks](TODO.md): the consolidated checklist for theory, novelty
-  comparisons, experiments, and manuscript development.
-- [Lean proof pilot](lean/README.md): formal large-rate lower bounds conditional
-  on the predictive moment recurrence, with pinned dependencies and an axiom
-  audit. Run `make prepare-lean` and `make check-lean` inside `devenv shell`.
-- [Research plan](notes/research-plan.md): the proposed contribution, current
-  evidence, mathematical setup, and first milestone.
-- [Joint-interaction specification](notes/joint-interactions.md) and [first
-  results](notes/joint-interactions-results.md): exact fresh-sample training
-  paths, risk decompositions, figures, and paired simulations. Independent
-  review of the new analytical deductions remains pending.
-- [Robustness protocol](notes/normalization-robustness.md): the declared
-  follow-up to C1 and C2, including parameter slices, rate and stopping
-  adjustments, controls, paired uncertainty, and failure reporting. The
-  [results](notes/normalization-robustness-results.md) show that both original
-  anchor comparisons disappear after retuning, while other laws retain reversals
-  and objective disagreements.
-- [Joint-budget theorem](notes/joint-budget-limits.md) and [independent
-  review](notes/joint-budget-review.md): the scoped fresh-sample limit.
-- [Practical-selection protocol](notes/practical-selection.md) and
-  [results](notes/practical-selection-results.md): training-estimated
-  preprocessing, intercepts, missing rare groups, validation-based selection,
-  and a sparse categorical linear-model evaluation on UCI Mushroom.
-- [Mushroom rate-search protocol](notes/mushroom-rate-search.md) and
-  [results](notes/mushroom-rate-search-results.md): a separately declared,
-  equally allocated expansion with paired comparisons, original-scale paths, and
-  retained failures. The primary unscaled search moves off its upper edge; the
-  large-sample SD rare advantage under aggregate selection is no longer
-  resolved, while damping's advantage persists.
-- [Literature audit](notes/novelty-audit.md): theorem-level overlap and
-  unresolved novelty comparisons.
-- [Damping and variance-scaling protocol](notes/mushroom-scaling-sensitivity.md)
-  and [results](notes/mushroom-scaling-sensitivity-results.md): five fixed
-  damping offsets and variance scaling in the primary centered/fitted Mushroom
-  arm, with equal tuning effort per rule and preserved preceding studies.
-  Reproduce with `make reproduce-mushroom-sensitivity` and audit with
-  `make check-mushroom-sensitivity` inside `devenv shell`.
-- [Four-rule practical protocol](notes/variance-scaling-followup.md) and
-  [results](notes/variance-scaling-followup-results.md): variance scaling across
-  all synthetic and Mushroom preprocessing arms, with a common 25-factor rate
-  grid and nested replications of the earlier searches. Reproduce with
-  `make reproduce-variance-scaling` and audit with `make check-variance-scaling`
-  inside `devenv shell`.
-- [Controlled pilot](notes/rare-subgroup-pilot.md): protocol, results, and
-  limits of the fixed-data subgroup-risk comparison.
-- [Initial investigation](notes/two-feature-investigation.md): detailed
-  derivations and a separate boundary correction to the earlier paper.
-- [Provenance](notes/provenance.md): where the initial theory and code came
-  from.
+- [Manuscript](paper/main.tex): the main text and appendices are inline; only
+  the [checklist](paper/sections/checklist.tex) is a separate input.
+- [Current tasks](TODO.md), [research plan](notes/research-plan.md), and
+  [conference preparation](notes/aistats-2027.md).
+- [Contribution decision](notes/predictive-contribution.md), [direct
+  proof](notes/predictive-theorem.md), and [proof review and unrestricted-rate
+  addendum](notes/predictive-proof-review.md).
+- [Prospective evaluation draft](notes/predictive-holdout.md): implementation,
+  declaration, and execution remain open.
+- [Lean pilot](lean/README.md): two large-rate lower bounds conditional on the
+  moment recurrence, with pinned dependencies and an axiom audit.
+- [Archive inventory](notes/archive.md): historical manuscripts and the previous
+  research backlog now live in
+  [`../normreg-multi-archive`](../normreg-multi-archive/README.md), backed by a
+  [private GitHub repository](https://github.com/jolars/normreg-multi-archive).
+
+## Evidence retained for the paper
+
+The [calibrated comparison proofs](notes/normalization-risk-theorem.md) and
+[joint-interaction study](notes/joint-interactions-results.md) explain
+particular learning paths. The [robustness
+study](notes/normalization-robustness-results.md) shows that retuning removes
+both original anchors, while other laws retain reversals or objective
+disagreements. Its covariance diagnostic failure remains part of the record.
+
+The [practical-selection study](notes/practical-selection-results.md) examines
+estimated preprocessing, fitted intercepts, missing rare groups, and validation
+selection on synthetic data and UCI Mushroom. The separate [rate
+expansion](notes/mushroom-rate-search-results.md), [damping
+sensitivity](notes/mushroom-scaling-sensitivity-results.md), and [four-rule
+extension](notes/variance-scaling-followup-results.md) retain the earlier
+studies and their failures. The expanded search removes the resolved
+large-sample SD rare-risk advantage under aggregate selection, while damping
+retains lower risks. Synthetic tuning boundaries and numerical discrepancies
+still limit the four-rule comparison.
+
+Protocols and reports live in `notes/`, scripts in `experiments/`, and artifacts
+in separate `results/` directories. Attributed source data are in
+`data/mushroom/`. Older calculations still used by the audits or frozen
+file-hash checks remain at their original paths.
 
 ## Work locally
 
-The development environment supplies Python, NumPy, SciPy, Matplotlib, Ruff,
-LaTeX, and the repository checks. Nix inputs are pinned in `devenv.lock`, and
-Python dependencies are pinned in `uv.lock`.
-
-The large robustness moment archive and detailed summary are local generated
-files, excluded from Git. `make prepare-results` recreates missing copies and
-verifies their frozen SHA-256 hashes. The checks that require them run this step
-automatically, including CI. The first run needs additional time and disk space;
-later runs reuse the verified local files. Git LFS is not required.
+The pinned devenv environment supplies Python, NumPy, SciPy, Matplotlib, Ruff,
+LaTeX, and repository checks. Run:
 
 ```sh
 devenv shell
 make paper
-make paper-notes
 make check
 ```
 
-The conference draft builds to `build/main.pdf`, with an eight-page main-text
-limit enforced during compilation. The longer manuscript builds separately to
-`build/research-notes.pdf`. `make check` checks formatting and configuration,
-verifies the optimization formulas against an independent ODE solution and exact
-batch enumeration, validates the shrinkage baselines against coordinate descent
-and Monte Carlo, and builds the manuscript. `make check-quick` uses fewer Monte
-Carlo draws for iteration. `make format` formats Markdown, Nix, and Python.
+The paper builds to `build/main.pdf`; compilation enforces the eight-page
+main-text limit. `make check` validates formatting, configuration, theory,
+empirical audits, preserved baselines, and the manuscript. `make check-quick`
+uses fewer Monte Carlo draws for the shrinkage baseline.
+`make check-optimization` runs the numerical audits alone; `make check-python`
+checks Python formatting and lint. Keep Python assertions enabled. `make format`
+formats Markdown, Nix, and Python.
 
-Edit manuscript figures in [`scripts/figures/`](scripts/figures/README.md). All
-seven generators share the Latin Modern font settings in
-`scripts/figures/style.py`. Run `make figures` inside `devenv shell` to export
-PDF, SVG, and PNG files to `build/figures/` from saved results. The paper
-targets rebuild the figures they use when their scripts, style, or inputs
-change. Historical figure code and artifacts remain frozen with the original
-studies.
+Two large robustness outputs are ignored local files. `make prepare-results`
+recreates missing copies and verifies their frozen hashes; dependent checks run
+it automatically. The first run takes additional time and disk space. See
+[generated result storage](notes/generated-results.md) for the history cleanup
+and preserved-file verification. No Git LFS is needed.
 
-The introduction's two-panel figure illustrates the oracle signal families with
-exact moment risks, a finite rate grid, and every integer stop under each
-budget. Inside `devenv shell`, run `make reproduce-predictive-intro` to
-regenerate its PDF, SVG, and numerical summary under
-`results/predictive-intro/`, or `make check-predictive-intro` to verify them
-without rewriting. The check includes rate-grid refinement and independent
-tensor replay of every selected endpoint. This figure illustrates the existing
-theorem; it is not a held-out evaluation.
+Each study has matching `reproduce-` and `check-` targets:
 
-To check just the optimization calculations inside `devenv shell`:
+  | Study                      | Target suffix              |
+  | -------------------------- | -------------------------- |
+  | First fresh-sample study   | `joint-interactions`       |
+  | Retuning and robustness    | `normalization-robustness` |
+  | Estimated preprocessing    | `practical-selection`      |
+  | Expanded categorical rates | `mushroom-rate-search`     |
+  | Fixed damping sensitivity  | `mushroom-sensitivity`     |
+  | Four-rule practical study  | `variance-scaling`         |
+  | Oracle illustration        | `predictive-intro`         |
 
-```sh
-make check-optimization
-```
+For example, `make check-mushroom-rate-search` audits the saved study, whereas
+`make reproduce-mushroom-rate-search` regenerates its artifacts. Use the Make
+targets so frozen studies receive the required preservation checks. Do not
+hand-edit results, declarations, or recorded hashes.
 
-This runs the elementary checks in `experiments/check_optimization.py`,
-block-flow checks in `experiments/check_block_flow.py`, finite-update moment
-checks in `experiments/check_discrete_dynamics.py`, and stability checks in
-`experiments/check_multivariate_stability.py`, plus covariance and
-sampling-scheme checks in `experiments/check_sampling_schemes.py`.
-`experiments/check_joint_budget.py` adds growing-budget and short-path checks;
-`experiments/check_rare_subgroup_pilot.py` checks the pilot's conditional
-moments and prediction risks. These use independent ODE solutions and exact
-support, batch, and short-trajectory enumeration without rewriting results.
-`experiments/check_joint_interactions.py` checks the new fresh-sample study and
-the provenance of its saved artifacts.
+Edit presentation figures in [scripts/figures/](scripts/figures/README.md).
+`make figures` exports all seven sets to `build/figures/`; `make paper` rebuilds
+the three it uses. Set dimensions in Python, never in `\includegraphics`.
+Historical plotting code and outputs remain frozen.
 
-To reproduce the joint-interaction grid, paired simulation, and SVG/PDF figures:
+The separate Lean checks use `make prepare-lean` followed by `make check-lean`.
+The older manuscript and proposed-claim builds are available in the archive.
 
-```sh
-make reproduce-joint-interactions
-```
-
-This writes `results/joint-interactions.json`, `results/joint-interactions.npz`,
-and figures under `results/figures/`. Run `make check-joint-interactions` for
-its focused numerical and provenance checks. The
-[specification](notes/joint-interactions.md) records the complete comparison and
-distinguishes it from the fixed-data pilot.
-
-To reproduce the declared robustness extension inside `devenv shell`:
-
-```sh
-make reproduce-normalization-robustness
-```
-
-This writes the complete grid, paired simulations, summaries, and six SVG/PDF
-figures under `results/normalization-robustness/`. Run
-`make check-normalization-robustness` for independent numerical, selection,
-uncertainty, and provenance checks. The
-[report](notes/normalization-robustness-results.md) retains disappearing
-comparisons, unresolved unrestricted envelopes, and one investigated Monte Carlo
-covariance diagnostic. Both preceding studies remain unchanged. The full moment
-archive is about 441 MiB, and its detailed summary is about 203 MiB. Both are
-excluded from Git. The tracked reports, figures, simulation archive, and frozen
-hashes remain available. See the [storage migration](notes/generated-results.md)
-for the preservation checks used after removing these files from unpublished
-history.
-
-To reproduce the controlled pilot inside `devenv shell`:
-
-```sh
-python experiments/run_rare_subgroup_pilot.py
-```
-
-This writes `results/rare-subgroup-pilot.json`. The [pilot
-report](notes/rare-subgroup-pilot.md) records the frozen tuning grid, seeds,
-uncertainty convention, and interpretation. Its reported excess squared
-prediction errors omit the factor of one half in the training loss.
-
-To reproduce the practical-selection extension inside `devenv shell`:
-
-```sh
-make reproduce-practical-selection
-```
-
-This writes all candidate paths, validation selections, summaries, and SVG/PDF
-figures under `results/practical-selection/`. The attributed Mushroom input is
-vendored under `data/mushroom/`, so reproduction requires no download. Run
-`make check-practical-selection` for independent transformed-design updates,
-loss and selection reconstruction, paired uncertainty, and provenance checks.
-The earlier studies and the robustness covariance diagnostic are preserved.
-
-To reproduce the separate Mushroom rate-search follow-up inside `devenv shell`:
-
-```sh
-make reproduce-mushroom-rate-search
-```
-
-This verifies the existing declaration, expands the rate grid on the same splits
-and index streams, and writes paths, selections, paired summaries, and figures
-under `results/mushroom-rate-search/`. `make check-mushroom-rate-search` checks
-the independent transformed-design replay and reconstructs the nested original
-search against the frozen practical archive. Both focused audits also run in the
-integrated validation.
-
-To regenerate the numerical reference results for the shrinkage baselines:
-
-```sh
-make reproduce
-```
-
-This writes `results/two-feature-check.json`, including the seed, parameters,
-dependency versions, and comparison results. `make verify` runs the same full
-calculation without rewriting that file. For an individual run:
-
-```sh
-python experiments/check_two_features.py --draws 20000 --check-only
-```
-
-Outside NixOS, the numerical environment can also be installed with
-`uv sync --locked`; run calculations with
-`uv run python experiments/check_two_features.py --check-only`. Building the
-paper additionally requires a LaTeX installation with `latexmk` and the packages
-used in `paper/main.tex`.
-
-## Research conventions
-
-The manuscript and optimization checks use the averaged loss and covariance
-$C = X_c^\top X_c/n$ for empirical designs. The shrinkage script uses the
-equivalent unaveraged Gram matrix $G = nC$, with $t = \lambda_1/n$ and
-$r = \lambda_2/n$. All reported coefficients are on the original feature scale.
-
-Use $T$ for gradient-flow time, $k$ for update count, $B$ for batch size, and
-$\eta$ for learning rate. Distinguish population flow, fixed-design fits, and
-SGD using fresh observations. Finite-sample penalty distributions condition on
-the design and fixed penalties; formal Gram limits are separate from actual
-binary sampling limits. A fixed diagonal preconditioner does not represent the
-complete dynamics of AdaGrad or Adam.
-
-## Repository administration
-
-This is a local Git repository on `main`. No GitHub remote or license has been
-selected. GitHub Actions and Dependabot configurations are included for future
-hosting; they have not run remotely.
-
-Versionary uses the Python version in `pyproject.toml` for research-code
-snapshots and manages `CHANGELOG.md` when releases begin. Its workflow is
-inactive until `ENABLE_RELEASES=true` is set and `RELEASE_TOKEN` is configured
-in the eventual GitHub repository. No package publication is configured.
+See [AGENTS.md](AGENTS.md) for mathematical conventions and preservation rules.
+The active repository is
+[jolars/normreg-multi](https://github.com/jolars/normreg-multi). Releases
+require `ENABLE_RELEASES=true` and `RELEASE_TOKEN`; no package publication or
+license is configured. Versionary manages `CHANGELOG.md` when releases begin.
