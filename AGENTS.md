@@ -211,5 +211,11 @@ publication and a license have not been configured.
 
 ### Figures
 
+- Editable figure generators live in `scripts/figures/` and share the Matplotlib
+  `rcParams` in `style.py`, which renders text and math through LaTeX with
+  `lmodern`. Inside `devenv shell`, run `make figures` to regenerate all
+  presentation figures from saved results under `build/figures/`. The paper
+  targets rebuild the figures they use automatically. Keep the historical figure
+  code in `experiments/` and its hashed outputs in `results/` frozen.
 - Never set width or height in the LaTeX `\includegraphics` command. Adapt
   figure sizes in the Python scripts instead.

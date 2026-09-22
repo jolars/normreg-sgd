@@ -112,6 +112,14 @@ batch enumeration, validates the shrinkage baselines against coordinate descent
 and Monte Carlo, and builds the manuscript. `make check-quick` uses fewer Monte
 Carlo draws for iteration. `make format` formats Markdown, Nix, and Python.
 
+Edit manuscript figures in [`scripts/figures/`](scripts/figures/README.md). All
+seven generators share the Latin Modern font settings in
+`scripts/figures/style.py`. Run `make figures` inside `devenv shell` to export
+PDF, SVG, and PNG files to `build/figures/` from saved results. The paper
+targets rebuild the figures they use when their scripts, style, or inputs
+change. Historical figure code and artifacts remain frozen with the original
+studies.
+
 The introduction's two-panel figure illustrates the oracle signal families with
 exact moment risks, a finite rate grid, and every integer stop under each
 budget. Inside `devenv shell`, run `make reproduce-predictive-intro` to

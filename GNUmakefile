@@ -11,6 +11,35 @@ include Makefile
 .PHONY: check-predictive-review
 .PHONY: reproduce-predictive-intro check-predictive-intro
 .PHONY: prepare-lean check-lean
+.PHONY: figures paper-figures
+
+PAPER_FIGURES := build/figures/predictive-intro/tuned-rare-risk.pdf \
+	build/figures/practical-selection/practical-selection.pdf \
+	build/figures/mushroom-rate-search/paths-n2048-aggregate.pdf
+
+paper paper-notes: paper-figures
+
+paper-figures: $(PAPER_FIGURES)
+
+$(PAPER_FIGURES): scripts/figures/style.py devenv.nix devenv.lock uv.lock
+
+build/figures/predictive-intro/tuned-rare-risk.pdf: scripts/figures/plot_predictive_intro.py results/predictive-intro/summary.json
+	python scripts/figures/plot_predictive_intro.py
+
+build/figures/practical-selection/practical-selection.pdf: scripts/figures/plot_practical_selection.py results/practical-selection/summary.json
+	python scripts/figures/plot_practical_selection.py
+
+build/figures/mushroom-rate-search/paths-n2048-aggregate.pdf: scripts/figures/plot_mushroom_rate_search.py results/mushroom-rate-search/summary.json
+	python scripts/figures/plot_mushroom_rate_search.py
+
+figures: prepare-results
+	python scripts/figures/plot_predictive_intro.py
+	python scripts/figures/plot_practical_selection.py
+	python scripts/figures/plot_mushroom_rate_search.py
+	python scripts/figures/plot_joint_interactions.py
+	python scripts/figures/plot_normalization_robustness.py
+	python scripts/figures/plot_mushroom_sensitivity.py
+	python scripts/figures/plot_variance_scaling.py
 
 prepare-lean:
 	cd lean && lake exe cache get Mathlib.Data.Real.Basic Mathlib.Tactic.FieldSimp Mathlib.Tactic.Linarith Mathlib.Tactic.Positivity Mathlib.Tactic.Ring
