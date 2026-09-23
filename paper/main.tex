@@ -2008,4 +2008,10 @@ container, and reproduction instructions, including how to build the complete
 paper from saved results, rerun experiments, and check the numerical
 certificates. It also identifies optional outputs that must be regenerated.
 
+We ran the experiments on a local NixOS workstation with an AMD Ryzen 9 7900
+CPU (12 cores, 24 hardware threads) and approximately 62\,GiB of usable RAM.
+The Python implementations use NumPy and SciPy on the CPU, with OpenBLAS
+restricted to one thread by the experiment tasks. Saved experiment metadata
+include software versions and elapsed runtimes.
+
 \end{document}
