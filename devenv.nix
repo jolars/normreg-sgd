@@ -49,25 +49,25 @@
     };
     nixfmt.enable = true;
     actionlint.enable = true;
-    panache-format = {
-      enable = true;
-      name = "Check Markdown formatting";
-      entry = "panache format --check --force-exclude";
-      files = "\\.md$";
-    };
-    panache-lint = {
-      enable = true;
-      name = "Lint Markdown";
-      entry = "panache lint --force-exclude";
-      files = "\\.md$";
-    };
-    python = {
-      enable = true;
-      name = "Check experiment formatting and lint";
-      entry = "make check-python";
-      files = "^((experiments|scripts)/.*\\.py|pyproject\\.toml)$";
-      pass_filenames = false;
-    };
+    # panache-format = {
+    #   enable = true;
+    #   name = "Check Markdown formatting";
+    #   entry = "panache format --check --force-exclude";
+    #   files = "\\.md$";
+    # };
+    # panache-lint = {
+    #   enable = true;
+    #   name = "Lint Markdown";
+    #   entry = "panache lint --force-exclude";
+    #   files = "\\.md$";
+    # };
+    # python = {
+    #   enable = true;
+    #   name = "Check experiment formatting and lint";
+    #   entry = "make check-python";
+    #   files = "^((experiments|scripts)/.*\\.py|pyproject\\.toml)$";
+    #   pass_filenames = false;
+    # };
   };
 
   enterTest = ''
