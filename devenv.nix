@@ -35,6 +35,7 @@
       "microtype"
       "natbib"
       "booktabs"
+      "cleveref"
     ];
   };
 

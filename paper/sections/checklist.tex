@@ -5,7 +5,7 @@
         \begin{enumerate}
           \item A clear description of the mathematical setting, assumptions,
                 algorithm, and/or model. [Yes]
-                Section~\ref{sec:conference-setting}.
+                \Cref{sec:conference-setting}.
           \item An analysis of the properties and complexity (time, space,
                 sample size) of any algorithm. [No] We analyze the stated
                 procedures and count processed observations, but do not give a
@@ -19,17 +19,15 @@
   \item For any theoretical claim, check if you include:
         \begin{enumerate}
           \item Statements of the full set of assumptions of all theoretical
-                results. [Yes] Section~\ref{sec:conference-setting} and the
+                results. [Yes] \Cref{sec:conference-setting} and the
                 theorem statements.
           \item Complete proofs of all theoretical results. [No] Derivations and
                 enclosure arguments appear in
-                Appendices~\ref{sec:predictive-proofs}
-                and~\ref{sec:comparison-proofs}; the executable
+                \cref{sec:predictive-proofs,sec:comparison-proofs}; the executable
                 certificates still need to accompany the anonymous submission.
           \item Clear explanations of any assumptions. [Yes]
-                Sections~\ref{sec:conference-setting}
-                and~\ref{sec:conference-predictive}, and the supporting
-                comparisons in Section~\ref{sec:conference-comparisons}.
+                \Cref{sec:conference-setting,sec:conference-predictive}, and the
+                supporting comparisons in \cref{sec:conference-comparisons}.
         \end{enumerate}
 
   \item For all figures and tables that present empirical results, check if you
@@ -42,13 +40,13 @@
                 to prepare an anonymous distribution.
           \item All the training details (e.g., data splits, hyperparameters,
                 how they were chosen). [No] The practical protocol is summarized
-                in Appendix~\ref{sec:practical}; the full frozen protocols and
+                in \cref{sec:practical}; the full frozen protocols and
                 search sets still need to accompany the submission.
           \item A clear definition of the specific measure or statistics and
                 error bars (e.g., with respect to the random seed after running
                 experiments multiple times). [Yes]
-                Section~\ref{sec:conference-experiments} and
-                Appendix~\ref{sec:practical} define risks, pairing, and MCSEs.
+                \Cref{sec:conference-experiments} and
+                \cref{sec:practical} define risks, pairing, and MCSEs.
           \item A description of the computing infrastructure used. (e.g., type
                 of GPUs, internal cluster, or cloud provider). [No] A
                 consolidated description of the hardware and runtime still
