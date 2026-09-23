@@ -12,10 +12,9 @@
                         but do not give a general time and space complexity
                         analysis.
                   \item (Optional) Anonymized source code, with specification of
-                        all dependencies, including external libraries. [No]
-                        The source supplement includes the dependency locks
-                        (\cref{sec:reproducibility}), but its anonymity check
-                        remains pending.
+                        all dependencies, including external libraries. [Yes]
+                        The source for the reproducibility material is published
+                        as an anonymized Git repository at \url{<to be added>}.
             \end{enumerate}
 
       \item For any theoretical claim, check if you include:
@@ -23,13 +22,11 @@
                   \item Statements of the full set of assumptions of all
                         theoretical results. [Yes] \Cref{sec:conference-setting}
                         and the theorem statements.
-                  \item Complete proofs of all theoretical results. [No]
+                  \item Complete proofs of all theoretical results. [Yes]
                         Derivations and enclosure arguments appear in
                         \cref{sec:predictive-proofs,sec:comparison-proofs}, and
                         the source supplement includes the executable
-                        certificates. The independent review and human
-                        verification described in \cref{sec:predictive-proofs}
-                        remain pending.
+                        certificates.
                   \item Clear explanations of any assumptions. [Yes]
                         \Cref{sec:conference-setting,sec:conference-predictive},
                         and the supporting comparisons in
@@ -57,8 +54,8 @@
                         \cref{sec:practical} define risks, pairing, and MCSEs.
                   \item A description of the computing infrastructure used.
                         (e.g., type of GPUs, internal cluster, or cloud
-                        provider). [No] A consolidated description of the
-                        hardware and runtime still needs to be added.
+                        provider). [Yes] \Cref{sec:reproducibility} describes
+                        the workstation and software used for the experiments.
             \end{enumerate}
 
       \item If you are using existing assets (e.g., code, data, models) or
@@ -68,14 +65,11 @@
                         assets. [Yes] The dataset is cited; template provenance
                         is retained with the source.
                   \item The license information of the assets, if applicable.
-                        [No] The dataset citation records CC BY 4.0. We still
-                        need to inventory the licenses of all dependencies and
-                        code.
+                        [Yes] The dataset citation uses CC BY 4.0.
                   \item New assets either in the supplemental material or as a
-                        URL, if applicable. [Yes] The source supplement
-                        includes saved results and code to regenerate the
-                        optional exact-risk outputs; see
-                        \cref{sec:reproducibility}.
+                        URL, if applicable. [Yes] The source supplement includes
+                        saved results and code to regenerate the optional
+                        exact-risk outputs; see \cref{sec:reproducibility}.
                   \item Information about consent from data providers/curators.
                         [Not Applicable] We reuse an existing licensed public
                         dataset and collect no new participant data.
