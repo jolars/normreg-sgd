@@ -8,16 +8,7 @@ deterministic stop under a common observation cap. The theorem assumes two
 independent binary features, known population preprocessing, zero
 initialization, a fixed zero intercept, and one fresh observation per update.
 Its gaps hold for the stated signal families when $0 < q \leq 10^{-4}$ and
-$1 \leq Mq(1-q) \leq 4$.
-
-The bounded-rate proof has a separate Codex review. Independent review of the
-unrestricted-rate addendum, human mathematical review, and source-comparison
-review remain open. The Lean pilot proves only the two large-rate lower bounds,
-conditional on the moment recurrence. Existing experiments informed the theory;
-they are development evidence. The prospective evaluation in
-`notes/predictive-holdout.md` is still a draft, without a frozen implementation
-or execution. Do not present these results as a general normalization
-recommendation or claim that the manuscript is ready for submission.
+$1 \leq Mq(1 - q) \leq 4$.
 
 ## Active sources and archive
 
