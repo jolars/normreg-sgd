@@ -127,30 +127,25 @@ informed the theorem; prospective evaluation remains open.
 
 \paragraph{Relation to prior work.}
 
-Several authors have studied how preconditioning affects statistical performance
-\citep{amari2020preconditioning, su2024preconditioning}. In particular,
-\citet[Section 4.2, Proposition 7]{amari2020preconditioning} show that the
-preferred preconditioner depends on signal alignment even after optimizing
-early-stopping bias in an overparameterized model with fixed data. We instead
-compare total rare-subgroup risk, including variance from stochastic updates, in
-a fixed-dimensional model with fresh observations. Under the same observation
-cap, we obtain explicit gaps between the best risks attainable over all constant
-rates and deterministic stops.
+\citet[Proposition 7]{amari2020preconditioning} show that signal alignment
+affects the preferred preconditioner after optimizing aggregate prediction bias
+over stopping times. They study gradient flow on a fixed training sample in an
+overparameterized model, averaging over signal priors. For fresh-sample SGD,
+\citet[Theorems 4.2--4.4]{su2024preconditioning} bound the aggregate excess risk
+of tail-averaged iterates and tune preconditioning to match ridge regression up
+to constant factors. Our theorem compares total rare-subgroup risk of final
+iterates after optimizing all nonnegative constant rates and deterministic stops
+under one observation cap.
 
-Early stopping also changes least-squares regularization \citep{ali2019early},
-and analyses of least-mean-squares methods separate bias and variance while
-accounting for sampling and batching \citep{defossez2015averaged,
-jain2018parallelizing}. AdaBatch connects sparse mini-batch aggregation with
-coordinate rescaling \citep{defossez2017adabatch}, while moment operators
-characterize exact mean-square stability \citep{mulayoff2024exact}.
-\citet{liu2025precondition} study how the test objective affects preconditioning
-under covariate shift. For explicit regularization,
-\citet{larsson2025normalization} analyze how feature scaling affects shrinkage.
-We build on these mechanisms to compare conventional normalization rules using
-final iterates, coefficients on the original scale, and rare-presence risk. Our
-contribution is the quantitative comparison and its dependence on tuning;
-diagonal preconditioning and the bias--variance tradeoff are established
-mechanisms.
+Rare-presence risk is a target-distribution risk: we condition the test law on
+the rare feature while retaining the training law. \citet[Remark 3.1]{lei2021shift}
+give a minimax target-risk separation from optimally tuned ridge with a fixed
+design and Gaussian noise. \citet[Corollary 3.3]{wu2022pretraining} analyze
+target risk of the final online-SGD iterate with geometric step decay, and
+\citet{liu2025precondition} study minimax preconditioning and accelerated SGD
+under covariate shift. These results do not supply our explicit opposite gaps
+for fixed signal families. Appendix~\ref{sec:comparison-proofs} discusses the
+established mechanisms supporting our analysis.
 
 \section{Normalization and the training procedure}
 \label{sec:conference-setting}
@@ -1065,6 +1060,15 @@ a prospective evaluation of its predictions.
 
 \section{Proofs of the normalization-risk comparisons}
 \label{sec:comparison-proofs}
+
+Our calculations build on established mechanisms. Early stopping changes
+least-squares regularization \citep{ali2019early}, and analyses of
+least-mean-squares methods separate bias and variance while accounting for
+sampling and batching \citep{defossez2015averaged, jain2018parallelizing}.
+AdaBatch connects sparse mini-batch aggregation with coordinate rescaling
+\citep{defossez2017adabatch}, while moment operators characterize exact
+mean-square stability \citep{mulayoff2024exact}. For explicit regularization,
+\citet{larsson2025normalization} analyze how feature scaling affects shrinkage.
 
 In this appendix, we derive the moment recurrences and approximation bounds used
 to prove Theorems~\ref{thm:conference-c1} and~\ref{thm:conference-c2}. We then

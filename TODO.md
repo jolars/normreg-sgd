@@ -7,13 +7,16 @@ submission requirement.
 
 ## Review the claims
 
-- [ ] Review the closest-source comparison, especially Amari et al.'s optimally
+- [x] Review the closest-source comparison, especially Amari et al.'s optimally
   stopped bias result, Su et al.'s preconditioned-SGD results, and the
   target-risk antecedents. Compare assumptions, risk objectives, iterates,
   and tuning domains, and determine whether existing results imply the
   oracle comparison. Check versions and precise statements before making a
   priority claim, then revise the related-work discussion to reflect the
-  verified distinctions.
+  verified distinctions. Completed in the [bounded source
+  review](notes/predictive-source-comparison.md); the related-work
+  discussion and references now reflect it. Exhaustive priority is not
+  established.
 - [ ] Resolve citation markers and verify any claims retained from [the research
   report](deep-research-report.md). Add verified references from the audits
   only where they support the current manuscript.
