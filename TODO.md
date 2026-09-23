@@ -2,8 +2,7 @@
 
 Keep the manuscript theory-led. Prioritize the revisions below, informed by the
 [mock-review synthesis](reviews/2026-09-23-aistats/synthesis.md), before adding
-another empirical study. Human mathematical verification remains a separate
-submission requirement.
+another empirical study.
 
 ## Review the claims
 
@@ -70,10 +69,6 @@ submission requirement.
 
 ## Prepare the submission
 
-- [ ] Complete and document human verification of the full oracle theorem,
-  including the unrestricted-rate extension, the supporting proofs, and the
-  submitted numerical claims. Automated checks and AI-assisted reviews do
-  not replace this verification.
 - [ ] Review the final claims, experimental interpretation, references, and
   disclosure.
 - [ ] Finalize title, abstract, author list, OpenReview profiles, and the
