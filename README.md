@@ -5,10 +5,10 @@ including its appendices. Run commands from the repository root in
 `devenv shell`.
 
 ```sh
-make paper       # Build the five manuscript figures and build/main.pdf.
-make figures     # Build just the manuscript figures from saved summaries.
-make check       # Check formatting, provenance, calculations, and the paper.
-make verify      # Run the paper's numerical and artifact checks.
+task paper       # Build the five manuscript figures and build/main.pdf.
+task figures     # Export manuscript figures to figures/ from saved summaries.
+task check       # Check formatting, provenance, calculations, and the paper.
+task verify      # Run the paper's numerical and artifact checks.
 ```
 
 ## Experiments used in the paper
@@ -27,20 +27,24 @@ make verify      # Run the paper's numerical and artifact checks.
   | Matched four-scaling search                      | Final Mushroom comparison and follow-up appendix | `check-variance-scaling`                              |
   | Numerical discrepancies and clipping             | Final comparison and diagnostic appendix         | `check-review-diagnostics`                            |
 
-The corresponding `reproduce-*` targets regenerate studies or illustrations
-intentionally. Certificate and shared-moment checks compute their results
-directly. Reproduction can be expensive and can rewrite results; building the
-paper reads saved summaries. `make prepare-results` reconstructs the two ignored
-robustness artifacts when missing and checks their frozen hashes.
+Run `task --list` to list the available commands. The corresponding
+`reproduce-*` tasks regenerate studies or illustrations intentionally.
+Certificate and shared-moment checks compute their results directly.
+Reproduction can be expensive and can rewrite results; building the paper reads
+saved summaries. `task prepare-results` reconstructs the two ignored robustness
+artifacts when missing and checks their frozen hashes.
 
 Some older module names remain because the paper's calculations import them:
 `run_joint_interactions.py` supplies exact moments,
 `check_joint_interactions.py` supplies exhaustive path enumeration,
 `check_discrete_dynamics.py` supplies an independent moment operator, and
 `plot_joint_interactions.py` supplies the frozen figure export helper. Their
-standalone historical study is no longer part of the build. Archived plots
-within retained studies remain inputs to their artifact audits; editable
-manuscript plots live in [scripts/figures](scripts/figures/README.md).
+standalone historical study is no longer part of the build. `results/` contains
+numerical arrays, summaries, and provenance records. Manuscript figures are
+generated under `figures/`, and the unchanged historical exports used by
+artifact audits live in `figures/frozen/`. Editable plotting code lives in
+[scripts/figures](scripts/figures/README.md). The generated diagnostic table is
+stored in `paper/generated/review-diagnostics.tex`.
 
 ## Frozen provenance after cleanup
 
@@ -54,8 +58,16 @@ retained inputs are checked on disk; deleting or changing one still fails
 validation.
 
 Use a clone with full Git history for artifact checks and reproduction. For a
-shallow clone, run `git fetch --unshallow`. The `make` targets apply the
+shallow clone, run `git fetch --unshallow`. The Task commands apply the
 provenance adapter in
-[scripts/frozen_experiment.py](scripts/frozen_experiment.py); invoke those
-targets instead of running frozen study drivers directly. Numerical gate
-failures recorded in the original studies remain visible in their audits.
+[scripts/frozen_experiment.py](scripts/frozen_experiment.py); invoke those tasks
+instead of running frozen study drivers directly. Numerical gate failures
+recorded in the original studies remain visible in their audits.
+
+[scripts/relocated_outputs.json](scripts/relocated_outputs.json) maps recorded
+figure and table paths to their new locations. The adapter temporarily exposes
+the old paths as symlinks while a frozen command runs, then removes them,
+including on failure. Frozen commands share a lock so these aliases cannot
+overlap. This preserves the hashed source files and manifests while writing
+figures under `figures/frozen/`. Missing or changed frozen exports still fail
+validation.

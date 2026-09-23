@@ -7,6 +7,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import frozen_inputs
+from relocated_outputs import legacy_output_paths
 
 
 def main():
@@ -60,6 +61,52 @@ def main():
                     assert "Git history" in str(error)
                 else:
                     raise AssertionError("An unavailable archive was accepted.")
+            figure = root / "figures/frozen/study/plot.svg"
+            figure.parent.mkdir(parents=True)
+            figure.write_text("frozen figure\n")
+            legacy = root / "results/study/plot.svg"
+            with patch.object(
+                frozen_inputs,
+                "RELOCATED_PATHS",
+                {"results/study/plot.svg": "figures/frozen/study/plot.svg"},
+            ):
+                digest = hashlib.sha256(figure.read_bytes()).hexdigest()
+                assert frozen_inputs.sha256(legacy) == digest
+                with legacy_output_paths():
+                    assert legacy.read_bytes() == figure.read_bytes()
+                    assert list(legacy.parent.glob("*.svg")) == [legacy]
+                    legacy.write_text("regenerated figure\n")
+                    assert figure.read_text() == "regenerated figure\n"
+                assert not legacy.is_symlink()
+                assert not legacy.exists()
+                try:
+                    with legacy_output_paths():
+                        raise RuntimeError("Interrupted reproduction")
+                except RuntimeError:
+                    pass
+                assert not legacy.is_symlink()
+                legacy.write_text("unexpected output\n")
+                try:
+                    with legacy_output_paths():
+                        raise AssertionError("An existing output was overwritten.")
+                except FileExistsError:
+                    pass
+                assert legacy.read_text() == "unexpected output\n"
+                legacy.unlink()
+                figure.write_text("changed figure\n")
+                assert frozen_inputs.sha256(legacy) != digest
+                figure.unlink()
+                with legacy_output_paths():
+                    assert not legacy.exists()
+                    legacy.write_text("new figure\n")
+                    assert figure.read_text() == "new figure\n"
+                figure.unlink()
+                try:
+                    frozen_inputs.sha256(legacy)
+                except FileNotFoundError:
+                    pass
+                else:
+                    raise AssertionError("A missing relocated figure was hidden.")
     print("Historical provenance and missing/changed paper-input checks passed.")
 
 

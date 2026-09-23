@@ -1,0 +1,279 @@
+version: '3'
+
+vars:
+  FROZEN: python scripts/frozen_experiment.py
+
+tasks:
+  default:
+    desc: Build the manuscript.
+    aliases: [all]
+    cmds:
+      - task: paper
+
+  paper:
+    desc: Build the manuscript figures and build/main.pdf.
+    cmds:
+      - task: figures
+      - cd paper && latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error -outdir=../build main.tex
+
+  figures:
+    desc: Export the five manuscript figures to figures/.
+    aliases: [paper-figures]
+    cmds:
+      - task: figure
+        vars:
+          SCRIPT: predictive_intro
+          STUDY: predictive-intro
+          SUMMARY: results/predictive-intro/summary.json
+          NAME: tuned-rare-risk
+      - task: figure
+        vars:
+          SCRIPT: signal_allocation
+          STUDY: signal-allocation
+          SUMMARY: results/signal-allocation/summary.json
+          NAME: risk-map
+      - task: figure
+        vars:
+          SCRIPT: mushroom_final
+          STUDY: mushroom-final
+          SUMMARY: results/variance-scaling-followup/mushroom-summary-c1.json
+          NAME: selected-risks
+      - task: figure
+        vars:
+          SCRIPT: practical_selection
+          STUDY: practical-selection
+          SUMMARY: results/practical-selection/summary.json
+          NAME: practical-selection
+      - task: figure
+        vars:
+          SCRIPT: mushroom_rate_search
+          STUDY: mushroom-rate-search
+          SUMMARY: results/mushroom-rate-search/summary.json
+          NAME: paths-n2048-aggregate
+
+  figure:
+    internal: true
+    label: 'figure:{{.STUDY}}'
+    sources:
+      - Taskfile.yml
+      - 'scripts/figures/plot_{{.SCRIPT}}.py'
+      - scripts/figures/style.py
+      - '{{.SUMMARY}}'
+      - devenv.nix
+      - devenv.lock
+      - uv.lock
+    generates:
+      - 'figures/{{.STUDY}}/{{.NAME}}.pdf'
+      - 'figures/{{.STUDY}}/{{.NAME}}.svg'
+      - 'figures/{{.STUDY}}/{{.NAME}}.png'
+    cmds:
+      - 'python scripts/figures/plot_{{.SCRIPT}}.py'
+
+  check:
+    desc: Check formatting, configuration, provenance, calculations, and the paper.
+    aliases: [check-quick]
+    cmds:
+      - task: check-markdown
+      - task: check-config
+      - task: check-python
+      - task: check-experiments
+      - task: paper
+
+  check-markdown:
+    desc: Check Markdown formatting and lint.
+    cmds:
+      - panache format --check .
+      - panache lint .
+
+  check-config:
+    desc: Check Nix, GitHub Actions, and the Python lockfile.
+    cmds:
+      - nixfmt --check devenv.nix
+      - actionlint
+      - uv lock --check
+
+  check-python:
+    desc: Check Python formatting and lint.
+    cmds:
+      - ruff format --check experiments scripts
+      - ruff check experiments scripts
+
+  check-experiments:
+    desc: Verify numerical results and frozen artifacts.
+    aliases: [verify]
+    cmds:
+      - task: check-frozen-inputs
+      - task: check-moments
+      - task: check-normalization-risk
+      - task: check-normalization-robustness
+      - task: check-predictive-theorem
+      - task: check-predictive-review
+      - task: check-predictive-intro
+      - task: check-practical-selection
+      - task: check-mushroom-rate-search
+      - task: check-mushroom-sensitivity
+      - task: check-variance-scaling
+      - task: check-review-diagnostics
+      - task: check-signal-allocation
+
+  check-frozen-inputs:
+    desc: Check archived provenance and relocated artifact handling.
+    cmds:
+      - python scripts/check_frozen_inputs.py
+
+  check-moments:
+    desc: Check the shared exact-moment calculations.
+    cmds:
+      - python experiments/check_joint_interactions.py
+
+  check-normalization-risk:
+    desc: Check the calibrated normalization-risk theorem.
+    cmds:
+      - python experiments/check_normalization_risk_theorem.py
+
+  check-predictive-theorem:
+    desc: Check the predictive theorem certificates.
+    cmds:
+      - python experiments/check_predictive_theorem.py
+
+  check-predictive-review:
+    desc: Run the independent predictive theorem checks.
+    cmds:
+      - python experiments/check_predictive_review.py
+
+  check-predictive-intro:
+    desc: Check the introduction illustration and frozen exports.
+    cmds:
+      - '{{.FROZEN}} plot_predictive_intro --check'
+
+  check-review-diagnostics:
+    desc: Check review diagnostics and generated tables.
+    cmds:
+      - '{{.FROZEN}} scripts/review_diagnostics.py --check'
+
+  check-signal-allocation:
+    desc: Check the signal-allocation illustration.
+    cmds:
+      - python scripts/illustrate_signal_allocation.py --check
+
+  prepare-results:
+    desc: Recreate missing robustness artifacts and verify their frozen hashes.
+    run: once
+    cmds:
+      - python scripts/prepare_results.py
+
+  check-normalization-robustness:
+    desc: Check normalization robustness and its recorded artifacts.
+    deps: [prepare-results]
+    cmds:
+      - '{{.FROZEN}} check_normalization_robustness'
+
+  check-practical-selection:
+    desc: Check practical preprocessing and validation selection.
+    deps: [prepare-results]
+    cmds:
+      - '{{.FROZEN}} check_practical_selection'
+
+  check-mushroom-rate-search:
+    desc: Check the expanded Mushroom rate search.
+    deps: [prepare-results]
+    cmds:
+      - 'OPENBLAS_NUM_THREADS=1 {{.FROZEN}} check_mushroom_rate_search'
+
+  check-mushroom-sensitivity:
+    desc: Check Mushroom damping and variance sensitivity.
+    deps: [prepare-results]
+    cmds:
+      - 'OPENBLAS_NUM_THREADS=1 {{.FROZEN}} check_mushroom_sensitivity'
+
+  check-variance-scaling:
+    desc: Check the matched four-scaling search.
+    deps: [prepare-results]
+    cmds:
+      - 'OPENBLAS_NUM_THREADS=1 {{.FROZEN}} check_variance_scaling'
+
+  reproduce-normalization-robustness:
+    desc: Regenerate the normalization-robustness study.
+    deps: [prepare-results]
+    cmds:
+      - '{{.FROZEN}} check_normalization_robustness --numerics-only'
+      - task: check-normalization-risk
+      - '{{.FROZEN}} run_normalization_robustness'
+      - '{{.FROZEN}} simulate_normalization_robustness'
+      - '{{.FROZEN}} summarize_normalization_robustness'
+      - '{{.FROZEN}} plot_normalization_robustness'
+      - task: check-normalization-robustness
+
+  reproduce-practical-selection:
+    desc: Regenerate the practical-selection study.
+    deps: [prepare-results]
+    cmds:
+      - '{{.FROZEN}} check_practical_selection --numerics-only'
+      - '{{.FROZEN}} run_practical_selection'
+      - '{{.FROZEN}} summarize_practical_selection'
+      - '{{.FROZEN}} audit_practical_precision'
+      - task: check-practical-selection
+
+  reproduce-mushroom-rate-search:
+    desc: Regenerate the expanded Mushroom rate search.
+    deps: [prepare-results]
+    cmds:
+      - 'OPENBLAS_NUM_THREADS=1 {{.FROZEN}} check_mushroom_rate_search --numerics-only'
+      - '{{.FROZEN}} mushroom_rate_spec --declare'
+      - 'OPENBLAS_NUM_THREADS=1 {{.FROZEN}} run_mushroom_rate_search'
+      - 'OPENBLAS_NUM_THREADS=1 {{.FROZEN}} summarize_mushroom_rate_search'
+      - task: check-mushroom-rate-search
+
+  reproduce-mushroom-sensitivity:
+    desc: Regenerate the Mushroom sensitivity study.
+    deps: [prepare-results]
+    cmds:
+      - 'OPENBLAS_NUM_THREADS=1 {{.FROZEN}} check_mushroom_sensitivity --numerics-only'
+      - '{{.FROZEN}} mushroom_sensitivity_spec --declare'
+      - 'OPENBLAS_NUM_THREADS=1 {{.FROZEN}} run_mushroom_sensitivity'
+      - 'OPENBLAS_NUM_THREADS=1 {{.FROZEN}} summarize_mushroom_sensitivity'
+      - task: check-mushroom-sensitivity
+
+  reproduce-variance-scaling:
+    desc: Regenerate the matched four-scaling search.
+    deps: [prepare-results]
+    cmds:
+      - 'OPENBLAS_NUM_THREADS=1 {{.FROZEN}} check_variance_scaling --numerics-only'
+      - '{{.FROZEN}} variance_scaling_spec --declare'
+      - 'OPENBLAS_NUM_THREADS=1 {{.FROZEN}} run_variance_scaling'
+      - 'OPENBLAS_NUM_THREADS=1 {{.FROZEN}} summarize_variance_scaling'
+      - 'OPENBLAS_NUM_THREADS=1 {{.FROZEN}} check_variance_scaling --write-audit'
+
+  reproduce-predictive-intro:
+    desc: Regenerate the introduction illustration and its frozen exports.
+    cmds:
+      - '{{.FROZEN}} plot_predictive_intro'
+
+  reproduce-review-diagnostics:
+    desc: Regenerate review diagnostics and update the manuscript tables.
+    cmds:
+      - '{{.FROZEN}} scripts/review_diagnostics.py --update-paper'
+
+  reproduce-signal-allocation:
+    desc: Regenerate the signal-allocation illustration.
+    cmds:
+      - python scripts/illustrate_signal_allocation.py
+
+  prepare-lean:
+    desc: Fetch the Mathlib caches needed by the proofs.
+    dir: lean
+    cmds:
+      - lake exe cache get Mathlib.Data.Real.Basic Mathlib.Tactic.FieldSimp Mathlib.Tactic.Linarith Mathlib.Tactic.Positivity Mathlib.Tactic.Ring
+
+  check-lean:
+    desc: Build the formal proofs and axiom audits.
+    dir: lean
+    cmds:
+      - lake build
+
+  format:
+    desc: Format Markdown, Nix, and Python sources.
+    cmds:
+      - panache format .
+      - nixfmt devenv.nix
+      - ruff format experiments scripts

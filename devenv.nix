@@ -2,7 +2,7 @@
 {
   packages = with pkgs; [
     git
-    gnumake
+    go-task
     panache
     nixfmt
     actionlint
@@ -65,13 +65,13 @@
     # python = {
     #   enable = true;
     #   name = "Check experiment formatting and lint";
-    #   entry = "make check-python";
+    #   entry = "task check-python";
     #   files = "^((experiments|scripts)/.*\\.py|pyproject\\.toml)$";
     #   pass_filenames = false;
     # };
   };
 
   enterTest = ''
-    make check
+    task check
   '';
 }

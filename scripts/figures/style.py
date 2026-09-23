@@ -8,7 +8,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 ROOT = Path(__file__).resolve().parents[2]
-OUTPUT = ROOT / "build/figures"
+OUTPUT = ROOT / "figures"
 PAPER_WIDTH = 6.75
 
 # LaTeX renders text and math with the same font package as the manuscript.

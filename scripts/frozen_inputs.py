@@ -9,11 +9,16 @@ ROOT = Path(__file__).resolve().parents[1]
 ARCHIVE = json.loads((ROOT / "scripts/archived_inputs.json").read_text())
 REVISION = ARCHIVE["revision"]
 ARCHIVED_PATHS = frozenset(ARCHIVE["paths"])
+RELOCATED_PATHS = json.loads((ROOT / "scripts/relocated_outputs.json").read_text())
 VERIFIED = set()
 
 
 def sha256(path):
     path = Path(path).resolve()
+    if path.is_relative_to(ROOT):
+        relative = str(path.relative_to(ROOT))
+        if relative in RELOCATED_PATHS:
+            path = ROOT / RELOCATED_PATHS[relative]
     try:
         with path.open("rb") as stream:
             return hashlib.file_digest(stream, "sha256").hexdigest()

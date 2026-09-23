@@ -92,7 +92,7 @@ rare signals has a noise cost, and normalization changes that tradeoff.
 
 \begin{figure*}[t]
   \centering
-  \includegraphics{../build/figures/predictive-intro/tuned-rare-risk.pdf}
+  \includegraphics{../figures/predictive-intro/tuned-rare-risk.pdf}
   \caption{
     Tuning does not erase the effect of normalization. Independent binary
     features have prevalences $1/2$ and $q = 10^{-4}$, with
@@ -338,7 +338,7 @@ families; it does not prove an oracle transition outside them.
 
 \begin{figure*}[t]
   \centering
-  \includegraphics{../build/figures/signal-allocation/risk-map.pdf}
+  \includegraphics{../figures/signal-allocation/risk-map.pdf}
   \caption{
     Intermediate signals in the theorem's data model, with $q = 10^{-4}$ and
     $(\beta_C^*)^2 = 1.01(1 - f)$, $(\beta_R^*)^2 = 1.01f$. Red favors SD and
@@ -569,7 +569,7 @@ the earlier grids and refined stopping search.
 
 \begin{figure*}[t]
   \centering
-  \includegraphics{../build/figures/mushroom-final/selected-risks.pdf}
+  \includegraphics{../figures/mushroom-final/selected-risks.pdf}
   \caption{
     Final matched Mushroom comparison at $n = 2048$, validation size $1024$, and
     cap $M = 8192$, with centered predictors and a fitted intercept. Each
@@ -735,7 +735,7 @@ the method with higher risk, showing that none can reverse the ordering. Two
 independent implementations, \texttt{experiments/check\_predictive\_theorem.py}
 and \texttt{experiments/check\_predictive\_review.py}, check the rational
 certificates and the reductions of the moment equations. These checks run with
-\texttt{make check-predictive-theorem} and \texttt{make check-predictive-review}
+\texttt{task check-predictive-theorem} and \texttt{task check-predictive-review}
 in the locked environment.
 
 The proof for bounded rates has undergone a separate AI-assisted mathematical
@@ -1049,8 +1049,8 @@ interior rates. Replaying 112 selected endpoints with the separately enumerated
 full tensor operator gives maximum absolute risk discrepancy below $10^{-9}$.
 
 The artifact stores both grids, all selected rates and stops, both risk arrays,
-and source hashes. Run \texttt{make reproduce-signal-allocation} to regenerate
-it and \texttt{make check-signal-allocation} to verify it. Unlike
+and source hashes. Run \texttt{task reproduce-signal-allocation} to regenerate
+it and \texttt{task check-signal-allocation} to verify it. Unlike
 \cref{fig:conference-tuned-intro}, this search uses a finite stopping grid as
 well as a finite rate grid. Refinement and replay assess that calculation; they
 do not bound the error relative to the unrestricted oracle. The zero contours
@@ -1087,7 +1087,7 @@ to prove \cref{thm:conference-c1,thm:conference-c2}. We then describe the
 interval certificates. Throughout, we use the binary model, fresh sampling, and
 population preprocessing of \cref{sec:conference-setting}. The implementation is
 in \texttt{experiments/check\_normalization\_risk\_theorem.py}. Running
-\texttt{make check-normalization-risk} in the locked project environment checks
+\texttt{task check-normalization-risk} in the locked project environment checks
 both the certificates and independent numerical calculations. We still need to
 package an anonymized reproducibility archive for submission.
 
@@ -1407,7 +1407,7 @@ risk. We also retain all 151 failed synthetic endpoints, flagged in the archive.
 
 \begin{figure}[ht]
   \centering
-  \includegraphics{../build/figures/practical-selection/practical-selection.pdf}
+  \includegraphics{../figures/practical-selection/practical-selection.pdf}
   \caption{
     Original five-rate study, retained as development evidence. Top: fixed
     configurations for the independent and dependent anchor laws, with known
@@ -1602,7 +1602,7 @@ every mean.
 
 \begin{figure}[tp]
   \centering
-  \includegraphics{../build/figures/mushroom-rate-search/paths-n2048-aggregate.pdf}
+  \includegraphics{../figures/mushroom-rate-search/paths-n2048-aggregate.pdf}
   \caption{
     Paths on the original coefficient scale and selected endpoints under
     aggregate validation at $n = 2048$. Dotted curves use the rates and batches
@@ -1870,10 +1870,11 @@ frozen file hashes.
 
 These diagnostics were added after independent review. They read the frozen
 archives without changing their candidates, validation selections, or summaries.
-The source and input hashes, individual records, and regenerated tables are in
-\path{results/review-diagnostics/}. Run
-\texttt{make reproduce-review-diagnostics} to regenerate the outputs and
-\texttt{make check-review-diagnostics} to verify them. The diagnostics do not
+The source and input hashes and individual records are in
+\path{results/review-diagnostics/}, and the regenerated tables are in
+\path{paper/generated/review-diagnostics.tex}. Run
+\texttt{task reproduce-review-diagnostics} to regenerate the outputs and
+\texttt{task check-review-diagnostics} to verify them. The diagnostics do not
 constitute a new prospective experiment.
 
 \subsection{Which claims depend on the numerical discrepancies?}

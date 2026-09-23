@@ -77,8 +77,8 @@ the repository root:
 
 ```sh
 devenv shell
-make prepare-lean
-make check-lean
+task prepare-lean
+task check-lean
 ```
 
 The preparation target downloads the required precompiled Mathlib modules. Its

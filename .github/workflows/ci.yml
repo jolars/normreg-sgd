@@ -31,7 +31,7 @@ jobs:
       - name: Install devenv
         run: nix profile add nixpkgs#devenv
       - name: Validate calculations and build manuscript
-        run: devenv shell make check
+        run: devenv shell task check
       - uses: actions/upload-artifact@v7
         with:
           name: normreg-multi-manuscript

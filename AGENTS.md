@@ -11,24 +11,28 @@ budgets.
 - `scripts/` contains artifact preparation and diagnostics. Editable manuscript
   plots live in `scripts/figures/`, with shared styling in `style.py`.
 - `lean/NormReg/` contains formal proofs and axiom audits.
-- `data/mushroom/` stores source data; `results/` stores experiment artifacts.
-  Generated manuscript and figure files go in ignored `build/`.
+- `data/mushroom/` stores source data; `results/` stores numerical arrays,
+  summaries, and provenance records. Generated figures go in root `figures/`;
+  tracked historical exports live in `figures/frozen/`. LaTeX build files go in
+  ignored `build/`, and the generated diagnostic table lives in
+  `paper/generated/`.
 
 ## Build, Test, and Development Commands
 
 Run commands from the repository root inside `devenv shell`, which supplies
-Python, LaTeX, Lean, and validation tools.
+Task, Python, LaTeX, Lean, and validation tools. Run `task --list` to list
+tasks.
 
-- `make paper`: regenerate required figures and compile `build/main.pdf`.
-- `make figures`: regenerate manuscript plots from saved results.
-- `make check`: run formatting, configuration, numerical checks, and the paper
+- `task paper`: regenerate required figures and compile `build/main.pdf`.
+- `task figures`: regenerate manuscript plots from saved results.
+- `task check`: run formatting, configuration, numerical checks, and the paper
   build, matching CI.
-- `make check-quick`: alias for `make check`; the unused Monte Carlo study was
+- `task check-quick`: alias for `task check`; the unused Monte Carlo study was
   removed.
-- `make check-python`: check Python formatting and lint with Ruff.
-- `make prepare-lean`, then `make check-lean`: fetch Mathlib caches and build
-  proofs; these checks run separately from `make check`.
-- `make format`: format Markdown, Nix, and Python sources.
+- `task check-python`: check Python formatting and lint with Ruff.
+- `task prepare-lean`, then `task check-lean`: fetch Mathlib caches and build
+  proofs; these checks run separately from `task check`.
+- `task format`: format Markdown, Nix, and Python sources.
 
 ## Coding Style & Naming Conventions
 
@@ -45,17 +49,20 @@ Tests are executable numerical checks in `experiments/check_*.py`, using
 assertions and NumPy/SciPy comparisons rather than a dedicated test framework.
 No coverage percentage is configured. For bug fixes, add a failing regression
 check before changing behavior. Run the relevant check, such as
-`make check-predictive-theorem`, then broader validation appropriate to the
+`task check-predictive-theorem`, then broader validation appropriate to the
 change.
 
 ## Reproducibility
 
 Preserve seeds, declarations, raw data, and archived inputs checked by hashes.
-Add build targets to `GNUmakefile`. Retired provenance inputs, including the
+Add build tasks to `Taskfile.yml`. Retired provenance inputs, including the
 original `Makefile`, are listed in `scripts/archived_inputs.json` and checked
 against their pinned Git revision. Full Git history is required for these
 checks. Make presentation changes in `scripts/figures/`. Use the relevant
-`make reproduce-*` target when intentionally regenerating a study.
+`task reproduce-*` task when intentionally regenerating a study. The provenance
+adapter maps historical figure and table paths through
+`scripts/relocated_outputs.json`; use the Task commands so frozen sources and
+manifests remain unchanged.
 
 ## Commit & Pull Request Guidelines
 

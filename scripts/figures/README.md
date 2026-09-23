@@ -9,23 +9,22 @@ manuscript's full text width in inches.
 Inside `devenv shell`, run:
 
 ```sh
-make figures
+task figures
 ```
 
 This reads saved experiment summaries and moment archives, then writes PDF, SVG,
-and PNG files under `build/figures/`. PDFs embed Latin Modern fonts, and SVGs
-contain glyph outlines so their appearance does not depend on installed viewer
-fonts. The environment includes the LaTeX packages and `dvipng` needed by
-[Matplotlib's LaTeX
-renderer](https://matplotlib.org/stable/users/explain/text/usetex.html).
+and PNG files under `figures/`. PDFs embed Latin Modern fonts, and SVGs contain
+glyph outlines so their appearance does not depend on installed viewer fonts.
+The environment includes the LaTeX packages and `dvipng` needed by [Matplotlib's
+LaTeX renderer](https://matplotlib.org/stable/users/explain/text/usetex.html).
 
-  | Script                         | Output directory under `build/figures/` |
-  | ------------------------------ | --------------------------------------- |
-  | `plot_predictive_intro.py`     | `predictive-intro/`                     |
-  | `plot_signal_allocation.py`    | `signal-allocation/`                    |
-  | `plot_mushroom_final.py`       | `mushroom-final/`                       |
-  | `plot_practical_selection.py`  | `practical-selection/`                  |
-  | `plot_mushroom_rate_search.py` | `mushroom-rate-search/`                 |
+  | Script                         | Output directory under `figures/` |
+  | ------------------------------ | --------------------------------- |
+  | `plot_predictive_intro.py`     | `predictive-intro/`               |
+  | `plot_signal_allocation.py`    | `signal-allocation/`              |
+  | `plot_mushroom_final.py`       | `mushroom-final/`                 |
+  | `plot_practical_selection.py`  | `practical-selection/`            |
+  | `plot_mushroom_rate_search.py` | `mushroom-rate-search/`           |
 
 Run a single generator while editing, for example:
 
@@ -37,13 +36,16 @@ Only figures included by `paper/main.tex` are generated. The Mushroom
 rate-search script exports the $n = 2048$ paths under aggregate validation used
 in the supplement.
 
-`make paper` rebuilds its five figures when the corresponding scripts, shared
-style, environment configuration, or saved summaries change.
-`make paper-figures` performs that step without compiling LaTeX.
+`task paper` rebuilds its five figures when the corresponding scripts, shared
+style, Taskfile, environment configuration, or saved summaries change. Missing
+PDF, SVG, or PNG exports also trigger a rebuild. `task paper-figures` performs
+that step without compiling LaTeX.
 
 The original plotting code embedded in `experiments/` remains an archival input
-to the frozen studies and their hash checks. Their reproduction targets still
-recreate the historical artifacts in `results/`. Make presentation changes here;
-the manuscript loads the editable exports from `build/figures/`. These scripts
-retain the plotted selections and diagnostics from the archived generators and
-do not rerun training, tune rates, or rewrite numerical summaries.
+to the frozen studies and their hash checks. The reproduction tasks use the
+provenance adapter to write historical exports under `figures/frozen/`, with
+previews in `figures/frozen/previews/`. Numerical data and provenance records
+stay in `results/`. Make presentation changes here; the manuscript loads the
+editable exports from `figures/`. These scripts retain the plotted selections
+and diagnostics from the archived generators and do not rerun training, tune
+rates, or rewrite numerical summaries.
