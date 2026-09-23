@@ -19,6 +19,7 @@
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{proposition}[theorem]{Proposition}
 \newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
 \theoremstyle{remark}
 \newtheorem{remark}[theorem]{Remark}
 \DeclareMathOperator{\diag}{diag}
@@ -111,10 +112,11 @@ Our main theorem establishes both orderings for two independent binary
 predictors under squared loss, with known population centering and scales, zero
 initialization, a fixed zero intercept, and one fresh observation per update. It
 covers all nonnegative constant rates and deterministic stops within the budget.
-The gaps stay bounded away from zero for rare prevalence $0 < q \leq 10^{-4}$
-and observation caps $M$ satisfying $1 \leq Mq(1 - q) \leq 4$. This is a
-sufficient regime for the two signal families in our theorem. Learning-rate
-schedules and data-dependent selection remain outside its scope.
+Explicit bounds give both orderings for rare prevalence $0 < q \leq 0.04$ and
+observation caps $M$ satisfying $1 \leq Mq(1 - q) \leq 4$. The gaps stay bounded
+away from zero as prevalence decreases. These are sufficient conditions for the
+two signal families in our theorem. Learning-rate schedules and data-dependent
+selection remain outside its scope.
 
 Under a fixed rate calibration, supporting comparisons show that the preferred
 normalization can change with stopping, batching, and the prediction objective.
@@ -299,29 +301,39 @@ and stop. It is not a comparison under equal total tuning computation.
 
 \begin{theorem}[Opposite oracle rare-risk orderings]
   \label{thm:conference-predictive}
-  Suppose $\sigma^2 > 0$, $0 < q \leq 10^{-4}$, and $1 \leq Mq(1 - q) \leq 4$ in
-  the independent binary model above.
+  Suppose $\sigma^2 > 0$, $0 < q \leq 1/16$, and
+  $1 \leq \tau = Mq(1 - q) \leq 4$ in the independent binary model above. Let
+  $\Delta_R(q,\tau)$ and $\Delta_C(q,\tau)$ be the explicit bounds in
+  \cref{eq:predictive-finite-gaps}.
   \begin{enumerate}
     \item If $(\beta_R^*)^2 = \sigma^2$ and $(\beta_C^*)^2 \leq \sigma^2/100$,
-          then $R_U^*(M) - R_S^*(M) \geq 7\sigma^2/1000$.
+          then $R_U^*(M) - R_S^*(M) \geq \sigma^2\Delta_R(q,\tau)$. This gap is
+          at least $\sigma^2/1000$ when $q \leq 1/20$.
     \item If $(\beta_C^*)^2 = \sigma^2$ and $(\beta_R^*)^2 \leq \sigma^2/100$,
-          then $R_S^*(M) - R_U^*(M) \geq \sigma^2/200$.
+          then $R_S^*(M) - R_U^*(M) \geq \sigma^2\Delta_C(q,\tau)$. This gap is
+          at least $\sigma^2/50$ when $q \leq 1/25$.
   \end{enumerate}
   Either sign is allowed for each coefficient. Both inequalities also hold if
   each rule searches only its mean-square-stable nonnegative constant rates,
   together with initialization.
 \end{theorem}
 
-We prove the theorem in \cref{sec:predictive-proofs} by bounding every rate and
-stop for the method with higher risk and constructing one stable candidate for
-the other method. The diagonal error moments satisfy an exact positive
-recurrence, even though the stochastic updates couple the independent features.
-When the rare signal dominates, learning it with U also introduces noise in the
-common coefficient, and S can reduce this cost. When the common signal
-dominates, S must balance incomplete learning of that signal against noise in
-the rare coefficient. U can learn the common coefficient while leaving the small
-rare signal largely unchanged. These bounds compare the best attainable risks
-without identifying the minimizing rates and stops.
+We prove the theorem in \cref{sec:predictive-proofs} by bounding one method
+below at every rate and stop and bounding the other above with a stable
+candidate. The diagonal error moments satisfy an exact positive recurrence, even
+though the stochastic updates couple the independent features. When the rare
+signal dominates, learning it with U also introduces noise in the common
+coefficient, and S can reduce this cost. When the common signal dominates, S
+must balance incomplete learning of that signal against noise in the rare
+coefficient. U can learn the common coefficient while leaving the small rare
+signal largely unchanged. These bounds compare the best attainable risks without
+identifying the minimizing rates and stops.
+
+For example, at $q = 0.02$ and $M = 102$, the bounds give gaps greater than
+$0.009\sigma^2$ and $0.064\sigma^2$ for the respective full signal families. The
+sufficient prevalence cutoffs are not transition boundaries.
+\Cref{sec:predictive-certification} gives further positive regions and recovers
+the small-prevalence comparison with stronger constants.
 
 At the observation cap $M$, the expected number of training rows in which the
 single rare feature is present is $Mq = \tau/(1 - q)$, where
@@ -740,34 +752,34 @@ authors remain responsible for the submitted work.
 \section{Proof of the comparison after oracle tuning}
 \label{sec:predictive-proofs}
 
-We prove \cref{thm:conference-predictive} using exact error moments. We first
-restrict the rate parameter in \cref{eq:conference-oracle-rates} to
-$\alpha \in[0,1]$. For each signal family, we then bound all larger rates for
-the method with higher risk, showing that none can reverse the ordering. Two
-independent implementations, \texttt{checks/predictive\_theorem.py} and
-\texttt{checks/predictive\_review.py}, check the rational certificates and the
-reductions of the moment equations. The source supplement includes both
-implementations; its \texttt{README.md} gives the commands for running them.
+We prove \cref{thm:conference-predictive} directly at positive prevalence. The
+bounds below are explicit functions of $q$ and $\tau = Mq(1 - q)$. Finite minima
+over rate intervals bound the continuous search; they do not restrict the oracle
+to a rate grid. Analytic bounds cover every rate above one. The checker
+\texttt{checks/predictive\_fixed\_q.py} certifies the reported positive regions
+with rational arithmetic and checks the moment bounds against observation-level
+tensor calculations.
 
-The proof for bounded rates has undergone a separate AI-assisted mathematical
-review. For the extension to unrestricted rates, we have local algebraic checks
-and a Lean formalization of the lower bounds conditional on the moment
-recurrence. Independent review of that extension and human verification of the
-complete theorem remain open in this working draft.
+The earlier small-prevalence checkers, \texttt{checks/predictive\_theorem.py}
+and \texttt{checks/predictive\_review.py}, remain in the source supplement. The
+Lean pilot formalizes the original small-prevalence large-rate bounds
+conditional on the moment recurrence. It does not formalize the new
+finite-prevalence comparison. Independent review of this extension and human
+verification of the complete theorem remain open in this working draft.
 
 \subsection{Exact moments}
 
-By homogeneity, we may take $\sigma^2 = 1$. Put $s = (\beta_C^*)^2$,
-$r = (\beta_R^*)^2$, $Q = 10^{-4}$, and $\tau = Mb$. We write
+By homogeneity, take $\sigma^2 = 1$. Put $s = (\beta_C^*)^2$,
+$r = (\beta_R^*)^2$, $b = q(1 - q)$, and $w = (1 - q)^2$. Write
 $C_k = \E\bigl((\beta_{C,k} - \beta_C^*)^2\bigr)$ and
 $H_k = \E\bigl((\beta_{R,k} - \beta_R^*)^2\bigr)$. Independence gives
 \begin{equation}
-  R_{R,k} = C_k/8 + (1 - q)^2H_k/2. \label{eq:predictive-risk}
+  R_{R,k} = C_k/8 + wH_k/2. \label{eq:predictive-risk}
 \end{equation}
 The required feature moments are $x_C^2 = 1/4$, $\E(x_R^2) = b$,
 $\E(x_R^4) = b(1 - 3b)$, and $\E(x_C^2x_R^2) = b/4$. Mixed moments with an odd
 power of $x_C$ vanish. Expanding the squared update and using the conditional
-noise assumptions therefore gives
+noise assumptions gives
 \begin{equation}
   \binom{C_{k+1}}{H_{k+1}} = \begin{pmatrix}
                                A           & 4u^2b \\
@@ -777,231 +789,270 @@ noise assumptions therefore gives
                            = \binom{s}{r}, \label{eq:predictive-moments}
 \end{equation}
 where $A = (1 - u)^2$, $D_b = 1 - b\alpha(2 - \alpha + 3b\alpha)$, and
-$u = \alpha/4$ for U or $u = b\alpha$ for S. The diagonal equations and the risk
-do not involve cross error moments, so changing the signs of the coefficients
-leaves the risk unchanged. Every matrix entry is nonnegative for every
-$\alpha \geq 0$, since the diagonal entries are expectations of squared update
-coefficients.
+$u = \alpha/4$ for U or $u = b\alpha$ for S. The diagonal equations and risk do
+not involve cross error moments, so coefficient signs do not affect risk. Every
+matrix entry is nonnegative for every $\alpha \geq 0$: in particular,
+$D_b = (1 - b\alpha)^2 + b\alpha^2(1 - 4b) \geq 0$. Increasing either initial
+squared coefficient cannot reduce risk.
 
 For $0 < \alpha \leq 1$, the row sums are
 \[
   1 - u\{2 - u(1 + 4b)\} < 1,\qquad 1 - b\alpha\{2 - 5\alpha/4 + 3b\alpha\} < 1.
 \]
-The homogeneous moments therefore contract, and the moments contributed by noise
-stay bounded. Since the cross moment is bounded by $\sqrt{C_kH_k}$, all positive
-rates that we use below as candidates for the method with lower risk are
-mean-square stable. At $\alpha = 0$, the predictor stays at initialization.
+The homogeneous moments contract and the noise moments stay bounded. The cross
+moment is bounded by $\sqrt{C_kH_k}$, so all positive candidate rates used below
+are mean-square stable. At zero rate, the predictor stays at initialization.
 
-\subsection{Dominant rare signal on the bounded rate interval}
+\subsection{Explicit finite-prevalence bounds}
+\label{sec:predictive-finite-bounds}
 
-Suppose $r = 1$ and $s \leq 1/100$. For U, we have $A \leq D_b$ because the
-common contraction factor falls below one by at least $7\alpha/16$, whereas the
-rare factor falls below one by at most $2b\alpha$. Dropping nonnegative terms in
-\cref{eq:predictive-moments} and summing the noise terms gives, with
-$z = D_b^k$,
+Throughout, $0 < q \leq 1/16$ and $1 \leq \tau \leq 4$. Let $N = 4096$ and
+$a_j = j/N$, for $j = 0,\ldots,N$. Define
+\[
+  d_b(a)
+  = a(2 - a + 3ba),\qquad n_j
+  = \min\left\{ w,\frac{wa_j}{2 - a_j + 3ba_j} + \frac{a_j}{8 - a_j} \right\},\qquad p_j
+  = \min\left\{ \frac18,\frac{wa_j}{2(2 - ba_j)} \right\},
+\]
+and
+\[
+  z_{R,j} = \exp\left\{ -\frac{\tau d_b(a_{j+1})}
+                                  {1 - bd_b(a_{j+1})} \right\},\qquad z_{C,j}
+          = \exp\left\{ -\frac{2\tau a_{j+1}}{1 - ba_{j+1}} \right\}.
+\]
+Define the lower bounds
 \begin{equation}
-  R_{R,k}^U \geq \frac12\left[ (1 - q)^2z + \left\{ \frac{(1 - q)^2\alpha}{2 - \alpha + 3b\alpha} + \frac{\alpha}{8 - \alpha} \right\}(1 - z) \right]. \label{eq:predictive-u-lower}
+  \begin{aligned}
+    L_R(q,\tau) & = \min\left\{ \frac{w}{2(1 + 3b)}, \min_{0 \leq j<N}\frac{n_j + (w - n_j)z_{R,j}}2 \right\}, \\
+    L_C(q,\tau) & = \min_{0 \leq j<N}\left\{ p_j + \left( \frac18 - p_j \right)z_{C,j} \right\}.
+  \end{aligned} \label{eq:predictive-finite-lower}
 \end{equation}
-For the common-noise term, we use $1 - A^k \geq 1 - D_b^k$. The bound also holds
-directly at zero rate. Since the right side is affine in $z$, we can bound its
-minimum over $k \leq M$ by its values at $z = 1$ and $z = D_b^M$.
+The integer $N$ controls only the precision of the lower bounds. All their
+denominators are positive on the stated domain.
 
-Set $d(\alpha) = \alpha(2 - \alpha)$, $Z = e^{-\tau d(\alpha)}$, and
+For the upper bounds, use $k = M$ and the stable rates
 \[
-  N(\alpha) = \frac{\alpha}{2 - \alpha}
-              + \frac{\alpha}{8 - \alpha},\qquad F_U^-(\alpha,\tau)
-            = \tfrac12[Z + N(\alpha)(1 - Z)].
+  \alpha_S = \frac{2}{\tau + 4},\qquad \alpha_U = \frac{8b}{\tau} = \frac8M.
 \]
-Writing $d_b = d(\alpha) + 3b\alpha^2$, the logarithm series yields
+Put
 \[
-  0 \leq -\frac{\log(1 - bd_b)}b - d(\alpha)
-    \leq b\left[ 3 + \frac{(1 + 3Q)^2}{2\{1 - Q(1 + 3Q)\}} \right]
-    < 4b.
+  p_S = \frac{\alpha_S(1 - q)}{2 - (1 - q)\alpha_S},\qquad G
+      = \frac{\alpha_U}{2 - \alpha_U/4},\qquad H_*
+      = \frac{1/100 + b\alpha_U/(2 - \alpha_U/4) + \tau\alpha_U^2(1 + G/4)}
+                  {1 - \tau b\alpha_U^2G/4}.
 \]
-Hence $|D_b^M - Z| \leq 16q$. The initial and noise coefficients in
-\cref{eq:predictive-u-lower} differ from $1$ and $N(\alpha)$ by at most $2q$ and
-$5q$, respectively, and $|1 - N(\alpha)| \leq 1$. It follows that
+Here $\alpha_S \leq 2/5$, $\alpha_U \leq 1/2$, and
+$\tau b\alpha_U^2G/4 \leq 1/960$, so $H_*$ is well defined. Define
 \begin{equation}
-  R_{R,k}^U \geq \min\{1/2,F_U^-(\alpha,\tau)\} - 11q, \qquad 0
-            \leq \alpha
-            \leq 1,\quad 0
-            \leq k
-            \leq M. \label{eq:predictive-u-transfer}
+  \begin{aligned}
+    V_S(q,\tau) & = \frac12\left[ p_S + \left( w + \frac1{400} - p_S \right) e^{-\tau\alpha_S\{2-(1-q)\alpha_S\}} \right], \\
+    V_U(q,\tau) & = \frac{e^{-4}}8 + \frac G8 + \left( \frac w2 + \frac{bG}8 \right)H_*.
+  \end{aligned} \label{eq:predictive-finite-upper}
 \end{equation}
-
-For S, we use $Y_k = C_k/4 + H_k$ and
-$\widetilde D = 1 - bd(\alpha) + b^2\alpha^2$. The exact recurrence gives
-\[
-  Y_{k+1} = \frac{\widetilde D}{4}C_k
-            + (D_b + b^3\alpha^2)H_k
-            + b\alpha^2(1 + b)
-          \leq \widetilde D Y_k + b\alpha^2(1 + b),
-\]
-since $\widetilde D - (D_b + b^3\alpha^2) = b^2\alpha^2(4 - b) \geq 0$. Using
-$R_{R,M}^S \leq Y_M/2$ and summing the geometric series gives
-\[
-  R_{R,M}^S \leq \frac12\left[ (r + s/4)\widetilde D^M + \frac{\alpha(1 + b)}{2 - \alpha - b\alpha}(1 - \widetilde D^M) \right].
-\]
-Define
-\[
-  F_S(\alpha,\tau;s,r) = \tfrac12\left[ (r + s/4)Z + \frac{\alpha}{2 - \alpha}(1 - Z) \right].
-\]
-The logarithm remainder and plateau difference satisfy
-\[
-  |\widetilde D^M - Z| \leq 4b\left[ 1 + \frac1{2(1 - Q)} \right],\qquad 0
-                       \leq \frac{\alpha(1 + b)}{2 - \alpha - b\alpha}
-                            - \frac{\alpha}{2 - \alpha}
-                       \leq \frac{2b}{1 - Q}.
-\]
-Consequently, for the rare-signal family,
+The theorem's gap bounds are the explicit finite expressions
 \begin{equation}
-  R_{R,M}^S \leq F_S(\alpha,\tau;1/100,1) + 5q. \label{eq:predictive-s-transfer}
+  \Delta_R(q,\tau) = L_R(q,\tau) - V_S(q,\tau),\qquad \Delta_C(q,\tau)
+                   = L_C(q,\tau)
+                     - V_U(q,\tau). \label{eq:predictive-finite-gaps}
 \end{equation}
-The unrounded coefficient of $q$ is at most
-$\{(401/400)4[1 + 1/(2(1 - Q))] + 2/(1 - Q)\}/2 < 5$.
+They need not be positive everywhere on the stated domain. A nonpositive bound
+does not establish the opposite ordering.
 
-We choose the stable candidate $\alpha_S = 2/(\tau + 4) \in[1/4,2/5]$ and
-$k = M$. We next construct a rational certificate for the bound
+\subsection{Dominant rare signal}
+
+Suppose $r = 1$ and $s \leq 1/100$. For U and $\alpha \in[0,1]$,
+\[
+  D_b - A = \frac{(1 - 4b)\alpha}{16} \{8 + (12b - 1)\alpha\} \geq 0.
+\]
+Dropping nonnegative coupling terms in \cref{eq:predictive-moments} and summing
+the direct noise terms gives, with $z = D_b^k$,
 \begin{equation}
-  \min\{1/2,F_U^-(\alpha,\tau)\} - F_S(2/(\tau + 4),\tau;1/100,1)
-  \geq 1/100 \quad\text{on }[0,1]
-       \times[1,4] . \label{eq:predictive-certificate}
+  R_{R,k}^U \geq \frac12\left[ wz + \left\{ \frac{w\alpha}{2 - \alpha + 3b\alpha} + \frac{\alpha}{8 - \alpha} \right\}(1 - z) \right]. \label{eq:predictive-u-lower}
 \end{equation}
-Both $d$ and $N$ increase on $[0,1]$. On a rectangle
-$[a_0,a_1] \times[t_0,t_1]$, we put $N_0 = N(a_0)$ and bound $Z$ between
-$e^{-t_1d(a_1)}$ and $e^{-t_0d(a_0)}$. Since $(N + (1 - N)Z)/2$ increases with
-$N$, we obtain a lower bound by using $N_0$ and the lower endpoint for $Z$ if
-$N_0 \leq 1$, or the upper endpoint otherwise. We then take the minimum with
-$1/2$. The S candidate has plateau $1/(\tau + 3)$ and exponent
-$4\tau(\tau + 3)/(\tau + 4)^2$. Its risk decreases with $\tau$, so its value at
-$t_0$ gives an upper bound on the rectangle.
+For the common-noise term, use $1 - A^k \geq 1 - D_b^k$. The formula extends
+directly to zero rate. Its right side is affine in $z$. Taking the smaller value
+at $z = 1$ or $z = D_b^M$ is equivalent to capping the noise coefficient at $w$.
 
-For rational $x \in[0,4]$, put $P_{18}(x) = \sum_{j=0}^{18}x^j/j!$. Positivity
-and the ratio of successive omitted terms give
+For $0 \leq x < 1$, the logarithm series gives $-\log(1 - x) \leq x/(1 - x)$.
+Consequently,
+\[
+  D_b^M \geq \exp\left\{ -\frac{\tau d_b(\alpha)}
+                                      {1 - bd_b(\alpha)} \right\}.
+\]
+Both $d_b(\alpha)$ and the noise coefficient increase on $[0,1]$. For
+$\alpha \in[a_j,a_{j+1}]$, use the left endpoint for the capped noise
+coefficient and the right endpoint for the exponential lower bound. This gives
+the $j$th term in $L_R$ for every $0 \leq k \leq M$.
+
+For every $\alpha \geq 1$, put $m_b = 1/(1 + 3b)$. The identity
+\[
+  D_bm_b + b\alpha^2 - m_b = \frac{2b\alpha(\alpha - 1)}{1 + 3b} \geq 0
+\]
+and positivity of the recurrence imply $H_k \geq m_b$ by induction from
+$H_0 = 1$. Thus $R_{R,k}^U \geq w/\{2(1 + 3b)\}$ at every finite stop, including
+zero. This proves the remaining term in $L_R$, without a stability restriction.
+
+For the S candidate, retain the exact risk weight by setting
+$W_k = C_k/4 + wH_k = 2R_{R,k}^S$. Let
+$\rho = 1 - b\alpha\{2 - (1 - q)\alpha\}$. The recurrence gives
+\[
+  W_{k+1} \leq \rho W_k + b\alpha^2(1 - q),
+\]
+because the common coefficient has multiplier $\rho$ and
+\[
+  \rho w - (wD_b + b^3\alpha^2) = 2wbq(1 - 2q)\alpha^2 \geq 0.
+\]
+At $\alpha = \alpha_S$, $0 < \rho < 1$ and $W_0 \leq w + 1/400$. Geometric
+summation therefore bounds the risk by
+\[
+  \frac12\left[ p_S + (w + 1/400 - p_S)\rho^M \right] \leq V_S(q,\tau).
+\]
+The last step uses $\rho^M \leq e^{-\tau\alpha_S\{2-(1-q)\alpha_S\}}$ and
+$w + 1/400 > p_S$. Hence every U rate and stop exceeds this S candidate's risk
+by at least $\Delta_R(q,\tau)$, uniformly over the rare-signal family.
+
+\subsection{Dominant common signal}
+
+Suppose $s = 1$ and $r \leq 1/100$. Under S, put $A = (1 - b\alpha)^2$. Since
+$D_b - A = b\alpha^2(1 - 4b) \geq 0$, positivity gives
+\[
+  C_k \geq A^k,\qquad H_k
+      \geq b\alpha^2\sum_{j=0}^{k-1}D_b^j
+      \geq b\alpha^2\sum_{j=0}^{k-1}A^j.
+\]
+For $0 < \alpha \leq 1$, geometric summation yields
+\[
+  R_{R,k}^S \geq \frac{A^k}{8} + \frac{w\alpha}{2(2 - b\alpha)}(1 - A^k).
+\]
+The expression is affine in $A^k$. Minimizing over $k \leq M$ caps its second
+coefficient at $1/8$ and replaces $A^k$ by $A^M$. Moreover,
+\[
+  A^M \geq \exp\left\{ -\frac{2\tau\alpha}{1 - b\alpha} \right\}.
+\]
+The plateau and the magnitude of the exponent both increase with $\alpha$. Their
+left and right endpoints give the $j$th term in $L_C$ on each rate interval.
+Zero rate gives risk at least $1/8$ directly.
+
+For $\alpha \geq 1$, if $A \geq 1$ then $C_k \geq 1$ and the risk is at least
+$1/8$. Otherwise $0 < b\alpha < 2$ and the same geometric bound gives
+\[
+  R_{R,k}^S \geq \min\left\{ \frac18, \frac{w\alpha}{2(2 - b\alpha)} \right\}
+            \geq \min\left\{ \frac18,\frac{w}{2(2 - b)} \right\}
+            = \frac18.
+\]
+The last equality follows from $q \leq 1/16$. Since $L_C \leq 1/8$, the bound
+covers all larger rates as well.
+
+For the U candidate, set $\alpha = \alpha_U$, $u = \alpha/4$, and
+$H_{\max} = \max_{0 \leq j \leq M}H_j$. Summing the common equation gives
+\[
+  C_j \leq A^j + G(1 + bH_{\max}).
+\]
+Since $D_b \leq 1$, drop the rare-coordinate contraction and sum up to any
+$j \leq M$. Using $\sum_{j \geq 0}A^j = 1/\{u(2 - u)\}$ gives
+\[
+  H_{\max} \leq \frac1{100}
+                + \frac{b\alpha}{2 - \alpha/4}
+                + \tau\alpha^2\left( 1 + \frac G4 \right)
+                + \frac{\tau b\alpha^2G}{4}H_{\max}.
+\]
+Thus $H_{\max} \leq H_*$. Also,
+$A^M = (1 - \alpha/4)^{2M} \leq e^{-\alpha M/2} = e^{-4}$, which gives
+$R_{R,M}^U \leq V_U(q,\tau)$. Every S rate and stop therefore exceeds this U
+candidate's risk by at least $\Delta_C(q,\tau)$, uniformly over the
+common-signal family.
+
+Taking the two oracle infima gives the claimed gap inequalities. Restricting
+each search to stable rates preserves both lower bounds and both candidates.
+Rescaling by $\sigma^2$ proves the theorem for general positive noise variance.
+The argument requires neither stability of the losing method's rate nor
+attainment of either infimum.
+
+\subsection{Positive regions and the small-prevalence corollary}
+\label{sec:predictive-certification}
+
+The checker certifies the following lower bounds for every $1 \leq \tau \leq 4$.
+All intervals include every positive prevalence up to the displayed endpoint.
+The bounds apply to the entire respective signal families.
+\begin{center}
+  \begin{tabular}{@{}llrr@{}}
+    \toprule
+    Family & Prevalence range     &               Gap bound & Certificate leaves \\
+    \midrule
+    Rare   & $0 < q \leq 1/20$    &  $\Delta_R \geq 1/1000$ &         $77{,}510$ \\
+    Common & $0 < q \leq 1/25$    &    $\Delta_C \geq 1/50$ &              $103$ \\
+    Rare   & $0 < q \leq 1/50$    &  $\Delta_R \geq 7/1000$ &         $76{,}623$ \\
+    Common & $0 < q \leq 1/50$    &   $\Delta_C \geq 9/200$ &               $58$ \\
+    Rare   & $0 < q \leq 10^{-4}$ & $\Delta_R \geq 11/1000$ &          $7{,}158$ \\
+    Common & $0 < q \leq 10^{-4}$ &  $\Delta_C \geq 11/200$ &              $105$ \\
+    \bottomrule
+  \end{tabular}
+\end{center}
+
+Here is the full certification rule. On a box
+$[a_0,a_1] \times[q_0,q_1] \times[t_0,t_1]$, set $b_i = q_i(1 - q_i)$ and
+$w_i = (1 - q_i)^2$. For the rare lower bound, use $w_1$, the capped noise
+coefficient at $(a_0,q_1)$, and the exponential lower bound at $(a_1,q_1,t_1)$.
+For the common lower bound, use $\min\{1/8,w_1a_0/[2(2 - b_0a_0)]\}$ for the
+plateau and the exponential lower bound at $(a_1,q_1,t_1)$. These substitutions
+follow from monotonicity of $b$, $d_b$, the rate plateaus, and the exponents on
+the stated ranges. Also include the rare large-rate floor at $q_1$.
+
+The S upper bound decreases with $q$ and $\tau$: its plateau decreases, its
+initial coefficient decreases, and its exponent
+$4\tau(\tau + 3 + q)/(\tau + 4)^2$ increases. Use $V_S(q_0,t_0)$ on the box. For
+the U upper bound, substitute $b_1$ for $b$, $w_0$ for $w$, and $t_0$ for
+$\tau$. Indeed, $\alpha_U$, $G$, the numerator of $H_*$, and its feedback
+coefficient increase with $b$ and decrease with $\tau$ after substituting
+$\alpha_U = 8b/\tau$.
+
+To enclose exponentials, for rational $x \in[0,4]$ put
+$P_{18}(x) = \sum_{j=0}^{18}x^j/j!$. Positivity and the ratio of successive
+omitted terms give
 \begin{equation}
   P_{18}(x)
   \leq e^x
   \leq P_{18}(x)
        + \frac{x^{19}/19!}{1 - x/20}. \label{eq:predictive-exp-certificate}
 \end{equation}
-Taking reciprocals gives rational enclosures for $e^{-x}$. Starting from the
-whole rectangle, the theorem checker subdivides each unresolved rectangle into
-four equal rectangles. It accepts a leaf only when the lower margin is at least
-$1/100$. The 5,035 accepted leaves have maximum depth nine and total area
-exactly three, with minimum rational margin above $0.01000005$. The independent
-review checker uses a different exponential enclosure and subdivision, yielding
-3,925 leaves. Both constructions certify the inequality over the continuous
-domain.
+Taking reciprocals encloses $e^{-x}$. The checker applies this rule to one
+fourth of each exponent and raises the endpoints to the fourth power. All
+exponents lie in $[0,16]$, so the rule covers every evaluation using rational
+arithmetic only.
 
-Combining
-\cref{eq:predictive-u-transfer,eq:predictive-s-transfer,eq:predictive-certificate},
-we find that every U candidate in the bounded rate interval has risk exceeding
-that of the S candidate by at least
-\[
-  1/100 - 16q \geq 0.0084 > 0.007.
-\]
+Start with $[0,1] \times[0,Q] \times[1,4]$ for each table row; the formulas
+extend continuously to $q = 0$. Accept a box only if its lower margin reaches
+the stated gap. Otherwise bisect the dimension with largest width among
+$a_1 - a_0$, $q_1 - q_0$, and $(t_1 - t_0)/3$, breaking ties in that order. Stop
+bisecting rate intervals at width $1/N$. All rate endpoints therefore align with
+the partition defining \cref{eq:predictive-finite-lower}; an accepted box bounds
+every constituent interval's expression. The accepted boxes cover the domain,
+and their exact volumes sum to $3Q$. Thus the certificates establish the bounds
+over continuous prevalence and budget ranges, including every admissible integer
+stop. No sampled rate or prevalence search is used as proof.
 
-\subsection{Dominant common signal on the bounded rate interval}
+At $q = 1/50$ and $M = 102$, direct evaluation of the same formulas with
+rational exponential enclosures gives $\Delta_R > 0.0092472$ and
+$\Delta_C > 0.0641380$. These are certified family bounds, not estimates of the
+oracle gaps. As a separate diagnostic, the checker compares 888 bounds with
+80-digit observation-level tensor powers, including zero stops, both signal
+families, and rates above the stability range.
 
-Suppose $s = 1$ and $r \leq 1/100$. For S, the common mean error is
-$-(1 - b\alpha)^k\beta_C^*$. If $\alpha \leq 1/4$, Jensen's inequality and the
-logarithm bound give
-\[
-  R_{R,k}^S \geq \tfrac18(1 - b\alpha)^{2k}
-            \geq \tfrac18\exp\{-2/(1 - Q/4)\}
-            > 1/60.
-\]
-If $1/4 \leq \alpha \leq 1$, put $z = (1 - b\alpha)^k$. Since
-$D_b \leq 1 - b\alpha$ and $\alpha/(2 - \alpha + 3b\alpha) \geq \alpha/2$,
-common squared bias and direct rare observation noise yield
-\[
-  R_{R,k}^S \geq z^2/8 + \frac{(1 - q)^2\alpha}{4}(1 - z)
-            \geq z^2/8 + \frac3{50}(1 - z)
-            \geq \frac{33}{625}
-            > \frac1{60}.
-\]
-We obtain the penultimate inequality by minimizing the quadratic over $[0,1]$.
+\begin{corollary}[Small prevalence]
+  \label{cor:predictive-small-q}
+  Under the assumptions of \cref{thm:conference-predictive}, if
+  $0 < q \leq 10^{-4}$, then the rare-signal gap is at least $11\sigma^2/1000$
+  and the common-signal gap is at least $11\sigma^2/200$. In particular, the
+  earlier bounds $7\sigma^2/1000$ and $\sigma^2/200$ hold.
+\end{corollary}
 
-For U, we put $h = \sqrt b \leq 1/100$, choose $\alpha_U = 4h$, and stop at $M$.
-Then $u = h$. Write $H_{\max} = \max_{0 \leq j \leq M}H_j$. Geometric summation
-in the common equation of \labelcref{eq:predictive-moments} gives
-\[
-  C_j \leq A^j + \frac{4h}{2 - h} + \frac{4h^3}{2 - h}H_{\max}.
-\]
-To obtain an upper bound, we drop the contraction in the rare coordinate and sum
-this inequality. Using $M \leq 4/h^2$ and $\sum_{j \geq 0}A^j = 1/\{h(2 - h)\}$
-then gives
-\[
-  H_{\max} \leq r + \frac{68h^3}{2 - h} + 64h^2 + \frac{64h^5}{2 - h}H_{\max}.
-\]
-Thus
-\[
-  H_{\max} \leq H_*(h)
-           := \frac{1/100 + 68h^3/(2 - h) + 64h^2}{1 - 64h^5/(2 - h)}.
-\]
-Using $M \geq 1/h^2$ in the common bound now gives
-\[
-  R_{R,M}^U \leq \frac{e^{-2/h}}8
-                 + \frac{h}{2(2 - h)}
-                 + \left\{ \frac12 + \frac{h^3}{2(2 - h)} \right\}H_*(h)
-            < 0.01072966
-            < \frac{11}{1000}.
-\]
-Each term increases with $h$ on this interval. At $h = 1/100$, the checker
-verifies the bound rationally using $e^{-200} \leq 2^{-200}$. It verifies the
-lower exponential bound above using \cref{eq:predictive-exp-certificate}. Every
-S candidate in the bounded rate interval therefore has risk exceeding that of
-the U candidate by more than $1/60 - 11/1000 > 1/200$.
-
-\subsection{Removing the rate cap}
-
-For the rare-signal family, $H_0 = 1$. Put $m_b = 1/(1 + 3b)$. For every
-$\alpha \geq 1$,
-\[
-  D_bm_b + b\alpha^2 - m_b = \frac{2b\alpha(\alpha - 1)}{1 + 3b} \geq 0.
-\]
-Dropping the nonnegative common-to-rare term in \cref{eq:predictive-moments} and
-using induction gives $H_k \geq m_b$ at every finite stop. Hence
-\[
-  R_{R,k}^U(\alpha) \geq \frac{(1 - q)^2}{2(1 + 3b)}
-                    \geq \frac{(1 - Q)^2}{2(1 + 3Q)}
-                    > \frac{49}{100}.
-\]
-The original S candidate remains below $1/3$, since
-\[
-  R_{R,M}^S(\alpha_S) \leq F_S(2/(\tau + 4),\tau;1/100,1) + 5q
-                      \leq F_S(2/5,1;1/100,1) + 5Q
-                      < \frac13.
-\]
-Rational exponential enclosures certify the last bound. Every added U candidate
-therefore has risk exceeding that of the S candidate by more than
-$49/100 - 1/3 > 7/1000$.
-
-For the common-signal family, $C_0 = 1$ and $H_0 \geq 0$. Under S, let
-$A = (1 - b\alpha)^2$. The identity $D_b - A = b\alpha^2(1 - 4b) \geq 0$ and
-positivity imply
-\[
-  C_k \geq A^k,\qquad H_k
-      \geq b\alpha^2\sum_{j=0}^{k-1}D_b^j
-      \geq b\alpha^2\sum_{j=0}^{k-1}A^j.
-\]
-If $A \geq 1$, the common error gives $R_{R,k}^S \geq 1/8$. Otherwise
-$0 < b\alpha < 2$, and geometric summation gives
-\[
-  R_{R,k}^S \geq \frac{A^k}{8}
-                 + \frac{(1 - q)^2\alpha}{2(2 - b\alpha)}(1 - A^k).
-\]
-For $\alpha \geq 1$, the second coefficient is at least $(1 - q)^2/4 > 1/8$.
-Thus $R_{R,k}^S \geq 1/8$ for every added rate and stop, including $k = 0$. The
-stable U candidate remains below $11/1000$, giving a gap greater than
-$1/8 - 11/1000 > 1/200$.
-
-For each signal family, we have now bounded every candidate of the method with
-higher risk against one admissible stable candidate of the other method. Taking
-the infima over the enlarged searches proves both inequalities. Restricting each
-search to stable rates preserves the bounds and the candidates. Multiplying by
-$\sigma^2$ restores the stated gaps. The argument requires neither stability of
-all added rates nor attainment of the unrestricted infima.
+The table proves the corollary. The former cutoff $10^{-4}$ was therefore
+conservative: the two positivity regions now reach prevalences 500 and 400 times
+as large. Within the former regime, the certified constants improve from $0.007$
+to $0.011$ and from $0.005$ to $0.055$, respectively. These comparisons assess
+sufficient bounds, not the largest possible gaps or prevalence ranges. The
+present bounds still discard nonnegative coupling terms and replace discrete
+powers by exponential bounds.
 
 \section{Numerical illustration of the oracle comparison}
 \label{sec:predictive-intro-figure}

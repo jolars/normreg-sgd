@@ -164,12 +164,21 @@ experiments.
 
 ```sh
 task check:predictive-theorem # Check the oracle-tuning certificates.
+task check:predictive-fixed-q # Certify the finite-prevalence gap bounds.
 task check:predictive-review  # Run the independent certificate implementation.
 task check:normalization-risk # Check the supporting comparison certificates.
 task check:workflow           # Exercise the workflow with small configurations.
 task check:results            # Reconstruct saved losses and selections.
 task check:exact-risk-results # Check the large exact-risk outputs, if generated.
 ```
+
+The finite-prevalence checker certifies the continuous parameter regions in
+Theorem 3.1 and Appendix A with exact rational exponential enclosures. Its rate
+intervals bound every nonnegative constant rate, with analytic bounds above one,
+and every admissible stop. It also checks the fixed example at $q=0.02$ and
+$M=102$ and compares the bounds with observation-level moment calculations. The
+earlier small-prevalence certificates remain in the theorem and review checkers;
+they do not independently certify the new extension.
 
 Use `task experiment:diagnostics` to regenerate the diagnostic records and
 tables, then `task check:results` to verify them. Use

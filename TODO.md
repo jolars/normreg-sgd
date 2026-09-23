@@ -11,17 +11,16 @@ another empirical study.
 - [ ] Add one controlled experiment changing a single oracle assumption—Section 5.
   Include a converged prediction reference for Mushroom.
 
-- [ ] Extend the oracle comparison to fixed positive $q$, with explicit risk-gap
-  bounds depending on $q$ and $M$—Theorem 3.1 and Appendix A. Identify where
-  each bound is positive for its signal family, and assess how conservative
-  the current cutoff $q \leq 10^{-4}$ and constants are. Retain the
-  small-$q$ result as a corollary if the broader proof supports it.
-  Exploratory rate-grid searches for the Figure 1 signal vectors at
-  $q = 0.02$, $M = 102$, and $\sigma^2 = 1$ give gaps of approximately
-  $0.0257$ favoring SD for the rare-signal vector and $0.0747$ favoring no
-  scaling for the common-signal vector. These are numerical evidence; the
-  extension needs a proof covering all nonnegative constant rates, all
-  admissible stops, and the full signal families.
+- [x] Extend the oracle comparison to fixed positive $q$, with explicit risk-gap
+  bounds depending on $q$ and $M$—Theorem 3.1 and Appendix A. Rational
+  certificates prove positive gaps for $q\leq0.05$ in the rare-signal family
+  and $q\leq0.04$ in the common-signal family, throughout
+  $1\leq Mq(1-q)\leq4$. At $q=0.02$ and $M=102$, the certified gaps exceed
+  $0.0092472\sigma^2$ and $0.0641380\sigma^2$, respectively. The proof
+  covers all nonnegative constant rates, all admissible stops, and both full
+  signal families. The small-$q$ corollary improves the former constants to
+  $0.011\sigma^2$ and $0.055\sigma^2$. Run `task check:predictive-fixed-q`;
+  independent mathematical review remains open.
 
 - [ ] Simplify the experimental narrative, preserve unresolved-result
   qualifications, add the suggested Zou comparison, and correct the

@@ -149,6 +149,7 @@ tasks:
       - task: check:moments
       - task: check:normalization-risk
       - task: check:predictive-theorem
+      - task: check:predictive-fixed-q
       - task: check:predictive-review
       - task: check:exact-risk
       - task: check:selection
@@ -177,6 +178,11 @@ tasks:
     desc: Check predictive review calculations.
     cmds:
       - python -m checks.predictive_review
+
+  check:predictive-fixed-q:
+    desc: Certify the oracle gaps at fixed positive prevalence.
+    cmds:
+      - python -m checks.predictive_fixed_q
 
   check:exact-risk:
     desc: Check exact risk calculations.
