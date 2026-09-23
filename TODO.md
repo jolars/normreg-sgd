@@ -53,13 +53,6 @@ submission requirement.
   checks. Preserve recorded failures and study boundaries, and document
   hardware, computation, data provenance, and asset licenses.
 
-## Complete human mathematical verification
-
-- [ ] Complete human review of the theorem and proofs, including the
-  unrestricted-rate extension. Record the scope and unresolved questions
-  before updating the verification disclosures. Packaging artifacts and
-  additional AI reviews do not complete this task.
-
 ## Prepare the submission
 
 - [ ] Review the final claims, experimental interpretation, references, and
