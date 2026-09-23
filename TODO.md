@@ -4,9 +4,7 @@ Keep the manuscript theory-led. Prioritize the revisions below, informed by the
 [mock-review synthesis](reviews/2026-09-23-aistats/synthesis.md), before adding
 another empirical study.
 
-- [ ] Package certificates and experimental artifacts
-
-- [ ] complete author verification
+- [x] Package certificates and experimental artifacts
 
 - [ ] complete Appendices A/C.
 

@@ -223,7 +223,7 @@ $a = 1/4$, $b = q(1 - q)$, and $c = q\ell/2$. Then
   C = \begin{pmatrix}
         a & c \\
         c & b
-      \end{pmatrix},\qquad C_R
+      \end{pmatrix}, \qquad C_R
     = \begin{pmatrix}
         a             & \ell(1 - q)/2 \\
         \ell(1 - q)/2 & (1 - q)^2
@@ -240,23 +240,29 @@ coordinate. We use the final iterate in both settings.
 
 \paragraph{Damped scaling.}
 
-The sampled-data experiments also include damped scaling, with
+The sampled-data experiments also include damped scaling, with offset
+$\tau > 0$:
 \begin{equation}
-  s_j = \sqrt{v_j + 0.01},\qquad P_{jj}
-      = \frac{1}{v_j + 0.01}, \label{eq:conference-damped}
+  s_j = \sqrt{v_j + \tau},\qquad P_{jj}
+      = \frac{1}{v_j + \tau}. \label{eq:conference-damped}
 \end{equation}
-where $v_j$ is either the known population variance or an estimate from the
-training data. We use the heuristic offset $0.01$ from the controlled pilot,
-fixed in variance units before evaluation. We neither derive this value from
-theory nor select it by validation. At the same learning rate, damping
-multiplies the SD update on the original coefficient scale by
-$v_j/(v_j + 0.01)$. This is approximately one half at binary prevalence $0.01$
-and $0.96$ for a balanced binary feature, illustrating how the offset reduces
-updates more strongly for rare features. The comparison does not establish an
-optimal damping level. For diagonal $C$ and any offset $\delta > 0$, the
-population rule $P_\delta = (C + \delta I)^{-1}$ satisfies
-$\delta P_\delta = (\delta^{-1}C + I)^{-1}$. It therefore belongs, up to a
-scalar absorbed into the learning rate, to the preconditioner family of
+Here $v_j$ is either the known population variance or an estimate from the
+training data. The offset limits the amplification of low-variance features,
+since $P_{jj} \leq 1/\tau$. At the same learning rate, damping multiplies the SD
+update on the original coefficient scale by $v_j/(v_j + \tau)$. Thus $\tau$ is
+the feature variance at which damping halves the SD update; features with much
+larger variance remain close to SD scaling.
+
+We retain the heuristic value $\tau = 0.01$ from the controlled pilot, fixed in
+variance units before evaluation. For binary features, this approximately halves
+the SD update at prevalence $0.01$, while retaining $0.96$ of the update for a
+balanced feature. We neither derive this value from theory nor select it by
+validation. \Cref{sec:mushroom-sensitivity} examines five fixed offsets from
+$0.001$ to $0.1$; these comparisons do not establish an optimal damping level.
+
+For diagonal $C$, the population rule $P_\tau = (C + \tau I)^{-1}$ satisfies
+$\tau P_\tau = (\tau^{-1}C + I)^{-1}$. It therefore belongs, up to a scalar
+absorbed into the learning rate, to the preconditioner family of
 \citet{su2024preconditioning}. Our fixed heuristic does not select an optimal
 member of that family.
 
@@ -484,8 +490,8 @@ predictor? Sampled-data experiments use replacement sampling from fixed noisy
 training sets, estimated preprocessing, and fitted intercepts. Reusing a row
 also reuses its noise. Their prevalences and procedures differ from the theorem,
 so they do not establish that its ordering survives these changes. The original
-studies preceded the theorem; the clipping diagnostic below is post hoc.
-The source supplement contains code, data, and saved results, with reproduction
+studies preceded the theorem; the clipping diagnostic below is post hoc. The
+source supplement contains code, data, and saved results, with reproduction
 instructions in its \texttt{README.md}; see \cref{sec:reproducibility}.
 
 \subsection{What survives retuning}
@@ -734,11 +740,10 @@ We prove \cref{thm:conference-predictive} using exact error moments. We first
 restrict the rate parameter in \cref{eq:conference-oracle-rates} to
 $\alpha \in[0,1]$. For each signal family, we then bound all larger rates for
 the method with higher risk, showing that none can reverse the ordering. Two
-independent implementations, \texttt{checks/predictive\_theorem.py}
-and \texttt{checks/predictive\_review.py}, check the rational
-certificates and the reductions of the moment equations. The source supplement
-includes both implementations; its \texttt{README.md} gives the commands for
-running them.
+independent implementations, \texttt{checks/predictive\_theorem.py} and
+\texttt{checks/predictive\_review.py}, check the rational certificates and the
+reductions of the moment equations. The source supplement includes both
+implementations; its \texttt{README.md} gives the commands for running them.
 
 The proof for bounded rates has undergone a separate AI-assisted mathematical
 review. For the extension to unrestricted rates, we have local algebraic checks
@@ -1052,13 +1057,12 @@ full tensor operator gives maximum absolute risk discrepancy below $10^{-9}$.
 
 The saved results include both grids, all selected rates and stops, and both
 risk arrays. The source supplement's \texttt{README.md} gives regeneration and
-verification commands. Unlike
-\cref{fig:conference-tuned-intro}, this search uses a finite stopping grid as
-well as a finite rate grid. Refinement and replay assess that calculation; they
-do not bound the error relative to the unrestricted oracle. The zero contours
-interpolate plotted grid-risk differences and are not certified transition
-curves. No new observations are sampled, and no claim of prospective evaluation
-is made.
+verification commands. Unlike \cref{fig:conference-tuned-intro}, this search
+uses a finite stopping grid as well as a finite rate grid. Refinement and replay
+assess that calculation; they do not bound the error relative to the
+unrestricted oracle. The zero contours interpolate plotted grid-risk differences
+and are not certified transition curves. No new observations are sampled, and no
+claim of prospective evaluation is made.
 
 \section{Proofs of the normalization-risk comparisons}
 \label{sec:comparison-proofs}
@@ -1550,8 +1554,9 @@ nominal cost $34M$ with cap $M$, compared with $10M$ for the nested five-factor
 search. Thus each search gives equal effort to all scaling rules, but the
 expanded search uses more work. Additional stopping checkpoints reuse the paths
 and require more validation scoring. The budget $M$ excludes the costs of
-curvature calibration, preprocessing, and scoring. Because this follow-up reuses previously studied data,
-it does not provide independent confirmation on new data.
+curvature calibration, preprocessing, and scoring. Because this follow-up reuses
+previously studied data, it does not provide independent confirmation on new
+data.
 
 \begin{table}[ht]
   \centering
@@ -1661,8 +1666,8 @@ We store the protocol, declaration, and complete summaries separately for the
 searches over five and 17 rate factors. Independent checks reconstruct all
 losses, selections, paired summaries, coefficient contributions, and boundary
 diagnostics. They also replay all paths for replication zero of each size and
-every selected path for the remaining partitions in transformed coordinates,
-and compare results for the five-factor subset with the saved results from
+every selected path for the remaining partitions in transformed coordinates, and
+compare results for the five-factor subset with the saved results from
 \cref{sec:practical}.
 
 \section{Sensitivity to damping and variance scaling}
@@ -1840,17 +1845,17 @@ stages, the archives retain 6,451,200 endpoints and 387,072 choices, including
 \paragraph{Independent audit and numerical limits.}
 
 The audit reconstructs every loss and selection and replays 100,271 paths in
-explicitly transformed coordinates.
-Coefficient paths shared with the earlier studies reproduce exactly.
-Reconstructed losses have maximum normwise discrepancy $1.36 \times 10^{-14}$
-and leave every selection unchanged. Mushroom passes the declared trajectory
-and prediction tolerances. For synthetic data, however, the audit retains 63
-discrepancies in twelve replications, all of which have empty rare validation
-groups. These comprise 60 checks of selected predictions, two first-failure
-times, and one trajectory check. Repeated queries can refer to the same selected path. The
-maximum normwise coefficient and prediction discrepancies are $.003747$ and
-$.004184$, exceeding the declared tolerances of $2 \times 10^{-9}$ and
-$10^{-8}$. All stored checkpoint statuses agree.
+explicitly transformed coordinates. Coefficient paths shared with the earlier
+studies reproduce exactly. Reconstructed losses have maximum normwise
+discrepancy $1.36 \times 10^{-14}$ and leave every selection unchanged. Mushroom
+passes the declared trajectory and prediction tolerances. For synthetic data,
+however, the audit retains 63 discrepancies in twelve replications, all of which
+have empty rare validation groups. These comprise 60 checks of selected
+predictions, two first-failure times, and one trajectory check. Repeated queries
+can refer to the same selected path. The maximum normwise coefficient and
+prediction discrepancies are $.003747$ and $.004184$, exceeding the declared
+tolerances of $2 \times 10^{-9}$ and $10^{-8}$. All stored checkpoint statuses
+agree.
 
 The transformed replay therefore does not certify these extreme synthetic paths.
 The mean for rarer C2 quoted above is dominated by flagged selections, so its
@@ -1865,13 +1870,12 @@ outputs are in \path{results/synthetic/rates25/} and
 \section{Post hoc diagnostics for the final comparison}
 \label{sec:review-diagnostics}
 
-These diagnostics were added after independent review. They use the saved results
-without changing the candidates, validation selections, or summaries.
-The individual diagnostic records are in
-\path{results/diagnostics/}, and the regenerated tables are in
-\path{paper/generated/review-diagnostics.tex}. The source supplement's
-\texttt{README.md} gives regeneration and verification commands. The diagnostics
-do not constitute a new prospective experiment.
+These diagnostics were added after independent review. They use the saved
+results without changing the candidates, validation selections, or summaries.
+The individual diagnostic records are in \path{results/diagnostics/}, and the
+regenerated tables are in \path{paper/generated/review-diagnostics.tex}. The
+source supplement's \texttt{README.md} gives regeneration and verification
+commands. The diagnostics do not constitute a new prospective experiment.
 
 \subsection{Which claims depend on the numerical discrepancies?}
 
@@ -1894,27 +1898,26 @@ identifies a primary query without a flagged selected-prediction check.
   \small
   \begin{tabular}{llrrl}
     \toprule
-    Law & Scaling & Checks & Primary share & Replications (zero-based) \\
+    Law                & Scaling  & Checks & Primary share & Replications (zero-based) \\
     \midrule
-    Rarer C1 & Damped & 4 & 100.00\% & 103 \\
-    Rarer C1 & SD & 2 & --- & 82 \\
-    Rarer C1 & Variance & 10 & --- & 29, 82 \\
-    Rarer C2 & Damped & 6 & 100.00\% & 52 \\
-    Rarer C2 & SD & 10 & 100.00\% & 16, 52 \\
-    Rarer C2 & Variance & 22 & 100.00\% & 17, 68, 100, 108 \\
-    Opposite, disjoint & Damped & 4 & --- & 72 \\
-    Common only & SD & 2 & --- & 75 \\
+    Rarer C1           & Damped   &      4 &      100.00\% & 103                       \\
+    Rarer C1           & SD       &      2 &           --- & 82                        \\
+    Rarer C1           & Variance &     10 &           --- & 29, 82                    \\
+    Rarer C2           & Damped   &      6 &      100.00\% & 52                        \\
+    Rarer C2           & SD       &     10 &      100.00\% & 16, 52                    \\
+    Rarer C2           & Variance &     22 &      100.00\% & 17, 68, 100, 108          \\
+    Opposite, disjoint & Damped   &      4 &           --- & 72                        \\
+    Common only        & SD       &      2 &           --- & 75                        \\
     \bottomrule
   \end{tabular}
   \caption{
-    Selected-prediction discrepancies in the centered/fitted synthetic
-    arm. Checks count selection queries, including repeated choices.
-    Primary share is the fraction of the archived mean rare risk
-    contributed by flagged selections at cap $2048$, under aggregate
-    validation and the expanded rate grid with original stops. A dash
-    means this primary query has no flagged selection. These shares
-    locate dependence on discrepant paths; they do not correct
-    their risks.
+    Selected-prediction discrepancies in the centered/fitted synthetic arm.
+    Checks count selection queries, including repeated choices. Primary share is
+    the fraction of the archived mean rare risk contributed by flagged
+    selections at cap $2048$, under aggregate validation and the expanded rate
+    grid with original stops. A dash means this primary query has no flagged
+    selection. These shares locate dependence on discrepant paths; they do not
+    correct their risks.
   }
   \label{tab:review-audit-impact}
 \end{table}
@@ -1962,26 +1965,25 @@ particular, we do not rescore candidates using clipped validation predictions.
   \small
   \begin{tabular}{llrrrr}
     \toprule
-    Selection & Scaling & Raw aggregate & Clipped aggregate
-      & Raw rare & Clipped rare \\
+    Selection & Scaling  & Raw aggregate & Clipped aggregate & Raw rare & Clipped rare \\
     \midrule
-    Aggregate & None & 0.001341 & 0.001102 & 0.005955 & 0.005504 \\
-    Aggregate & SD & 0.004476 & 0.001543 & 0.004764 & 0.004280 \\
-    Aggregate & Damped & 0.000810 & 0.000660 & 0.000682 & 0.000519 \\
-    Aggregate & Variance & 0.311988 & 0.052641 & 0.051586 & 0.051000 \\
-    Rare & None & 0.039395 & 0.031451 & 0.003678 & 0.002887 \\
-    Rare & SD & 0.141068 & 0.001864 & 0.002257 & 0.001826 \\
-    Rare & Damped & 0.002611 & 0.001452 & 0.000499 & 0.000324 \\
-    Rare & Variance & 25.572030 & 0.056872 & 0.019374 & 0.014308 \\
+    Aggregate & None     &      0.001341 &          0.001102 & 0.005955 &     0.005504 \\
+    Aggregate & SD       &      0.004476 &          0.001543 & 0.004764 &     0.004280 \\
+    Aggregate & Damped   &      0.000810 &          0.000660 & 0.000682 &     0.000519 \\
+    Aggregate & Variance &      0.311988 &          0.052641 & 0.051586 &     0.051000 \\
+    Rare      & None     &      0.039395 &          0.031451 & 0.003678 &     0.002887 \\
+    Rare      & SD       &      0.141068 &          0.001864 & 0.002257 &     0.001826 \\
+    Rare      & Damped   &      0.002611 &          0.001452 & 0.000499 &     0.000324 \\
+    Rare      & Variance &     25.572030 &          0.056872 & 0.019374 &     0.014308 \\
     \bottomrule
   \end{tabular}
   \caption{
     Post hoc clipping to $[0,1]$ of the saved Mushroom predictors in
-    \cref{tab:conference-mushroom}, with $n=2048$, cap $8192$,
-    centered predictors, and a fitted intercept. Means include all 32
-    partitions. Selection retains the original unclipped validation
-    scores; clipping requires no additional training. The diagnostic
-    archive also reports MCSEs, quantiles, and the smaller sample size.
+    \cref{tab:conference-mushroom}, with $n = 2048$, cap $8192$, centered
+    predictors, and a fitted intercept. Means include all 32 partitions.
+    Selection retains the original unclipped validation scores; clipping
+    requires no additional training. The diagnostic archive also reports MCSEs,
+    quantiles, and the smaller sample size.
   }
   \label{tab:review-clipping}
 \end{table}
@@ -2008,10 +2010,10 @@ container, and reproduction instructions, including how to build the complete
 paper from saved results, rerun experiments, and check the numerical
 certificates. It also identifies optional outputs that must be regenerated.
 
-We ran the experiments on a local NixOS workstation with an AMD Ryzen 9 7900
-CPU (12 cores, 24 hardware threads) and approximately 62\,GiB of usable RAM.
-The Python implementations use NumPy and SciPy on the CPU, with OpenBLAS
-restricted to one thread by the experiment tasks. Saved experiment metadata
-include software versions and elapsed runtimes.
+We ran the experiments on a local NixOS workstation with an AMD Ryzen 9 7900 CPU
+(12 cores, 24 hardware threads) and approximately 62\,GiB of usable RAM. The
+Python implementations use NumPy and SciPy on the CPU, with OpenBLAS restricted
+to one thread by the experiment tasks. Saved experiment metadata include
+software versions and elapsed runtimes.
 
 \end{document}
