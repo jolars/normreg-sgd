@@ -1,5 +1,12 @@
 flavor = "gfm"
-extend-exclude = ["build/**", "figures/**", "CHANGELOG.md"]
+extend-exclude = [
+  ".devenv/**",
+  ".venv/**",
+  "lean/.lake/**",
+  "build/**",
+  "figures/**",
+  "CHANGELOG.md",
+]
 
 [format]
 line-width = 80

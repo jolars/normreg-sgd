@@ -6,4 +6,31 @@ inputs:
         follows: nixpkgs
   nixpkgs:
     url: github:cachix/devenv-nixpkgs/rolling
-
+  nix2container:
+    url: github:nlewo/nix2container
+    inputs:
+      nixpkgs:
+        follows: nixpkgs
+  mk-shell-bin:
+    url: github:rrbutani/nix-mk-shell-bin
+  uv2nix:
+    url: github:pyproject-nix/uv2nix
+    inputs:
+      nixpkgs:
+        follows: nixpkgs
+      pyproject-nix:
+        follows: pyproject-nix
+  pyproject-nix:
+    url: github:pyproject-nix/pyproject.nix
+    inputs:
+      nixpkgs:
+        follows: nixpkgs
+  pyproject-build-systems:
+    url: github:pyproject-nix/build-system-pkgs
+    inputs:
+      nixpkgs:
+        follows: nixpkgs
+      pyproject-nix:
+        follows: pyproject-nix
+      uv2nix:
+        follows: uv2nix

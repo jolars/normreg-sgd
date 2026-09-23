@@ -1,8 +1,25 @@
 # Feature normalization under finite training budgets
 
-This repository contains the experiments, numerical checks, and
-[manuscript](paper/main.tex) for the study. Run commands from the repository
-root inside `devenv shell`.
+This repository contains the [manuscript](paper/main.tex), experiment code,
+source data, saved results, and numerical checks for the study. The repository
+and release archive use the same layout and commands.
+
+To build the complete paper from the saved results, install
+[Nix](https://nixos.org/download/) and
+[devenv](https://devenv.sh/getting-started/), then run this command from the
+repository or extracted archive:
+
+```sh
+devenv shell task paper
+```
+
+The output is `build/main.pdf`, including the appendices. This command generates
+the manuscript figures and runs LaTeX without retraining models. The Nix and
+Python dependencies are pinned in `devenv.lock` and `uv.lock`. Initial setup
+requires network access. A container with the dependencies already installed is
+also available through the build instructions below.
+
+For other tasks, enter `devenv shell` and run:
 
 ```sh
 task experiment:mushroom     # Run and summarize Mushroom comparisons.
@@ -12,6 +29,61 @@ task figures                # Plot saved results.
 task paper                  # Generate figures and compile build/main.pdf.
 task check                  # Check code, numerics, illustrations, and the paper.
 ```
+
+## Packaging and containers
+
+`task package` (also named `task package-code`) creates
+`build/normreg-multi-<version>.tar.gz`, using the version in `pyproject.toml`.
+The archive contains the paper source and styles, experiment and plotting code,
+source data, saved results, numerical checks, Lean source, instructions, and
+environment files. It can be extracted and used without Git history. The image
+and archive take their contents from the same definition in
+[nix/release.nix](nix/release.nix).
+
+Local environments, build products, private mock reviews, and Lean's downloaded
+caches are excluded. As in the repository, the two large exact-risk outputs must
+be generated with `task experiment:exact-risk`; they are not needed to build the
+paper. Packaging and container builds do not run experiments.
+
+Build and load the image on a Linux machine with Nix, devenv, and Docker:
+
+```sh
+devenv shell task container:load
+```
+
+The local image is `normreg-multi:<version>`. `task container:build` builds the
+image specification without loading Docker. The image includes the archive
+contents under `/env`, Python 3.13 with the dependencies from `uv.lock`, Task,
+and the manuscript's LaTeX tools. It uses the same pinned Nix packages as the
+development environment. No Nix installation or package downloads are needed to
+run the loaded image.
+
+For example, replace `<version>` with the version being reproduced:
+
+```sh
+docker run --rm --network none normreg-multi:<version> task --list
+docker run --rm --network none normreg-multi:<version> task check:workflow
+docker run --name normreg-paper --network none normreg-multi:<version> task paper
+docker cp normreg-paper:/env/build/main.pdf ./main.pdf
+docker rm normreg-paper
+```
+
+The same image runs `task experiment:<name>` and `task check:results`. To retain
+new results, keep the container until `docker cp` has copied `/env/results`, or
+mount a writable copy of the extracted archive at `/env`. The separate
+`task prepare-lean` step downloads Mathlib caches and needs network access.
+
+Publish the versioned image to a registry explicitly:
+
+```sh
+devenv shell task container:publish REGISTRY=docker://ghcr.io/jolars/
+```
+
+Authenticate with that registry before publishing. This command publishes
+`ghcr.io/jolars/normreg-multi:<version>`; the archive in `build/` can be
+attached to the corresponding repository release. Reviewers can use either the
+archive with devenv or the published image. See the [devenv container
+documentation](https://devenv.sh/containers/) for other registry destinations.
 
 ## Running experiments
 
@@ -52,11 +124,12 @@ paths and updates the diagnostic tables in the manuscript. Run `task --list` to
 see all tasks.
 
 Experiments can take substantial time and replace the saved outputs for the
-selected configuration. Summarizing reads those outputs without retraining.
-Building figures or the paper never launches experiments. Saved summaries are
-included so the manuscript can be built immediately. The two large exact-risk
-files, `paths.npz` and `summary.json`, are ignored; regenerate them explicitly
-with `task experiment:exact-risk` when needed.
+selected configuration. Use a separate extracted copy to retain the supplied
+results when rerunning experiments. Summarizing reads those outputs without
+retraining. Building figures or the paper never launches experiments. Saved
+summaries are included so the manuscript can be built immediately. The two large
+exact-risk files, `paths.npz` and `summary.json`, are ignored; regenerate them
+explicitly with `task experiment:exact-risk` when needed.
 
 ## Editing experiments
 
@@ -90,12 +163,24 @@ updates, moment identities, selection rules, and theorem certificates.
 experiments.
 
 ```sh
-task check:results             # Reconstruct saved losses and selections.
-task check:exact-risk-results  # Check the large exact-risk outputs, if generated.
+task check:predictive-theorem # Check the oracle-tuning certificates.
+task check:predictive-review  # Run the independent certificate implementation.
+task check:normalization-risk # Check the supporting comparison certificates.
+task check:workflow           # Exercise the workflow with small configurations.
+task check:results            # Reconstruct saved losses and selections.
+task check:exact-risk-results # Check the large exact-risk outputs, if generated.
 ```
+
+Use `task experiment:diagnostics` to regenerate the diagnostic records and
+tables, then `task check:results` to verify them. Use
+`task experiment:signal-allocation` to regenerate the signal-allocation
+illustration and `task check:illustrations` to verify the illustration
+summaries.
 
 Checks retain and report the known numerical discrepancies in extreme synthetic
 paths. They do not certify those paths merely because structural checks pass.
+Successful numerical checks also do not replace the mathematical verification
+that the manuscript identifies as unfinished.
 
 Edit manuscript plots in [scripts/figures/](scripts/figures/README.md).
 Generated PDF, SVG, and PNG files go in `figures/`; LaTeX output goes in

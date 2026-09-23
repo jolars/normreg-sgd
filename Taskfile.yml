@@ -10,6 +10,49 @@ tasks:
     cmds:
       - task: paper
 
+  package:
+    desc: Package the paper, experiments, saved results, and environment in build/.
+    aliases: [package-code]
+    cmds:
+      - |
+        release_output=$(devenv build outputs.release | python -c 'import json, sys; print(json.load(sys.stdin)["outputs.release"])')
+        mkdir -p build
+        install -m 644 "$release_output"/*.tar.gz build/
+
+  review:
+    desc: Build the paper and source supplement, then run private AISTATS mock reviews.
+    vars:
+      REVIEW_OUTPUT:
+        sh: date +reviews/aistats-%Y%m%d-%H%M%S
+      RELEASE_VERSION:
+        sh: python -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])'
+    cmds:
+      - task: paper
+      - task: package
+      - >-
+        {{.REVIEWER | default "codex-aistats-review"}}
+        --paper build/main.pdf
+        --supplement-archive 'build/normreg-multi-{{.RELEASE_VERSION}}.tar.gz'
+        --output '{{.OUTPUT | default .REVIEW_OUTPUT}}'
+        {{.CLI_ARGS}}
+
+  container:build:
+    desc: Build the experiment image with the release contents and dependencies.
+    cmds:
+      - devenv container build experiments
+
+  container:load:
+    desc: Build the experiment image and load it into local Docker.
+    cmds:
+      - devenv container copy experiments
+
+  container:publish:
+    desc: Publish the experiment image to an explicit REGISTRY destination.
+    requires:
+      vars: [REGISTRY]
+    cmds:
+      - devenv container copy experiments --registry '{{.REGISTRY}}'
+
   paper:
     desc: Build the manuscript figures and build/main.pdf.
     cmds:
@@ -90,8 +133,8 @@ tasks:
   check-config:
     desc: Check Nix, GitHub Actions, and the Python lockfile.
     cmds:
-      - nixfmt --check devenv.nix
-      - actionlint
+      - nixfmt --check devenv.nix nix/*.nix
+      - actionlint .github/workflows/*.yml
       - uv lock --check
 
   check-python:
@@ -279,5 +322,5 @@ tasks:
     desc: Format Markdown, Nix, and Python sources.
     cmds:
       - panache format .
-      - nixfmt devenv.nix
+      - nixfmt devenv.nix nix/*.nix
       - ruff format experiments checks scripts

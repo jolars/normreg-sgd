@@ -485,6 +485,8 @@ training sets, estimated preprocessing, and fitted intercepts. Reusing a row
 also reuses its noise. Their prevalences and procedures differ from the theorem,
 so they do not establish that its ordering survives these changes. The original
 studies preceded the theorem; the clipping diagnostic below is post hoc.
+The source supplement contains code, data, and saved results, with reproduction
+instructions in its \texttt{README.md}; see \cref{sec:reproducibility}.
 
 \subsection{What survives retuning}
 
@@ -734,9 +736,9 @@ $\alpha \in[0,1]$. For each signal family, we then bound all larger rates for
 the method with higher risk, showing that none can reverse the ordering. Two
 independent implementations, \texttt{checks/predictive\_theorem.py}
 and \texttt{checks/predictive\_review.py}, check the rational
-certificates and the reductions of the moment equations. These checks run with
-\texttt{task check:predictive-theorem} and \texttt{task check:predictive-review}
-in the locked environment.
+certificates and the reductions of the moment equations. The source supplement
+includes both implementations; its \texttt{README.md} gives the commands for
+running them.
 
 The proof for bounded rates has undergone a separate AI-assisted mathematical
 review. For the extension to unrestricted rates, we have local algebraic checks
@@ -1049,8 +1051,8 @@ interior rates. Replaying 112 selected endpoints with the separately enumerated
 full tensor operator gives maximum absolute risk discrepancy below $10^{-9}$.
 
 The saved results include both grids, all selected rates and stops, and both
-risk arrays. Run \texttt{task experiment:signal-allocation} to regenerate
-them and \texttt{task check:illustrations} to verify them. Unlike
+risk arrays. The source supplement's \texttt{README.md} gives regeneration and
+verification commands. Unlike
 \cref{fig:conference-tuned-intro}, this search uses a finite stopping grid as
 well as a finite rate grid. Refinement and replay assess that calculation; they
 do not bound the error relative to the unrestricted oracle. The zero contours
@@ -1086,10 +1088,9 @@ In this appendix, we derive the moment recurrences and approximation bounds used
 to prove \cref{thm:conference-c1,thm:conference-c2}. We then describe the
 interval certificates. Throughout, we use the binary model, fresh sampling, and
 population preprocessing of \cref{sec:conference-setting}. The implementation is
-in \texttt{checks/normalization\_risk\_theorem.py}. Running
-\texttt{task check:normalization-risk} in the locked project environment checks
-both the certificates and independent numerical calculations. We still need to
-package an anonymized reproducibility archive for submission.
+in \texttt{checks/normalization\_risk\_theorem.py}. The source supplement
+includes this implementation, which checks both the certificates and independent
+numerical calculations; its \texttt{README.md} gives reproduction instructions.
 
 \subsection{Exact moments and the variance decomposition}
 
@@ -1868,10 +1869,9 @@ These diagnostics were added after independent review. They use the saved result
 without changing the candidates, validation selections, or summaries.
 The individual diagnostic records are in
 \path{results/diagnostics/}, and the regenerated tables are in
-\path{paper/generated/review-diagnostics.tex}. Run
-\texttt{task experiment:diagnostics} to regenerate the outputs and
-\texttt{task check:results} to verify them. The diagnostics do not
-constitute a new prospective experiment.
+\path{paper/generated/review-diagnostics.tex}. The source supplement's
+\texttt{README.md} gives regeneration and verification commands. The diagnostics
+do not constitute a new prospective experiment.
 
 \subsection{Which claims depend on the numerical discrepancies?}
 
@@ -1997,5 +1997,15 @@ objectives; it does not establish optimal damping or a uniform ranking.
 Quantiles, MCSEs, and all paired partition results remain in the diagnostic
 archive. The unbounded-response synthetic model has no analogous known label
 interval.
+
+\section{Source supplement}
+\label{sec:reproducibility}
+
+The source supplement accompanies the manuscript and contains the paper source,
+experiment and plotting code, source data, saved results, numerical checks, and
+pinned environment definitions. Its \texttt{README.md} gives the setup,
+container, and reproduction instructions, including how to build the complete
+paper from saved results, rerun experiments, and check the numerical
+certificates. It also identifies optional outputs that must be regenerated.
 
 \end{document}
