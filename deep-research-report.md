@@ -1,5 +1,16 @@
 # Novelty assessment of “Normalization and Implicit Regularization in Stochastic Learning”
 
+This is the September 15, 2026 planning assessment, with citations repaired on
+September 23. Its proposed directions and novelty ratings are historical
+judgments, not the current paper's claims. The [contribution
+decision](notes/predictive-contribution.md) and [bounded source
+comparison](notes/predictive-source-comparison.md) supersede its positioning
+advice. The [citation resolution record](notes/research-report-citations.md)
+identifies the sources, corrections, and material excluded from the manuscript.
+The original browsing log is unavailable; the links below supply checked support
+for the surrounding statements rather than recover the opaque search
+identifiers.
+
 ## Overall assessment
 
 **Yes, the research plan plausibly contains a novel research contribution, but
@@ -11,8 +22,9 @@ stochastic-gradient dynamics and risk trajectories in least squares are well
 studied; mini-batch size and learning rate have known equivalences and
 trade-offs; feature frequency has long motivated coordinate-adaptive
 optimization; and, most importantly, **preconditioned SGD for least squares has
-now been studied explicitly as a source of implicit regularization**.
-citeturn17search0turn19academia21turn18search3turn20academia5turn15academia29
+now been studied explicitly as a source of implicit regularization** ([Ali,
+Kolter, and Tibshirani][ali2019]; [Zou et al.][zou2021]; [Jain et
+al.][jain2018]; [Meterez et al.][meterez2026]; [Su, Zou, and Wu][su2024]).
 
 What does appear much less occupied—and, in the literature I found, is not
 treated as a unified problem—is the following combination:
@@ -70,7 +82,8 @@ Regularized Regression* directly studies how feature normalization changes
 lasso, ridge, and elastic-net fitting. In particular, it treats binary-feature
 prevalence, shows normalization-specific effects on coefficient shrinkage,
 considers mixed feature types and interactions, and explicitly proposes
-normalization as something that can be tuned. citeturn1academia19
+normalization as something that can be tuned ([Larsson and
+Wallin][larsson2025]).
 
 That makes the conceptual continuity in your proposed paper attractive, but it
 also means that the follow-up cannot reasonably claim as new:
@@ -105,7 +118,8 @@ for Least Square Problems* is probably the paper that should most strongly
 affect your positioning. It studies least-squares SGD with an arbitrary
 preconditioning matrix, derives excess-risk bounds, compares preconditioned SGD
 with standard and preconditioned ridge regression, and constructs
-preconditioners that improve SGD's statistical behavior. citeturn15academia29
+preconditioners that improve SGD's statistical behavior ([Su, Zou, and
+Wu][su2024]).
 
 This means that a claim such as
 
@@ -115,13 +129,13 @@ This means that a claim such as
 would now be much too weak. In mathematical terms, feature normalization is a
 special diagonal preconditioner, and the broad proposition that preconditioning
 can change the generalization/regularization properties of least-squares SGD is
-already explicit in that work. citeturn15academia29
+already explicit in that work ([Su, Zou, and Wu][su2024]).
 
 There is also newer work analyzing preconditioned SGD through the simultaneous
 effects of geometry on conditioning and stochastic noise floors, including
 diagonal preconditioners. That reinforces the point that “preconditioning
-changes the rate/noise trade-off” is not itself an open conceptual claim.
-citeturn15academia31turn19search2
+changes the rate/noise trade-off” is not itself an open conceptual claim ([Scott
+et al.][scott2026]).
 
 Your differentiation from this literature is potentially strong, however. Your
 $P$ is not designed abstractly to optimize a bound or condition number. It is
@@ -135,21 +149,23 @@ better preconditioner.”
 
 Ali, Kolter, and Tibshirani studied the complete gradient-flow trajectory for
 least squares and its relationship with ridge regularization, including risk
-comparisons along the early-stopping path. citeturn17search0 Ali, Dobriban,
-and Tibshirani subsequently studied the implicit regularization of **stochastic
-gradient flow** for least squares, making learning rate, mini-batching, number
-of iterations, and excess risk part of the analysis. citeturn3academia30
+comparisons along the early-stopping path ([Ali, Kolter, and
+Tibshirani][ali2019]). Ali, Dobriban, and Tibshirani subsequently studied the
+implicit regularization of **stochastic gradient flow** for least squares,
+making learning rate, mini-batching, number of iterations, and excess risk part
+of the analysis ([Ali, Dobriban, and Tibshirani][ali2020]).
 
-The discrete problem has also moved forward. The 2026 revision of Sonthalia,
-Lok, and Rebrova studies arbitrary learning-rate schedules for discrete
-full-batch gradient descent in linear least squares, characterizes the parameter
-trajectory and expected excess risk, and connects finite-horizon GD to
-generalized ridge-type solutions. citeturn12search2
+The discrete problem has also moved forward. The July 2026 revision of
+Sonthalia, Lok, and Rebrova studies discrete full-batch gradient descent in
+linear least squares. Its abstract describes parameter trajectories and expected
+excess risk for learning-rate schedules, and a connection with generalized ridge
+solutions ([Sonthalia, Lok, and Rebrova][sonthalia2026]).
 
-And the area is still active: a paper posted on **September 10, 2026**, only
-five days before the date of your plan, proves minimax-rate results for an
-early-stopping rule for a continuous-time SGD model in linear inverse problems,
-explicitly handling persistent stochastic fluctuations. citeturn19academia19
+Jahn, Pillaud-Vivien, and Schertzer's paper, posted on **September 10, 2026**,
+studies discrepancy-based stopping for a continuous-time SGD model in linear
+inverse problems. Its abstract reports a high-probability minimax rate up to a
+logarithmic factor under source and spectral conditions, despite persistent
+stochastic fluctuations ([Jahn, Pillaud-Vivien, and Schertzer][jahn2026]).
 
 Consequently, neither of these would be strong novelty claims:
 
@@ -170,21 +186,24 @@ That distinction is important.
 
 For least squares specifically, Jain et al. gave sharp results for
 mini-batching, averaging, and statistical error, including how the usefulness of
-larger mini-batches depends on the problem. citeturn18search3 More generally,
-the observation that learning rate and batch size can compensate for one another
-is longstanding: Smith et al. showed empirically that increasing batch size can
-replace learning-rate decay in several training settings and proposed
-proportional learning-rate/batch-size scaling. citeturn20academia6
+larger mini-batches depends on the problem ([Jain et al.][jain2018]). More
+generally, the observation that learning rate and batch size can compensate for
+one another is longstanding: Smith et al. showed empirically that increasing
+batch size can replace learning-rate decay in several training settings and
+proposed proportional learning-rate/batch-size scaling ([Smith et al.,
+2018][smith2018]).
 
-The more serious overlap is recent. Meterez et al.'s 2025 *Seesaw* paper gives
-what the authors describe as the first **finite-sample equivalence result
-between learning-rate decay and increasing batch size for SGD on noisy linear
-regression**. citeturn20academia5
+Meterez et al.'s *Seesaw* paper, first posted in 2025, compares geometric
+learning-rate and batch-size schedules for noisy Gaussian linear regression. The
+inspected 2026 revision gives phase-end risk comparisons up to constants under
+matched observation budgets and a bounded-risk assumption. This is not an
+identity of trajectories or a result about feature normalization ([Meterez et
+al.][meterez2026]).
 
 There is also a distinct line of work interpreting the SGD regularizer induced
 by finite learning rates in terms of the learning-rate-to-batch-size ratio;
 Smith et al. derive such a modified-loss effect for random-shuffling SGD under
-their regime. citeturn19academia20
+their regime ([Smith et al., 2021][smith2021]).
 
 Thus your Questions 1–3 should not be positioned as discovering that $\eta$,
 $B$, and $k$ interact. The potentially new part is:
@@ -201,8 +220,8 @@ what changing **relative coordinate scaling** does.
 
 Zou et al. explicitly study the “implicit regularization” of unregularized SGD
 in linear least squares, in both under- and overparameterized regimes, and
-compare optimally tuned SGD statistically with ridge regression.
-citeturn19academia21 This is one reason your plan is right to keep full-rank
+compare optimally tuned SGD statistically with ridge regression ([Zou et
+al.][zou2021]). This is one reason your plan is right to keep full-rank
 convergence to OLS, finite-time regularization, and minimum-norm/interpolating
 implicit bias conceptually separate.
 
@@ -212,12 +231,11 @@ about **transient optimization bias plus stochastic variation**. Calling every
 such difference “implicit regularization” without qualification risks making the
 work look less precise than it actually is.
 
-There is also extensive work on exact or asymptotically exact learning
-trajectories for SGD on quadratic/least-squares problems, including
-high-dimensional analyses. Accordingly, deriving a closed recursion for the
-first two moments of linear SGD is valuable machinery, but the existence of such
-recursions is unlikely to constitute the main novelty on its own.
-citeturn13search3turn13search26
+Exact second-moment operators for least-squares SGD already appear in [Défossez
+and Bach][defossez2015] and [Jain et al.][jain2018]. Deriving a closed recursion
+is therefore useful machinery, but its existence alone does not establish
+novelty. These checked sources replace the original report's unidentified
+citations to high-dimensional trajectory analyses.
 
 ### Rare features and feature-frequency-dependent optimization are not new either
 
@@ -227,13 +245,14 @@ specifically to alter learning rates according to feature occurrence; adaptive
 methods such as AdaGrad became attractive in sparse settings for closely related
 reasons. AdaBatch is particularly relevant because it modifies mini-batch
 aggregation for sparse problems and interprets the result as implicit coordinate
-rescaling. citeturn10search0
+rescaling ([Défossez and Bach][adabatch2017]).
 
-There is even work using **linear regression with rare one-hot features** as a
-controlled example when studying stochastic reweighting. citeturn16search3
-And a 2026 study of stochastic momentum with sparse updates explicitly analyzes
-what happens to optimization dynamics when feature updates arrive rarely.
-citeturn16search6
+Zou et al. also analyze an uncentered one-hot design in their SGD-versus-ridge
+comparison. [Zou et al.][zou2021] The original report's separate attribution to
+stochastic reweighting could not be verified and is withdrawn. And a 2026 study
+of stochastic momentum with sparse updates explicitly analyzes what happens to
+optimization dynamics when feature updates arrive rarely ([Everett and
+Paquette][everett2026]).
 
 So neither
 
@@ -374,7 +393,7 @@ The quantity $Bq$ is a natural first-order measure of how many rare occurrences
 appear in a mini-batch. Its basic significance is not novel: sparse-data
 optimization already recognizes that batching behaves differently for
 infrequently active coordinates, and methods such as AdaBatch were motivated in
-part by this structure. citeturn10search0
+part by this structure ([Défossez and Bach][adabatch2017]).
 
 A stronger result would be something like:
 
@@ -419,8 +438,8 @@ does not formulate in terms of **statistically meaningful common/rare binary
 variables and their feasible joint distributions**. Existing preconditioning
 work generally seeks global risk guarantees or improved optimization/statistical
 conditioning rather than asking how incomplete learning of one interpretable
-feature contaminates another feature's coefficient.
-citeturn15academia29turn15academia31
+feature contaminates another feature's coefficient ([Su, Zou, and Wu][su2024];
+[Scott et al.][scott2026]).
 
 This could generate a genuinely interesting result of the form:
 
@@ -449,7 +468,7 @@ Most of the nearby least-squares SGD literature evaluates global excess
 prediction risk. For example, both the SGD-versus-ridge work and
 preconditioned-SGD work are framed around aggregate generalization/excess risk
 rather than the consequences for a test subpopulation defined by the presence of
-a rare predictor. citeturn19academia21turn15academia29
+a rare predictor ([Zou et al.][zou2021]; [Su, Zou, and Wu][su2024]).
 
 Your conditional risk is not merely the same risk on fewer observations, because
 
@@ -488,10 +507,11 @@ is excellent design.
 
 The need for this distinction is reinforced by existing work on mini-batching
 and by more recent linear-regression work examining one-pass versus
-repeated-data training. citeturn18search3turn5academia17turn5academia18
-Recent learning-rate/batch-size equivalence results also show why an apparent
-improvement can disappear after the appropriate computational calibration.
-citeturn20academia5
+repeated-data training ([Jain et al.][jain2018]; [Chen, Zhou, and
+Zhou][chen2026]; [Lin, Wu, and Bartlett][lin2025]). Recent
+learning-rate/batch-size equivalence results also show why an apparent
+improvement can disappear after the appropriate computational calibration
+([Meterez et al.][meterez2026]).
 
 So the accounting framework is not, by itself, a novelty claim. Its value is
 defensive: it makes a normalization-ranking reversal much more convincing if the
@@ -503,26 +523,26 @@ if it does not.
 A useful way to assess the project is to ask what a skeptical reviewer could
 cite against each possible headline result.
 
-  | Candidate contribution from the plan                                                                               | Prior-art pressure                                                                 | My assessment                                        |
-  | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- | ---------------------------------------------------- |
-  | Normalization changes GD/SGD convergence rates                                                                     | Classical optimization/preconditioning; feature scaling is standard                | **Very low novelty**                                 |
-  | Global feature scaling is equivalent to adjusting $\eta$                                                           | Direct algebra                                                                     | **Control result only**                              |
-  | Relative normalization gives different learning rates to common and rare binary coordinates                        | Follows directly from $PC$; frequency-sensitive learning is long known             | **Low alone; useful mechanism**                      |
-  | Early stopping regularizes least squares                                                                           | Extensive gradient-flow/GD literature                                              | **Not novel** citeturn17search0turn12search2     |
-  | SGD provides implicit regularization in least squares                                                              | Extensive literature                                                               | **Not novel** citeturn19academia21                |
-  | Preconditioning changes SGD's implicit regularization                                                              | Direct recent prior work                                                           | **Not novel** citeturn15academia29                |
-  | Batch size and learning rate trade off                                                                             | Extensive literature, including recent finite-sample linear-regression equivalence | **Not novel** citeturn20academia5turn20academia6 |
-  | Rare features require frequency-aware optimization                                                                 | Sparse/adaptive optimization literature                                            | **Not novel** citeturn10search0turn16search3     |
-  | $Bq$ determines rare-feature SGD variability                                                                       | Related intuitions already exist                                                   | **Moderate at best unless made exact and delimited** |
-  | $Bq$ is insufficient under dependence; identify the missing quantity                                               | I found no close treatment in your normalization setting                           | **Potentially strong**                               |
-  | Exact finite-time moments under a diagonal preconditioner                                                          | Quadratic-SGD dynamics are heavily studied                                         | **Moderate as machinery; weak as headline**          |
-  | Normalize-by-prevalence $\times B\times\eta\times k$ risk phase diagram                                            | No close match found                                                               | **Moderate-to-high if analytically characterized**   |
-  | Provable reversal between normalization rules as stopping/batch regime changes                                     | No close match found                                                               | **High potential**                                   |
-  | Dependence causes incomplete learning of one feature to distort another differently under different normalizations | No close match found in this statistical formulation                               | **High potential**                                   |
-  | Aggregate-optimal normalization differs from rare-subgroup-optimal normalization for a characterized regime        | No close match found                                                               | **High potential**                                   |
-  | Joint hyperparameter tuning of normalization, LR, batch, and stopping improves test performance                    | Hyperparameter tuning is generic; normalization tuning already in foundation paper | **Low without mechanism**                            |
-  | Extension to adaptive optimizers/neural nets                                                                       | Very crowded area                                                                  | **Not inherently novel; should remain secondary**    |
-  | Extension to overparameterized interpolation                                                                       | Huge implicit-bias literature                                                      | **Would require a fresh novelty review**             |
+  | Candidate contribution from the plan                                                                               | Prior-art pressure                                                                 | My assessment                                                                                       |
+  | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+  | Normalization changes GD/SGD convergence rates                                                                     | Classical optimization/preconditioning; feature scaling is standard                | **Very low novelty**                                                                                |
+  | Global feature scaling is equivalent to adjusting $\eta$                                                           | Direct algebra                                                                     | **Control result only**                                                                             |
+  | Relative normalization gives different learning rates to common and rare binary coordinates                        | Follows directly from $PC$; frequency-sensitive learning is long known             | **Low alone; useful mechanism**                                                                     |
+  | Early stopping regularizes least squares                                                                           | Extensive gradient-flow/GD literature                                              | **Not novel** [Ali, Kolter, and Tibshirani][ali2019]; [Sonthalia, Lok, and Rebrova][sonthalia2026]. |
+  | SGD provides implicit regularization in least squares                                                              | Extensive literature                                                               | **Not novel** [Zou et al.][zou2021].                                                                |
+  | Preconditioning changes SGD's implicit regularization                                                              | Direct recent prior work                                                           | **Not novel** [Su, Zou, and Wu][su2024].                                                            |
+  | Batch size and learning rate trade off                                                                             | Extensive literature, including recent finite-sample linear-regression equivalence | **Not novel** [Meterez et al.][meterez2026]; [Smith et al., 2018][smith2018].                       |
+  | Rare features require frequency-aware optimization                                                                 | Sparse/adaptive optimization literature                                            | **Not novel** [Défossez and Bach][adabatch2017]; [Duchi, Hazan, and Singer][duchi2011].             |
+  | $Bq$ determines rare-feature SGD variability                                                                       | Related intuitions already exist                                                   | **Moderate at best unless made exact and delimited**                                                |
+  | $Bq$ is insufficient under dependence; identify the missing quantity                                               | I found no close treatment in your normalization setting                           | **Potentially strong**                                                                              |
+  | Exact finite-time moments under a diagonal preconditioner                                                          | Quadratic-SGD dynamics are heavily studied                                         | **Moderate as machinery; weak as headline**                                                         |
+  | Normalize-by-prevalence $\times B\times\eta\times k$ risk phase diagram                                            | No close match found                                                               | **Moderate-to-high if analytically characterized**                                                  |
+  | Provable reversal between normalization rules as stopping/batch regime changes                                     | No close match found                                                               | **High potential**                                                                                  |
+  | Dependence causes incomplete learning of one feature to distort another differently under different normalizations | No close match found in this statistical formulation                               | **High potential**                                                                                  |
+  | Aggregate-optimal normalization differs from rare-subgroup-optimal normalization for a characterized regime        | No close match found                                                               | **High potential**                                                                                  |
+  | Joint hyperparameter tuning of normalization, LR, batch, and stopping improves test performance                    | Hyperparameter tuning is generic; normalization tuning already in foundation paper | **Low without mechanism**                                                                           |
+  | Extension to adaptive optimizers/neural nets                                                                       | Very crowded area                                                                  | **Not inherently novel; should remain secondary**                                                   |
+  | Extension to overparameterized interpolation                                                                       | Huge implicit-bias literature                                                      | **Would require a fresh novelty review**                                                            |
 
 The main implication is that **the project becomes more novel as it becomes more
 statistical and less generic-optimization-oriented**.
@@ -568,11 +588,11 @@ or its asymptotic approximation, at which the ordering changes.
 
 Why this would matter: early-stopping theory already says risk evolves with
 training time, and preconditioned-SGD theory already says preconditioning
-changes risk. citeturn17search0turn15academia29 What would be new is a
-**statistically interpretable explanation of how a standard normalization choice
-causes one rule to dominate another in one finite-budget regime and lose in
-another because rare-feature bias and stochastic variance evolve at different
-rates**.
+changes risk ([Ali, Kolter, and Tibshirani][ali2019]; [Su, Zou, and
+Wu][su2024]). What would be new is a **statistically interpretable explanation
+of how a standard normalization choice causes one rule to dominate another in
+one finite-budget regime and lose in another because rare-feature bias and
+stochastic variance evolve at different rates**.
 
 That directly answers your central question rather than merely assembling
 existing ingredients.
@@ -639,8 +659,8 @@ Your planned equal-sign/opposite-sign and nested/negative-dependence experiments
 are unusually well suited to producing such a result.
 
 That would also connect naturally to the original Larsson–Wallin paper's concern
-with dependence while producing something genuinely new on the training side.
-citeturn1academia19
+with dependence while producing something genuinely new on the training side
+([Larsson and Wallin][larsson2025]).
 
 ### An aggregate-versus-subgroup reversal theorem
 
@@ -665,9 +685,9 @@ would be strong if it holds over an open parameter region rather than one
 constructed numerical example.
 
 This is less directly crowded by the neighboring SGD literature, whose principal
-comparisons generally use aggregate excess risk.
-citeturn19academia21turn15academia29 It also turns the “rare feature” device
-from an optimization curiosity into a statistical prediction problem.
+comparisons generally use aggregate excess risk ([Zou et al.][zou2021]; [Su,
+Zou, and Wu][su2024]). It also turns the “rare feature” device from an
+optimization curiosity into a statistical prediction problem.
 
 ### A counterexample can be a real contribution
 
@@ -744,18 +764,20 @@ I would also be explicit in the paper about the closest literature rather than
 trying to place it at a distance:
 
 - Larsson–Wallin: normalization changes **explicit regularization** for
-  prevalent versus rare binary features. citeturn1academia19
+  prevalent versus rare binary features ([Larsson and Wallin][larsson2025]).
 - Ali–Kolter–Tibshirani and related work: stopping induces **finite-time
-  regularization** in least squares. citeturn17search0
+  regularization** in least squares ([Ali, Kolter, and Tibshirani][ali2019]).
 - Ali–Dobriban–Tibshirani and Zou et al.: SGD itself has analyzable
-  **statistical regularization behavior** in least squares.
-  citeturn3academia30turn19academia21
-- Su–Zou–Wu: **preconditioning changes that behavior**. citeturn15academia29
+  **statistical regularization behavior** in least squares ([Ali, Dobriban, and
+  Tibshirani][ali2020]; [Zou et al.][zou2021]).
+- Su–Zou–Wu: **preconditioning changes that behavior** ([Su, Zou, and
+  Wu][su2024]).
 - Jain et al. and Meterez et al.: mini-batch size and learning rate have
-  nontrivial and sometimes equivalent effects in least-squares SGD.
-  citeturn18search3turn20academia5
+  nontrivial and sometimes equivalent effects in least-squares SGD ([Jain et
+  al.][jain2018]; [Meterez et al.][meterez2026]).
 - Sparse/frequency-adaptive optimization: rare feature occurrence has long been
-  recognized as an optimization issue. citeturn10search0turn16search3
+  recognized as an optimization issue ([Défossez and Bach][adabatch2017];
+  [Duchi, Hazan, and Singer][duchi2011]).
 - **Your gap:** none of these works, as far as I could find, asks how *ordinary
   preprocessing normalization based on feature prevalence* jointly redistributes
   deterministic learning and stochastic error across **dependent common/rare
@@ -775,11 +797,12 @@ The broad umbrella is crowded. In particular, three developments rule out broad
 claims:
 
 1. early stopping and whole-path regularization for least squares are already
-   established; citeturn17search0turn12search2
+   established; [Ali, Kolter, and Tibshirani][ali2019]; [Sonthalia, Lok, and
+   Rebrova][sonthalia2026].
 2. preconditioned SGD for least squares has already been studied explicitly as
-   implicit regularization; citeturn15academia29
+   implicit regularization; [Su, Zou, and Wu][su2024].
 3. learning-rate/batch-size equivalence now has a finite-sample
-   noisy-linear-regression treatment. citeturn20academia5
+   noisy-linear-regression treatment ([Meterez et al.][meterez2026]).
 
 But those papers do **not**, from the literature I located, collapse your
 project. Rather, they sharpen what is actually new about it.
@@ -843,3 +866,22 @@ So the answer to “Does this research plan represent a novel idea?” is:
 > risk are included. A sharp comparative theorem in that space would, based on
 > the literature reviewed here through September 15, 2026, give the project a
 > credible and potentially strong original contribution.**
+
+[ali2019]: https://proceedings.mlr.press/v89/ali19a.html
+[ali2020]: https://proceedings.mlr.press/v119/ali20a.html
+[zou2021]: https://arxiv.org/abs/2108.04552v2
+[jain2018]: https://jmlr.org/papers/v18/16-595.html
+[meterez2026]: https://arxiv.org/html/2510.14717v2
+[su2024]: https://arxiv.org/html/2403.08585v3
+[larsson2025]: https://arxiv.org/html/2501.03821v3
+[scott2026]: https://arxiv.org/abs/2511.19716v3
+[sonthalia2026]: https://arxiv.org/abs/2406.04425v2
+[jahn2026]: https://arxiv.org/abs/2609.11273v1
+[smith2018]: https://arxiv.org/abs/1711.00489v2
+[smith2021]: https://arxiv.org/abs/2101.12176v1
+[adabatch2017]: https://arxiv.org/html/1711.01761v1
+[duchi2011]: https://jmlr.org/papers/v12/duchi11a.html
+[everett2026]: https://arxiv.org/abs/2605.28961v1
+[chen2026]: https://arxiv.org/abs/2605.24316v3
+[lin2025]: https://arxiv.org/abs/2506.08415v2
+[defossez2015]: https://proceedings.mlr.press/v38/defossez15.html

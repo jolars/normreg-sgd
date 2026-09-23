@@ -138,14 +138,15 @@ iterates after optimizing all nonnegative constant rates and deterministic stops
 under one observation cap.
 
 Rare-presence risk is a target-distribution risk: we condition the test law on
-the rare feature while retaining the training law. \citet[Remark 3.1]{lei2021shift}
-give a minimax target-risk separation from optimally tuned ridge with a fixed
-design and Gaussian noise. \citet[Corollary 3.3]{wu2022pretraining} analyze
-target risk of the final online-SGD iterate with geometric step decay, and
-\citet{liu2025precondition} study minimax preconditioning and accelerated SGD
-under covariate shift. These results do not supply our explicit opposite gaps
-for fixed signal families. Appendix~\ref{sec:comparison-proofs} discusses the
-established mechanisms supporting our analysis.
+the rare feature while retaining the training law.
+\citet[Remark 3.1]{lei2021shift} give a minimax target-risk separation from
+optimally tuned ridge with a fixed design and Gaussian noise.
+\citet[Corollary 3.3]{wu2022pretraining} analyze target risk of the final
+online-SGD iterate with geometric step decay, and \citet{liu2025precondition}
+study minimax preconditioning and accelerated SGD under covariate shift. These
+results do not supply our explicit opposite gaps for fixed signal families.
+Appendix~\ref{sec:comparison-proofs} discusses the established mechanisms
+supporting our analysis.
 
 \section{Normalization and the training procedure}
 \label{sec:conference-setting}
@@ -1062,13 +1063,26 @@ a prospective evaluation of its predictions.
 \label{sec:comparison-proofs}
 
 Our calculations build on established mechanisms. Early stopping changes
-least-squares regularization \citep{ali2019early}, and analyses of
-least-mean-squares methods separate bias and variance while accounting for
-sampling and batching \citep{defossez2015averaged, jain2018parallelizing}.
-AdaBatch connects sparse mini-batch aggregation with coordinate rescaling
-\citep{defossez2017adabatch}, while moment operators characterize exact
-mean-square stability \citep{mulayoff2024exact}. For explicit regularization,
-\citet{larsson2025normalization} analyze how feature scaling affects shrinkage.
+least-squares regularization \citep{ali2019early}. \citet{ali2020stochastic}
+compare stochastic gradient flow with ridge along the training path for a fixed
+design. Their Lemma 1 matches discrete SGD's first two moments to an Euler
+discretization of the flow; the continuous process is an approximation to SGD.
+Analyses of least-mean-squares methods separate bias and variance while
+accounting for sampling and batching \citep{defossez2015averaged,
+jain2018parallelizing}. AdaBatch connects sparse mini-batch aggregation with
+coordinate rescaling \citep{defossez2017adabatch}, while moment operators
+characterize exact mean-square stability \citep{mulayoff2024exact}. For explicit
+regularization, \citet{larsson2025normalization} analyze how feature scaling
+affects shrinkage.
+
+The risks of scaling rare features also have precedents.
+\citet[Section 5.4]{bordes2010erratum} warn that standardizing very rare
+features can hurt test performance. In a study of deterministic graph neural
+network training,
+\citet[Section 5]{milligan2024normalization} identify increased stochastic
+variance as a possible cost of standardizing rare binary features. These
+observations motivate quantitative risk comparisons but do not establish our
+oracle inequalities.
 
 In this appendix, we derive the moment recurrences and approximation bounds used
 to prove Theorems~\ref{thm:conference-c1} and~\ref{thm:conference-c2}. We then

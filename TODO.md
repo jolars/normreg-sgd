@@ -17,9 +17,11 @@ submission requirement.
   review](notes/predictive-source-comparison.md); the related-work
   discussion and references now reflect it. Exhaustive priority is not
   established.
-- [ ] Resolve citation markers and verify any claims retained from [the research
+- [x] Resolve citation markers and verify any claims retained from [the research
   report](deep-research-report.md). Add verified references from the audits
-  only where they support the current manuscript.
+  only where they support the current manuscript. Completed in the [citation
+  resolution record](notes/research-report-citations.md), including the
+  disposition of unverified attributions and three additions to Appendix C.
 
 ## Determine the impact of numerical discrepancies
 
