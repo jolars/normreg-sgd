@@ -1,19 +1,19 @@
-# The original Makefile is a hashed input of the preserved robustness study.
 .DEFAULT_GOAL := all
-include Makefile
 
-.PHONY: check-practical-selection reproduce-practical-selection check-predictive-claim check-predictive-feasibility
-.PHONY: check-mushroom-rate-search reproduce-mushroom-rate-search
-.PHONY: check-mushroom-sensitivity reproduce-mushroom-sensitivity
-.PHONY: prepare-results check-scripts format-scripts
-.PHONY: check-variance-scaling reproduce-variance-scaling
-.PHONY: check-predictive-regime check-predictive-theorem
-.PHONY: check-predictive-review
-.PHONY: reproduce-predictive-intro check-predictive-intro
-.PHONY: prepare-lean check-lean
-.PHONY: figures paper-figures
-.PHONY: reproduce-review-diagnostics check-review-diagnostics
-.PHONY: reproduce-signal-allocation check-signal-allocation
+FROZEN := python scripts/frozen_experiment.py
+
+.PHONY: all paper figures paper-figures check check-quick verify check-experiments
+.PHONY: check-markdown check-config check-python check-frozen-inputs format
+.PHONY: prepare-results prepare-lean check-lean
+.PHONY: check-moments check-normalization-risk check-normalization-robustness
+.PHONY: check-predictive-theorem check-predictive-review check-predictive-intro
+.PHONY: check-practical-selection check-mushroom-rate-search
+.PHONY: check-mushroom-sensitivity check-variance-scaling
+.PHONY: check-review-diagnostics check-signal-allocation
+.PHONY: reproduce-normalization-robustness reproduce-practical-selection
+.PHONY: reproduce-mushroom-rate-search reproduce-mushroom-sensitivity
+.PHONY: reproduce-variance-scaling reproduce-predictive-intro
+.PHONY: reproduce-review-diagnostics reproduce-signal-allocation
 
 PAPER_FIGURES := build/figures/predictive-intro/tuned-rare-risk.pdf \
 	build/figures/signal-allocation/risk-map.pdf \
@@ -21,9 +21,12 @@ PAPER_FIGURES := build/figures/predictive-intro/tuned-rare-risk.pdf \
 	build/figures/practical-selection/practical-selection.pdf \
 	build/figures/mushroom-rate-search/paths-n2048-aggregate.pdf
 
-paper: paper-figures
+all: paper
 
-paper-figures: $(PAPER_FIGURES)
+paper: paper-figures
+	cd paper && latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error -outdir=../build main.tex
+
+figures paper-figures: $(PAPER_FIGURES)
 
 $(PAPER_FIGURES): scripts/figures/style.py devenv.nix devenv.lock uv.lock
 
@@ -42,75 +45,39 @@ build/figures/mushroom-final/selected-risks.pdf: scripts/figures/plot_mushroom_f
 build/figures/mushroom-rate-search/paths-n2048-aggregate.pdf: scripts/figures/plot_mushroom_rate_search.py results/mushroom-rate-search/summary.json
 	python scripts/figures/plot_mushroom_rate_search.py
 
-figures: prepare-results
-	python scripts/figures/plot_predictive_intro.py
-	python scripts/figures/plot_practical_selection.py
-	python scripts/figures/plot_mushroom_rate_search.py
-	python scripts/figures/plot_joint_interactions.py
-	python scripts/figures/plot_normalization_robustness.py
-	python scripts/figures/plot_mushroom_sensitivity.py
-	python scripts/figures/plot_variance_scaling.py
-	python scripts/figures/plot_signal_allocation.py
-	python scripts/figures/plot_mushroom_final.py
+check: check-markdown check-config check-python verify paper
 
-reproduce-review-diagnostics:
-	python scripts/review_diagnostics.py --update-paper
+# The retired elastic-net Monte Carlo check was the only quick/full difference.
+check-quick: check
 
-check-review-diagnostics:
-	python scripts/review_diagnostics.py --check
+check-markdown:
+	panache format --check .
+	panache lint .
 
-reproduce-signal-allocation:
-	python scripts/illustrate_signal_allocation.py
+check-config:
+	nixfmt --check devenv.nix
+	actionlint
+	uv lock --check
 
-check-signal-allocation:
-	python scripts/illustrate_signal_allocation.py --check
+check-python:
+	ruff format --check experiments scripts
+	ruff check experiments scripts
 
-check-optimization: check-review-diagnostics check-signal-allocation
+verify: check-experiments
 
-prepare-lean:
-	cd lean && lake exe cache get Mathlib.Data.Real.Basic Mathlib.Tactic.FieldSimp Mathlib.Tactic.Linarith Mathlib.Tactic.Positivity Mathlib.Tactic.Ring
+check-experiments: check-frozen-inputs check-moments check-normalization-risk check-normalization-robustness
+check-experiments: check-predictive-theorem check-predictive-review check-predictive-intro
+check-experiments: check-practical-selection check-mushroom-rate-search check-mushroom-sensitivity
+check-experiments: check-variance-scaling check-review-diagnostics check-signal-allocation
 
-check-lean:
-	cd lean && lake build
+check-frozen-inputs:
+	python scripts/check_frozen_inputs.py
 
-prepare-results:
-	python scripts/prepare_results.py
+check-moments:
+	python experiments/check_joint_interactions.py
 
-check-normalization-robustness check-practical-selection check-mushroom-rate-search check-mushroom-sensitivity: prepare-results
-reproduce-practical-selection reproduce-mushroom-rate-search reproduce-mushroom-sensitivity: prepare-results
-
-check-python: check-scripts
-
-check-scripts:
-	ruff format --check scripts
-	ruff check scripts
-
-format: format-scripts
-
-format-scripts:
-	ruff format scripts
-
-check-optimization: check-practical-selection check-predictive-claim check-mushroom-rate-search check-mushroom-sensitivity
-check-optimization: check-variance-scaling
-
-check-variance-scaling: prepare-results
-	OPENBLAS_NUM_THREADS=1 python experiments/check_variance_scaling.py
-
-reproduce-variance-scaling: prepare-results
-	OPENBLAS_NUM_THREADS=1 python experiments/check_variance_scaling.py --numerics-only
-	python experiments/variance_scaling_spec.py --declare
-	OPENBLAS_NUM_THREADS=1 python experiments/run_variance_scaling.py
-	OPENBLAS_NUM_THREADS=1 python experiments/summarize_variance_scaling.py
-	OPENBLAS_NUM_THREADS=1 python experiments/check_variance_scaling.py --write-audit
-
-check-predictive-claim: check-predictive-feasibility check-predictive-regime check-predictive-theorem check-predictive-review
-	python experiments/check_predictive_claim.py
-
-check-predictive-feasibility:
-	python experiments/check_predictive_feasibility.py
-
-check-predictive-regime:
-	python experiments/check_predictive_regime.py
+check-normalization-risk:
+	python experiments/check_normalization_risk_theorem.py
 
 check-predictive-theorem:
 	python experiments/check_predictive_theorem.py
@@ -118,40 +85,89 @@ check-predictive-theorem:
 check-predictive-review:
 	python experiments/check_predictive_review.py
 
-reproduce-predictive-intro:
-	python experiments/plot_predictive_intro.py
-
 check-predictive-intro:
 	python experiments/plot_predictive_intro.py --check
 
-check-optimization: check-predictive-intro
+check-review-diagnostics:
+	python scripts/review_diagnostics.py --check
+
+check-signal-allocation:
+	python scripts/illustrate_signal_allocation.py --check
+
+prepare-results:
+	python scripts/prepare_results.py
+
+check-normalization-robustness check-practical-selection check-mushroom-rate-search check-mushroom-sensitivity check-variance-scaling: prepare-results
+reproduce-normalization-robustness reproduce-practical-selection reproduce-mushroom-rate-search reproduce-mushroom-sensitivity reproduce-variance-scaling: prepare-results
+
+check-normalization-robustness:
+	$(FROZEN) check_normalization_robustness
 
 check-practical-selection:
-	python experiments/check_practical_selection.py
-
-reproduce-practical-selection:
-	python experiments/check_practical_selection.py --numerics-only
-	python scripts/frozen_experiment.py run_practical_selection
-	python experiments/summarize_practical_selection.py
-	python experiments/audit_practical_precision.py
-	$(MAKE) check-practical-selection
+	$(FROZEN) check_practical_selection
 
 check-mushroom-rate-search:
-	OPENBLAS_NUM_THREADS=1 python scripts/frozen_experiment.py check_mushroom_rate_search
-
-reproduce-mushroom-rate-search:
-	OPENBLAS_NUM_THREADS=1 python scripts/frozen_experiment.py check_mushroom_rate_search --numerics-only
-	python scripts/frozen_experiment.py mushroom_rate_spec --declare
-	OPENBLAS_NUM_THREADS=1 python scripts/frozen_experiment.py run_mushroom_rate_search
-	OPENBLAS_NUM_THREADS=1 python experiments/summarize_mushroom_rate_search.py
-	$(MAKE) check-mushroom-rate-search
+	OPENBLAS_NUM_THREADS=1 $(FROZEN) check_mushroom_rate_search
 
 check-mushroom-sensitivity:
-	OPENBLAS_NUM_THREADS=1 python scripts/frozen_experiment.py check_mushroom_sensitivity
+	OPENBLAS_NUM_THREADS=1 $(FROZEN) check_mushroom_sensitivity
+
+check-variance-scaling:
+	OPENBLAS_NUM_THREADS=1 $(FROZEN) check_variance_scaling
+
+reproduce-normalization-robustness:
+	$(FROZEN) check_normalization_robustness --numerics-only
+	$(MAKE) check-normalization-risk
+	$(FROZEN) run_normalization_robustness
+	$(FROZEN) simulate_normalization_robustness
+	$(FROZEN) summarize_normalization_robustness
+	$(FROZEN) plot_normalization_robustness
+	$(MAKE) check-normalization-robustness
+
+reproduce-practical-selection:
+	$(FROZEN) check_practical_selection --numerics-only
+	$(FROZEN) run_practical_selection
+	$(FROZEN) summarize_practical_selection
+	$(FROZEN) audit_practical_precision
+	$(MAKE) check-practical-selection
+
+reproduce-mushroom-rate-search:
+	OPENBLAS_NUM_THREADS=1 $(FROZEN) check_mushroom_rate_search --numerics-only
+	$(FROZEN) mushroom_rate_spec --declare
+	OPENBLAS_NUM_THREADS=1 $(FROZEN) run_mushroom_rate_search
+	OPENBLAS_NUM_THREADS=1 $(FROZEN) summarize_mushroom_rate_search
+	$(MAKE) check-mushroom-rate-search
 
 reproduce-mushroom-sensitivity:
-	OPENBLAS_NUM_THREADS=1 python scripts/frozen_experiment.py check_mushroom_sensitivity --numerics-only
-	python scripts/frozen_experiment.py mushroom_sensitivity_spec --declare
-	OPENBLAS_NUM_THREADS=1 python scripts/frozen_experiment.py run_mushroom_sensitivity
-	OPENBLAS_NUM_THREADS=1 python experiments/summarize_mushroom_sensitivity.py
+	OPENBLAS_NUM_THREADS=1 $(FROZEN) check_mushroom_sensitivity --numerics-only
+	$(FROZEN) mushroom_sensitivity_spec --declare
+	OPENBLAS_NUM_THREADS=1 $(FROZEN) run_mushroom_sensitivity
+	OPENBLAS_NUM_THREADS=1 $(FROZEN) summarize_mushroom_sensitivity
 	$(MAKE) check-mushroom-sensitivity
+
+reproduce-variance-scaling:
+	OPENBLAS_NUM_THREADS=1 $(FROZEN) check_variance_scaling --numerics-only
+	$(FROZEN) variance_scaling_spec --declare
+	OPENBLAS_NUM_THREADS=1 $(FROZEN) run_variance_scaling
+	OPENBLAS_NUM_THREADS=1 $(FROZEN) summarize_variance_scaling
+	OPENBLAS_NUM_THREADS=1 $(FROZEN) check_variance_scaling --write-audit
+
+reproduce-predictive-intro:
+	python experiments/plot_predictive_intro.py
+
+reproduce-review-diagnostics:
+	python scripts/review_diagnostics.py --update-paper
+
+reproduce-signal-allocation:
+	python scripts/illustrate_signal_allocation.py
+
+prepare-lean:
+	cd lean && lake exe cache get Mathlib.Data.Real.Basic Mathlib.Tactic.FieldSimp Mathlib.Tactic.Linarith Mathlib.Tactic.Positivity Mathlib.Tactic.Ring
+
+check-lean:
+	cd lean && lake build
+
+format:
+	panache format .
+	nixfmt devenv.nix
+	ruff format experiments scripts

@@ -1,6 +1,5 @@
 """Recreate missing large outputs without changing the frozen study records."""
 
-import hashlib
 import json
 import os
 import shutil
@@ -9,20 +8,27 @@ import sys
 import tempfile
 from pathlib import Path
 
+from frozen_inputs import sha256
+
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "results/normalization-robustness"
 
 
 def verify(path, expected):
-    with path.open("rb") as stream:
-        actual = hashlib.file_digest(stream, "sha256").hexdigest()
+    actual = sha256(path)
     if actual != expected:
         raise ValueError(f"Frozen hash mismatch: {path}. Existing files were retained.")
 
 
 def run(script, output):
     subprocess.run(
-        [sys.executable, f"experiments/{script}.py", "--output", str(output)],
+        [
+            sys.executable,
+            "scripts/frozen_experiment.py",
+            script,
+            "--output",
+            str(output),
+        ],
         cwd=ROOT,
         check=True,
     )

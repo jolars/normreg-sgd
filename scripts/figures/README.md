@@ -19,23 +19,23 @@ fonts. The environment includes the LaTeX packages and `dvipng` needed by
 [Matplotlib's LaTeX
 renderer](https://matplotlib.org/stable/users/explain/text/usetex.html).
 
-  | Script                             | Output directory under `build/figures/` |
-  | ---------------------------------- | --------------------------------------- |
-  | `plot_predictive_intro.py`         | `predictive-intro/`                     |
-  | `plot_signal_allocation.py`        | `signal-allocation/`                    |
-  | `plot_mushroom_final.py`           | `mushroom-final/`                       |
-  | `plot_joint_interactions.py`       | `joint-interactions/`                   |
-  | `plot_normalization_robustness.py` | `normalization-robustness/`             |
-  | `plot_practical_selection.py`      | `practical-selection/`                  |
-  | `plot_mushroom_rate_search.py`     | `mushroom-rate-search/`                 |
-  | `plot_mushroom_sensitivity.py`     | `mushroom-scaling-sensitivity/`         |
-  | `plot_variance_scaling.py`         | `variance-scaling-followup/`            |
+  | Script                         | Output directory under `build/figures/` |
+  | ------------------------------ | --------------------------------------- |
+  | `plot_predictive_intro.py`     | `predictive-intro/`                     |
+  | `plot_signal_allocation.py`    | `signal-allocation/`                    |
+  | `plot_mushroom_final.py`       | `mushroom-final/`                       |
+  | `plot_practical_selection.py`  | `practical-selection/`                  |
+  | `plot_mushroom_rate_search.py` | `mushroom-rate-search/`                 |
 
 Run a single generator while editing, for example:
 
 ```sh
 python scripts/figures/plot_predictive_intro.py
 ```
+
+Only figures included by `paper/main.tex` are generated. The Mushroom
+rate-search script exports the $n = 2048$ paths under aggregate validation used
+in the supplement.
 
 `make paper` rebuilds its five figures when the corresponding scripts, shared
 style, environment configuration, or saved summaries change.

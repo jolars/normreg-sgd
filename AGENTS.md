@@ -23,7 +23,8 @@ Python, LaTeX, Lean, and validation tools.
 - `make figures`: regenerate manuscript plots from saved results.
 - `make check`: run formatting, configuration, numerical checks, and the paper
   build, matching CI.
-- `make check-quick`: run checks with a smaller final Monte Carlo sample.
+- `make check-quick`: alias for `make check`; the unused Monte Carlo study was
+  removed.
 - `make check-python`: check Python formatting and lint with Ruff.
 - `make prepare-lean`, then `make check-lean`: fetch Mathlib caches and build
   proofs; these checks run separately from `make check`.
@@ -50,8 +51,10 @@ change.
 ## Reproducibility
 
 Preserve seeds, declarations, raw data, and archived inputs checked by hashes.
-Add build targets to `GNUmakefile`; the original `Makefile` is a hashed study
-input. Make presentation changes in `scripts/figures/`. Use the relevant
+Add build targets to `GNUmakefile`. Retired provenance inputs, including the
+original `Makefile`, are listed in `scripts/archived_inputs.json` and checked
+against their pinned Git revision. Full Git history is required for these
+checks. Make presentation changes in `scripts/figures/`. Use the relevant
 `make reproduce-*` target when intentionally regenerating a study.
 
 ## Commit & Pull Request Guidelines

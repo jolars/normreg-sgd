@@ -1,13 +1,14 @@
 """Run frozen experiments using recorded file hashes after history cleanup."""
 
 import argparse
-import hashlib
 import importlib
 import json
 import runpy
 import sys
 from functools import partial
 from pathlib import Path
+
+from frozen_inputs import sha256
 
 ROOT = Path(__file__).resolve().parents[1]
 RECORDS = {
@@ -19,12 +20,11 @@ RECORDS = {
 }
 
 
-def preserved_hashes(record):
-    expected = json.loads((ROOT / record).read_text())["preserved"]
+def preserved_hashes(record, key="preserved"):
+    expected = json.loads((ROOT / record).read_text())[key]
     actual = {}
     for name, digest in expected.items():
-        with (ROOT / name).open("rb") as stream:
-            actual[name] = hashlib.file_digest(stream, "sha256").hexdigest()
+        actual[name] = sha256(ROOT / name)
         if actual[name] != digest:
             raise ValueError(f"Preserved study changed: {name}")
     return actual
@@ -39,6 +39,14 @@ def main():
     if script.parent != ROOT / "experiments" or not script.is_file():
         parser.error("Choose a script in experiments/.")
     sys.path.insert(0, str(ROOT / "experiments"))
+    # Patch before importing consumers so their hash aliases use the same policy.
+    for name in ("practical_spec", "robustness_spec"):
+        importlib.import_module(name).sha256 = sha256
+    importlib.import_module("robustness_spec").preserved = partial(
+        preserved_hashes,
+        "results/normalization-robustness/specification.json",
+        "preserved_sha256",
+    )
     modules = {}
     # Preserve the hashed sources and declarations while replacing obsolete Git lookups.
     for name, record in RECORDS.items():

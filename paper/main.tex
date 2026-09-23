@@ -1897,26 +1897,27 @@ identifies a primary query without a flagged selected-prediction check.
   \small
   \begin{tabular}{llrrl}
     \toprule
-    Law                & Scaling  & Checks & Primary share & Replications (zero-based) \\
+    Law & Scaling & Checks & Primary share & Replications (zero-based) \\
     \midrule
-    Rarer C1           & Damped   &      4 &      100.00\% & 103                       \\
-    Rarer C1           & SD       &      2 &           --- & 82                        \\
-    Rarer C1           & Variance &     10 &           --- & 29, 82                    \\
-    Rarer C2           & Damped   &      6 &      100.00\% & 52                        \\
-    Rarer C2           & SD       &     10 &      100.00\% & 16, 52                    \\
-    Rarer C2           & Variance &     22 &      100.00\% & 17, 68, 100, 108          \\
-    Opposite, disjoint & Damped   &      4 &           --- & 72                        \\
-    Common only        & SD       &      2 &           --- & 75                        \\
+    Rarer C1 & Damped & 4 & 100.00\% & 103 \\
+    Rarer C1 & SD & 2 & --- & 82 \\
+    Rarer C1 & Variance & 10 & --- & 29, 82 \\
+    Rarer C2 & Damped & 6 & 100.00\% & 52 \\
+    Rarer C2 & SD & 10 & 100.00\% & 16, 52 \\
+    Rarer C2 & Variance & 22 & 100.00\% & 17, 68, 100, 108 \\
+    Opposite, disjoint & Damped & 4 & --- & 72 \\
+    Common only & SD & 2 & --- & 75 \\
     \bottomrule
   \end{tabular}
   \caption{
-    Selected-prediction discrepancies in the centered/fitted synthetic arm.
-    Checks count selection queries, including repeated choices. Primary share is
-    the fraction of the archived mean rare risk contributed by flagged
-    selections at cap $2048$, under aggregate validation and the expanded rate
-    grid with original stops. A dash means this primary query has no flagged
-    selection. These shares locate dependence on discrepant paths; they do not
-    correct their risks.
+    Selected-prediction discrepancies in the centered/fitted synthetic
+    arm. Checks count selection queries, including repeated choices.
+    Primary share is the fraction of the archived mean rare risk
+    contributed by flagged selections at cap $2048$, under aggregate
+    validation and the expanded rate grid with original stops. A dash
+    means this primary query has no flagged selection. These shares
+    locate dependence on discrepant paths; they do not correct
+    their risks.
   }
   \label{tab:review-audit-impact}
 \end{table}
@@ -1964,25 +1965,26 @@ particular, we do not rescore candidates using clipped validation predictions.
   \small
   \begin{tabular}{llrrrr}
     \toprule
-    Selection & Scaling  & Raw aggregate & Clipped aggregate & Raw rare & Clipped rare \\
+    Selection & Scaling & Raw aggregate & Clipped aggregate
+      & Raw rare & Clipped rare \\
     \midrule
-    Aggregate & None     &      0.001341 &          0.001102 & 0.005955 &     0.005504 \\
-    Aggregate & SD       &      0.004476 &          0.001543 & 0.004764 &     0.004280 \\
-    Aggregate & Damped   &      0.000810 &          0.000660 & 0.000682 &     0.000519 \\
-    Aggregate & Variance &      0.311988 &          0.052641 & 0.051586 &     0.051000 \\
-    Rare      & None     &      0.039395 &          0.031451 & 0.003678 &     0.002887 \\
-    Rare      & SD       &      0.141068 &          0.001864 & 0.002257 &     0.001826 \\
-    Rare      & Damped   &      0.002611 &          0.001452 & 0.000499 &     0.000324 \\
-    Rare      & Variance &     25.572030 &          0.056872 & 0.019374 &     0.014308 \\
+    Aggregate & None & 0.001341 & 0.001102 & 0.005955 & 0.005504 \\
+    Aggregate & SD & 0.004476 & 0.001543 & 0.004764 & 0.004280 \\
+    Aggregate & Damped & 0.000810 & 0.000660 & 0.000682 & 0.000519 \\
+    Aggregate & Variance & 0.311988 & 0.052641 & 0.051586 & 0.051000 \\
+    Rare & None & 0.039395 & 0.031451 & 0.003678 & 0.002887 \\
+    Rare & SD & 0.141068 & 0.001864 & 0.002257 & 0.001826 \\
+    Rare & Damped & 0.002611 & 0.001452 & 0.000499 & 0.000324 \\
+    Rare & Variance & 25.572030 & 0.056872 & 0.019374 & 0.014308 \\
     \bottomrule
   \end{tabular}
   \caption{
     Post hoc clipping to $[0,1]$ of the saved Mushroom predictors in
-    \cref{tab:conference-mushroom}, with $n = 2048$, cap $8192$, centered
-    predictors, and a fitted intercept. Means include all 32 partitions.
-    Selection retains the original unclipped validation scores; clipping
-    requires no additional training. The diagnostic archive also reports MCSEs,
-    quantiles, and the smaller sample size.
+    \cref{tab:conference-mushroom}, with $n=2048$, cap $8192$,
+    centered predictors, and a fitted intercept. Means include all 32
+    partitions. Selection retains the original unclipped validation
+    scores; clipping requires no additional training. The diagnostic
+    archive also reports MCSEs, quantiles, and the smaller sample size.
   }
   \label{tab:review-clipping}
 \end{table}
