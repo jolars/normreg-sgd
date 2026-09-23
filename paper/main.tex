@@ -103,9 +103,9 @@ rare signals has a noise cost, and normalization changes that tradeoff.
     variance one. Under the stated population setup, curves show the lowest
     exact rare risk over a finite rate grid and every integer stop within each
     cap, including zero. Both panels use the same axes; lower is better. This
-    illustrates \cref{thm:conference-predictive}, which covers all
-    nonnegative constant rates. See \cref{sec:predictive-intro-figure}
-    for numerical details.
+    illustrates \cref{thm:conference-predictive}, which covers all nonnegative
+    constant rates. See \cref{sec:predictive-intro-figure} for numerical
+    details.
   }
   \label{fig:conference-tuned-intro}
 \end{figure*}
@@ -147,8 +147,8 @@ optimally tuned ridge with a fixed design and Gaussian noise.
 online-SGD iterate with geometric step decay, and \citet{liu2025precondition}
 study minimax preconditioning and accelerated SGD under covariate shift. These
 results do not supply our explicit opposite gaps for fixed signal families.
-\Cref{sec:comparison-proofs} discusses the established mechanisms
-supporting our analysis.
+\Cref{sec:comparison-proofs} discusses the established mechanisms supporting our
+analysis.
 
 \section{Normalization and the training procedure}
 \label{sec:conference-setting}
@@ -167,9 +167,9 @@ original coefficient scale:
 We use the average squared loss with a factor $1/2$. In the population
 comparisons, we fix the centered intercept at zero and initialize $\beta_0 = 0$.
 Each update uses $B$ independent fresh observations, so $k$ updates require
-$M = kB$ observations. In \cref{sec:conference-experiments}, we also
-sample with replacement from a fixed training set of size $n$. There, $M$ counts
-processed observations and can exceed $n$.
+$M = kB$ observations. In \cref{sec:conference-experiments}, we also sample with
+replacement from a fixed training set of size $n$. There, $M$ counts processed
+observations and can exceed $n$.
 
 We can compensate exactly for global rescaling by adjusting the learning rate.
 Replacing $S$ by $gS$ and $\eta$ by $g^2\eta$ leaves every update unchanged when
@@ -178,9 +178,9 @@ however, generally changes $\eta S^{-2}$ in a way that a single learning rate
 cannot undo. Whether this leads to a risk difference after tuning requires a
 separate comparison.
 
-Let $e_k = \E[\beta_k-\beta^*]$ and
-$V_k = \E[(\beta_k-\beta^*)(\beta_k-\beta^*)^\top]$. Under independent sampling
-of new observations at each update,
+Let $e_k = \E(\beta_k-\beta^*)$ and
+$V_k = \E\bigl((\beta_k-\beta^*)(\beta_k-\beta^*)^\top\bigr)$. Under independent
+sampling of new observations at each update,
 \begin{equation}
   V_k = e_ke_k^\top + A_k + \sigma^2N_k, \label{eq:conference-decomposition}
 \end{equation}
@@ -203,7 +203,7 @@ using half squared loss:
   R_k = \tfrac12\operatorname{tr}(CV_k),\qquad R_{G,k}
       = \tfrac12\operatorname{tr}(C_GV_k), \label{eq:conference-risks}
 \end{equation}
-Here $C_G = \E[xx^\top\mid G]$ is the conditional second moment, which includes
+Here $C_G = \E(xx^\top\mid G)$ is the conditional second moment, which includes
 the contribution of the conditional feature mean. Both risks exclude irreducible
 test noise. We evaluate both objectives for the same trained predictor, without
 changing the distribution of its training data.
@@ -262,8 +262,8 @@ optimal damping level.
 We now allow each normalization rule to choose its learning rate and stopping
 count to minimize rare-presence risk. We assume independent features
 ($\ell = 0$), $B = 1$, and the population preprocessing, zero initialization,
-and fixed intercept of \cref{sec:conference-setting}. Put $b = q(1 - q)$.
-We parameterize the update matrices on the original coefficient scale as
+and fixed intercept of \cref{sec:conference-setting}. Put $b = q(1 - q)$. We
+parameterize the update matrices on the original coefficient scale as
 \begin{equation}
   D_U(\alpha) = \alpha I_2,\qquad D_S(\alpha)
               = \diag(4b\alpha,\alpha),\quad \alpha
@@ -298,16 +298,16 @@ finite stops, the search includes rates that need not be mean-square stable.
   together with initialization.
 \end{theorem}
 
-We prove the theorem in \cref{sec:predictive-proofs} by bounding every
-rate and stop for the method with higher risk and constructing one stable
-candidate for the other method. The diagonal error moments satisfy an exact
-positive recurrence, even though the stochastic updates couple the independent
-features. When the rare signal dominates, learning it with U also introduces
-noise in the common coefficient, and S can reduce this cost. When the common
-signal dominates, S must balance incomplete learning of that signal against
-noise in the rare coefficient. U can learn the common coefficient while leaving
-the small rare signal largely unchanged. These bounds compare the best
-attainable risks without identifying the minimizing rates and stops.
+We prove the theorem in \cref{sec:predictive-proofs} by bounding every rate and
+stop for the method with higher risk and constructing one stable candidate for
+the other method. The diagonal error moments satisfy an exact positive
+recurrence, even though the stochastic updates couple the independent features.
+When the rare signal dominates, learning it with U also introduces noise in the
+common coefficient, and S can reduce this cost. When the common signal
+dominates, S must balance incomplete learning of that signal against noise in
+the rare coefficient. U can learn the common coefficient while leaving the small
+rare signal largely unchanged. These bounds compare the best attainable risks
+without identifying the minimizing rates and stops.
 
 At the observation cap, the expected number of rare training observations is
 $Mq = \tau/(1 - q)$, where $\tau = Mq(1 - q) \in[1,4]$. The positive gaps
@@ -409,7 +409,7 @@ where $\Delta_A$ and $\Delta_R$ denote the aggregate and rare-risk differences.
 The cross moment is the sum of the product of the coefficient biases and the
 covariance of their errors.
 
-\begin{theorem}[Objective disagreement]
+\begin{proposition}[Objective disagreement under fixed calibration]
   \label{thm:conference-c2}
   Take $q = .02$, $\ell \in[.9,1]$, $\beta^* = (2,1)^\top$, $h = .01$, $B = 1$,
   $k = M = 100$, and $\sigma^2 \in[3.8,4.1]$. Both U and S are mean-square
@@ -419,7 +419,7 @@ covariance of their errors.
     -.0983 & \leq R_{R,k}^S - R_{R,k}^U \leq -.0233.
   \end{align*}
   Moreover, $V_{CC,k}^S > V_{CC,k}^U$ and $V_{RR,k}^S > V_{RR,k}^U$.
-\end{theorem}
+\end{proposition}
 
 SD scaling increases each coefficient's mean squared error but improves
 rare-presence prediction. At $\ell = 1$ and $\sigma^2 = 4$,
@@ -451,8 +451,8 @@ with fresh observations, then sample with replacement from noisy training sets,
 and finally evaluate predictions on held-out records from a categorical dataset.
 The observation budget counts every sampled training row, including repeated
 visits, and we select final iterates from stored checkpoints. These experiments
-preceded \cref{thm:conference-predictive} and motivated its formulation.
-A prospective test of its predicted orderings remains open.
+preceded \cref{thm:conference-predictive} and motivated its formulation. A
+prospective test of its predicted orderings remains open.
 
 \subsection{Rate and stopping adjustments}
 
@@ -467,16 +467,15 @@ test distribution, so this is an oracle comparison.
 
 Both original anchor comparisons disappear after these adjustments.
 \Cref{tab:conference-adjustment} shows the rare-risk differences at the
-independent anchor of \cref{thm:conference-c1}, before and after
-selecting the rate and stopping count. S no longer has higher risk at the late
-$B = 1$ stop, with selected rates $h_U = .004$ and $h_S = .0003125$. At the
-dependent anchor of \cref{thm:conference-c2}, selection favors U under
-both objectives. Reversals and disagreements between objectives remain for other
-laws. These results illustrate why \cref{thm:conference-c1,thm:conference-c2}
-apply to the fixed calibration. The separate oracle
-comparison in \cref{thm:conference-predictive} establishes orderings that
-persist after optimizing over all constant rates and deterministic stops on its
-two signal families.
+independent anchor of \cref{thm:conference-c1}, before and after selecting the
+rate and stopping count. S no longer has higher risk at the late $B = 1$ stop,
+with selected rates $h_U = .004$ and $h_S = .0003125$. At the dependent anchor
+of \cref{thm:conference-c2}, selection favors U under both objectives. Reversals
+and disagreements between objectives remain for other laws. These results
+illustrate why \cref{thm:conference-c1,thm:conference-c2} apply to the fixed
+calibration. The separate oracle comparison in \cref{thm:conference-predictive}
+establishes orderings that persist after optimizing over all constant rates and
+deterministic stops on its two signal families.
 
 \begin{table}[t]
   \centering
@@ -540,8 +539,8 @@ disadvantage is within two MCSE of zero. At the latter budget, the rare-only
 signal favors S by $.2320$ ($.0233$), while the common-only signal favors U by
 $.1272$ ($.0159$). These sampled-data results use empirical rate calibration, so
 they do not extend the exact population theorems.
-\Cref{fig:conference-practical} shows the fixed paths and the
-categorical-task comparisons described below.
+\Cref{fig:conference-practical} shows the fixed paths and the categorical-task
+comparisons described below.
 
 \begin{figure*}[t]
   \centering
@@ -599,10 +598,10 @@ splits, index streams, and stopping checkpoints. Each scaling now uses 34
 trajectories, costing $34M$ observations at cap $M$. A further declared
 comparison adds variance scaling, $s_j = v_j$, and gives all four rules 25
 factors from $10^{-5}$ to $409.6$, at a cost of $50M$ per rule.
-\Cref{tab:conference-mushroom} reports the results of this four-rule
-comparison. \Cref{sec:mushroom-rate-search,sec:variance-scaling-followup}
-describe the retained paths and failures, comparisons with the earlier searches,
-and separate checks of stopping resolution.
+\Cref{tab:conference-mushroom} reports the results of this four-rule comparison.
+\Cref{sec:mushroom-rate-search,sec:variance-scaling-followup} describe the
+retained paths and failures, comparisons with the earlier searches, and separate
+checks of stopping resolution.
 
 \begin{table}[t]
   \centering
@@ -767,8 +766,8 @@ authors remain responsible for the submitted work.
 \section{Proof of the comparison after oracle tuning}
 \label{sec:predictive-proofs}
 
-We prove \cref{thm:conference-predictive} using exact error moments. We
-first restrict the rate parameter in \cref{eq:conference-oracle-rates} to
+We prove \cref{thm:conference-predictive} using exact error moments. We first
+restrict the rate parameter in \cref{eq:conference-oracle-rates} to
 $\alpha \in[0,1]$. For each signal family, we then bound all larger rates for
 the method with higher risk, showing that none can reverse the ordering. Two
 independent implementations, \texttt{experiments/check\_predictive\_theorem.py}
@@ -787,13 +786,14 @@ complete theorem remain open in this working draft.
 
 By homogeneity, we may take $\sigma^2 = 1$. Put $s = (\beta_C^*)^2$,
 $r = (\beta_R^*)^2$, $Q = 10^{-4}$, and $\tau = Mb$. We write
-$C_k = \E[(\beta_{C,k}-\beta_C^*)^2]$ and $H_k = \E[(\beta_{R,k}-\beta_R^*)^2]$.
+$C_k = \E\bigl((\beta_{C,k}-\beta_C^*)^2\bigr)$ and
+$H_k = \E\bigl((\beta_{R,k}-\beta_R^*)^2\bigr)$.
 Independence gives
 \begin{equation}
   R_{R,k} = C_k/8 + (1 - q)^2H_k/2. \label{eq:predictive-risk}
 \end{equation}
-The required feature moments are $x_C^2 = 1/4$, $\E x_R^2 = b$,
-$\E x_R^4 = b(1 - 3b)$, and $\E x_C^2x_R^2 = b/4$. Mixed moments with an odd
+The required feature moments are $x_C^2 = 1/4$, $\E(x_R^2) = b$,
+$\E(x_R^4) = b(1 - 3b)$, and $\E(x_C^2x_R^2) = b/4$. Mixed moments with an odd
 power of $x_C$ vanish. Expanding the squared update and using the conditional
 noise assumptions therefore gives
 \begin{equation}
@@ -847,8 +847,8 @@ Writing $d_b = d(\alpha) + 3b\alpha^2$, the logarithm series yields
     < 4b.
 \]
 Hence $|D_b^M - Z| \leq 16q$. The initial and noise coefficients in
-\cref{eq:predictive-u-lower} differ from $1$ and $N(\alpha)$ by at most $2q$
-and $5q$, respectively, and $|1 - N(\alpha)| \leq 1$. It follows that
+\cref{eq:predictive-u-lower} differ from $1$ and $N(\alpha)$ by at most $2q$ and
+$5q$, respectively, and $|1 - N(\alpha)| \leq 1$. It follows that
 \begin{equation}
   R_{R,k}^U \geq \min\{1/2,F_U^-(\alpha,\tau)\} - 11q, \qquad 0
             \leq \alpha
@@ -988,8 +988,8 @@ $\alpha \geq 1$,
 \[
   D_bm_b + b\alpha^2 - m_b = \frac{2b\alpha(\alpha - 1)}{1 + 3b} \geq 0.
 \]
-Dropping the nonnegative common-to-rare term in \cref{eq:predictive-moments}
-and using induction gives $H_k \geq m_b$ at every finite stop. Hence
+Dropping the nonnegative common-to-rare term in \cref{eq:predictive-moments} and
+using induction gives $H_k \geq m_b$ at every finite stop. Hence
 \[
   R_{R,k}^U(\alpha) \geq \frac{(1 - q)^2}{2(1 + 3b)}
                     \geq \frac{(1 - Q)^2}{2(1 + 3Q)}
@@ -1035,19 +1035,19 @@ all added rates nor attainment of the unrestricted infima.
 \label{sec:predictive-intro-figure}
 
 \Cref{fig:conference-tuned-intro} illustrates the two signal families in
-\cref{thm:conference-predictive} at $q = 10^{-4}$ and $\sigma^2 = 1$. We
-set $(\beta_C^*,\beta_R^*) = (0.1,1)$ for the rare-signal panel and $(1,0.1)$
-for the common-signal panel. All other assumptions match the theorem. We
-evaluate 61 integer observation caps, evenly spaced up to rounding from
-$10{,}002$ to $40{,}004$, so $1 \leq Mq(1 - q) \leq 4$. The horizontal axis
-reports the expected number of rare observations at the cap, $Mq$, rather than a
-realized count.
+\cref{thm:conference-predictive} at $q = 10^{-4}$ and $\sigma^2 = 1$. We set
+$(\beta_C^*,\beta_R^*) = (0.1,1)$ for the rare-signal panel and $(1,0.1)$ for
+the common-signal panel. All other assumptions match the theorem. We evaluate 61
+integer observation caps, evenly spaced up to rounding from $10{,}002$ to
+$40{,}004$, so $1 \leq Mq(1 - q) \leq 4$. The horizontal axis reports the
+expected number of rare observations at the cap, $Mq$, rather than a realized
+count.
 
 For each rule, we use the parameterization in \cref{eq:conference-oracle-rates}
 and a grid consisting of zero and 4097 geometrically spaced positive values of
 $\alpha$ from $10^{-6}$ to $2$. We iterate the exact recurrence
-\labelcref{eq:predictive-moments}, including both sources of training variance. At
-each cap, we select the rate and integer stopping count with the lowest
+\labelcref{eq:predictive-moments}, including both sources of training variance.
+At each cap, we select the rate and integer stopping count with the lowest
 population rare risk, searching every stop from zero through the cap. The curves
 connect these numerical minima; they are not trajectories of a single trained
 model. Selection uses population risk averaged over training randomness, rather
@@ -1088,11 +1088,10 @@ features. These observations motivate quantitative risk comparisons but do not
 establish our oracle inequalities.
 
 In this appendix, we derive the moment recurrences and approximation bounds used
-to prove \cref{thm:conference-c1,thm:conference-c2}. We then
-describe the interval certificates. Throughout, we use the binary model, fresh
-sampling, and population preprocessing of \cref{sec:conference-setting}.
-The implementation is in
-\texttt{experiments/check\_normalization\_risk\_theorem.py}. Running
+to prove \cref{thm:conference-c1,thm:conference-c2}. We then describe the
+interval certificates. Throughout, we use the binary model, fresh sampling, and
+population preprocessing of \cref{sec:conference-setting}. The implementation is
+in \texttt{experiments/check\_normalization\_risk\_theorem.py}. Running
 \texttt{make check-normalization-risk} in the locked project environment checks
 both the certificates and independent numerical calculations. We still need to
 package an anonymized reproducibility archive for submission.
@@ -1121,14 +1120,14 @@ The exact recurrence is $s_{k+1} = L_Ds_k + \sigma^2g_D$, where
 To verify the recurrence, let $\widehat C$ be the average second moment in a
 batch. The squared common coordinate is always $a$, and the binary law gives
 \[
-  \E x_R^4 = b(1 - 3b),\quad \E x_C^2x_R^2 = ab,\quad \E x_Cx_R^3 = c(1 - 3b).
+  \E(x_R^4) = b(1 - 3b),\quad \E(x_C^2x_R^2) = ab,\quad \E(x_Cx_R^3) = c(1 - 3b).
 \]
-Consequently, $\E\widehat c^2 = t_B$, $\E(\widehat c\widehat b) = m_B$, and
-$\E\widehat b^2 = b^2 + b(1 - 4b)/B$. Expanding
-$\E[(I-D\widehat C)V_k(I-\widehat CD)]$ yields $L_D$. The conditional mean-zero
-noise assumption removes the cross terms, and the added noise has covariance
-$\sigma^2DCD/B$. Because each batch is fresh, its update matrix is independent
-of the previous error.
+Consequently, $\E(\widehat c^2) = t_B$, $\E(\widehat c\widehat b) = m_B$, and
+$\E(\widehat b^2) = b^2 + b(1 - 4b)/B$. Expanding
+$\E\bigl((I-D\widehat C)V_k(I-\widehat CD)\bigr)$ yields $L_D$. The conditional
+mean-zero noise assumption removes the cross terms, and the added noise has
+covariance $\sigma^2DCD/B$. Because each batch is fresh, its update matrix is
+independent of the previous error.
 
 To prove \cref{eq:conference-decomposition}, we run the noiseless recursion on
 the same feature stream. Its mean error is $e_k = -(I - DC)^k\beta^*$ and its
@@ -1136,7 +1135,7 @@ covariance is $A_k \succeq 0$. Conditional on all sampled features, the
 component due to noise has mean zero, so its cross moment with the noiseless
 component vanishes. Its covariance is $\sigma^2N_k \succeq 0$, which proves the
 decomposition. Equivalently, if
-$\mathcal T_D(V) = \E[(I-D\widehat C)V(I-\widehat CD)]$, then
+$\mathcal T_D(V) = \E\bigl((I-D\widehat C)V(I-\widehat CD)\bigr)$, then
 \[
   V_k = \mathcal T_D^k(\beta^*\beta^{*\top})
         + \frac{\sigma^2}{B}\sum_{j=0}^{k-1}\mathcal T_D^j(DCD).
@@ -1204,8 +1203,10 @@ guarantees lower rare risk for S, whereas $F_- + \sigma^2N_- > 0$ guarantees
 lower rare risk for U. The homogeneous approximation includes variation from
 rare-feature sampling through $D_0$, in addition to the squared mean error.
 
-\subsection{Certificate for
-  \texorpdfstring{\Cref{thm:conference-c1}}{Theorem~\ref*{thm:conference-c1}}}
+\subsection{
+  Certificate for
+  \texorpdfstring{\Cref{thm:conference-c1}}{Theorem~\ref*{thm:conference-c1}}
+}
 
 We partition each of the $q$ and $h$ intervals into eight equal closed pieces.
 On each of the resulting 64 rectangles, we evaluate the preceding bounds using
@@ -1221,8 +1222,8 @@ rectangle. The full homogeneous second-moment map is therefore stable, and the
 moments remain bounded when we include the fixed finite noise term.
 
 Every rectangle satisfies $F_+ < 0 < N_-$. Taking the hull of the resulting
-$F + \sigma^2N$ intervals gives the bounds in \cref{tab:conference-c1}. In
-table order, the enclosures for the noise threshold are $[10.46,17.76]$,
+$F + \sigma^2N$ intervals gives the bounds in \cref{tab:conference-c1}. In table
+order, the enclosures for the noise threshold are $[10.46,17.76]$,
 $[.53,1.405]$, $[112.61,184.22]$, and $[5.69,14.49]$. They imply the four signs
 uniformly whenever $1.405 < \sigma^2 < 5.69$. The narrower interval in the
 theorem gives the displayed risk-gap bounds. Because the rectangles are closed,
@@ -1245,13 +1246,15 @@ compare integer endpoints, including the check that they lie within the reported
 decimal bounds. We convert to floating point only for display. The enclosure
 calculations therefore cover the full parameter boxes.
 
-\subsection{Proof of
-  \texorpdfstring{\Cref{thm:conference-c2}}{Theorem~\ref*{thm:conference-c2}}}
+\subsection{
+  Proof of
+  \texorpdfstring{\Cref{thm:conference-c2}}{Theorem~\ref*{thm:conference-c2}}
+}
 
 To establish stability, we use the fact that a feature vector with
 $\|z\|^2 \leq L$ satisfies
 \[
-  \E[(I-\eta zz^\top)^2] \preceq I - \eta(2 - \eta L)H, \qquad H = \E[zz^\top].
+  \E\bigl((I-\eta zz^\top)^2\bigr) \preceq I - \eta(2 - \eta L)H, \qquad H = \E(zz^\top).
 \]
 If $H \succ 0$ and $0 < \eta < 2/L$, this contracts expected squared error. For
 U, take $L = .25 + .98^2 = 1.2104$, $\eta = .04$, and use
@@ -1375,11 +1378,11 @@ We use 32 random partitions for each pair of training and validation sizes,
 $(256,128)$ and $(2048,1024)$, holding out the remaining records for testing.
 All candidates share partitions and replacement index streams. We use batches
 $B \in \{16,128\}$ and caps $M \in \{512,2048,8192\}$, and do not clip
-predictions. \Cref{tab:practical} reports results with centered predictors
-and a fitted intercept at the largest cap, jointly selecting the rate, batch
-size, and stopping count. We separately retain the other preprocessing arms,
-shorter caps, fixed stops, all paths, and the search across scaling rules, which
-requires three times as much work.
+predictions. \Cref{tab:practical} reports results with centered predictors and a
+fitted intercept at the largest cap, jointly selecting the rate, batch size, and
+stopping count. We separately retain the other preprocessing arms, shorter caps,
+fixed stops, all paths, and the search across scaling rules, which requires
+three times as much work.
 
 \begin{table}[t]
   \centering
@@ -1429,8 +1432,8 @@ failures.
 \section{Expanding the Mushroom rate search}
 \label{sec:mushroom-rate-search}
 
-In the frozen experiment in \cref{sec:practical}, aggregate validation
-selects the upper rate factor $.8$ for unscaled training in all 32 large-sample
+In the frozen experiment in \cref{sec:practical}, aggregate validation selects
+the upper rate factor $.8$ for unscaled training in all 32 large-sample
 partitions. To investigate this boundary, we declare a follow-up with 17 factors
 before evaluating the new candidates:
 \[
@@ -1484,13 +1487,13 @@ it does not provide independent confirmation on new data.
   \label{tab:mushroom-expanded-gaps}
 \end{table}
 
-\Cref{tab:mushroom-expanded-gaps} shows how expanding the rate search
-changes the comparisons. At the larger sample size, aggregate selection gives
-unscaled aggregate loss $.001341\ (.000074)$ and rare loss $.005955\ (.000888)$,
-compared with $.001754\ (.000060)$ and $.012482\ (.001386)$ in the original
-search. SD's rare-risk advantage is now within two MCSE of zero. Damping retains
-lower aggregate and rare loss, at $.000810\ (.000039)$ and $.000682\ (.000133)$.
-At the smaller sample size, aggregate selection gives rare losses
+\Cref{tab:mushroom-expanded-gaps} shows how expanding the rate search changes
+the comparisons. At the larger sample size, aggregate selection gives unscaled
+aggregate loss $.001341\ (.000074)$ and rare loss $.005955\ (.000888)$, compared
+with $.001754\ (.000060)$ and $.012482\ (.001386)$ in the original search. SD's
+rare-risk advantage is now within two MCSE of zero. Damping retains lower
+aggregate and rare loss, at $.000810\ (.000039)$ and $.000682\ (.000133)$. At
+the smaller sample size, aggregate selection gives rare losses
 $.098799\ (.032694)$, $.076035\ (.028437)$, and $.078161\ (.028979)$ for none,
 SD, and damping. Pairing resolves differences that the marginal error bars alone
 do not show.
@@ -1524,12 +1527,11 @@ every mean.
 
 Expanding the search increases the mean unscaled green coefficient to $.59990$
 from $.48216$, while SD and damping give means $.77633$ and $.91262$.
-\Cref{fig:mushroom-expanded-paths} shows both risks alongside the
-coefficient paths. The centered green contributions are $.59460$, $.76948$, and
-$.90456$, with other features contributing $-.14755$, $-.30233$, and $-.40205$
-in the subgroup. Centered intercepts are approximately $.485$. Because the full
-one-hot design is rank deficient, its coefficients still depend on the
-optimizer.
+\Cref{fig:mushroom-expanded-paths} shows both risks alongside the coefficient
+paths. The centered green contributions are $.59460$, $.76948$, and $.90456$,
+with other features contributing $-.14755$, $-.30233$, and $-.40205$ in the
+subgroup. Centered intercepts are approximately $.485$. Because the full one-hot
+design is rank deficient, its coefficients still depend on the optimizer.
 
 All 32 unscaled aggregate selections in the expanded primary search use
 $B = 16$, $M = 8192$, and factors $.6$--$1.8$. At the same batch size and stop,
@@ -1580,10 +1582,10 @@ $s_j = \sqrt{v_j + \tau}$, together with no scaling, SD ($\tau = 0$), and
 variance scaling ($s_j = v_j$). We reuse both sample sizes and all 32 partitions
 per size, and restrict the comparison to centered predictors with a fitted
 intercept. Each fixed rule receives the same 17 rate factors, two batch sizes,
-and stopping searches from \cref{sec:mushroom-rate-search}. Comparing
-the five positive offsets therefore requires five times the work of evaluating
-one fixed rule. We do not select an offset by test loss, and we preserve the
-earlier protocols and artifacts.
+and stopping searches from \cref{sec:mushroom-rate-search}. Comparing the five
+positive offsets therefore requires five times the work of evaluating one fixed
+rule. We do not select an offset by test loss, and we preserve the earlier
+protocols and artifacts.
 
 \begin{table}[ht]
   \centering
