@@ -9,9 +9,11 @@ fresh observation per update, and the stated signal and rare-observation
 regimes.
 
 The bounded-rate proof has a separate Codex review. Independent review of the
-unrestricted-rate extension, human mathematical review, and source-comparison
-review remain open. The empirical studies informed the theory; the prospective
-evaluation is still a protocol draft. These results do not establish a general
+unrestricted-rate extension and human mathematical review remain open. A
+[bounded source comparison](notes/predictive-source-comparison.md) distinguishes
+the result from its closest cited antecedents without establishing exhaustive
+priority. The empirical studies informed the theory; the prospective evaluation
+is still a protocol draft. These results do not establish a general
 normalization recommendation.
 
 ## Start here
@@ -40,6 +42,14 @@ particular learning paths. The [robustness
 study](notes/normalization-robustness-results.md) shows that retuning removes
 both original anchors, while other laws retain reversals or objective
 disagreements. Its covariance diagnostic failure remains part of the record.
+
+The [signal-allocation illustration](notes/signal-allocation.md) explores
+intermediate signals, noise, and budgets under the theorem's data model using
+finite rate and stopping grids. The [review
+diagnostics](notes/review-diagnostics.md) identify which synthetic summaries
+depend on retained numerical discrepancies and report clipping of saved Mushroom
+predictors without reselection. Both are post hoc analyses, kept separate from
+the frozen studies and prospective protocol.
 
 The [practical-selection study](notes/practical-selection-results.md) examines
 estimated preprocessing, fitted intercepts, missing rare groups, and validation
@@ -84,15 +94,17 @@ and preserved-file verification. No Git LFS is needed.
 
 Each study has matching `reproduce-` and `check-` targets:
 
-  | Study                      | Target suffix              |
-  | -------------------------- | -------------------------- |
-  | First fresh-sample study   | `joint-interactions`       |
-  | Retuning and robustness    | `normalization-robustness` |
-  | Estimated preprocessing    | `practical-selection`      |
-  | Expanded categorical rates | `mushroom-rate-search`     |
-  | Fixed damping sensitivity  | `mushroom-sensitivity`     |
-  | Four-rule practical study  | `variance-scaling`         |
-  | Oracle illustration        | `predictive-intro`         |
+  | Study                          | Target suffix              |
+  | ------------------------------ | -------------------------- |
+  | First fresh-sample study       | `joint-interactions`       |
+  | Retuning and robustness        | `normalization-robustness` |
+  | Estimated preprocessing        | `practical-selection`      |
+  | Expanded categorical rates     | `mushroom-rate-search`     |
+  | Fixed damping sensitivity      | `mushroom-sensitivity`     |
+  | Four-rule practical study      | `variance-scaling`         |
+  | Oracle illustration            | `predictive-intro`         |
+  | Signal-allocation illustration | `signal-allocation`        |
+  | Audit mapping and clipping     | `review-diagnostics`       |
 
 For example, `make check-mushroom-rate-search` audits the saved study, whereas
 `make reproduce-mushroom-rate-search` regenerates its artifacts. Use the Make
@@ -100,8 +112,8 @@ targets so frozen studies receive the required preservation checks. Do not
 hand-edit results, declarations, or recorded hashes.
 
 Edit presentation figures in [scripts/figures/](scripts/figures/README.md).
-`make figures` exports all seven sets to `build/figures/`; `make paper` rebuilds
-the three it uses. Set dimensions in Python, never in `\includegraphics`.
+`make figures` exports all nine sets to `build/figures/`; `make paper` rebuilds
+the five it uses. Set dimensions in Python, never in `\includegraphics`.
 Historical plotting code and outputs remain frozen.
 
 The separate Lean checks use `make prepare-lean` followed by `make check-lean`.

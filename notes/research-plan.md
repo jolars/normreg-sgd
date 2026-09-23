@@ -1,6 +1,6 @@
 # Current research plan
 
-Updated September 22, 2026. The current paper is **Feature Normalization under
+Updated September 23, 2026. The current paper is **Feature Normalization under
 Finite Training Budgets**, targeting AISTATS 2027. The [September 20
 decision](predictive-contribution.md) makes the comparison after oracle tuning
 the main theoretical contribution. The previous broad research program and its
@@ -31,11 +31,11 @@ recurrence; it does not formalize the full model or theorem.
 
 The bounded proof has a separate Codex review and independent numerical
 certificates. Independent review of the unrestricted-rate addendum, human
-mathematical review, and source-comparison review remain open. The [contribution
-decision](predictive-contribution.md) compares the result with Amari et al.'s
-optimally stopped bias result and the previously inspected preconditioning and
-target-risk literature. This comparison does not settle priority or publication
-significance.
+mathematical review remain open. The [bounded source
+comparison](predictive-source-comparison.md) distinguishes the theorem from
+Amari et al.'s optimally stopped bias result and the inspected preconditioning
+and target-risk literature. This comparison does not settle exhaustive priority
+or publication significance.
 
 The calibrated C1/C2 results explain specific risk contrasts. The robustness
 study shows that retuning removes both original anchors. Practical selection,
@@ -44,12 +44,21 @@ delimit empirical usefulness. Preserve their failed paths, missing groups,
 tuning boundaries, and numerical audit limitations. They informed the theorem
 and are not prospective confirmation of its prediction.
 
-The next scientific milestone is the [prospective
-protocol](predictive-holdout.md). Audit development overlap, implement and check
-the evaluation, and freeze the prediction and implementation before execution.
-Test new synthetic laws and an additional sparse categorical task, separating
-theorem-domain checks from extrapolation and data-dependent selection. Report
-unfavorable and unresolved results alongside any successes.
+The September 23 revision adds a [finite-grid signal-allocation
+illustration](signal-allocation.md) under the theorem's model and separate
+[review diagnostics](review-diagnostics.md) for the frozen practical studies.
+The latter identify claims affected by numerical discrepancies and evaluate
+clipping of saved Mushroom selections. Both additions are post hoc. The main
+empirical figure now shows the final matched search, with the earlier comparison
+preserved in the supplement.
+
+Prioritize author verification and the self-contained anonymous reproduction
+package. The [prospective protocol](predictive-holdout.md) remains a deferred
+extension if a stronger practical contribution is needed. Before executing it,
+audit development overlap, implement and check the evaluation, and freeze the
+prediction and implementation. Begin with the theorem's model and change
+observation reuse, preprocessing, intercept fitting, and selection separately.
+Report unfavorable and unresolved results alongside successes.
 
 The [current task list](../TODO.md) tracks those reviews, evaluation, and
 submission preparation. The [conference plan](aistats-2027.md) records the

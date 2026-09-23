@@ -1,10 +1,10 @@
 # Manuscript figures
 
-Edit the plotting scripts in this directory. All seven use `style.py` for
-Matplotlib's `rcParams`, font sizes, and export settings. Text and equations
-render through LaTeX with `lmodern`, matching the manuscript. Change `RC_PARAMS`
-to adjust the shared typography. Set figure dimensions in each script;
-`PAPER_WIDTH` is the manuscript's full text width in inches.
+Edit the plotting scripts in this directory. All use `style.py` for Matplotlib's
+`rcParams`, font sizes, and export settings. Text and equations render through
+LaTeX with `lmodern`, matching the manuscript. Change `RC_PARAMS` to adjust the
+shared typography. Set figure dimensions in each script; `PAPER_WIDTH` is the
+manuscript's full text width in inches.
 
 Inside `devenv shell`, run:
 
@@ -22,6 +22,8 @@ renderer](https://matplotlib.org/stable/users/explain/text/usetex.html).
   | Script                             | Output directory under `build/figures/` |
   | ---------------------------------- | --------------------------------------- |
   | `plot_predictive_intro.py`         | `predictive-intro/`                     |
+  | `plot_signal_allocation.py`        | `signal-allocation/`                    |
+  | `plot_mushroom_final.py`           | `mushroom-final/`                       |
   | `plot_joint_interactions.py`       | `joint-interactions/`                   |
   | `plot_normalization_robustness.py` | `normalization-robustness/`             |
   | `plot_practical_selection.py`      | `practical-selection/`                  |
@@ -35,7 +37,7 @@ Run a single generator while editing, for example:
 python scripts/figures/plot_predictive_intro.py
 ```
 
-`make paper` rebuilds its three figures when the corresponding scripts, shared
+`make paper` rebuilds its five figures when the corresponding scripts, shared
 style, environment configuration, or saved summaries change.
 `make paper-figures` performs that step without compiling LaTeX.
 

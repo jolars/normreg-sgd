@@ -12,8 +12,12 @@ include Makefile
 .PHONY: reproduce-predictive-intro check-predictive-intro
 .PHONY: prepare-lean check-lean
 .PHONY: figures paper-figures
+.PHONY: reproduce-review-diagnostics check-review-diagnostics
+.PHONY: reproduce-signal-allocation check-signal-allocation
 
 PAPER_FIGURES := build/figures/predictive-intro/tuned-rare-risk.pdf \
+	build/figures/signal-allocation/risk-map.pdf \
+	build/figures/mushroom-final/selected-risks.pdf \
 	build/figures/practical-selection/practical-selection.pdf \
 	build/figures/mushroom-rate-search/paths-n2048-aggregate.pdf
 
@@ -29,6 +33,12 @@ build/figures/predictive-intro/tuned-rare-risk.pdf: scripts/figures/plot_predict
 build/figures/practical-selection/practical-selection.pdf: scripts/figures/plot_practical_selection.py results/practical-selection/summary.json
 	python scripts/figures/plot_practical_selection.py
 
+build/figures/signal-allocation/risk-map.pdf: scripts/figures/plot_signal_allocation.py results/signal-allocation/summary.json
+	python scripts/figures/plot_signal_allocation.py
+
+build/figures/mushroom-final/selected-risks.pdf: scripts/figures/plot_mushroom_final.py results/variance-scaling-followup/mushroom-summary-c1.json
+	python scripts/figures/plot_mushroom_final.py
+
 build/figures/mushroom-rate-search/paths-n2048-aggregate.pdf: scripts/figures/plot_mushroom_rate_search.py results/mushroom-rate-search/summary.json
 	python scripts/figures/plot_mushroom_rate_search.py
 
@@ -40,6 +50,22 @@ figures: prepare-results
 	python scripts/figures/plot_normalization_robustness.py
 	python scripts/figures/plot_mushroom_sensitivity.py
 	python scripts/figures/plot_variance_scaling.py
+	python scripts/figures/plot_signal_allocation.py
+	python scripts/figures/plot_mushroom_final.py
+
+reproduce-review-diagnostics:
+	python scripts/review_diagnostics.py --update-paper
+
+check-review-diagnostics:
+	python scripts/review_diagnostics.py --check
+
+reproduce-signal-allocation:
+	python scripts/illustrate_signal_allocation.py
+
+check-signal-allocation:
+	python scripts/illustrate_signal_allocation.py --check
+
+check-optimization: check-review-diagnostics check-signal-allocation
 
 prepare-lean:
 	cd lean && lake exe cache get Mathlib.Data.Real.Basic Mathlib.Tactic.FieldSimp Mathlib.Tactic.Linarith Mathlib.Tactic.Positivity Mathlib.Tactic.Ring
