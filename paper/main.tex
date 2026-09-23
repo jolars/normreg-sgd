@@ -1526,10 +1526,11 @@ of five fixed damping offsets multiplies its total search cost by five.
   \label{tab:search-protocols}
 \end{table}
 
-In the frozen experiment in \cref{sec:practical}, aggregate validation selects
-the upper rate factor $.8$ for unscaled training in all 32 large-sample
-partitions. To investigate this boundary, we declare a follow-up with 17 factors
-before evaluating the new candidates:
+For Mushroom, aggregate validation over the five rate factors in
+\cref{sec:practical} selects the largest factor, $.8$, for unscaled training in
+all 32 partitions with $n = 2048$ training observations. To investigate this
+boundary, we declare an expanded grid with 17 factors before evaluating the new
+candidates:
 \[
   a_0 \in \{.001,.01,.05,.2,.4,.6,.8,1,1.2,1.4,1.6,1.8,2,2.4,3.2,4.8,6.4\}, \qquad \eta
       = a_0/\max(L,10^{-12}).
@@ -1545,7 +1546,7 @@ original fallback when the rare validation group is empty. We do not refit
 models on validation data.
 
 For each scaling and preprocessing arm, the expanded search uses 34 paths, at
-nominal cost $34M$ with cap $M$, compared with $10M$ for the nested original
+nominal cost $34M$ with cap $M$, compared with $10M$ for the nested five-factor
 search. Thus each search gives equal effort to all scaling rules, but the
 expanded search uses more work. Additional stopping checkpoints reuse the paths
 and require more validation scoring. The budget $M$ excludes the costs of
@@ -1657,14 +1658,15 @@ aggregate selection, mean rare loss on the five partitions without green
 training observations is $.51233$, $.43994$, and $.44841$ for none, SD, and
 damping.
 
-We store the protocol, declaration, and complete summaries separately from the
-frozen study. Independent checks reconstruct all losses, selections, paired
-summaries, coefficient contributions, and boundary diagnostics. They also replay
-all paths for replication zero of each size and every selected path for the
-remaining partitions in transformed coordinates, and compare the nested original
-grid with the frozen archive. The checks verify hashes for sources,
-dependencies, data, archives, figures, and preserved files. Human review of the
-interpretation remains part of manuscript preparation.
+We store the protocol, declaration, and complete summaries separately for the
+searches over five and 17 rate factors. Independent checks reconstruct all
+losses, selections, paired summaries, coefficient contributions, and boundary
+diagnostics. They also replay all paths for replication zero of each size and
+every selected path for the remaining partitions in transformed coordinates,
+and compare results for the five-factor subset with the saved results from
+\cref{sec:practical}. The checks verify hashes for sources, dependencies, data,
+archives, figures, and preserved files. Human review of the interpretation
+remains part of manuscript preparation.
 
 \section{Sensitivity to damping and variance scaling}
 \label{sec:mushroom-sensitivity}
@@ -1843,13 +1845,13 @@ stages, the archives retain 6,451,200 endpoints and 387,072 choices, including
 
 The audit reconstructs every loss and selection, verifies all 179 preserved
 files, and replays 100,271 paths in explicitly transformed coordinates.
-Overlapping frozen coefficient paths reproduce exactly. Reconstructed losses
-have maximum normwise discrepancy $1.36 \times 10^{-14}$ and leave every
-selection unchanged. Mushroom passes the declared trajectory and prediction
-tolerances. For synthetic data, however, the audit retains 63 discrepancies in
-twelve replications, all of which have empty rare validation groups. These
-comprise 60 checks of selected predictions, two first-failure times, and one
-trajectory check. Repeated queries can refer to the same selected path. The
+Coefficient paths shared with the earlier studies reproduce exactly.
+Reconstructed losses have maximum normwise discrepancy $1.36 \times 10^{-14}$
+and leave every selection unchanged. Mushroom passes the declared trajectory
+and prediction tolerances. For synthetic data, however, the audit retains 63
+discrepancies in twelve replications, all of which have empty rare validation
+groups. These comprise 60 checks of selected predictions, two first-failure
+times, and one trajectory check. Repeated queries can refer to the same selected path. The
 maximum normwise coefficient and prediction discrepancies are $.003747$ and
 $.004184$, exceeding the declared tolerances of $2 \times 10^{-9}$ and
 $10^{-8}$. All stored checkpoint statuses agree.
@@ -1862,14 +1864,13 @@ and affected summaries. We retain the original candidates and selections in the
 archive. The result note records the affected configurations and explains how we
 extended the checker to retain disagreements in failure times rather than stop
 at the first one. See \path{notes/variance-scaling-followup-results.md} for the
-protocol, archives, and reproduction commands. All earlier studies retain their
-frozen file hashes.
+protocol, archives, and reproduction commands.
 
 \section{Post hoc diagnostics for the final comparison}
 \label{sec:review-diagnostics}
 
-These diagnostics were added after independent review. They read the frozen
-archives without changing their candidates, validation selections, or summaries.
+These diagnostics were added after independent review. They use the saved results
+without changing the candidates, validation selections, or summaries.
 The source and input hashes and individual records are in
 \path{results/review-diagnostics/}, and the regenerated tables are in
 \path{paper/generated/review-diagnostics.tex}. Run
