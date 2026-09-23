@@ -1,7 +1,7 @@
 version: '3'
 
-vars:
-  FROZEN: python scripts/frozen_experiment.py
+env:
+  OPENBLAS_NUM_THREADS: '1'
 
 tasks:
   default:
@@ -36,19 +36,20 @@ tasks:
         vars:
           SCRIPT: mushroom_final
           STUDY: mushroom-final
-          SUMMARY: results/variance-scaling-followup/mushroom-summary-c1.json
+          SUMMARY: results/mushroom/rates25/mushroom-summary-c1.json
           NAME: selected-risks
       - task: figure
         vars:
           SCRIPT: practical_selection
           STUDY: practical-selection
-          SUMMARY: results/practical-selection/summary.json
+          SUMMARY: results/synthetic/rates5/summary.json
+          EXTRA_SUMMARY: results/mushroom/rates5/summary.json
           NAME: practical-selection
       - task: figure
         vars:
           SCRIPT: mushroom_rate_search
           STUDY: mushroom-rate-search
-          SUMMARY: results/mushroom-rate-search/summary.json
+          SUMMARY: results/mushroom/rates17/summary.json
           NAME: paths-n2048-aggregate
 
   figure:
@@ -59,6 +60,7 @@ tasks:
       - 'scripts/figures/plot_{{.SCRIPT}}.py'
       - scripts/figures/style.py
       - '{{.SUMMARY}}'
+      - '{{.EXTRA_SUMMARY | default .SUMMARY}}'
       - devenv.nix
       - devenv.lock
       - uv.lock
@@ -70,7 +72,7 @@ tasks:
       - 'python scripts/figures/plot_{{.SCRIPT}}.py'
 
   check:
-    desc: Check formatting, configuration, provenance, calculations, and the paper.
+    desc: Check formatting, configuration, calculations, and the paper.
     aliases: [check-quick]
     cmds:
       - task: check-markdown
@@ -95,169 +97,171 @@ tasks:
   check-python:
     desc: Check Python formatting and lint.
     cmds:
-      - ruff format --check experiments scripts
-      - ruff check experiments scripts
+      - ruff format --check experiments checks scripts
+      - ruff check experiments checks scripts
 
   check-experiments:
-    desc: Verify numerical results and frozen artifacts.
-    aliases: [verify]
+    desc: Check mathematical identities, numerical updates, and selections.
     cmds:
-      - task: check-frozen-inputs
-      - task: check-moments
-      - task: check-normalization-risk
-      - task: check-normalization-robustness
-      - task: check-predictive-theorem
-      - task: check-predictive-review
-      - task: check-predictive-intro
-      - task: check-practical-selection
-      - task: check-mushroom-rate-search
-      - task: check-mushroom-sensitivity
-      - task: check-variance-scaling
-      - task: check-review-diagnostics
-      - task: check-signal-allocation
+      - task: check:moments
+      - task: check:normalization-risk
+      - task: check:predictive-theorem
+      - task: check:predictive-review
+      - task: check:exact-risk
+      - task: check:selection
+      - task: check:mushroom-rates
+      - task: check:mushroom-damping
+      - task: check:matched-scaling
+      - task: check:illustrations
+      - task: check:workflow
 
-  check-frozen-inputs:
-    desc: Check archived provenance and relocated artifact handling.
+  check:moments:
+    desc: Check moments calculations.
     cmds:
-      - python scripts/check_frozen_inputs.py
+      - python -m checks.joint_interactions
 
-  check-moments:
-    desc: Check the shared exact-moment calculations.
+  check:normalization-risk:
+    desc: Check normalization risk calculations.
     cmds:
-      - python experiments/check_joint_interactions.py
+      - python -m checks.normalization_risk_theorem
 
-  check-normalization-risk:
-    desc: Check the calibrated normalization-risk theorem.
+  check:predictive-theorem:
+    desc: Check predictive theorem calculations.
     cmds:
-      - python experiments/check_normalization_risk_theorem.py
+      - python -m checks.predictive_theorem
 
-  check-predictive-theorem:
-    desc: Check the predictive theorem certificates.
+  check:predictive-review:
+    desc: Check predictive review calculations.
     cmds:
-      - python experiments/check_predictive_theorem.py
+      - python -m checks.predictive_review
 
-  check-predictive-review:
-    desc: Run the independent predictive theorem checks.
+  check:exact-risk:
+    desc: Check exact risk calculations.
     cmds:
-      - python experiments/check_predictive_review.py
+      - python -m checks.normalization_robustness --numerics-only
 
-  check-predictive-intro:
-    desc: Check the introduction illustration and frozen exports.
+  check:selection:
+    desc: Check selection calculations.
     cmds:
-      - '{{.FROZEN}} plot_predictive_intro --check'
+      - python -m checks.practical_selection --numerics-only
 
-  check-review-diagnostics:
-    desc: Check review diagnostics and generated tables.
+  check:mushroom-rates:
+    desc: Check mushroom rates calculations.
     cmds:
-      - '{{.FROZEN}} scripts/review_diagnostics.py --check'
+      - python -m checks.mushroom_rate_search --numerics-only
 
-  check-signal-allocation:
-    desc: Check the signal-allocation illustration.
+  check:mushroom-damping:
+    desc: Check mushroom damping calculations.
     cmds:
-      - python scripts/illustrate_signal_allocation.py --check
+      - python -m checks.mushroom_sensitivity --numerics-only
 
-  prepare-results:
-    desc: Recreate missing robustness artifacts and verify their frozen hashes.
-    run: once
+  check:matched-scaling:
+    desc: Check matched scaling calculations.
     cmds:
-      - python scripts/prepare_results.py
+      - python -m checks.variance_scaling --numerics-only
 
-  check-normalization-robustness:
-    desc: Check normalization robustness and its recorded artifacts.
-    deps: [prepare-results]
+  check:illustrations:
+    desc: Check the numerical data used in the two illustrations.
     cmds:
-      - '{{.FROZEN}} check_normalization_robustness'
+      - python -m experiments.predictive_intro.run --check
+      - python -m experiments.signal_allocation.run --check
 
-  check-practical-selection:
-    desc: Check practical preprocessing and validation selection.
-    deps: [prepare-results]
+  check:workflow:
+    desc: Check experiment entry points and a small saved run.
     cmds:
-      - '{{.FROZEN}} check_practical_selection'
+      - python -m checks.workflow
 
-  check-mushroom-rate-search:
-    desc: Check the expanded Mushroom rate search.
-    deps: [prepare-results]
+  check:results:
+    desc: Reconstruct saved losses, selections, summaries, and diagnostics.
     cmds:
-      - 'OPENBLAS_NUM_THREADS=1 {{.FROZEN}} check_mushroom_rate_search'
+      - python -m checks.practical_selection
+      - python -m checks.mushroom_rate_search
+      - python -m checks.mushroom_sensitivity
+      - python -m checks.variance_scaling
+      - python -m experiments.diagnostics.run --check
 
-  check-mushroom-sensitivity:
-    desc: Check Mushroom damping and variance sensitivity.
-    deps: [prepare-results]
+  check:exact-risk-results:
+    desc: Check the large exact-risk outputs after running that experiment.
     cmds:
-      - 'OPENBLAS_NUM_THREADS=1 {{.FROZEN}} check_mushroom_sensitivity'
+      - python -m checks.normalization_robustness
 
-  check-variance-scaling:
-    desc: Check the matched four-scaling search.
-    deps: [prepare-results]
+  experiment:mushroom:
+    desc: Run and summarize the mushroom experiment (-- --config NAME).
     cmds:
-      - 'OPENBLAS_NUM_THREADS=1 {{.FROZEN}} check_variance_scaling'
+      - task: experiment:mushroom:run
+        vars:
+          ARGS: '{{.CLI_ARGS}}'
+      - task: experiment:mushroom:summarize
+        vars:
+          ARGS: '{{.CLI_ARGS}}'
 
-  reproduce-normalization-robustness:
-    desc: Regenerate the normalization-robustness study.
-    deps: [prepare-results]
+  experiment:mushroom:run:
+    desc: Run the mushroom experiment (-- --config NAME).
     cmds:
-      - '{{.FROZEN}} check_normalization_robustness --numerics-only'
-      - task: check-normalization-risk
-      - '{{.FROZEN}} run_normalization_robustness'
-      - '{{.FROZEN}} simulate_normalization_robustness'
-      - '{{.FROZEN}} summarize_normalization_robustness'
-      - '{{.FROZEN}} plot_normalization_robustness'
-      - task: check-normalization-robustness
+      - 'python -m experiments.mushroom.run {{.ARGS | default .CLI_ARGS}}'
 
-  reproduce-practical-selection:
-    desc: Regenerate the practical-selection study.
-    deps: [prepare-results]
+  experiment:mushroom:summarize:
+    desc: Summarize the mushroom experiment (-- --config NAME).
     cmds:
-      - '{{.FROZEN}} check_practical_selection --numerics-only'
-      - '{{.FROZEN}} run_practical_selection'
-      - '{{.FROZEN}} summarize_practical_selection'
-      - '{{.FROZEN}} audit_practical_precision'
-      - task: check-practical-selection
+      - 'python -m experiments.mushroom.summarize {{.ARGS | default .CLI_ARGS}}'
 
-  reproduce-mushroom-rate-search:
-    desc: Regenerate the expanded Mushroom rate search.
-    deps: [prepare-results]
+  experiment:synthetic:
+    desc: Run and summarize the synthetic experiment (-- --config NAME).
     cmds:
-      - 'OPENBLAS_NUM_THREADS=1 {{.FROZEN}} check_mushroom_rate_search --numerics-only'
-      - '{{.FROZEN}} mushroom_rate_spec --declare'
-      - 'OPENBLAS_NUM_THREADS=1 {{.FROZEN}} run_mushroom_rate_search'
-      - 'OPENBLAS_NUM_THREADS=1 {{.FROZEN}} summarize_mushroom_rate_search'
-      - task: check-mushroom-rate-search
+      - task: experiment:synthetic:run
+        vars:
+          ARGS: '{{.CLI_ARGS}}'
+      - task: experiment:synthetic:summarize
+        vars:
+          ARGS: '{{.CLI_ARGS}}'
 
-  reproduce-mushroom-sensitivity:
-    desc: Regenerate the Mushroom sensitivity study.
-    deps: [prepare-results]
+  experiment:synthetic:run:
+    desc: Run the synthetic experiment (-- --config NAME).
     cmds:
-      - 'OPENBLAS_NUM_THREADS=1 {{.FROZEN}} check_mushroom_sensitivity --numerics-only'
-      - '{{.FROZEN}} mushroom_sensitivity_spec --declare'
-      - 'OPENBLAS_NUM_THREADS=1 {{.FROZEN}} run_mushroom_sensitivity'
-      - 'OPENBLAS_NUM_THREADS=1 {{.FROZEN}} summarize_mushroom_sensitivity'
-      - task: check-mushroom-sensitivity
+      - 'python -m experiments.synthetic.run {{.ARGS | default .CLI_ARGS}}'
 
-  reproduce-variance-scaling:
-    desc: Regenerate the matched four-scaling search.
-    deps: [prepare-results]
+  experiment:synthetic:summarize:
+    desc: Summarize the synthetic experiment (-- --config NAME).
     cmds:
-      - 'OPENBLAS_NUM_THREADS=1 {{.FROZEN}} check_variance_scaling --numerics-only'
-      - '{{.FROZEN}} variance_scaling_spec --declare'
-      - 'OPENBLAS_NUM_THREADS=1 {{.FROZEN}} run_variance_scaling'
-      - 'OPENBLAS_NUM_THREADS=1 {{.FROZEN}} summarize_variance_scaling'
-      - 'OPENBLAS_NUM_THREADS=1 {{.FROZEN}} check_variance_scaling --write-audit'
+      - 'python -m experiments.synthetic.summarize {{.ARGS | default .CLI_ARGS}}'
 
-  reproduce-predictive-intro:
-    desc: Regenerate the introduction illustration and its frozen exports.
+  experiment:exact-risk:
+    desc: Run and summarize the exact-risk comparisons.
     cmds:
-      - '{{.FROZEN}} plot_predictive_intro'
+      - task: experiment:exact-risk:run
+      - task: experiment:exact-risk:summarize
 
-  reproduce-review-diagnostics:
-    desc: Regenerate review diagnostics and update the manuscript tables.
+  experiment:exact-risk:run:
+    desc: Compute exact moments and paired simulations.
     cmds:
-      - '{{.FROZEN}} scripts/review_diagnostics.py --update-paper'
+      - python -m experiments.exact_risk.run
+      - python -m experiments.exact_risk.simulate
 
-  reproduce-signal-allocation:
-    desc: Regenerate the signal-allocation illustration.
+  experiment:exact-risk:summarize:
+    desc: Summarize the saved exact-risk comparisons.
     cmds:
-      - python scripts/illustrate_signal_allocation.py
+      - python -m experiments.exact_risk.summarize
+
+  experiment:predictive-intro:
+    desc: Compute the introduction illustration.
+    cmds:
+      - python -m experiments.predictive_intro.run
+
+  experiment:signal-allocation:
+    desc: Compute the signal-allocation illustration.
+    cmds:
+      - python -m experiments.signal_allocation.run
+
+  experiment:diagnostics:
+    desc: Reconstruct numerical discrepancies and compute post hoc diagnostics.
+    cmds:
+      - python -m checks.variance_scaling --write-audit
+      - python -m experiments.diagnostics.run --update-paper
+
+  experiment:precision:
+    desc: Replay selected synthetic paths at 160-digit precision.
+    cmds:
+      - python -m experiments.precision.run
 
   prepare-lean:
     desc: Fetch the Mathlib caches needed by the proofs.
@@ -276,4 +280,4 @@ tasks:
     cmds:
       - panache format .
       - nixfmt devenv.nix
-      - ruff format experiments scripts
+      - ruff format experiments checks scripts

@@ -46764,10 +46764,5 @@
         ]
       ]
     ]
-  ],
-  "source_sha256": {
-    "scripts/illustrate_signal_allocation.py": "06c3d6bb03f35148bf7fb8c67a1c95ee6439482ddfc9149879fd0b278bd0ede6",
-    "experiments/check_predictive_theorem.py": "35139e4e57a188ab52136498f57c8b7717ddaa0b1cda756911d004d83a63f51e",
-    "uv.lock": "ea6f9276833b578ea85ca5214a5865fe831f8c20c1ec4366079dc63f511b7404"
-  }
+  ]
 }

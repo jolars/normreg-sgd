@@ -75,4 +75,11 @@ def plot(summary):
 
 
 if __name__ == "__main__":
-    plot(json.loads((ROOT / "results/practical-selection/summary.json").read_text()))
+    plot(
+        {
+            label: json.loads(
+                (ROOT / "results" / label / "rates5/summary.json").read_text()
+            )
+            for label in ("synthetic", "mushroom")
+        }
+    )

@@ -41,11 +41,8 @@ style, Taskfile, environment configuration, or saved summaries change. Missing
 PDF, SVG, or PNG exports also trigger a rebuild. `task paper-figures` performs
 that step without compiling LaTeX.
 
-The original plotting code embedded in `experiments/` remains an archival input
-to the frozen studies and their hash checks. The reproduction tasks use the
-provenance adapter to write historical exports under `figures/frozen/`, with
-previews in `figures/frozen/previews/`. Numerical data and provenance records
-stay in `results/`. Make presentation changes here; the manuscript loads the
-editable exports from `figures/`. These scripts retain the plotted selections
-and diagnostics from the archived generators and do not rerun training, tune
-rates, or rewrite numerical summaries.
+Numerical results and summaries live in `results/<experiment>/`. These scripts
+read saved summaries and write the figures used by the manuscript. They do not
+train models or select new configurations. To change an analysis, run the
+experiment's `:summarize` task before regenerating figures. Git preserves
+earlier versions of plotting code and results.

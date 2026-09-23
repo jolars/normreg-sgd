@@ -29,7 +29,7 @@ another empirical study.
   higher-precision checks for the discrepant synthetic paths.
 - [x] Determine which empirical conclusions depend on those paths. Resolve or
   qualify affected claims, keeping diagnostic sensitivity calculations
-  separate from the original results. Preserve extreme paths and frozen
+  separate from the original results. Preserve extreme paths and saved
   summaries. Completed in Appendix H and the [review
   diagnostics](notes/review-diagnostics.md). Flagged selections dominate
   four extreme synthetic means; their magnitudes and rankings are qualified.
@@ -63,9 +63,9 @@ another empirical study.
   selection rules, audit outputs, locked dependencies, and reproduction
   commands. All eight synthetic laws are now explicit in Appendix D; the
   anonymous executable distribution remains to be packaged.
-- [ ] Include instructions for the large generated files and frozen-study
-  checks. Preserve recorded failures and study boundaries, and document
-  hardware, computation, data provenance, and asset licenses.
+- [ ] Include instructions for the large generated files and numerical checks.
+  Preserve recorded failures and study boundaries, and document hardware,
+  computation, data provenance, and asset licenses.
 
 ## Prepare the submission
 
@@ -96,9 +96,9 @@ to an identified theorem error.
   counts, and better-covered groups. Prespecify the strata and catastrophic
   event criteria, and report event frequencies and quantiles alongside
   means.
-- [ ] Freeze the prediction, protocol, implementation, and declaration before
-  running the evaluation.
-- [ ] Execute the frozen study and report theorem-domain checks separately from
+- [ ] Record the prediction and evaluation protocol in Git before running the
+  evaluation.
+- [ ] Execute the planned study and report theorem-domain checks separately from
   extrapolation and validation selection. Retain failed candidates, missing
   groups, boundaries, numerical discrepancies, and null or unfavorable
   outcomes.

@@ -13,8 +13,6 @@ result-*
 build/
 .task/
 /figures/*
-!/figures/frozen/
-/figures/frozen/previews/
 paper/*.aux
 paper/*.bbl
 paper/*.blg
@@ -26,6 +24,6 @@ paper/*.pdf
 paper/*.synctex.gz
 paper/*.toc
 
-# Recreated with task prepare-results and checked against frozen hashes.
-/results/normalization-robustness/paths.npz
-/results/normalization-robustness/summary.json
+# These large outputs are generated explicitly by task experiment:exact-risk.
+/results/exact-risk/paths.npz
+/results/exact-risk/summary.json

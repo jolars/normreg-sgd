@@ -1,4 +1,4 @@
-"""Plot the final matched Mushroom search from its frozen summary."""
+"""Plot the final matched Mushroom search from its saved summary."""
 
 import json
 
@@ -48,8 +48,6 @@ def plot(report):
 if __name__ == "__main__":
     plot(
         json.loads(
-            (
-                ROOT / "results/variance-scaling-followup/mushroom-summary-c1.json"
-            ).read_text()
+            (ROOT / "results/mushroom/rates25/mushroom-summary-c1.json").read_text()
         )
     )

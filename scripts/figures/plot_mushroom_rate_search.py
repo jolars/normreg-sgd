@@ -87,4 +87,4 @@ def plot(summary):
 
 
 if __name__ == "__main__":
-    plot(json.loads((ROOT / "results/mushroom-rate-search/summary.json").read_text()))
+    plot(json.loads((ROOT / "results/mushroom/rates17/summary.json").read_text()))

@@ -1938,15 +1938,5 @@
         40004
       ]
     ]
-  ],
-  "source_sha256": {
-    "experiments/plot_predictive_intro.py": "5aac9ee2f82ccd07084e1a7fe673165eb489393e3f56a944b2e0740926c90548",
-    "experiments/check_predictive_theorem.py": "35139e4e57a188ab52136498f57c8b7717ddaa0b1cda756911d004d83a63f51e",
-    "experiments/plot_joint_interactions.py": "045aacff2336b42312a531ce4f4ab1109477e150b0bc4966f945e9e9f9fa0505",
-    "uv.lock": "ea6f9276833b578ea85ca5214a5865fe831f8c20c1ec4366079dc63f511b7404"
-  },
-  "figure_sha256": {
-    "tuned-rare-risk.pdf": "26cc1b6349b145a95720493f2e70e99df711d279d189cb5a953c7d0462dc7737",
-    "tuned-rare-risk.svg": "34da075d55c45cf8e6bc32316fbf70ff465afa36511a6192cf6fad8c0a801ac9"
-  }
+  ]
 }

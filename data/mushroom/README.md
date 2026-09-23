@@ -8,8 +8,8 @@ Repository, [DOI 10.24432/C5959T](https://doi.org/10.24432/C5959T). The
 the dataset under [Creative Commons Attribution
 4.0](https://creativecommons.org/licenses/by/4.0/). The data describe
 hypothetical samples derived from a field guide. The recorded poisonous class
-includes unknown edibility. The practical-selection protocol defines the derived
-one-hot representation, split rules, target, and subgroup.
+includes unknown edibility. The data-loading code in
+`experiments/common/data.py` defines the one-hot representation, split rules,
+target, and subgroup.
 
-The experiment verifies the raw file's SHA-256 before use; ordinary reproduction
-is offline and does not download or replace these inputs.
+Experiments read these local files without downloading or replacing them.

@@ -1,73 +1,104 @@
 # Feature normalization under finite training budgets
 
-The experiments in this repository support [the manuscript](paper/main.tex),
-including its appendices. Run commands from the repository root in
-`devenv shell`.
+This repository contains the experiments, numerical checks, and
+[manuscript](paper/main.tex) for the study. Run commands from the repository
+root inside `devenv shell`.
 
 ```sh
-task paper       # Build the five manuscript figures and build/main.pdf.
-task figures     # Export manuscript figures to figures/ from saved summaries.
-task check       # Check formatting, provenance, calculations, and the paper.
-task verify      # Run the paper's numerical and artifact checks.
+task experiment:mushroom     # Run and summarize Mushroom comparisons.
+task experiment:synthetic    # Run and summarize synthetic-data comparisons.
+task experiment:exact-risk   # Compute exact risks and paired simulations.
+task figures                # Plot saved results.
+task paper                  # Generate figures and compile build/main.pdf.
+task check                  # Check code, numerics, illustrations, and the paper.
 ```
 
-## Experiments used in the paper
+## Running experiments
 
-  | Study or calculation                             | Paper location                                   | Check target                                          |
-  | ------------------------------------------------ | ------------------------------------------------ | ----------------------------------------------------- |
-  | Oracle separation certificates                   | Oracle theorem and its proofs                    | `check-predictive-theorem`, `check-predictive-review` |
-  | Shared exact-moment implementation               | Moment recurrences and comparison proofs         | `check-moments`                                       |
-  | Finite-grid oracle illustration                  | Introduction and illustration appendix           | `check-predictive-intro`                              |
-  | Intermediate signal allocation                   | Signal-allocation figure and appendix            | `check-signal-allocation`                             |
-  | Calibrated risk comparisons                      | Fixed-configuration results and proofs           | `check-normalization-risk`                            |
-  | Retuning the calibrated anchors                  | Section 5.1 and comparison appendix              | `check-normalization-robustness`                      |
-  | Estimated preprocessing and validation selection | Section 5 and practical-selection appendix       | `check-practical-selection`                           |
-  | Expanded Mushroom rate search                    | Expanded-search appendix                         | `check-mushroom-rate-search`                          |
-  | Damping and variance sensitivity                 | Sensitivity appendix                             | `check-mushroom-sensitivity`                          |
-  | Matched four-scaling search                      | Final Mushroom comparison and follow-up appendix | `check-variance-scaling`                              |
-  | Numerical discrepancies and clipping             | Final comparison and diagnostic appendix         | `check-review-diagnostics`                            |
+Each experiment has a directory in `experiments/` and a task named
+`experiment:<name>`. Shared data loading, random streams, SGD updates, and
+statistics live in `experiments/common/`. The Mushroom and synthetic experiments
+run independently.
 
-Run `task --list` to list the available commands. The corresponding
-`reproduce-*` tasks regenerate studies or illustrations intentionally.
-Certificate and shared-moment checks compute their results directly.
-Reproduction can be expensive and can rewrite results; building the paper reads
-saved summaries. `task prepare-results` reconstructs the two ignored robustness
-artifacts when missing and checks their frozen hashes.
+  | Experiment          | Purpose                                                     | Results                      |
+  | ------------------- | ----------------------------------------------------------- | ---------------------------- |
+  | `mushroom`          | Categorical scaling, rate searches, and damping sensitivity | `results/mushroom/`          |
+  | `synthetic`         | Sampled training, estimated preprocessing, and selection    | `results/synthetic/`         |
+  | `exact-risk`        | Exact moments, rate comparisons, and paired simulations     | `results/exact-risk/`        |
+  | `predictive-intro`  | Finite-grid oracle illustration                             | `results/predictive-intro/`  |
+  | `signal-allocation` | Intermediate signal-allocation illustration                 | `results/signal-allocation/` |
+  | `diagnostics`       | Numerical discrepancies and prediction clipping             | `results/diagnostics/`       |
+  | `precision`         | Decimal replay of selected synthetic paths                  | `results/synthetic/rates5/`  |
 
-Some older module names remain because the paper's calculations import them:
-`run_joint_interactions.py` supplies exact moments,
-`check_joint_interactions.py` supplies exhaustive path enumeration,
-`check_discrete_dynamics.py` supplies an independent moment operator, and
-`plot_joint_interactions.py` supplies the frozen figure export helper. Their
-standalone historical study is no longer part of the build. `results/` contains
-numerical arrays, summaries, and provenance records. Manuscript figures are
-generated under `figures/`, and the unchanged historical exports used by
-artifact audits live in `figures/frozen/`. Editable plotting code lives in
-[scripts/figures](scripts/figures/README.md). The generated diagnostic table is
-stored in `paper/generated/review-diagnostics.tex`.
+Mushroom supports `rates5`, `rates17`, `rates25`, and `damping`. Synthetic data
+supports `rates5` and `rates25`. The default runs every configuration for that
+experiment. Select one configuration with:
 
-## Frozen provenance after cleanup
+```sh
+task experiment:mushroom -- --config rates17
+```
 
-Recorded numerical results, seeds, declarations, and hash manifests are
-unchanged. Those records also hash earlier experiments and notes that are no
-longer part of the paper.
-[scripts/archived_inputs.json](scripts/archived_inputs.json) lists the retired
-inputs and pins the Git revision containing their exact contents. Checks hash
-those historical blobs without restoring the files to the working tree. All
-retained inputs are checked on disk; deleting or changing one still fails
-validation.
+Run or summarize separately when changing the analysis:
 
-Use a clone with full Git history for artifact checks and reproduction. For a
-shallow clone, run `git fetch --unshallow`. The Task commands apply the
-provenance adapter in
-[scripts/frozen_experiment.py](scripts/frozen_experiment.py); invoke those tasks
-instead of running frozen study drivers directly. Numerical gate failures
-recorded in the original studies remain visible in their audits.
+```sh
+task experiment:mushroom:run -- --config rates17
+task experiment:mushroom:summarize -- --config rates17
+```
 
-[scripts/relocated_outputs.json](scripts/relocated_outputs.json) maps recorded
-figure and table paths to their new locations. The adapter temporarily exposes
-the old paths as symlinks while a frozen command runs, then removes them,
-including on failure. Frozen commands share a lock so these aliases cannot
-overlap. This preserves the hashed source files and manifests while writing
-figures under `figures/frozen/`. Missing or changed frozen exports still fail
-validation.
+These tasks also work for synthetic data. Exact-risk calculations have separate
+`:run` and `:summarize` tasks. The two illustrations compute their summaries in
+one step. `task experiment:diagnostics` reconstructs discrepancies from saved
+paths and updates the diagnostic tables in the manuscript. Run `task --list` to
+see all tasks.
+
+Experiments can take substantial time and replace the saved outputs for the
+selected configuration. Summarizing reads those outputs without retraining.
+Building figures or the paper never launches experiments. Saved summaries are
+included so the manuscript can be built immediately. The two large exact-risk
+files, `paths.npz` and `summary.json`, are ignored; regenerate them explicitly
+with `task experiment:exact-risk` when needed.
+
+## Editing experiments
+
+Configurations are ordinary Python values. Mushroom's 17-factor grid is in
+[experiments/mushroom/rates17.py](experiments/mushroom/rates17.py), and its
+damping offsets are in
+[experiments/mushroom/damping.py](experiments/mushroom/damping.py). The shared
+25-factor comparison is in
+[experiments/common/rates25.py](experiments/common/rates25.py). Data generation,
+the five-factor grid, sample sizes, and seeds are in
+[experiments/common/data.py](experiments/common/data.py).
+
+To add an experiment, create `experiments/<name>/` with `__init__.py` and
+`run.py`, add a `summarize.py` when useful, and register its task in
+`Taskfile.yml`. Use `python -m experiments.<name>.run` from the repository root.
+Save numerical outputs and settings under `results/<name>/`. New experiments can
+reuse functions in `experiments/common/` without depending on another
+experiment's command-line entry point.
+
+Git records changes to code, settings, and reported results. There are no
+checksum checks, locked declarations, or dependencies on old Git revisions.
+Commit the code, settings, and reported results together when recording a paper
+version. Seeds, candidate settings, selections, and numerical failures remain in
+the saved results.
+
+## Checks and figures
+
+`checks/` contains executable numerical checks, including independent SGD
+updates, moment identities, selection rules, and theorem certificates.
+`task check` runs these checks and builds the paper without running full
+experiments.
+
+```sh
+task check:results             # Reconstruct saved losses and selections.
+task check:exact-risk-results  # Check the large exact-risk outputs, if generated.
+```
+
+Checks retain and report the known numerical discrepancies in extreme synthetic
+paths. They do not certify those paths merely because structural checks pass.
+
+Edit manuscript plots in [scripts/figures/](scripts/figures/README.md).
+Generated PDF, SVG, and PNG files go in `figures/`; LaTeX output goes in
+`build/`. The generated diagnostic table is
+`paper/generated/review-diagnostics.tex`. Formal proofs live in `lean/` and are
+checked separately with `task prepare-lean` and `task check-lean`.
