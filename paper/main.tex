@@ -49,16 +49,16 @@
   update, we show that standardization gives lower rare-subgroup risk on one
   signal family, whereas unscaled training gives lower risk on another. Each
   method may choose any nonnegative constant learning rate and any deterministic
-  stop within the same budget. The risk gaps remain bounded away from zero as
-  prevalence decreases, provided that the expected number of rare observations
-  stays between roughly one and four. Thus tuning the learning rate and stopping
-  time need not remove the effect of relative feature scaling. Exact moments
-  separate incomplete learning from feature-sampling and observation-noise
-  variation, and a numerical illustration explores intermediate signal
-  allocations. Separate sampled-data studies show how tuning, validation
-  coverage, and prediction clipping affect practical comparisons. They do not
-  extend the oracle guarantee to estimated preprocessing or validation-selected
-  procedures.
+  stop within the same budget. For these two-feature signal families, the gaps
+  remain bounded away from zero as prevalence decreases, with budgets chosen to
+  keep the expected number of rare-feature occurrences in a specified range.
+  Thus tuning the learning rate and stopping time need not remove the effect of
+  relative feature scaling. Exact moments separate incomplete learning from
+  feature-sampling and observation-noise variation, and a numerical illustration
+  explores intermediate signal allocations. Separate sampled-data studies show
+  how tuning, validation coverage, and prediction clipping affect practical
+  comparisons. They do not extend the oracle guarantee to estimated
+  preprocessing or validation-selected procedures.
 \end{abstract}
 
 \section{Introduction}
@@ -111,8 +111,9 @@ Our main theorem establishes both orderings for two independent binary
 predictors under squared loss, with known population centering and scales, zero
 initialization, a fixed zero intercept, and one fresh observation per update. It
 covers all nonnegative constant rates and deterministic stops within the budget.
-The gaps stay bounded away from zero as prevalence decreases while the expected
-number of rare observations stays between roughly one and four. Learning-rate
+The gaps stay bounded away from zero for rare prevalence $0 < q \leq 10^{-4}$
+and observation caps $M$ satisfying $1 \leq Mq(1 - q) \leq 4$. This is a
+sufficient regime for the two signal families in our theorem. Learning-rate
 schedules and data-dependent selection remain outside its scope.
 
 Under a fixed rate calibration, supporting comparisons show that the preferred
@@ -322,15 +323,18 @@ the rare coefficient. U can learn the common coefficient while leaving the small
 rare signal largely unchanged. These bounds compare the best attainable risks
 without identifying the minimizing rates and stops.
 
-At the observation cap, the expected number of rare training observations is
-$Mq = \tau/(1 - q)$, where $\tau = Mq(1 - q) \in[1,4]$. The positive gaps
-therefore persist with roughly one to four rare observations, even as $M$ grows
-and $q$ decreases. Which normalization has lower risk depends on the signal as
-well as prevalence. The two families give sufficient conditions for opposite
-orderings, but do not locate a general transition between them. The theorem
-leaves batch selection, learning-rate schedules, and data-dependent stopping
-open. It also provides no guarantee for estimated preprocessing or validation
-selection.
+At the observation cap $M$, the expected number of training rows in which the
+single rare feature is present is $Mq = \tau/(1 - q)$, where
+$\tau = Mq(1 - q) \in[1,4]$. The positive gaps therefore persist as the budget
+grows inversely with prevalence, with roughly one to four rare-feature
+occurrences in expectation at the cap. The endpoints specify the interval
+covered by our proof, not a general threshold for learning rare features. The
+theorem gives no corresponding interval for higher-dimensional models. Which
+normalization has lower risk depends on the signal as well as prevalence. The
+two families give sufficient conditions for opposite orderings, but do not
+locate a general transition between them. The theorem leaves batch selection,
+learning-rate schedules, and data-dependent stopping open. It also provides no
+guarantee for estimated preprocessing or validation selection.
 
 \paragraph{Intermediate signal allocations.}
 
