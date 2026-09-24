@@ -1,0 +1,8 @@
+Checked 888 finite-prevalence bounds with 80-digit tensor powers.
+q = 1/50, M = 102: rounded family gap bounds 0.009247292 (rare), 0.064138047 (common).
+rare: q <= 1/50, tau in [1, 4], gap >= 7/1000; 76623 leaves (153245 boxes), volume 3/50, smallest margin 0.0070000062.
+common: q <= 1/50, tau in [1, 4], gap >= 9/200; 58 leaves (115 boxes), volume 3/50, smallest margin 0.0451324217.
+rare: q <= 1/20, tau in [1, 4], gap >= 1/1000; 77510 leaves (155019 boxes), volume 3/20, smallest margin 0.0010000266.
+common: q <= 1/25, tau in [1, 4], gap >= 1/50; 103 leaves (205 boxes), volume 3/25, smallest margin 0.0200055483.
+rare: q <= 1/10000, tau in [1, 4], gap >= 11/1000; 7158 leaves (14315 boxes), volume 3/10000, smallest margin 0.0110001018.
+common: q <= 1/10000, tau in [1, 4], gap >= 11/200; 105 leaves (209 boxes), volume 3/10000, smallest margin 0.0550383348.

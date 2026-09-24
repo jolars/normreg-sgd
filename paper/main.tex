@@ -168,11 +168,13 @@ observations, sensitivity to the tuning search, and prediction clipping.
 \paragraph{Relation to prior work.}
 
 Preconditioning changes statistical behavior as well as learning speed. Its
-benefit can depend on which features carry the signal, even after tuning the
-stopping time. \citet{amari2020preconditioning} establish this dependence for
-aggregate prediction bias. \citet{su2024preconditioning} study preconditioning
-for fresh-sample SGD, comparing the aggregate excess risk of tail-averaged
-iterates with ridge regression.
+effect on early-stopped predictions can persist even when the least-squares
+optimum is unchanged \citep{wadia2021whitening}. Its benefit can depend on which
+features carry the signal, even after tuning the stopping time.
+\citet{amari2020preconditioning} establish this dependence for aggregate
+prediction bias. \citet{su2024preconditioning} study preconditioning for
+fresh-sample SGD, comparing the aggregate excess risk of tail-averaged iterates
+with ridge regression.
 
 Evaluating prediction within a rare subgroup also changes how coefficient errors
 contribute to risk. Conditioning the test law on rare presence while retaining
@@ -455,27 +457,32 @@ after training favor U in this example, while calibration favors SD. Every
 validation set here contains rare observations. The reversal under exact
 selection shows that validation noise is not needed: choosing the best predictor
 in each training run is a different objective from choosing the best tuning
-settings on average.
+settings on average. Exact selection reduces U's rare risk by $.2771$ and SD's
+by $.1457$; U's larger gain overturns SD's advantage under calibration.
 
-\begin{table}[t]
+\begin{table*}[t]
   \centering
-  \begin{tabular}{lrr}
+  \begin{tabular}{lrrrrrr}
     \toprule
-    Selection              & Rare-risk gap &     MCSE \\
+                           & \multicolumn{2}{c}{Rare risk} & \multicolumn{2}{c}{Reduction from calibration} & \multicolumn{2}{c}{SD-minus-U gap} \\
+    \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
+    Selection              &       U &      SD &       U &      SD &     Mean &     MCSE \\
     \midrule
-    Separate calibration   &      $-.0855$ & $.00355$ \\
-    Validation (2048 rows) &      $+.0370$ & $.00214$ \\
-    Exact population risk  &      $+.0460$ & $.00215$ \\
+    Separate calibration   & $.2786$ & $.1931$ &     --- &     --- & $-.0855$ & $.00355$ \\
+    Validation (2048 rows) & $.0267$ & $.0637$ & $.2519$ & $.1295$ & $+.0370$ & $.00214$ \\
+    Exact population risk  & $.0015$ & $.0474$ & $.2771$ & $.1457$ & $+.0460$ & $.00215$ \\
     \bottomrule
   \end{tabular}
   \caption{
-    SD-minus-U rare risk with $(\beta_C^*,\beta_R^*) = (.1,1)$, $q = .02$, and
-    $M = 204$, under reuse, estimated preprocessing, and a fitted intercept (arm
-    8 in \cref{tab:bridge-arms}). Negative favors SD. MCSEs use 4096 paired
-    evaluation runs and condition on the calibration choices.
+    Rare risk and gains from selection with $(\beta_C^*,\beta_R^*) = (.1,1)$,
+    $q = .02$, and $M = 204$, under reuse, estimated preprocessing, and a fitted
+    intercept (arm 8 in \cref{tab:bridge-arms}). Positive reductions indicate
+    improvement over the separately calibrated choice for the same scaling;
+    negative SD-minus-U gaps favor SD. Means use 4096 paired evaluation runs.
+    MCSEs refer to the paired gaps and condition on the calibration choices.
   }
   \label{tab:bridge-selection}
-\end{table}
+\end{table*}
 
 \subsection{Further practical comparisons}
 
@@ -719,10 +726,7 @@ tensor calculations.
 
 The source supplement also includes small-prevalence checks in
 \texttt{checks/predictive\_theorem.py} and
-\texttt{checks/predictive\_review.py}. The Lean pilot formalizes
-small-prevalence large-rate bounds conditional on the moment recurrence; it does
-not formalize the finite-prevalence comparison. Independent review and human
-verification of the complete theorem remain open in this working draft.
+\texttt{checks/predictive\_review.py}.
 
 \subsection{Exact moments}
 
@@ -1192,6 +1196,16 @@ identity relating the two risk objectives is elementary.
 
 \subsection{Proofs and certificates}
 \label{sec:comparison-proofs}
+
+\citet[Section 3.2]{wadia2021whitening} explain how whitening changes
+early-stopped predictions in full-rank least squares despite leaving the unique
+optimum unchanged. Their gradient-flow calculation shows that whitening removes
+differences in learning speed across covariance eigendirections, which can cause
+signal and noise to be learned together. This is a precedent for the mechanism
+illustrated in \cref{fig:intro-coefficient-paths}. Our theorem compares total
+rare-subgroup risk for final iterates of fresh-sample SGD, with each scaling
+optimizing its constant rate and deterministic stop under a finite observation
+cap.
 
 The closest preconditioning results differ in their risk objectives and training
 procedures. \citet[Proposition 7]{amari2020preconditioning} show that signal
@@ -2559,6 +2573,22 @@ pinned environment definitions. Its \texttt{README.md} gives the setup,
 container, and reproduction instructions, including how to build the complete
 paper from saved results, rerun experiments, and check the numerical
 certificates. It also identifies optional outputs that must be regenerated.
+
+The certificate checkers are \path{checks/predictive_fixed_q.py} for
+\cref{thm:conference-predictive} and \path{checks/normalization_risk_theorem.py}
+for \cref{thm:conference-c1,thm:conference-c2}. Their recorded standard output
+is in \path{results/certificates/predictive-fixed-q.txt} and
+\path{results/certificates/normalization-risk.txt}. From the extracted archive,
+enter \texttt{devenv shell} and run
+\begin{verbatim}
+task check:predictive-fixed-q
+task check:normalization-risk
+\end{verbatim}
+These commands recompute the certificates without training models. The first
+checks the six continuous parameter regions in \cref{sec:predictive-proofs},
+including exact rational bounds and coverage volumes; the second checks the
+supporting fixed-calibration comparisons. The recorded output is a summary of
+the completed checks, not a substitute for rerunning the checkers.
 
 We ran the experiments on a local NixOS workstation with an AMD Ryzen 9 7900 CPU
 (12 cores, 24 hardware threads) and approximately 62\,GiB of usable RAM. The

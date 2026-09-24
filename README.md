@@ -205,6 +205,23 @@ $M=102$ and compares the bounds with observation-level moment calculations. The
 earlier small-prevalence certificates remain in the theorem and review checkers;
 they do not independently certify the new extension.
 
+The source archive includes the certificate checkers and their recorded standard
+output:
+
+  | Claim                      | Checker                                                           | Recorded output                                                         |
+  | -------------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------------- |
+  | Theorem 3.1 and Appendix A | [Finite-prevalence checker](checks/predictive_fixed_q.py)         | [Finite-prevalence output](results/certificates/predictive-fixed-q.txt) |
+  | Appendix B comparisons     | [Fixed-calibration checker](checks/normalization_risk_theorem.py) | [Fixed-calibration output](results/certificates/normalization-risk.txt) |
+
+From the extracted archive, enter `devenv shell` and run
+`task check:predictive-fixed-q` and `task check:normalization-risk`. These
+commands recompute the certificates without training models. The first reports
+all six certified regions, accepted box counts, exact coverage volumes, and the
+smallest certified margins. Its exponential enclosures and volume checks use
+exact rational arithmetic; displayed decimal margins are rounded. The second
+reports the supporting interval bounds and separate numerical diagnostics. The
+saved output summarizes completed checks and does not replace rerunning them.
+
 Use `task experiment:diagnostics` to regenerate the diagnostic records and
 tables, then `task check:results` to verify them. Use
 `task experiment:signal-allocation` to regenerate the signal-allocation
