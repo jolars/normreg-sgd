@@ -237,7 +237,7 @@ contributes $(1 - q)^2/2$ to rare risk and $q(1 - q)/2$ to aggregate risk.
 
 We compare unscaled features (U), with $P_U = I_2$, and standard-deviation
 scaling (S), with $P_S = \diag(a^{-1},b^{-1})$, where $P = S^{-2}$. In the main
-theorem, each rule chooses its own constant learning rate and stopping count.
+theorem, each rule chooses its own constant learning rate and iteration count.
 For the supporting comparisons, we calibrate the rates through the common
 coordinate. We use the final iterate in both settings.
 
@@ -266,17 +266,16 @@ $0.001$ to $0.1$; these comparisons do not establish an optimal damping level.
 For diagonal $C$, the population rule $P_\tau = (C + \tau I)^{-1}$ satisfies
 $\tau P_\tau = (\tau^{-1}C + I)^{-1}$. It therefore belongs, up to a scalar
 absorbed into the learning rate, to the preconditioner family of
-\citet{su2024preconditioning}. Our fixed heuristic does not select an optimal
-member of that family.
+\citet{su2024preconditioning}.
 
 \section{Opposite risk orderings after oracle tuning}
 \label{sec:conference-predictive}
 
-We now allow each normalization rule to choose its learning rate and stopping
-count to minimize rare-presence risk. We assume independent features
-($\ell = 0$), $B = 1$, and the population preprocessing, zero initialization,
-and fixed intercept of \cref{sec:conference-setting}. Put $b = q(1 - q)$. We
-parameterize the update matrices on the original coefficient scale as
+We now let each normalization rule choose its learning rate and iteration count
+to minimize rare-presence risk, assuming independent features ($\ell = 0$),
+$B = 1$, and the population preprocessing, zero initialization, and fixed
+intercept of \cref{sec:conference-setting}. Put $b = q(1 - q)$. We parameterize
+the update matrices on the original coefficient scale as
 \begin{equation}
   D_U(\alpha) = \alpha I_2,\qquad D_S(\alpha)
               = \diag(4b\alpha,\alpha),\quad \alpha
