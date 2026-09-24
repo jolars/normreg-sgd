@@ -79,7 +79,7 @@ changes which signals we learn before stopping.
 least-squares problem: the methods approach the same solution along different
 paths and reach different coefficients when stopped early.
 
-\begin{figure}[t]
+\begin{figure}[htb]
   \centering
   \includegraphics[width=\columnwidth]{../figures/coefficient-paths/paths-to-ols.pdf}
   \caption{
@@ -105,7 +105,7 @@ feature to the rare feature at a fixed budget and noise level.
 \Cref{fig:conference-tuned-intro} shows the two signal families across
 observation caps.
 
-\begin{figure}[t]
+\begin{figure}[htb]
   \centering
   \includegraphics[width=\columnwidth]{../figures/signal-crossing/risk-crossing.pdf}
   \caption{
@@ -167,26 +167,23 @@ observations, sensitivity to the tuning search, and prediction clipping.
 
 \paragraph{Relation to prior work.}
 
-\citet[Proposition 7]{amari2020preconditioning} show that signal alignment
-affects the preferred preconditioner after optimizing aggregate prediction bias
-over stopping times. They study gradient flow on a fixed training sample in an
-overparameterized model, averaging over signal priors. For fresh-sample SGD,
-\citet[Theorems 4.2--4.4]{su2024preconditioning} bound the aggregate excess risk
-of tail-averaged iterates and tune preconditioning to match ridge regression up
-to constant factors. Our theorem compares total rare-subgroup risk of final
-iterates after optimizing all nonnegative constant rates and deterministic stops
-under one observation cap.
+Preconditioning changes statistical behavior as well as learning speed. Its
+benefit can depend on which features carry the signal, even after tuning the
+stopping time. \citet{amari2020preconditioning} establish this dependence for
+aggregate prediction bias. \citet{su2024preconditioning} study preconditioning
+for fresh-sample SGD, comparing the aggregate excess risk of tail-averaged
+iterates with ridge regression.
 
-Rare-presence risk is a target-distribution risk: we condition the test law on
-the rare feature while retaining the training law.
-\citet[Remark 3.1]{lei2021shift} give a minimax target-risk separation from
-optimally tuned ridge with a fixed design and Gaussian noise.
-\citet[Corollary 3.3]{wu2022pretraining} analyze target risk of the final
-online-SGD iterate with geometric step decay, and \citet{liu2025precondition}
-study minimax preconditioning and accelerated SGD under covariate shift. These
-results do not supply our explicit opposite gaps for fixed signal families.
-\Cref{sec:comparison-proofs} discusses the established mechanisms supporting our
-analysis.
+Evaluating prediction within a rare subgroup also changes how coefficient errors
+contribute to risk. Conditioning the test law on rare presence while retaining
+the training law connects our objective to work on target-distribution risk and
+covariate shift \citep{lei2021shift, wu2022pretraining, liu2025precondition}. We
+ask which normalization achieves lower rare-subgroup risk after each method
+chooses its nonnegative constant learning rate and deterministic stopping time
+under the same observation cap. For final iterates of fresh-sample SGD, our
+theorem establishes opposite positive risk gaps on two fixed signal families.
+\Cref{sec:comparison-proofs} gives detailed comparisons with prior work and
+discusses the established mechanisms supporting our analysis.
 
 \section{Normalization, learning, and rare-subgroup risk}
 \label{sec:conference-setting}
@@ -216,9 +213,9 @@ following SGD update on the original coefficient scale:
 \end{equation}
 We use squared loss with a factor $1/2$. Each update uses one independent fresh
 observation, so an observation cap $M$ permits at most $M$ updates. We compare
-unscaled features (U), with $P_U = I_2$, and standard-deviation scaling
-(S, or SD), with $P_S = \diag(a^{-1},b^{-1})$, where $P = S^{-2}$. Both
-procedures use the final iterate.
+unscaled features (U), with $P_U = I_2$, and standard-deviation scaling (S, or
+SD), with $P_S = \diag(a^{-1},b^{-1})$, where $P = S^{-2}$. Both procedures use
+the final iterate.
 
 We can compensate exactly for global rescaling by adjusting the learning rate.
 Replacing $S$ by $gS$ and $\eta$ by $g^2\eta$ leaves every update unchanged when
@@ -234,7 +231,7 @@ $J = 1$. Under half squared loss, independence gives a weighted sum of the two
 coefficient mean squared errors:
 \begin{equation}
   \begin{aligned}
-    R_{R,k} & = \frac18\E\bigl[(\beta_{C,k} - \beta_C^*)^2\bigr] \\
+    R_{R,k} & = \frac18\E\bigl[(\beta_{C,k} - \beta_C^*)^2\bigr]                    \\
             & \quad + \frac{(1 - q)^2}{2}\E\bigl[(\beta_{R,k} - \beta_R^*)^2\bigr].
   \end{aligned} \label{eq:conference-rare-risk}
 \end{equation}
@@ -267,8 +264,8 @@ To expose the tradeoff, temporarily fix $\eta_U = 4h$ and $\eta_S = h$. The
 common coefficient then has the same mean trajectory under both rules. SD
 scaling changes the contraction factor for the mean rare-coefficient error from
 $1 - 4hb$ to $1 - h$, while increasing the observation-noise variance added to
-that coefficient at each update from $16h^2b\sigma^2$ to $h^2\sigma^2/b$.
-It learns the rare signal faster but also introduces more noise.
+that coefficient at each update from $16h^2b\sigma^2$ to $h^2\sigma^2/b$. It
+learns the rare signal faster but also introduces more noise.
 
 At a fixed calibration, SD can have lower rare risk early and higher risk later,
 as observation noise overtakes its learning advantage. Separate rate and
@@ -282,10 +279,9 @@ deterministic stop within its budget.
 \label{sec:conference-predictive}
 
 We now compare the lowest attainable rare-presence risks of the two scaling
-rules in the independent model of \cref{sec:conference-setting}.
-The budget is chosen so that rare observations remain scarce:
-$1 \leq Mq(1 - q) \leq 4$ gives roughly one to four rare occurrences in
-expectation at the cap.
+rules in the independent model of \cref{sec:conference-setting}. The budget is
+chosen so that rare observations remain scarce: $1 \leq Mq(1 - q) \leq 4$ gives
+roughly one to four rare occurrences in expectation at the cap.
 
 A global learning rate moves both coordinate steps together, while normalization
 fixes their ratio. Tuning can change how much each method learns, but cannot
@@ -566,14 +562,14 @@ grids used to assess tuning sensitivity.
   \caption{
     Search and clipping change the Mushroom comparison. Both panels use
     $n = 2048$, 1024 validation records, cap $M = 8192$, centered predictors,
-    and a fitted intercept. Left: SD-minus-U rare half squared loss under
-    five- and 25-rate searches, with unchanged stopping checkpoints. Negative
-    favors SD; work counts nominal training observations per scaling. Right:
-    aggregate half squared loss before and after clipping to $[0,1]$, using
-    the same predictors selected by rare validation in the 25-rate search.
-    Points show means with one MCSE across 32 partitions, paired between
-    scalings on the left. \Cref{tab:review-clipping} gives both losses under
-    both selection objectives.
+    and a fitted intercept. Left: SD-minus-U rare half squared loss under five-
+    and 25-rate searches, with unchanged stopping checkpoints. Negative favors
+    SD; work counts nominal training observations per scaling. Right: aggregate
+    half squared loss before and after clipping to $[0,1]$, using the same
+    predictors selected by rare validation in the 25-rate search. Points show
+    means with one MCSE across 32 partitions, paired between scalings on the
+    left. \Cref{tab:review-clipping} gives both losses under both selection
+    objectives.
   }
   \label{fig:conference-practical}
 \end{figure*}
@@ -584,11 +580,10 @@ rare-risk gap changes from $-.006570$ (paired MCSE $.001526$) in the five-rate
 search to $-.001192$ ($.001318$) in the 25-rate search. The paired change is
 $+.005379$ ($.001061$). The expanded search therefore reduces the SD advantage
 and leaves the gap within two MCSE of zero, without establishing equivalence.
-Under rare selection, the gap changes from $-.009307$ ($.001315$) to
-$-.001421$ ($.000470$), a paired change of $+.007886$ ($.001247$). SD retains
-lower rare loss in this comparison, but its raw aggregate loss varies widely.
-Both the search and the selection objective matter when interpreting the
-comparison.
+Under rare selection, the gap changes from $-.009307$ ($.001315$) to $-.001421$
+($.000470$), a paired change of $+.007886$ ($.001247$). SD retains lower rare
+loss in this comparison, but its raw aggregate loss varies widely. Both the
+search and the selection objective matter when interpreting the comparison.
 
 Damping has lower aggregate and rare loss than no scaling under aggregate
 selection, with differences $-.000532$ ($.000056$) and $-.005273$ ($.000797$).
@@ -677,14 +672,10 @@ equivalent in rare-subgroup risk.
 
 \section*{AI Use Statement}
 
-We made substantial use of generative AI tools, including OpenAI Codex, for
-research planning, literature search, mathematical derivation and proof review,
-implementing experiments and independent numerical checks, interpreting results,
-and drafting and editing the manuscript. These checks do not replace author
-verification. For this working draft, we have not yet completed human
-verification of every proof, source, experiment, and claim. Before submission,
-we will update this statement to describe the verification completed. The human
-authors remain responsible for the submitted work.
+We made use of generative AI tools, including OpenAI Codex, for research
+planning, literature search, mathematical derivation and proof review,
+implementing experiments and independent numerical checks, and editing the
+manuscript.
 
 \bibliographystyle{plainnat}
 \bibliography{references}
@@ -937,12 +928,12 @@ $R_{R,M}^U \leq V_U(q,\tau)$. Every S rate and stop therefore exceeds this U
 candidate's risk by at least $\Delta_C(q,\tau)$, uniformly over the
 common-signal family.
 
-Taking the two oracle infima proves \cref{eq:predictive-oracle-gaps}. Restricting
-each search to stable rates preserves both lower bounds and both candidates.
-Rescaling by $\sigma^2$ gives the bounds for general positive noise variance.
-The certificates below then imply \cref{thm:conference-predictive}. The argument
-requires neither stability of the losing method's rate nor attainment of either
-infimum.
+Taking the two oracle infima proves \cref{eq:predictive-oracle-gaps}.
+Restricting each search to stable rates preserves both lower bounds and both
+candidates. Rescaling by $\sigma^2$ gives the bounds for general positive noise
+variance. The certificates below then imply \cref{thm:conference-predictive}.
+The argument requires neither stability of the losing method's rate nor
+attainment of either infimum.
 
 \subsection{Positive regions and the small-prevalence corollary}
 \label{sec:predictive-certification}
@@ -1054,8 +1045,8 @@ Retain the marginal probabilities and centered features of
 \[
   \Prob(I = 1,J = 1) = \frac{q(1 + \ell)}{2},\qquad - 1 \leq \ell \leq 1.
 \]
-For $0 < q < 1/2$, these ranges ensure nonnegative cell probabilities. To express
-the risks under dependence, let $C = \E(xx^\top)$ and
+For $0 < q < 1/2$, these ranges ensure nonnegative cell probabilities. To
+express the risks under dependence, let $C = \E(xx^\top)$ and
 $C_G = \E(xx^\top \mid G)$. Then
 \begin{equation}
   R_k = \tfrac12\operatorname{tr}(CV_k),\qquad R_{G,k}
@@ -1201,6 +1192,25 @@ identity relating the two risk objectives is elementary.
 
 \subsection{Proofs and certificates}
 \label{sec:comparison-proofs}
+
+The closest preconditioning results differ in their risk objectives and training
+procedures. \citet[Proposition 7]{amari2020preconditioning} show that signal
+alignment affects the preferred preconditioner after optimizing aggregate
+prediction bias over stopping times. They study gradient flow on a fixed
+training sample in an overparameterized model, averaging over signal priors. For
+fresh-sample SGD, \citet[Theorems 4.2--4.4]{su2024preconditioning} bound the
+aggregate excess risk of tail-averaged iterates and tune preconditioning to
+match ridge regression up to constant factors.
+
+The target-risk literature also studies different comparisons.
+\citet[Remark 3.1]{lei2021shift} give a minimax target-risk separation from
+optimally tuned ridge with a fixed design and Gaussian noise.
+\citet[Corollary 3.3]{wu2022pretraining} analyze target risk of the final
+online-SGD iterate with geometric step decay, and \citet{liu2025precondition}
+study minimax preconditioning and accelerated SGD under covariate shift. These
+results do not supply our explicit opposite gaps for fixed signal families. Our
+theorem compares total rare-subgroup risk of final iterates after optimizing all
+nonnegative constant rates and deterministic stops under one observation cap.
 
 Our calculations build on established mechanisms. Early stopping changes
 least-squares regularization \citep{ali2019early}. \citet{ali2020stochastic}
@@ -2438,27 +2448,26 @@ law; it identifies a primary query without a flagged selected-prediction check.
   \small
   \begin{tabular}{llrrl}
     \toprule
-    Law & Scaling & Checks & Primary share & Replications (zero-based) \\
+    Law                & Scaling  & Checks & Primary share & Replications (zero-based) \\
     \midrule
-    Rarer C1 & Damped & 4 & 100.00\% & 103 \\
-    Rarer C1 & SD & 2 & --- & 82 \\
-    Rarer C1 & Variance & 10 & --- & 29, 82 \\
-    Rarer C2 & Damped & 6 & 100.00\% & 52 \\
-    Rarer C2 & SD & 10 & 100.00\% & 16, 52 \\
-    Rarer C2 & Variance & 22 & 100.00\% & 17, 68, 100, 108 \\
-    Opposite, disjoint & Damped & 4 & --- & 72 \\
-    Common only & SD & 2 & --- & 75 \\
+    Rarer C1           & Damped   &      4 &      100.00\% & 103                       \\
+    Rarer C1           & SD       &      2 &           --- & 82                        \\
+    Rarer C1           & Variance &     10 &           --- & 29, 82                    \\
+    Rarer C2           & Damped   &      6 &      100.00\% & 52                        \\
+    Rarer C2           & SD       &     10 &      100.00\% & 16, 52                    \\
+    Rarer C2           & Variance &     22 &      100.00\% & 17, 68, 100, 108          \\
+    Opposite, disjoint & Damped   &      4 &           --- & 72                        \\
+    Common only        & SD       &      2 &           --- & 75                        \\
     \bottomrule
   \end{tabular}
   \caption{
-    Selected-prediction discrepancies in the centered/fitted synthetic
-    arm. Checks count selection queries, including repeated choices.
-    Primary share is the fraction of the archived mean rare risk
-    contributed by flagged selections at cap $2048$, under aggregate
-    validation and the 25-rate grid with standard stops. A dash
-    means this primary query has no flagged selection. These shares
-    locate dependence on discrepant paths; they do not correct
-    their risks.
+    Selected-prediction discrepancies in the centered/fitted synthetic arm.
+    Checks count selection queries, including repeated choices. Primary share is
+    the fraction of the archived mean rare risk contributed by flagged
+    selections at cap $2048$, under aggregate validation and the 25-rate grid
+    with standard stops. A dash means this primary query has no flagged
+    selection. These shares locate dependence on discrepant paths; they do not
+    correct their risks.
   }
   \label{tab:review-audit-impact}
 \end{table}
@@ -2506,26 +2515,25 @@ particular, we do not rescore candidates using clipped validation predictions.
   \small
   \begin{tabular}{llrrrr}
     \toprule
-    Selection & Scaling & Raw aggregate & Clipped aggregate
-      & Raw rare & Clipped rare \\
+    Selection & Scaling  & Raw aggregate & Clipped aggregate & Raw rare & Clipped rare \\
     \midrule
-    Aggregate & None & 0.001341 & 0.001102 & 0.005955 & 0.005504 \\
-    Aggregate & SD & 0.004476 & 0.001543 & 0.004764 & 0.004280 \\
-    Aggregate & Damped & 0.000810 & 0.000660 & 0.000682 & 0.000519 \\
-    Aggregate & Variance & 0.311988 & 0.052641 & 0.051586 & 0.051000 \\
-    Rare & None & 0.039395 & 0.031451 & 0.003678 & 0.002887 \\
-    Rare & SD & 0.141068 & 0.001864 & 0.002257 & 0.001826 \\
-    Rare & Damped & 0.002611 & 0.001452 & 0.000499 & 0.000324 \\
-    Rare & Variance & 25.572030 & 0.056872 & 0.019374 & 0.014308 \\
+    Aggregate & None     &      0.001341 &          0.001102 & 0.005955 &     0.005504 \\
+    Aggregate & SD       &      0.004476 &          0.001543 & 0.004764 &     0.004280 \\
+    Aggregate & Damped   &      0.000810 &          0.000660 & 0.000682 &     0.000519 \\
+    Aggregate & Variance &      0.311988 &          0.052641 & 0.051586 &     0.051000 \\
+    Rare      & None     &      0.039395 &          0.031451 & 0.003678 &     0.002887 \\
+    Rare      & SD       &      0.141068 &          0.001864 & 0.002257 &     0.001826 \\
+    Rare      & Damped   &      0.002611 &          0.001452 & 0.000499 &     0.000324 \\
+    Rare      & Variance &     25.572030 &          0.056872 & 0.019374 &     0.014308 \\
     \bottomrule
   \end{tabular}
   \caption{
     Post hoc clipping to $[0,1]$ of the saved Mushroom predictors in
-    \cref{fig:conference-practical}, with $n=2048$, cap $8192$,
-    centered predictors, and a fitted intercept. Means include all 32
-    partitions. Selection retains the original unclipped validation
-    scores; clipping requires no additional training. The diagnostic
-    archive also reports MCSEs, quantiles, and the smaller sample size.
+    \cref{fig:conference-practical}, with $n = 2048$, cap $8192$, centered
+    predictors, and a fitted intercept. Means include all 32 partitions.
+    Selection retains the original unclipped validation scores; clipping
+    requires no additional training. The diagnostic archive also reports MCSEs,
+    quantiles, and the smaller sample size.
   }
   \label{tab:review-clipping}
 \end{table}

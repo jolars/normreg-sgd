@@ -102,13 +102,6 @@ another empirical study.
   the appendix retains the full raw and clipped losses. Both panels use saved
   results without further training or selection.
 
-- [ ] Keep theoretical figures closer to their explanatory text.
-
-  The signal-allocation heatmap appears amid the Mushroom discussion. Moving it
-  closer to the intermediate-signal explanation, or into the appendix, would
-  help the running thread. The mechanism decomposition now has its own figure
-  and remains the higher priority for the main text.
-
 - [ ] The validation-coverage example needs more context before the enormous
   loss appears.
 
@@ -162,16 +155,16 @@ another empirical study.
   weights errors differently—then explain the precise distinction of your
   theorem. Some of the detailed comparisons could move later.
 
-  Around the signal-allocation discussion (paper/main.tex:367), bring forward
-  the appendix’s explanation that the sweep holds squared coefficient magnitude
-  fixed, rather than aggregate signal variance. “Signal allocation” can
-  otherwise suggest equal predictive contributions, which is especially
-  misleading with unequal prevalences.
+- [ ] Around the signal-allocation discussion (paper/main.tex:367), bring
+  forward the appendix’s explanation that the sweep holds squared
+  coefficient magnitude fixed, rather than aggregate signal variance.
+  “Signal allocation” can otherwise suggest equal predictive contributions,
+  which is especially misleading with unequal prevalences.
 
-  All the main oracle illustrations use (q=10^{-4}), although the theorem now
-  covers substantially larger prevalences. An additional (q=0.02) illustration
-  would make the finite-prevalence result more tangible. This could be a
-  supplementary panel rather than another main figure.
+- [ ] All the main oracle illustrations use (q=10^{-4}), although the theorem
+  now covers substantially larger prevalences. An additional (q=0.02)
+  illustration would make the finite-prevalence result more tangible. This
+  could be a supplementary panel rather than another main figure.
 
 - [x] The appendices contain too much development history.
 
