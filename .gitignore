@@ -1,5 +1,4 @@
 .devenv*
-reviews/
 devenv.local.nix
 devenv.local.yaml
 .direnv/
