@@ -43,34 +43,24 @@
 ]
 
 \begin{abstract}
-  Feature normalization changes how quickly stochastic gradient descent learns
-  different coefficients. We study how this affects prediction under a finite
-  training budget, using common and rare binary features. For two independent
-  features with known population preprocessing and one fresh observation per
-  update, we show that standardization gives lower rare-subgroup risk on one
-  signal family, whereas unscaled training gives lower risk on another. Each
-  method may choose any nonnegative constant learning rate and any deterministic
-  stop within the same budget. For these two-feature signal families, the gaps
-  remain bounded away from zero as prevalence decreases, with budgets chosen to
-  keep the expected number of rare-feature occurrences in a specified range.
-  Thus tuning the learning rate and stopping time need not remove the effect of
-  relative feature scaling. Exact moments separate incomplete learning from
-  feature-sampling and observation-noise variation, and a numerical illustration
-  explores intermediate signal allocations. Separate sampled-data studies show
-  how tuning, validation coverage, and prediction clipping affect practical
-  comparisons. They do not extend the oracle guarantee to estimated
-  preprocessing or validation-selected procedures.
+  Standardizing a rare feature can help stochastic gradient descent learn its
+  effect within a finite budget, but it also changes the noise cost of learning.
+  We show that tuning the learning rate and stopping time need not remove the
+  resulting differences in rare-subgroup risk. For two independent binary
+  features, standardization attains lower risk on a family with a dominant rare
+  signal, whereas unscaled training attains
+  lower risk on a family with a dominant common signal. Each method may choose
+  any nonnegative constant rate and any deterministic stop within the same
+  observation cap. With known population preprocessing and one fresh observation
+  per update, the gaps remain bounded away from zero as prevalence decreases while the
+  expected number of rare occurrences stays roughly between one and four.
+  Exact moments explain the competing costs of incomplete learning and training
+  variation, and numerical comparisons explore intermediate signals. Separate
+  sampled-data studies examine tuning, validation coverage, and prediction
+  clipping without extending the oracle guarantee to these procedures.
 \end{abstract}
 
 \section{Introduction}
-
-Feature normalization is often motivated by placing predictors on a common
-scale. With binary and continuous predictors, a standard-deviation change
-measures population variation, whereas a binary change from absence to presence
-defines a specific contrast. These conventions can imply different
-regularization strengths. We study binary predictors to isolate prevalence: even
-with a shared absence-to-presence coding, standardization changes how strongly
-training responds to their effects.
 
 A rare feature gives a model few opportunities to learn its effect. Without
 scaling, gradient descent may fit common features while leaving the rare feature
@@ -102,15 +92,16 @@ paths and reach different coefficients when stopped early.
   \label{fig:intro-coefficient-paths}
 \end{figure}
 
-Learning-rate and stopping-time tuning need not remove this effect.
-\Cref{fig:intro-signal-crossing} illustrates the central comparison:
-standardization gives lower rare-subgroup risk when the rare signal dominates,
-whereas unscaled training gives lower risk when the common signal dominates.
-Each rule selects its own rate and stop under the same observation cap. Learning
-rare signals has a noise cost, and normalization changes that tradeoff. The
-curves trace the transition as signal moves from the common feature to the rare
-feature at a fixed budget and noise level. \Cref{fig:conference-tuned-intro}
-shows the two signal families across observation caps.
+Adjusting the learning rate and stopping time is a natural way to compensate for
+different learning speeds. Our main result shows that this adjustment need not
+erase the risk difference. \Cref{fig:intro-signal-crossing} illustrates the
+central comparison: standardization gives lower rare-subgroup risk when the rare
+signal dominates, whereas unscaled training gives lower risk when the common
+signal dominates. Each rule selects its own rate and stop under the same
+observation cap. The curves trace the transition as signal moves from the common
+feature to the rare feature at a fixed budget and noise level.
+\Cref{fig:conference-tuned-intro} shows the two signal families across
+observation caps.
 
 \begin{figure}[t]
   \centering
@@ -143,26 +134,33 @@ shows the two signal families across observation caps.
   \label{fig:conference-tuned-intro}
 \end{figure*}
 
-Our main theorem establishes both orderings for two independent binary
-predictors under squared loss, with known population centering and scales, zero
-initialization, a fixed zero intercept, and one fresh observation per update. It
-covers all nonnegative constant rates and deterministic stops within the budget.
-Explicit bounds give both orderings for rare prevalence $0 < q \leq 0.04$ and
-observation caps $M$ satisfying $1 \leq Mq(1 - q) \leq 4$. The gaps stay bounded
-away from zero as prevalence decreases. These are sufficient conditions for the
-two signal families in our theorem. Learning-rate schedules and data-dependent
-selection remain outside its scope.
+Our main contribution is an oracle comparison that establishes both orderings
+over all nonnegative constant learning rates and deterministic stops within a
+finite budget. We study two independent binary predictors under squared loss,
+with known population centering and scales, zero initialization, a fixed zero
+intercept, and one fresh observation per update. For the two signal families,
+explicit bounds give positive risk gaps whenever $0 < q \leq 0.04$ and
+$1 \leq Mq(1 - q) \leq 4$, where $q$ is rare prevalence and $M$ is the
+observation cap. As prevalence decreases, the gaps persist even though the
+budget grows: the expected number of rare occurrences remains roughly between
+one and four. Relative feature scaling therefore remains consequential after
+both methods have optimized their rate and stop.
 
-Under a fixed rate calibration, supporting comparisons show that the preferred
-normalization can change with stopping, batching, and the prediction objective.
-Tuning removes both original anchor comparisons, motivating the oracle theorem.
-An exact-moment illustration explores the transition between signal allocations
-at several noise levels and budgets. Separate experiments with estimated
-preprocessing and validation selection expose additional effects of tuning,
-missing validation groups, and unrestricted predictions. These studies informed
-the theorem, but their fixed training sets and fitted intercepts change the
-statistical experiment. We use them to delimit practical interpretations rather
-than to establish robustness of the oracle ordering.
+The analysis explains this result through the noise cost of learning each
+signal. To learn a dominant rare signal, unscaled training also introduces noise
+in the common coefficient. To learn a dominant common signal, standardization
+introduces noise in the rare coefficient. Exact moments separate these costs
+from incomplete learning and variation due to feature sampling. We first use
+fixed-rate comparisons to illustrate the tradeoff and the need for oracle
+tuning, then prove the opposite orderings and explore intermediate signal
+allocations numerically.
+
+The final part of the paper turns from attainable risk to the selection of a
+predictor using finite validation data. Separate studies examine missing rare
+validation observations, sensitivity to the tuning search, and prediction clipping.
+They use fixed training sets and estimated preprocessing, so they address
+additional obstacles to practical comparisons rather than establish that the
+oracle ordering survives those changes.
 
 \paragraph{Relation to prior work.}
 
@@ -187,26 +185,37 @@ results do not supply our explicit opposite gaps for fixed signal families.
 \Cref{sec:comparison-proofs} discusses the established mechanisms supporting our
 analysis.
 
-\section{Normalization and the training procedure}
+\section{Normalization, learning, and rare-subgroup risk}
 \label{sec:conference-setting}
 
-Let $x$ be a centered feature vector with $C = \E(xx^\top) \succ 0$, and suppose
-that $y = x^\top\beta^* + \varepsilon$, where $\E(\varepsilon \mid x) = 0$ and
-$\E(\varepsilon^2 \mid x) = \sigma^2$. We divide each feature by a positive
-scale factor, collected in the diagonal matrix $S$. Training on $z = S^{-1}x$
-with parameter $\theta = S\beta$ then gives the following SGD update on the
-original coefficient scale:
+We isolate the effect of prevalence with two independent binary features: a
+common feature $I$ with $\Prob(I = 1) = 1/2$ and a rare feature $J$ with
+$\Prob(J = 1) = q$, where $0 < q < 1/2$. For the centered vector
+$x = (I - 1/2,J - q)^\top$, suppose
+\[
+  y = x^\top\beta^* + \varepsilon,\qquad
+  \E(\varepsilon \mid x) = 0,\qquad
+  \E(\varepsilon^2 \mid x) = \sigma^2.
+\]
+Write $a = 1/4$, $b = q(1 - q)$, and $C = \E(xx^\top) = \diag(a,b)$.
+We use population centering, fix the centered intercept at zero, and initialize
+$\beta_0 = 0$.
+
+\paragraph{Scaling and the training budget.}
+
+We divide each feature by a positive scale factor, collected in the diagonal
+matrix $S$. Training on $z = S^{-1}x$ with parameter $\theta = S\beta$ gives
+the following SGD update on the original coefficient scale:
 \begin{equation}
   \beta_{k+1}
   = \beta_k
     - \frac{\eta S^{-2}}{B} \sum_{i=1}^B x_{k,i}(x_{k,i}^\top\beta_k - y_{k,i}). \label{eq:conference-update}
 \end{equation}
-We use the average squared loss with a factor $1/2$. In the population
-comparisons, we fix the centered intercept at zero and initialize $\beta_0 = 0$.
-Each update uses $B$ independent fresh observations, so $k$ updates require
-$M = kB$ observations. In \cref{sec:conference-experiments}, we also sample with
-replacement from a fixed training set of size $n$. There, $M$ counts processed
-observations and can exceed $n$.
+We use average squared loss with a factor $1/2$. Each update uses $B$
+independent fresh observations, so $k$ updates require $M = kB$ observations.
+We compare unscaled features (U), with $P_U = I_2$, and standard-deviation
+scaling (S, or SD), with $P_S = \diag(a^{-1},b^{-1})$, where $P = S^{-2}$.
+Both procedures use the final iterate.
 
 We can compensate exactly for global rescaling by adjusting the learning rate.
 Replacing $S$ by $gS$ and $\eta$ by $g^2\eta$ leaves every update unchanged when
@@ -215,104 +224,82 @@ however, generally changes $\eta S^{-2}$ in a way that a single learning rate
 cannot undo. Whether this leads to a risk difference after tuning requires a
 separate comparison.
 
+\paragraph{Prediction where the rare feature is present.}
+
 Let $e_k = \E(\beta_k - \beta^*)$ and
-$V_k = \E\bigl((\beta_k - \beta^*)(\beta_k - \beta^*)^\top\bigr)$. Under
-independent sampling of new observations at each update,
+$V_k = \E\bigl((\beta_k - \beta^*)(\beta_k - \beta^*)^\top\bigr)$. We define
+aggregate and subgroup excess prediction risks using half squared loss:
+\begin{equation}
+  R_k = \tfrac12\operatorname{tr}(CV_k),\qquad R_{G,k}
+      = \tfrac12\operatorname{tr}(C_GV_k), \label{eq:conference-risks}
+\end{equation}
+where $C_G = \E(xx^\top \mid G)$ is the conditional second moment, including
+the contribution of the conditional feature mean. Both risks exclude
+irreducible test noise. Our main objective is rare-presence risk, with
+$G = \{J = 1\}$ and $C_R = \diag(a,(1 - q)^2)$. A rare-coordinate error of one
+contributes $(1 - q)^2/2$ to rare risk but only $q(1 - q)/2$ to aggregate risk.
+Thus aggregate error can give little weight to an error that matters within the
+rare subgroup. We evaluate both objectives on the same trained predictor and
+retain the original training distribution.
+
+\paragraph{Learning signal and fitting noise.}
+
+Under fresh sampling, the error second moment decomposes as
 \begin{equation}
   V_k = e_ke_k^\top + A_k + \sigma^2N_k, \label{eq:conference-decomposition}
 \end{equation}
 where $A_k \succeq 0$ is the covariance of the noiseless process under random
 feature sampling and $\sigma^2N_k \succeq 0$ is the covariance contributed by
-observation noise. This decomposition separates incomplete learning from the two
-sources of variation in training. We derive the exact recurrence in
-\cref{sec:comparison-proofs}.
+observation noise. This separates incomplete learning from the two sources of
+training variation. \Cref{sec:comparison-proofs} derives the exact recurrence.
 
-Under independence, $e_{k+1,j} = (1 - \eta C_{jj}/s_j^2)e_{k,j}$. SD scaling,
-with $s_j^2 = C_{jj}$, gives every coordinate the multiplier $1 - \eta$. For
-$0 < \eta \leq 1$ and zero initialization, early stopping thus gives every
-coefficient the same shrinkage factor in expectation. This equalizes one aspect
-of implicit regularization, but coefficient uncertainties also depend on the
-sampling and noise covariances in \cref{eq:conference-decomposition}.
+The mean error obeys $e_{k+1,j} = (1 - \eta C_{jj}/s_j^2)e_{k,j}$. SD scaling
+therefore gives every coordinate the multiplier $1 - \eta$. For
+$0 < \eta \leq 1$, early stopping gives each coefficient the same shrinkage
+factor in expectation, although its uncertainty still depends on feature
+sampling and observation noise.
 
-For a subgroup $G$, we define the aggregate and subgroup excess prediction risks
-using half squared loss:
-\begin{equation}
-  R_k = \tfrac12\operatorname{tr}(CV_k),\qquad R_{G,k}
-      = \tfrac12\operatorname{tr}(C_GV_k), \label{eq:conference-risks}
-\end{equation}
-Here $C_G = \E(xx^\top \mid G)$ is the conditional second moment, which includes
-the contribution of the conditional feature mean. Both risks exclude irreducible
-test noise. We evaluate both objectives for the same trained predictor, without
-changing the distribution of its training data.
+To expose the tradeoff, temporarily fix $\eta_U = 4h$ and $\eta_S = h$. The
+common coefficient then has the same mean trajectory under both rules. SD
+scaling changes the contraction factor for the mean rare-coefficient error from
+$1 - 4hb$ to $1 - h$, while increasing the observation-noise variance added to
+that coefficient at each update from $16h^2b\sigma^2/B$ to
+$h^2\sigma^2/(bB)$. It learns the rare signal faster but also introduces more
+noise.
 
-\paragraph{Binary features.}
+For example, with $q = .02$, $h = .002$, $\beta^* = (1,1)^\top$,
+$\sigma^2 = 3$, and $B = 1$, SD has lower rare risk after 1,000 updates
+($.090407$ versus $.356678$), mainly because it has learned more of the rare
+signal. After 10,000 updates, U has lower risk ($.028145$ versus $.078788$),
+while SD's risk is almost entirely due to observation noise.
+\Cref{sec:conference-comparisons} gives the decomposition and certified
+comparisons over parameter ranges, including effects of batching and dependence.
 
-Let $I$ and $J$ be common and rare binary features, respectively, with
-\[
-  \begin{gathered}
-    \Prob(I = 1) = \tfrac12,\qquad \Prob(J = 1) = q, \\
-    \Prob(I = 1,J = 1) = \tfrac{q(1+\ell)}2,
-  \end{gathered}
-\]
-where $0 < q < 1/2$ and $-1 \leq \ell \leq 1$. These ranges ensure that all four
-cell probabilities are nonnegative. For $x = (I - 1/2,J - q)^\top$, write
-$a = 1/4$, $b = q(1 - q)$, and $c = q\ell/2$. Then
-\[
-  C = \begin{pmatrix}
-        a & c \\
-        c & b
-      \end{pmatrix}, \qquad C_R
-    = \begin{pmatrix}
-        a             & \ell(1 - q)/2 \\
-        \ell(1 - q)/2 & (1 - q)^2
-      \end{pmatrix},
-\]
-where $R$ denotes the subgroup $J = 1$. A rare-coordinate error of one
-contributes $(1 - q)^2/2$ to rare risk and $q(1 - q)/2$ to aggregate risk.
-
-We compare unscaled features (U), with $P_U = I_2$, and standard-deviation
-scaling (S), with $P_S = \diag(a^{-1},b^{-1})$, where $P = S^{-2}$. In the main
-theorem, each rule chooses its own constant learning rate and iteration count.
-For the supporting comparisons, we calibrate the rates through the common
-coordinate. We use the final iterate in both settings.
-
-\paragraph{Damped scaling.}
-
-The sampled-data experiments also include damped scaling, with offset
-$\tau > 0$:
-\begin{equation}
-  s_j = \sqrt{v_j + \tau},\qquad P_{jj}
-      = \frac{1}{v_j + \tau}. \label{eq:conference-damped}
-\end{equation}
-Here $v_j$ is either the known population variance or an estimate from the
-training data. The offset limits the amplification of low-variance features,
-since $P_{jj} \leq 1/\tau$. At the same learning rate, damping multiplies the SD
-update on the original coefficient scale by $v_j/(v_j + \tau)$. Thus $\tau$ is
-the feature variance at which damping halves the SD update; features with much
-larger variance remain close to SD scaling.
-
-We use $\tau = 0.01$ as an illustrative heuristic that reduces SD updates for
-rare binary features while largely preserving those for balanced features. At
-the same learning rate, it approximately halves the SD update at prevalence
-$0.01$, while retaining $0.96$ of the update for a balanced feature. We fix this
-value in variance units before evaluation; we neither derive it from theory nor
-select it by validation. \Cref{sec:mushroom-sensitivity} examines five fixed
-offsets from $0.001$ to $0.1$ to assess sensitivity to this choice. These
-comparisons do not establish an optimal damping level.
-
-For diagonal $C$, the population rule $P_\tau = (C + \tau I)^{-1}$ satisfies
-$\tau P_\tau = (\tau^{-1}C + I)^{-1}$. It therefore belongs, up to a scalar
-absorbed into the learning rate, to the preconditioner family of
-\citet{su2024preconditioning}.
+Separate rate and stopping adjustment on a finite grid removes this reversal
+under the same observation caps (\cref{tab:conference-adjustment}). The fixed
+calibration explains a mechanism, but leaves open whether tuning can remove the
+resulting risk differences. We address that question next by allowing each method to
+choose any nonnegative constant rate and any deterministic stop within its
+budget.
 
 \section{Opposite risk orderings after oracle tuning}
 \label{sec:conference-predictive}
 
-We now let each normalization rule choose its learning rate and iteration count
-to minimize rare-presence risk, assuming independent features ($\ell = 0$),
-$B = 1$, and the population preprocessing, zero initialization, and fixed
-intercept of \cref{sec:conference-setting}. Put $b = q(1 - q)$. We parameterize
-the update matrices on the original coefficient scale as
+We now compare the lowest attainable rare-presence risks of the two scaling
+rules in the independent model of \cref{sec:conference-setting}, with $B = 1$.
+The budget is chosen so that rare observations remain scarce:
+$1 \leq Mq(1 - q) \leq 4$ gives roughly one to four rare occurrences in
+expectation at the cap. In this regime, learning a signal can carry a noise cost
+in the other coefficient. When the rare signal dominates, U must learn it while
+also introducing noise in the common coefficient; S can reduce that cost. When
+the common signal dominates, S must balance learning it against noise in the
+rare coefficient. U can learn the common signal while leaving the small rare
+signal largely unchanged.
+
+\paragraph{The oracle comparison.}
+
+Each method chooses its own constant learning rate and iteration count. We
+parameterize the update matrices on the original coefficient scale as
 \begin{equation}
   D_U(\alpha) = \alpha I_2,\qquad D_S(\alpha)
               = \diag(4b\alpha,\alpha),\quad \alpha
@@ -356,14 +343,10 @@ and stop. It is not a comparison under equal total tuning computation.
 
 We prove the theorem in \cref{sec:predictive-proofs} by bounding one method
 below at every rate and stop and bounding the other above with a stable
-candidate. The diagonal error moments satisfy an exact positive recurrence, even
-though the stochastic updates couple the independent features. When the rare
-signal dominates, learning it with U also introduces noise in the common
-coefficient, and S can reduce this cost. When the common signal dominates, S
-must balance incomplete learning of that signal against noise in the rare
-coefficient. U can learn the common coefficient while leaving the small rare
-signal largely unchanged. These bounds compare the best attainable risks without
-identifying the minimizing rates and stops.
+candidate. The diagonal error moments satisfy an exact positive recurrence,
+even though the stochastic updates couple the independent features. These
+bounds compare the best attainable risks without identifying the minimizing
+rates and stops.
 
 For example, at $q = 0.02$ and $M = 102$, the bounds give gaps greater than
 $0.009\sigma^2$ and $0.064\sigma^2$ for the respective full signal families. The
@@ -371,18 +354,15 @@ sufficient prevalence cutoffs are not transition boundaries.
 \Cref{sec:predictive-certification} gives further positive regions and recovers
 the small-prevalence comparison with stronger constants.
 
-At the observation cap $M$, the expected number of training rows in which the
-single rare feature is present is $Mq = \tau/(1 - q)$, where
-$\tau = Mq(1 - q) \in[1,4]$. The positive gaps therefore persist as the budget
-grows inversely with prevalence, with roughly one to four rare-feature
-occurrences in expectation at the cap. The endpoints specify the interval
-covered by our proof, not a general threshold for learning rare features. The
-theorem gives no corresponding interval for higher-dimensional models. Which
-normalization has lower risk depends on the signal as well as prevalence. The
-two families give sufficient conditions for opposite orderings, but do not
-locate a general transition between them. The theorem leaves batch selection,
-learning-rate schedules, and data-dependent stopping open. It also provides no
-guarantee for estimated preprocessing or validation selection.
+The expected number of rare occurrences at the cap is
+$Mq = \tau/(1 - q)$. Hence the positive gaps persist as the budget grows
+inversely with prevalence while rare observations remain scarce. The interval
+$\tau \in[1,4]$ describes the budgets covered by the proof, not a general
+threshold for learning rare features. Likewise, the two signal families give
+sufficient conditions for opposite orderings, without locating a general
+transition between them. The guarantee concerns constant rates, deterministic
+stops, and population preprocessing; it leaves batch selection, learning-rate
+schedules, and data-dependent selection open.
 
 \paragraph{Intermediate signal allocations.}
 
@@ -409,231 +389,95 @@ families; it does not prove an oracle transition outside them.
   \label{fig:signal-allocation}
 \end{figure*}
 
-\section{Supporting comparisons under a fixed calibration}
-\label{sec:conference-comparisons}
-
-In this section, we fix $\eta_U = 4h$ and $\eta_S = h$. Both rules then have
-diagonal drift $h$ in the common coordinate. Under independence, this gives the
-common coefficient the same mean trajectory for both rules, although dependence
-generally breaks the match. We specify $h$ in advance and use it for both
-methods.
-
-\subsection{Learning the rare signal versus fitting noise}
-
-Under independence, SD scaling changes the contraction factor for the mean rare
-coefficient error from $1 - 4hb$ to $1 - h$. At the same time, it increases the
-observation-noise variance added to that coefficient at each update from
-$16h^2b\sigma^2/B$ to $h^2\sigma^2/(bB)$. Standardization therefore speeds up
-learning while introducing more noise. Random feature sampling contributes
-additional variance to both procedures.
-
-The diagonal error moments satisfy a nonnegative two-dimensional recurrence. By
-omitting the terms that couple the two coordinates, we obtain a scalar
-approximation to rare risk with an explicit nonnegative remainder. Let $F$ and
-$N$ denote the noiseless and unit-noise parts of the SD-minus-U risk difference.
-The approximation gives bounds $F_- \leq F \leq F_+$ and $N_- \leq N \leq N_+$.
-When $F_+ < 0 < N_-$, the noise-variance threshold $\tau = -F/N$ satisfies
-\begin{equation}
-  \frac{-F_+}{N_+} \leq \tau
-                   \leq \frac{-F_-}{N_-}. \label{eq:conference-threshold}
-\end{equation}
-The remainder accounts for the dependence that the sampled updates introduce
-between coefficient errors, even when the features are independent. We derive
-the approximation and define its terms in \cref{sec:comparison-proofs}.
-
-\begin{theorem}[Stopping and batch reversal]
-  \label{thm:conference-c1}
-  In the binary model with $\ell = 0$, suppose
-  \begin{gather*}
-    q \in[0.019,0.021] ,\quad h \in[0.0019,0.0021] ,               \\
-    \beta_C^*,\beta_R^* \in[0.95,1.05] ,\quad\sigma^2 \in[1.5,5] .
-  \end{gather*}
-  Both U and S are mean-square stable for $B \in \{1,10\}$. Their rare-risk
-  contrast $\Delta_{B,k} = R_{R,k}^S - R_{R,k}^U$ lies in the intervals in
-  \cref{tab:conference-c1} throughout this parameter box.
-\end{theorem}
-
-\begin{table}[t]
-  \centering
-  \begin{tabular}{rrrr}
-    \toprule
-    $B$ &    $k$ & $M = kB$ &    $\Delta_{B,k}$ \\
-    \midrule
-      1 &  1,000 &    1,000 &   $[-.353,-.160]$ \\
-      1 & 10,000 &   10,000 &    $[.0021,.125]$ \\
-     10 &  1,000 &   10,000 &   $[-.386,-.286]$ \\
-     10 & 10,000 &  100,000 & $[-.0281,-.0016]$ \\
-    \bottomrule
-  \end{tabular}
-  \caption{
-    Bounds on the rare-risk difference in \cref{thm:conference-c1}, valid
-    throughout the parameter box. Negative values favor SD scaling. The
-    intervals enclose the exact risk differences and do not represent Monte
-    Carlo uncertainty.
-  }
-  \label{tab:conference-c1}
-\end{table}
-
-At $B = 1$, the ordering reverses as training continues. With the same budget
-$M = 10{,}000$, it also differs between $B = 1$ and $B = 10$. These are
-comparisons between normalization rules at each batch size and budget. They do
-not establish which batch size is better for either rule.
-
-For the anchor $q = .02$, $h = .002$, $\beta^* = (1,1)^\top$, and
-$\sigma^2 = 3$, the early $B = 1$ rare risk is $.356678$ for U and $.090407$ for
-S. Squared bias contributes $.353207$ and $.011040$, respectively, so the early
-advantage comes mainly from learning the rare signal more quickly. By
-$k = 10{,}000$, U has learned enough of that signal to reach risk $.028145$,
-whereas S has risk $.078788$, almost entirely due to observation noise. The
-exact calculation includes variation from feature sampling at every step.
-
-\subsection{Aggregate and rare-presence objectives}
-
-Dependence can make the two prediction objectives favor different rules. Let
-$\Delta V = V_k^S - V_k^U$. Direct substitution into \cref{eq:conference-risks}
-gives
-\begin{equation}
-  \Delta_R - \Delta_A = \frac{1 - 2q}{2}\bigl\{(1 - q)\Delta V_{RR} + \ell\Delta V_{CR}\bigr\}, \label{eq:conference-objectives}
-\end{equation}
-where $\Delta_A$ and $\Delta_R$ denote the aggregate and rare-risk differences.
-The cross moment is the sum of the product of the coefficient biases and the
-covariance of their errors.
-
-\begin{proposition}[Objective disagreement under fixed calibration]
-  \label{thm:conference-c2}
-  Take $q = .02$, $\ell \in[.9,1]$, $\beta^* = (2,1)^\top$, $h = .01$, $B = 1$,
-  $k = M = 100$, and $\sigma^2 \in[3.8,4.1]$. Both U and S are mean-square
-  stable, and uniformly over these intervals,
-  \begin{align*}
-    .00077 & \leq R_k^S - R_k^U \leq .00194,         \\
-    -.0983 & \leq R_{R,k}^S - R_{R,k}^U \leq -.0233.
-  \end{align*}
-  Moreover, $V_{CC,k}^S > V_{CC,k}^U$ and $V_{RR,k}^S > V_{RR,k}^U$.
-\end{proposition}
-
-SD scaling increases each coefficient's mean squared error but improves
-rare-presence prediction. At $\ell = 1$ and $\sigma^2 = 4$,
-\[
-  \Delta V \approx \begin{pmatrix}
-                     .022743  & -.615146 \\
-                     -.615146 & .470335
-                   \end{pmatrix}.
-\]
-The reduction in the cross moment offsets the larger individual errors when
-predicting for the rare subgroup. Aggregate risk gives this moment weight $.01$,
-whereas rare risk gives it weight $.49$. Looking only at the individual
-coefficient errors would therefore miss the improvement in rare prediction.
-
-We prove both comparisons using rational interval arithmetic with outward
-rounding over the full parameter boxes. \Cref{sec:comparison-proofs} gives the
-recurrences and enclosure arguments. The results apply to the specified training
-procedures, whereas \cref{thm:conference-predictive} compares risks after
-optimizing over all constant rates and deterministic stops. Adaptive stopping
-and the choice of an optimal normalization remain outside these results. The
-identity relating the two risk objectives is elementary.
-
-\section{Tuning and validation selection}
+\section{Selecting a predictor with finite validation data}
 \label{sec:conference-experiments}
 
-The oracle theorem compares attainable risks in a specified trajectory class.
-The following studies address different questions: what survives retuning of
-fixed calibrations, and what happens when finite validation data select a
-predictor? Sampled-data experiments use replacement sampling from fixed noisy
-training sets, estimated preprocessing, and fitted intercepts. Reusing a row
-also reuses its noise. Their prevalences and procedures differ from the theorem,
-so they do not establish that its ordering survives these changes. The original
-studies preceded the theorem; the clipping diagnostic below is post hoc. The
-source supplement contains code, data, and saved results, with reproduction
-instructions in its \texttt{README.md}; see \cref{sec:reproducibility}.
+The oracle chooses its rate and stop using population risk. A practical
+procedure must estimate which predictor is best from finite validation data,
+where rare observations may be scarcer still. We examine three obstacles to
+interpreting practical comparisons: missing rare validation observations,
+sensitivity to the tuning search, and sensitivity to prediction postprocessing.
 
-\subsection{What survives retuning}
+These studies sample with replacement from fixed noisy training sets, estimate
+preprocessing, and include fitted intercepts. Reusing a row also reuses its
+noise, and the processed-observation count $M$ can exceed the training-set size
+$n$. These changes separate the studies from the fresh-sample theorem; they do
+not test its ordering under otherwise matched assumptions. The source supplement
+contains the full protocols, code, data, and saved results
+(\cref{sec:practical,sec:reproducibility}).
 
-Both original anchor comparisons disappear after rate and stopping adjustment.
-\Cref{tab:conference-adjustment} compares the fixed independent anchor with
-selection among stable configurations on a declared coarse grid, using the same
-observation cap. At the dependent anchor, selection favors U under both
-objectives. These results motivated the stronger quantifiers in
-\cref{thm:conference-predictive}. The wider study covers 228 binary laws and
-retains failures of unrestricted moment calculations and a Monte Carlo
-covariance gate. Those failures prevent a claim of complete agreement with
-simulation; they do not enter the oracle theorem's certificates.
+\paragraph{Scaling rules.}
 
-\begin{table}[t]
-  \centering
-  \begin{tabular}{rrrr}
-    \toprule
-    $B$ & $k$ (cap) &  Fixed gap & Adjusted gap \\
-    \midrule
-      1 &     1,000 & $-.266270$ &   $-.005695$ \\
-      1 &    10,000 & $+.050643$ &   $-.002562$ \\
-     10 &     1,000 & $-.334899$ &   $-.001381$ \\
-     10 &    10,000 & $-.014046$ &   $-.000103$ \\
-    \bottomrule
-  \end{tabular}
-  \caption{
-    SD-minus-U rare-risk differences at the independent anchor. For the adjusted
-    gaps, we select among stable configurations on the declared coarse grid,
-    using the same observation cap. This search removes the original stopping
-    reversal.
-  }
-  \label{tab:conference-adjustment}
-\end{table}
+Alongside U and SD, we include damping to limit amplification of low-variance
+features and variance scaling to examine stronger amplification. Let $v_j$ be
+the population feature variance or its training-data estimate. Damping uses a
+fixed offset $\lambda > 0$:
+\begin{equation}
+  s_j = \sqrt{v_j + \lambda},\qquad P_{jj}
+      = \frac{1}{v_j + \lambda}. \label{eq:conference-damped}
+\end{equation}
+We use $\lambda = 0.01$ as a heuristic, fixed before evaluation. At the same
+learning rate, it approximately halves the SD update at binary prevalence
+$0.01$ while retaining $0.96$ of the update for a balanced feature. Variance
+scaling uses $s_j = v_j$, giving $P_{jj} = v_j^{-2}$ for positive variances.
+These additional rules examine how the amount of amplification affects the
+comparison; the theorem does not establish an optimal choice among them.
 
-\subsection{Validation coverage and unstable candidates}
+\subsection{Missing rare validation observations}
 
 The sampled binary study uses eight laws, 128 replications per law, 256 training
 observations, and 128 validation observations. It compares known preprocessing,
 estimated scales, training centering with a fixed or fitted intercept, and
 uncentered predictors with a fitted intercept. Rates are calibrated by the
 largest empirical curvature, which does not guarantee stochastic stability.
-\Cref{sec:practical,sec:variance-scaling-followup} give the laws, grids, fixed
-configuration results, and expanded searches.
+\Cref{sec:practical,sec:variance-scaling-followup} give the laws and candidate
+searches.
 
-At $q = .002$, the two anchor laws have no rare validation observations in 106
-and 105 of 128 replications. The declared rule then falls back to aggregate
-loss. One selected SD predictor has validation half squared loss $2.086$ but
-rare loss about $2.257 \times 10^{33}$. A separate 160-digit replay of the worst
-selected replication in each of 24 law/scaling combinations preserves all 24
-selections. This establishes a coverage failure for the admitted candidate
-family. It does not show that the stable tradeoff in
-\cref{thm:conference-predictive} produces such losses, or that they persist
-under a stability-screened search.
+For the two laws with $q = .002$, there are no rare validation observations in
+106 and 105 of 128 replications. The declared selection rule then falls back to
+aggregate loss. One selected SD predictor has validation half squared loss
+$2.086$ but rare loss about $2.257 \times 10^{33}$. High-precision replay of the
+worst selected replication in each combination of law and scaling preserves
+those selections in the original search (\cref{sec:practical}). This is a
+coverage failure for the admitted candidate family: validation can select a
+predictor whose extreme errors occur in a group absent from validation. It does
+not show that such losses persist under a
+stability-screened search or arise from the stable tradeoff in the theorem.
 
-The later expanded synthetic search has unresolved transformed-coordinate replay
-discrepancies. Flagged selections dominate four extreme mean risks; we therefore
-retain these means as archived outputs without relying on their magnitudes or
-rankings for normalization conclusions. \Cref{tab:review-audit-impact} maps the
-checks to the affected summaries and distinguishes them from the earlier decimal
-investigation. A controlled study that changes observation reuse, preprocessing,
-and validation coverage separately remains open.
+The expanded synthetic search has unresolved replay discrepancies affecting
+extreme mean risks. We do not use those means to rank normalization rules;
+\cref{tab:review-audit-impact} identifies the affected summaries and separates
+their evidence from the earlier high-precision investigation.
 
-\subsection{The final matched categorical comparison}
+\subsection{Sensitivity to tuning in categorical prediction}
 
-We predict the recorded poisonous label in UCI Mushroom under squared loss,
-using all 22 categorical predictors \citep{uciMushroom}. The declared subgroup
-contains the 72 green-spore-print records among 8124 observations. One-hot
-vocabularies, means, and scales use training data alone; missingness is a
-category and unknown categories map to zero blocks. We use 32 paired partitions
-at each training/validation size, $(256,128)$ and $(2048,1024)$, and test on the
-remaining records. MCSEs describe variation across partitions and optimization
-within this fixed dataset, not population confidence intervals.
+We next examine how the tuning search and selection objective affect a
+comparison on UCI Mushroom. We predict the recorded poisonous label under
+squared loss using all 22 categorical predictors \citep{uciMushroom}. The
+declared rare subgroup contains the 72 green-spore-print records among 8124
+observations. One-hot vocabularies, means, and scales use training data alone;
+missingness is a category and unknown categories map to zero blocks. We use 32
+paired partitions at each training/validation size, $(256,128)$ and
+$(2048,1024)$, and test on the remaining records. MCSEs describe variation
+across partitions and optimization within this fixed dataset, not population
+confidence intervals.
 
-The final comparison gives all four rules the same 25 curvature-relative rate
-factors from $10^{-5}$ to $409.6$, batches $B \in \{16,128\}$, and stopping
-checkpoints $0,512,2048,8192$. Each rule selects its rate, batch, and stop by
-aggregate or rare validation loss. At cap $M$, the 50 trajectories cost up to
-$50M$ processed training observations per rule and preprocessing arm; scoring,
-preprocessing, and curvature calibration are additional work. The damping offset
-$.01$ stays fixed. \Cref{tab:search-protocols} separates this comparison from
-the earlier grids and refined stopping search.
+Each of the four rules receives the same 25 curvature-relative rate factors
+from $10^{-5}$ to $409.6$, batches $B \in \{16,128\}$, and stopping checkpoints
+$0,512,2048,8192$. Each selects its rate, batch, and stop by aggregate or rare
+validation loss. At cap $M$, the 50 trajectories cost up to $50M$ processed
+training observations per rule and preprocessing arm; scoring, preprocessing,
+and curvature calibration are additional work. The damping offset remains
+fixed at $.01$. \Cref{tab:search-protocols} documents this search and the
+smaller grids used to assess tuning sensitivity.
 
 \begin{figure*}[t]
   \centering
   \includegraphics{../figures/mushroom-final/selected-risks.pdf}
   \caption{
-    Final matched Mushroom comparison at $n = 2048$, validation size $1024$, and
-    cap $M = 8192$, with centered predictors and a fitted intercept. Each
-    scaling receives 50 trajectories and the original stopping checkpoints.
+    Mushroom comparison after separate tuning at $n = 2048$, validation size
+    $1024$, and cap $M = 8192$, with centered predictors and a fitted intercept.
+    Each scaling receives 50 trajectories and the stated stopping checkpoints.
     Points show mean raw-prediction loss, with one MCSE across 32 partitions, on
     logarithmic axes. Selection uses aggregate or rare validation loss. The
     earlier search appears separately in \cref{fig:practical-original}; clipping
@@ -661,92 +505,91 @@ the earlier grids and refined stopping search.
   \caption{
     Mean held-out half squared loss for Mushroom, with $n = 2048$, 1024
     validation records, a fitted intercept, and cap $M = 8192$. We use the
-    expanded rate search with 50 trajectories per scaling and the original
+    expanded rate search with 50 trajectories per scaling and the stated
     stopping checkpoints. The text reports paired uncertainty.
   }
   \label{tab:conference-mushroom}
 \end{table}
 
-\Cref{fig:conference-practical,tab:conference-mushroom} show the final
-large-sample comparison. Under aggregate selection, the SD-minus-none rare-risk
-gap is $-.001192$ (paired MCSE $.001318$), within two MCSE of zero. The earlier
-five-rate search gave $-.006570$ ($.001526$). Thus the original resolved SD
-advantage does not survive expanded tuning; this does not establish equivalence.
-Damping retains lower aggregate and rare loss than no scaling, with differences
-$-.000532$ ($.000056$) and $-.005273$ ($.000797$). Variance scaling has higher
-rare loss, with difference $.045630$ ($.008323$), while its aggregate contrast
-is unresolved. Under rare selection, SD has lower rare loss than no scaling by
-$.001421$ ($.000470$), but its raw aggregate loss varies widely.
+\Cref{fig:conference-practical,tab:conference-mushroom} show the comparison at
+the larger sample size. Under aggregate selection, the SD-minus-none rare-risk
+gap is $-.001192$ (paired MCSE $.001318$), within two MCSE of zero. A five-rate
+search gave $-.006570$ ($.001526$). Thus expanding the tuning search removes
+the resolved SD advantage in this comparison, although it does not establish
+equivalence. Under rare selection, SD has lower rare loss than no scaling by
+$.001421$ ($.000470$), but its raw aggregate loss varies widely. Both the search
+and the selection objective matter when interpreting the comparison.
+
+Damping has lower aggregate and rare loss than no scaling under aggregate
+selection, with differences $-.000532$ ($.000056$) and $-.005273$ ($.000797$).
+Variance scaling has higher rare loss, with difference $.045630$ ($.008323$),
+while its aggregate contrast is unresolved. Several fixed damping offsets also
+improve the larger-sample comparison, but comparing the five-offset family uses
+more total work and does not establish a deployable offset-selection rule
+(\cref{sec:mushroom-sensitivity}).
 
 Across both sample sizes and the original and refined stopping searches, no
 positive-budget Mushroom selection reaches a rate boundary. This resolves the
 tested grid edges, not continuous optimality. At the smaller sample size, five
-training partitions and thirteen validation partitions lack green observations.
-We retain these partitions and their declared fallbacks. Several fixed damping
-offsets also improve the larger-sample comparison, but the five-offset family
-uses more total work and does not establish a deployable offset-selection rule
-(\cref{sec:mushroom-sensitivity}).
+training partitions and thirteen validation partitions lack green observations;
+we retain them with their declared fallbacks.
 
-\paragraph{What the categorical comparison measures.}
+The experiment measures held-out prediction differences in a rank-deficient
+one-hot representation. It does not isolate transient learning from solution
+selection, so these differences cannot be attributed to early stopping alone.
+A converged prediction reference and identifiable prediction contrasts would be
+needed for that interpretation. Random partitions of these field-guide
+descriptions also do not establish generalization to new species or field data.
 
-The full one-hot design is rank deficient. Individual coefficients describe
-optimizer paths and are not uniquely identified category effects. Rank
-deficiency alone does not imply different test predictions at convergence, but
-the present experiment does not isolate transient learning from solution
-selection. We therefore base the comparison on held-out predictions and leave
-coefficient paths in the supplement. A converged prediction reference and
-identifiable prediction contrasts would be needed to attribute these differences
-to stopping early. Random partitions of these field-guide descriptions also do
-not establish generalization to new species or field data.
-
-\paragraph{Clipping the saved predictions.}
+\subsection{Sensitivity to prediction clipping}
 
 For labels in $[0,1]$, clipping predictions to this interval cannot increase
-squared loss for any fixed predictor. \Cref{tab:review-clipping} applies this
-postprocessing to every saved primary selection, using the original validation
-scores and no additional training. Under rare validation, clipping changes the
-aggregate mean ordering of SD and unscaled training and sharply reduces variance
-scaling's aggregate loss. Damping retains the lowest mean of both losses among
-the four rules under either selection objective. These are descriptive
-comparisons of the clipped predictors. Their changed magnitudes show why the raw
-catastrophic losses cannot support general recommendations about normalization.
-Selecting by clipped validation loss is a different procedure that this
+squared loss for any fixed predictor. This provides a further check on how much
+the observed comparisons depend on extreme predictions.
+\Cref{tab:review-clipping} applies clipping to every saved primary selection,
+using the original validation scores and no additional training.
+
+Under rare validation, clipping changes the aggregate mean ordering of SD and
+unscaled training and sharply reduces variance scaling's aggregate loss.
+Damping retains the lowest mean of both losses among the four rules under
+either selection objective. These are descriptive comparisons of the clipped
+predictors. Their changed magnitudes show why raw catastrophic losses cannot
+support general recommendations about normalization. Selecting by clipped
+validation loss would define a different procedure, which this post hoc
 diagnostic does not evaluate.
 
 \section{Discussion}
 
-Our main result compares complete constant-rate and deterministic-stop families
-under a common per-trajectory observation cap. Relative feature scaling can
-change their lowest attainable rare-subgroup risk in either direction. The
-positive gaps persist as prevalence decreases while rare observations remain
-scarce. The theorem identifies two sufficient-condition signal families; the
-finite-grid exploration suggests how budget and noise shift the transition
-between them without proving a general boundary.
+Normalization determines how strongly a finite-budget learner responds to the
+evidence for each feature. Our oracle comparison shows that relative scaling
+can change the lowest attainable rare-subgroup risk even after each method has
+optimized its constant learning rate and deterministic stopping time. Which
+scaling has lower risk depends on the signal: learning a rare effect can justify
+amplifying scarce observations, while learning a common effect can favor leaving
+a small rare effect largely unchanged. The positive gaps persist as prevalence
+decreases while rare observations remain scarce.
 
-The assumptions delimit this conclusion: two independent binary features, known
-population preprocessing, zero initialization, a fixed zero intercept, one fresh
-observation per update, and the stated signal and budget ranges. Learning-rate
-schedules, batch selection, and data-dependent stopping enlarge the comparison
-class. Estimated preprocessing and observation reuse change the statistical
-experiment. None is covered by the oracle guarantee.
+The theorem establishes this conclusion for two independent binary features,
+known population preprocessing, zero initialization, a fixed zero intercept,
+fresh observations, and the stated signal and budget ranges. The numerical
+exploration places the two signal families in a broader picture of budget and
+noise, without proving a general transition boundary. Learning-rate schedules,
+batch selection, data-dependent stopping, and adaptive optimizers remain outside
+the comparison.
 
-The practical studies expose additional mechanisms. Expanded tuning removes the
-original resolved Mushroom SD advantage under aggregate selection. Missing
-validation groups can conceal extreme predictions, and clipping bounded-label
-predictions can change empirical comparisons at no additional training cost.
-Damping performs well in the reported large-sample searches, but its heuristic
-offset and extra family-wide tuning cost preclude an optimal-rule claim. The
-rank-deficient representation and unresolved extreme synthetic replays further
-limit interpretation. These observations motivate controlled follow-up studies;
-they do not establish practical robustness of the theorem's ordering.
+The practical studies show why selecting a predictor requires additional care.
+Expanded tuning can remove an apparent scaling advantage, missing validation
+groups can conceal extreme errors, and clipping can change empirical orderings
+without further training. These findings qualify the interpretation of practical
+comparisons; they do not establish robustness of the oracle ordering. A study
+that separately introduces observation reuse, estimated scales, a fitted
+intercept, and validation selection would help determine where the theoretical
+tradeoff remains informative.
 
-A useful next step would change one assumption at a time, starting with the
-oracle model and separately introducing reused observations, estimated scales, a
-fitted intercept, and validation selection. Such a study could identify where
-the tradeoff between signal learning and noise remains informative and where
-coverage, instability, or solution selection takes over. The present result
-concerns fixed diagonal scaling and supplies no conclusion about adaptive
-optimizers.
+Feature normalization therefore belongs in the statistical specification of
+training under a finite budget: even in a two-feature model, tuning a global
+learning rate and stopping time need not make different relative scalings
+equivalent in rare-subgroup risk.
 
 % Flush main-text floats before counting the pages subject to the limit.
 \clearpage
@@ -1179,6 +1022,159 @@ learning before stopping. The oracle theorem separately compares noisy
 fresh-sample SGD after each method chooses its rate and stop; distance to a
 sample OLS solution alone does not establish its risk ordering.
 
+\section{Comparisons under a fixed calibration}
+\label{sec:conference-comparisons}
+
+These comparisons make the learning--noise tradeoff explicit at prescribed
+rates. They support the motivation in \cref{sec:conference-setting}, while the
+oracle theorem compares the larger families obtained by optimizing the rate and
+stop. We also allow dependence here to examine how aggregate and rare-presence
+objectives can disagree.
+
+\paragraph{Allowing dependent binary features.}
+
+Retain the marginal probabilities and centered features of
+\cref{sec:conference-setting}, but allow
+\[
+  \Prob(I = 1,J = 1) = \frac{q(1 + \ell)}{2},\qquad -1 \leq \ell \leq 1.
+\]
+For $0 < q < 1/2$, these ranges ensure nonnegative cell probabilities. With
+$a = 1/4$, $b = q(1 - q)$, and $c = q\ell/2$,
+\[
+  C = \begin{pmatrix}
+        a & c \\
+        c & b
+      \end{pmatrix}, \qquad C_R
+    = \begin{pmatrix}
+        a             & \ell(1 - q)/2 \\
+        \ell(1 - q)/2 & (1 - q)^2
+      \end{pmatrix}.
+\]
+Independence corresponds to $\ell = 0$. Population preprocessing, zero
+initialization, the fixed zero intercept, and fresh sampling remain as in the
+main text.
+
+In this section, we fix $\eta_U = 4h$ and $\eta_S = h$. Both rules then have
+diagonal drift $h$ in the common coordinate. Under independence, this gives the
+common coefficient the same mean trajectory for both rules, although dependence
+generally breaks the match. We specify $h$ in advance and use it for both
+methods.
+
+\subsection{Learning the rare signal versus fitting noise}
+
+Under independence, SD scaling changes the contraction factor for the mean rare
+coefficient error from $1 - 4hb$ to $1 - h$. At the same time, it increases the
+observation-noise variance added to that coefficient at each update from
+$16h^2b\sigma^2/B$ to $h^2\sigma^2/(bB)$. Standardization therefore speeds up
+learning while introducing more noise. Random feature sampling contributes
+additional variance to both procedures.
+
+The diagonal error moments satisfy a nonnegative two-dimensional recurrence. By
+omitting the terms that couple the two coordinates, we obtain a scalar
+approximation to rare risk with an explicit nonnegative remainder. Let $F$ and
+$N$ denote the noiseless and unit-noise parts of the SD-minus-U risk difference.
+The approximation gives bounds $F_- \leq F \leq F_+$ and $N_- \leq N \leq N_+$.
+When $F_+ < 0 < N_-$, the noise-variance threshold
+$\sigma_{\mathrm{crit}}^2 = -F/N$ satisfies
+\begin{equation}
+  \frac{-F_+}{N_+} \leq \sigma_{\mathrm{crit}}^2
+                   \leq \frac{-F_-}{N_-}. \label{eq:conference-threshold}
+\end{equation}
+The remainder accounts for the dependence that the sampled updates introduce
+between coefficient errors, even when the features are independent. We derive
+the approximation and define its terms in \cref{sec:comparison-proofs}.
+
+\begin{theorem}[Stopping and batch reversal]
+  \label{thm:conference-c1}
+  In the binary model with $\ell = 0$, suppose
+  \begin{gather*}
+    q \in[0.019,0.021] ,\quad h \in[0.0019,0.0021] ,               \\
+    \beta_C^*,\beta_R^* \in[0.95,1.05] ,\quad\sigma^2 \in[1.5,5] .
+  \end{gather*}
+  Both U and S are mean-square stable for $B \in \{1,10\}$. Their rare-risk
+  contrast $\Delta_{B,k} = R_{R,k}^S - R_{R,k}^U$ lies in the intervals in
+  \cref{tab:conference-c1} throughout this parameter box.
+\end{theorem}
+
+\begin{table}[t]
+  \centering
+  \begin{tabular}{rrrr}
+    \toprule
+    $B$ &    $k$ & $M = kB$ &    $\Delta_{B,k}$ \\
+    \midrule
+      1 &  1,000 &    1,000 &   $[-.353,-.160]$ \\
+      1 & 10,000 &   10,000 &    $[.0021,.125]$ \\
+     10 &  1,000 &   10,000 &   $[-.386,-.286]$ \\
+     10 & 10,000 &  100,000 & $[-.0281,-.0016]$ \\
+    \bottomrule
+  \end{tabular}
+  \caption{
+    Bounds on the rare-risk difference in \cref{thm:conference-c1}, valid
+    throughout the parameter box. Negative values favor SD scaling. The
+    intervals enclose the exact risk differences and do not represent Monte
+    Carlo uncertainty.
+  }
+  \label{tab:conference-c1}
+\end{table}
+
+At $B = 1$, the ordering reverses as training continues. With the same budget
+$M = 10{,}000$, it also differs between $B = 1$ and $B = 10$. These are
+comparisons between normalization rules at each batch size and budget. They do
+not establish which batch size is better for either rule.
+
+For the anchor $q = .02$, $h = .002$, $\beta^* = (1,1)^\top$, and
+$\sigma^2 = 3$, the early $B = 1$ rare risk is $.356678$ for U and $.090407$ for
+S. Squared bias contributes $.353207$ and $.011040$, respectively, so the early
+advantage comes mainly from learning the rare signal more quickly. By
+$k = 10{,}000$, U has learned enough of that signal to reach risk $.028145$,
+whereas S has risk $.078788$, almost entirely due to observation noise. The
+exact calculation includes variation from feature sampling at every step.
+
+\subsection{Aggregate and rare-presence objectives}
+
+Dependence can make the two prediction objectives favor different rules. Let
+$\Delta V = V_k^S - V_k^U$. Direct substitution into \cref{eq:conference-risks}
+gives
+\begin{equation}
+  \Delta_R - \Delta_A = \frac{1 - 2q}{2}\bigl\{(1 - q)\Delta V_{RR} + \ell\Delta V_{CR}\bigr\}, \label{eq:conference-objectives}
+\end{equation}
+where $\Delta_A$ and $\Delta_R$ denote the aggregate and rare-risk differences.
+The cross moment is the sum of the product of the coefficient biases and the
+covariance of their errors.
+
+\begin{proposition}[Objective disagreement under fixed calibration]
+  \label{thm:conference-c2}
+  Take $q = .02$, $\ell \in[.9,1]$, $\beta^* = (2,1)^\top$, $h = .01$, $B = 1$,
+  $k = M = 100$, and $\sigma^2 \in[3.8,4.1]$. Both U and S are mean-square
+  stable, and uniformly over these intervals,
+  \begin{align*}
+    .00077 & \leq R_k^S - R_k^U \leq .00194,         \\
+    -.0983 & \leq R_{R,k}^S - R_{R,k}^U \leq -.0233.
+  \end{align*}
+  Moreover, $V_{CC,k}^S > V_{CC,k}^U$ and $V_{RR,k}^S > V_{RR,k}^U$.
+\end{proposition}
+
+SD scaling increases each coefficient's mean squared error but improves
+rare-presence prediction. At $\ell = 1$ and $\sigma^2 = 4$,
+\[
+  \Delta V \approx \begin{pmatrix}
+                     .022743  & -.615146 \\
+                     -.615146 & .470335
+                   \end{pmatrix}.
+\]
+The reduction in the cross moment offsets the larger individual errors when
+predicting for the rare subgroup. Aggregate risk gives this moment weight $.01$,
+whereas rare risk gives it weight $.49$. Looking only at the individual
+coefficient errors would therefore miss the improvement in rare prediction.
+
+We prove both comparisons using rational interval arithmetic with outward
+rounding over the full parameter boxes. \Cref{sec:comparison-proofs} gives the
+recurrences and enclosure arguments. The results apply to the specified training
+procedures, whereas \cref{thm:conference-predictive} compares risks after
+optimizing over all constant rates and deterministic stops. Adaptive stopping
+and the choice of an optimal normalization remain outside these results. The
+identity relating the two risk objectives is elementary.
+
 \section{Proofs of the normalization-risk comparisons}
 \label{sec:comparison-proofs}
 
@@ -1206,7 +1202,8 @@ establish our oracle inequalities.
 In this appendix, we derive the moment recurrences and approximation bounds used
 to prove \cref{thm:conference-c1,thm:conference-c2}. We then describe the
 interval certificates. Throughout, we use the binary model, fresh sampling, and
-population preprocessing of \cref{sec:conference-setting}. The implementation is
+population preprocessing of \cref{sec:conference-setting}, allowing the
+dependence introduced in \cref{sec:conference-comparisons}. The implementation is
 in \texttt{checks/normalization\_risk\_theorem.py}. The source supplement
 includes this implementation, which checks both the certificates and independent
 numerical calculations; its \texttt{README.md} gives reproduction instructions.
@@ -1414,6 +1411,37 @@ check establishes priority or extends the results to procedures outside the
 stated comparisons.
 
 \subsection{Retuning the calibrated anchors}
+
+Both original anchor comparisons disappear after rate and stopping adjustment.
+\Cref{tab:conference-adjustment} compares the fixed independent anchor with
+selection among stable configurations on a declared coarse grid, using the same
+observation cap. At the dependent anchor, selection favors U under both
+objectives. These results motivated the stronger quantifiers in
+\cref{thm:conference-predictive}. The wider study covers 228 binary laws and
+retains failures of unrestricted moment calculations and a Monte Carlo
+covariance gate. Those failures prevent a claim of complete agreement with
+simulation; they do not enter the oracle theorem's certificates.
+
+\begin{table}[t]
+  \centering
+  \begin{tabular}{rrrr}
+    \toprule
+    $B$ & $k$ (cap) &  Fixed gap & Adjusted gap \\
+    \midrule
+      1 &     1,000 & $-.266270$ &   $-.005695$ \\
+      1 &    10,000 & $+.050643$ &   $-.002562$ \\
+     10 &     1,000 & $-.334899$ &   $-.001381$ \\
+     10 &    10,000 & $-.014046$ &   $-.000103$ \\
+    \bottomrule
+  \end{tabular}
+  \caption{
+    SD-minus-U rare-risk differences at the independent anchor. For the adjusted
+    gaps, we select among stable configurations on the declared coarse grid,
+    using the same observation cap. This search removes the original stopping
+    reversal.
+  }
+  \label{tab:conference-adjustment}
+\end{table}
 
 The broader exact-moment study underlying \cref{tab:conference-adjustment}
 covers 228 binary laws, 51,048 training configurations, and 2,571,800 endpoints.
@@ -1788,10 +1816,23 @@ compare results for the five-factor subset with the saved results from
 \section{Sensitivity to damping and variance scaling}
 \label{sec:mushroom-sensitivity}
 
+Damping limits the amplification of low-variance features, since
+$P_{jj} \leq 1/\lambda$. At the same learning rate, it multiplies the SD update
+on the original coefficient scale by $v_j/(v_j + \lambda)$. Thus $\lambda$ is
+the feature variance at which damping halves the SD update; features with much
+larger variance remain close to SD scaling. We fix the offset in variance units
+before evaluation, without deriving it from theory or selecting it by
+validation.
+
+For diagonal $C$, the population rule $P_\lambda = (C + \lambda I)^{-1}$
+satisfies $\lambda P_\lambda = (\lambda^{-1}C + I)^{-1}$. It therefore belongs,
+up to a scalar absorbed into the learning rate, to the preconditioner family of
+\citet{su2024preconditioning}.
+
 To examine sensitivity to the fixed heuristic offset $0.01$ in
 \cref{eq:conference-damped}, we compare five offsets
-$\tau \in \{0.001,0.003,0.01,0.03,0.1\}$ for $s_j = \sqrt{v_j + \tau}$, together
-with no scaling, SD ($\tau = 0$), and variance scaling ($s_j = v_j$). We reuse
+$\lambda \in \{0.001,0.003,0.01,0.03,0.1\}$ for $s_j = \sqrt{v_j + \lambda}$, together
+with no scaling, SD ($\lambda = 0$), and variance scaling ($s_j = v_j$). We reuse
 both sample sizes and all 32 partitions per size, and restrict the comparison to
 centered predictors with a fitted intercept. Each fixed rule receives the same
 17 rate factors, two batch sizes, and stopping searches from
@@ -1808,11 +1849,11 @@ offset by test loss.
     None          & .001341 (.000074) & .005955 (.000888) \\
     SD            & .004476 (.001498) & .004764 (.001079) \\
     Variance      & .311988 (.201772) & .051586 (.008319) \\
-    $\tau = .001$ & .001282 (.000054) & .001543 (.000323) \\
-    $\tau = .003$ & .001075 (.000031) & .001149 (.000165) \\
-    $\tau = .01$  & .000810 (.000039) & .000682 (.000133) \\
-    $\tau = .03$  & .000727 (.000044) & .000911 (.000277) \\
-    $\tau = .1$   & .000812 (.000053) & .001858 (.000525) \\
+    $\lambda = .001$ & .001282 (.000054) & .001543 (.000323) \\
+    $\lambda = .003$ & .001075 (.000031) & .001149 (.000165) \\
+    $\lambda = .01$  & .000810 (.000039) & .000682 (.000133) \\
+    $\lambda = .03$  & .000727 (.000044) & .000911 (.000277) \\
+    $\lambda = .1$   & .000812 (.000053) & .001858 (.000525) \\
     \bottomrule
   \end{tabular}
   \caption{
@@ -1834,7 +1875,7 @@ comparisons neither establish an optimal offset nor cover untested values.
 
 At $n = 256$, all five positive offsets improve both risks over no scaling at
 $M = 8192$ under aggregate validation. Selection by rare validation loss,
-however, has a severe failure at $\tau = .03$. Aggregate loss has mean
+however, has a severe failure at $\lambda = .03$. Aggregate loss has mean
 $42.6229$, median $.004108$, and maximum $1356.8142$, while rare loss has mean
 $4.7479$ and maximum $150.2734$. The partition responsible for most of this loss
 contains two green training examples and one green validation example. It
