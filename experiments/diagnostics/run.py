@@ -1,4 +1,4 @@
-"""Map retained numerical discrepancies and clip saved Mushroom predictors.
+"""Summarize search sensitivity, clipping, and retained numerical discrepancies.
 
 These are post hoc diagnostics of saved results. No candidates are retrained,
 reselected, or removed from the original summaries.
@@ -110,6 +110,7 @@ def calculate():
     manifest = read_json(MUSHROOM / "mushroom.json")
     raw_data = load_mushroom()
     clipping = []
+    search_changes = []
     maximum_reconstruction_error = 0.0
     for case in range(2):
         queries = [
@@ -120,6 +121,15 @@ def calculate():
             and q["search"] == "expanded"
         ]
         observations = defaultdict(list)
+        search_observations = defaultdict(list)
+        search_queries = {
+            (q["objective"], q["search"], q["scale"]): i
+            for i, q in enumerate(manifest["queries"])
+            if q["arm"] == "centered_fitted"
+            and q["cap"] == 8192
+            and q["search"] in ("practical", "expanded")
+            and q["scale"] in ("none", "sd")
+        }
         for meta in manifest["replications"]:
             if meta["case"] != case:
                 continue
@@ -134,6 +144,25 @@ def calculate():
                 coefficients = coefficients.reshape(-1, coefficients.shape[-1])
                 selections = data[prefix + "selections"]
                 stored = data[prefix + "test"].reshape(-1, 2)
+                for objective in range(2):
+                    gaps = {}
+                    for search in ("practical", "expanded"):
+                        losses = {
+                            scale: stored[
+                                selections[search_queries[objective, search, scale], 0],
+                                1,
+                            ]
+                            for scale in ("none", "sd")
+                        }
+                        gaps[search] = float(losses["sd"] - losses["none"])
+                    search_observations[objective].append(
+                        dict(
+                            replication=meta["rep"],
+                            five_rate_gap=gaps["practical"],
+                            expanded_gap=gaps["expanded"],
+                            change=gaps["expanded"] - gaps["practical"],
+                        )
+                    )
                 for qi, query in queries:
                     selected = int(selections[qi, 0])
                     coefficient = coefficients[selected]
@@ -161,6 +190,23 @@ def calculate():
                             ],
                         )
                     )
+        for objective, values in search_observations.items():
+            search_changes.append(
+                dict(
+                    case=case,
+                    arm="centered_fitted",
+                    cap=8192,
+                    objective=objective,
+                    risk="rare",
+                    scale="sd",
+                    reference="none",
+                    replications=values,
+                    **{
+                        name: statistics([v[name] for v in values])
+                        for name in ("five_rate_gap", "expanded_gap", "change")
+                    },
+                )
+            )
         for (scale, objective), values in observations.items():
             clipping.append(
                 dict(
@@ -181,6 +227,7 @@ def calculate():
         purpose="Post hoc diagnostics; original candidates and selections retained.",
         numerical_records=records,
         affected_summaries=affected,
+        search_changes=search_changes,
         clipping=clipping,
         clipping_scope={
             "arm": "centered_fitted",
@@ -275,7 +322,7 @@ def tables(report):
             r"  \end{tabular}",
             r"  \caption{",
             "    Post hoc clipping to $[0,1]$ of the saved Mushroom predictors in",
-            r"    \cref{tab:conference-mushroom}, with $n=2048$, cap $8192$,",
+            r"    \cref{fig:conference-practical}, with $n=2048$, cap $8192$,",
             "    centered predictors, and a fitted intercept. Means include all 32",
             "    partitions. Selection retains the original unclipped validation",
             "    scores; clipping requires no additional training. The diagnostic",

@@ -93,27 +93,21 @@ another empirical study.
   common range $0 < q \leq 0.04$. The appendix retains the wider ranges and
   prevalence-dependent bounds.
 
-- [ ] The empirical figures should show the comparisons that carry the argument.
+- [x] The empirical figures should show the comparisons that carry the argument.
 
-  Figure 5 and Table 1 (paper/main.tex:474) largely present the same final
-  Mushroom losses. Yet the section’s main conclusions concern changes caused by
-  expanding the search and clipping predictions. Those changes are not visible
-  in the main empirical figure.
+  The Mushroom figure now compares SD-minus-U rare-loss gaps under the five- and
+  25-rate searches, with paired MCSEs, and shows raw and clipped aggregate
+  losses for predictors selected by rare validation. The text reports paired
+  changes between the search gaps. The duplicated main-text table is removed;
+  the appendix retains the full raw and clipped losses. Both panels use saved
+  results without further training or selection.
 
-  I would replace one of the duplicated presentations with a compact comparison
-  showing the SD-minus-U gap under the original and expanded searches, with
-  paired uncertainty. A second panel could show the effect of clipping the
-  selected predictors. These would directly support the section’s claims and
-  mostly use results already available.
+- [ ] Keep theoretical figures closer to their explanatory text.
 
-  The theoretical figures have clearer individual roles: Figure 1 explains
-  geometry, Figure 2 gives the intuitive crossing, Figure 3 illustrates the
-  theorem across budgets, and Figure 4 explores the transition. Still, the full
-  heatmap is a lower priority than the mechanism decomposition suggested above.
-
-  Placement also matters. In the compiled draft, Figure 4 appears amid the
-  Mushroom discussion, and Figure 5 appears above the Discussion. Keeping each
-  closer to its explanatory text would help the running thread.
+  The signal-allocation heatmap appears amid the Mushroom discussion. Moving it
+  closer to the intermediate-signal explanation, or into the appendix, would
+  help the running thread. The mechanism decomposition now has its own figure
+  and remains the higher priority for the main text.
 
 - [ ] The validation-coverage example needs more context before the enormous
   loss appears.

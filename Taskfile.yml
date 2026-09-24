@@ -99,6 +99,7 @@ tasks:
           SCRIPT: mushroom_final
           STUDY: mushroom-final
           SUMMARY: results/mushroom/rates25/mushroom-summary-c1.json
+          EXTRA_SUMMARY: results/diagnostics/summary.json
           NAME: selected-risks
       - task: figure
         vars:

@@ -69,3 +69,12 @@ Regenerate those components with `task experiment:predictive-intro`. Each common
 and rare coefficient contributes squared mean error, feature-sampling variation,
 and observation noise, weighted by its contribution to rare-subgroup risk. The
 plot uses the same choices as the risk curves and performs no new tuning.
+
+The Mushroom figure reads paired SD-minus-U rare-loss contrasts from
+`results/mushroom/rates25/mushroom-summary-c1.json` and clipping summaries from
+`results/diagnostics/summary.json`. Its panels compare the five- and 25-rate
+searches and the raw and clipped aggregate losses of predictors selected by rare
+validation. Both show one MCSE across the same 32 partitions. The diagnostics
+also retain paired changes between the search gaps. Regenerate the diagnostic
+summaries with `python -m experiments.diagnostics.run --update-paper`; this
+reads saved predictors without training or selecting new candidates.

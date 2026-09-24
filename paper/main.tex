@@ -564,50 +564,31 @@ grids used to assess tuning sensitivity.
   \centering
   \includegraphics{../figures/mushroom-final/selected-risks.pdf}
   \caption{
-    Mushroom comparison after separate tuning at $n = 2048$, validation size
-    $1024$, and cap $M = 8192$, with centered predictors and a fitted intercept.
-    Each scaling receives 50 trajectories and the stated stopping checkpoints.
-    Points show mean raw-prediction loss, with one MCSE across 32 partitions, on
-    logarithmic axes. Selection uses aggregate or rare validation loss. The
-    five-rate reference appears in \cref{fig:practical-original}; clipping the
-    same selected predictors is reported in \cref{tab:review-clipping}.
+    Search and clipping change the Mushroom comparison. Both panels use
+    $n = 2048$, 1024 validation records, cap $M = 8192$, centered predictors,
+    and a fitted intercept. Left: SD-minus-U rare half squared loss under
+    five- and 25-rate searches, with unchanged stopping checkpoints. Negative
+    favors SD; work counts nominal training observations per scaling. Right:
+    aggregate half squared loss before and after clipping to $[0,1]$, using
+    the same predictors selected by rare validation in the 25-rate search.
+    Points show means with one MCSE across 32 partitions, paired between
+    scalings on the left. \Cref{tab:review-clipping} gives both losses under
+    both selection objectives.
   }
   \label{fig:conference-practical}
 \end{figure*}
 
-\begin{table}[t]
-  \centering
-  \begin{tabular}{llrr}
-    \toprule
-    Selection & Scaling  & Aggregate &    Rare \\
-    \midrule
-    Aggregate & None     &   .001341 & .005955 \\
-              & SD       &   .004476 & .004764 \\
-              & Damped   &   .000810 & .000682 \\
-              & Variance &   .311988 & .051586 \\
-    Rare      & None     &   .039395 & .003678 \\
-              & SD       &   .141068 & .002257 \\
-              & Damped   &   .002611 & .000499 \\
-              & Variance & 25.572030 & .019374 \\
-    \bottomrule
-  \end{tabular}
-  \caption{
-    Mean held-out half squared loss for Mushroom, with $n = 2048$, 1024
-    validation records, a fitted intercept, and cap $M = 8192$. We use the
-    25-rate search with 50 trajectories per scaling and the stated stopping
-    checkpoints. The text reports paired uncertainty.
-  }
-  \label{tab:conference-mushroom}
-\end{table}
-
-\Cref{fig:conference-practical,tab:conference-mushroom} show the comparison at
-the larger sample size. Under aggregate selection, the SD-minus-none rare-risk
-gap is $-.001192$ (paired MCSE $.001318$), within two MCSE of zero. A five-rate
-search gave $-.006570$ ($.001526$). Thus expanding the tuning search removes the
-resolved SD advantage in this comparison, although it does not establish
-equivalence. Under rare selection, SD has lower rare loss than no scaling by
-$.001421$ ($.000470$), but its raw aggregate loss varies widely. Both the search
-and the selection objective matter when interpreting the comparison.
+\Cref{fig:conference-practical} shows how the search and clipping affect the
+comparison at the larger sample size. Under aggregate selection, the SD-minus-U
+rare-risk gap changes from $-.006570$ (paired MCSE $.001526$) in the five-rate
+search to $-.001192$ ($.001318$) in the 25-rate search. The paired change is
+$+.005379$ ($.001061$). The expanded search therefore reduces the SD advantage
+and leaves the gap within two MCSE of zero, without establishing equivalence.
+Under rare selection, the gap changes from $-.009307$ ($.001315$) to
+$-.001421$ ($.000470$), a paired change of $+.007886$ ($.001247$). SD retains
+lower rare loss in this comparison, but its raw aggregate loss varies widely.
+Both the search and the selection objective matter when interpreting the
+comparison.
 
 Damping has lower aggregate and rare loss than no scaling under aggregate
 selection, with differences $-.000532$ ($.000056$) and $-.005273$ ($.000797$).
@@ -635,8 +616,10 @@ descriptions also do not establish generalization to new species or field data.
 For labels in $[0,1]$, clipping predictions to this interval cannot increase
 squared loss for any fixed predictor. This provides a further check on how much
 the observed comparisons depend on extreme predictions.
-\Cref{tab:review-clipping} applies clipping to every saved primary selection,
-using the original validation scores and no additional training.
+\Cref{fig:conference-practical} shows the aggregate losses under rare selection;
+\cref{tab:review-clipping} reports both losses under both selection objectives.
+Clipping retains the original validation scores and requires no additional
+training.
 
 Under rare validation, clipping changes the aggregate mean ordering of SD and
 unscaled training and sharply reduces variance scaling's aggregate loss. Damping
@@ -2455,26 +2438,27 @@ law; it identifies a primary query without a flagged selected-prediction check.
   \small
   \begin{tabular}{llrrl}
     \toprule
-    Law                & Scaling  & Checks & Primary share & Replications (zero-based) \\
+    Law & Scaling & Checks & Primary share & Replications (zero-based) \\
     \midrule
-    Rarer C1           & Damped   &      4 &      100.00\% & 103                       \\
-    Rarer C1           & SD       &      2 &           --- & 82                        \\
-    Rarer C1           & Variance &     10 &           --- & 29, 82                    \\
-    Rarer C2           & Damped   &      6 &      100.00\% & 52                        \\
-    Rarer C2           & SD       &     10 &      100.00\% & 16, 52                    \\
-    Rarer C2           & Variance &     22 &      100.00\% & 17, 68, 100, 108          \\
-    Opposite, disjoint & Damped   &      4 &           --- & 72                        \\
-    Common only        & SD       &      2 &           --- & 75                        \\
+    Rarer C1 & Damped & 4 & 100.00\% & 103 \\
+    Rarer C1 & SD & 2 & --- & 82 \\
+    Rarer C1 & Variance & 10 & --- & 29, 82 \\
+    Rarer C2 & Damped & 6 & 100.00\% & 52 \\
+    Rarer C2 & SD & 10 & 100.00\% & 16, 52 \\
+    Rarer C2 & Variance & 22 & 100.00\% & 17, 68, 100, 108 \\
+    Opposite, disjoint & Damped & 4 & --- & 72 \\
+    Common only & SD & 2 & --- & 75 \\
     \bottomrule
   \end{tabular}
   \caption{
-    Selected-prediction discrepancies in the centered/fitted synthetic arm.
-    Checks count selection queries, including repeated choices. Primary share is
-    the fraction of the archived mean rare risk contributed by flagged
-    selections at cap $2048$, under aggregate validation and the 25-rate grid
-    with standard stops. A dash means this primary query has no flagged
-    selection. These shares locate dependence on discrepant paths; they do not
-    correct their risks.
+    Selected-prediction discrepancies in the centered/fitted synthetic
+    arm. Checks count selection queries, including repeated choices.
+    Primary share is the fraction of the archived mean rare risk
+    contributed by flagged selections at cap $2048$, under aggregate
+    validation and the 25-rate grid with standard stops. A dash
+    means this primary query has no flagged selection. These shares
+    locate dependence on discrepant paths; they do not correct
+    their risks.
   }
   \label{tab:review-audit-impact}
 \end{table}
@@ -2522,25 +2506,26 @@ particular, we do not rescore candidates using clipped validation predictions.
   \small
   \begin{tabular}{llrrrr}
     \toprule
-    Selection & Scaling  & Raw aggregate & Clipped aggregate & Raw rare & Clipped rare \\
+    Selection & Scaling & Raw aggregate & Clipped aggregate
+      & Raw rare & Clipped rare \\
     \midrule
-    Aggregate & None     &      0.001341 &          0.001102 & 0.005955 &     0.005504 \\
-    Aggregate & SD       &      0.004476 &          0.001543 & 0.004764 &     0.004280 \\
-    Aggregate & Damped   &      0.000810 &          0.000660 & 0.000682 &     0.000519 \\
-    Aggregate & Variance &      0.311988 &          0.052641 & 0.051586 &     0.051000 \\
-    Rare      & None     &      0.039395 &          0.031451 & 0.003678 &     0.002887 \\
-    Rare      & SD       &      0.141068 &          0.001864 & 0.002257 &     0.001826 \\
-    Rare      & Damped   &      0.002611 &          0.001452 & 0.000499 &     0.000324 \\
-    Rare      & Variance &     25.572030 &          0.056872 & 0.019374 &     0.014308 \\
+    Aggregate & None & 0.001341 & 0.001102 & 0.005955 & 0.005504 \\
+    Aggregate & SD & 0.004476 & 0.001543 & 0.004764 & 0.004280 \\
+    Aggregate & Damped & 0.000810 & 0.000660 & 0.000682 & 0.000519 \\
+    Aggregate & Variance & 0.311988 & 0.052641 & 0.051586 & 0.051000 \\
+    Rare & None & 0.039395 & 0.031451 & 0.003678 & 0.002887 \\
+    Rare & SD & 0.141068 & 0.001864 & 0.002257 & 0.001826 \\
+    Rare & Damped & 0.002611 & 0.001452 & 0.000499 & 0.000324 \\
+    Rare & Variance & 25.572030 & 0.056872 & 0.019374 & 0.014308 \\
     \bottomrule
   \end{tabular}
   \caption{
     Post hoc clipping to $[0,1]$ of the saved Mushroom predictors in
-    \cref{tab:conference-mushroom}, with $n = 2048$, cap $8192$, centered
-    predictors, and a fitted intercept. Means include all 32 partitions.
-    Selection retains the original unclipped validation scores; clipping
-    requires no additional training. The diagnostic archive also reports MCSEs,
-    quantiles, and the smaller sample size.
+    \cref{fig:conference-practical}, with $n=2048$, cap $8192$,
+    centered predictors, and a fitted intercept. Means include all 32
+    partitions. Selection retains the original unclipped validation
+    scores; clipping requires no additional training. The diagnostic
+    archive also reports MCSEs, quantiles, and the smaller sample size.
   }
   \label{tab:review-clipping}
 \end{table}
