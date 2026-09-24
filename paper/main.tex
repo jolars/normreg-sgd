@@ -271,20 +271,13 @@ that coefficient at each update from $16h^2b\sigma^2/B$ to
 $h^2\sigma^2/(bB)$. It learns the rare signal faster but also introduces more
 noise.
 
-For example, with $q = .02$, $h = .002$, $\beta^* = (1,1)^\top$,
-$\sigma^2 = 3$, and $B = 1$, SD has lower rare risk after 1,000 updates
-($.090407$ versus $.356678$), mainly because it has learned more of the rare
-signal. After 10,000 updates, U has lower risk ($.028145$ versus $.078788$),
-while SD's risk is almost entirely due to observation noise.
-\Cref{sec:conference-comparisons} gives the decomposition and certified
-comparisons over parameter ranges, including effects of batching and dependence.
-
-Separate rate and stopping adjustment on a finite grid removes this reversal
-under the same observation caps (\cref{tab:conference-adjustment}). The fixed
-calibration explains a mechanism, but leaves open whether tuning can remove the
-resulting risk differences. We address that question next by allowing each method to
-choose any nonnegative constant rate and any deterministic stop within its
-budget.
+At a fixed calibration, SD can have lower rare risk early and higher risk later,
+as observation noise overtakes its learning advantage. Separate rate and stopping
+adjustment on a finite grid removes this reversal in the example of
+\cref{sec:conference-comparisons,tab:conference-adjustment}. That example
+illustrates the tradeoff, but does not establish a difference after tuning. We
+now allow each method to choose any nonnegative constant rate and any
+deterministic stop within its budget.
 
 \section{Opposite risk orderings after oracle tuning}
 \label{sec:conference-predictive}
@@ -293,17 +286,21 @@ We now compare the lowest attainable rare-presence risks of the two scaling
 rules in the independent model of \cref{sec:conference-setting}, with $B = 1$.
 The budget is chosen so that rare observations remain scarce:
 $1 \leq Mq(1 - q) \leq 4$ gives roughly one to four rare occurrences in
-expectation at the cap. In this regime, learning a signal can carry a noise cost
-in the other coefficient. When the rare signal dominates, U must learn it while
-also introducing noise in the common coefficient; S can reduce that cost. When
-the common signal dominates, S must balance learning it against noise in the
-rare coefficient. U can learn the common signal while leaving the small rare
-signal largely unchanged.
+expectation at the cap.
+
+A global learning rate moves both coordinate steps together, while normalization
+fixes their ratio. Tuning can change how much each method learns, but cannot
+adjust the two steps independently. Lowering the rate reduces observation noise
+while slowing learning; stopping sooner also leaves more signal unlearned. The
+observation cap limits how far a longer run can compensate for a smaller rate.
+The best choice can therefore accept incomplete learning to avoid noise in the
+other coefficient.
 
 \paragraph{The oracle comparison.}
 
-Each method chooses its own constant learning rate and iteration count. We
-parameterize the update matrices on the original coefficient scale as
+Each method chooses its own constant learning rate and iteration count. Let
+$\alpha$ denote the rare-coordinate step on the original coefficient scale, so
+the update matrices are
 \begin{equation}
   D_U(\alpha) = \alpha I_2,\qquad D_S(\alpha)
               = \diag(4b\alpha,\alpha),\quad \alpha
@@ -311,8 +308,15 @@ parameterize the update matrices on the original coefficient scale as
 \end{equation}
 Here $D = \eta P$, so $\eta_U = \alpha$ and $\eta_S = b\alpha$. Each
 parameterization covers every nonnegative constant learning rate for its rule.
-We use the same parameter to describe both searches, but choose its value
-separately for each method.
+At the same $\alpha$, the methods give the rare coefficient the same mean
+progress, while SD's common-coordinate step is $4b$ times U's.
+This complements the comparison in \cref{sec:conference-setting}, which matched
+common-coordinate progress and exposed SD's extra rare-coordinate noise. To
+learn a dominant rare signal, U also introduces common-coordinate noise that SD
+can reduce. To learn a dominant common signal, SD introduces rare-coordinate
+noise that U can reduce by leaving the small rare effect largely unchanged. The
+oracle chooses $\alpha$ separately for each method; matching progress only
+explains the constraint each search faces.
 
 For an observation cap $M \in \mathbb N$, define
 \begin{equation}
@@ -367,6 +371,37 @@ sufficient conditions for opposite orderings, without locating a general
 transition between them. The guarantee concerns constant rates, deterministic
 stops, and population preprocessing; it leaves batch selection, learning-rate
 schedules, and data-dependent selection open.
+
+\paragraph{The compromise after tuning.}
+
+\Cref{fig:tuned-decomposition} separates the risk components at the choices used
+in \cref{fig:conference-tuned-intro} for one observation cap. With a dominant
+rare signal, U incurs common-coordinate observation noise, while SD keeps that
+contribution small and learns more of the rare signal. With a dominant common
+signal, SD accepts substantial incomplete learning of that signal together with
+rare-coordinate noise. U instead learns the common signal while leaving the
+small rare effect largely unchanged. Thus the disadvantaged method need not
+have noise as its largest risk component: tuning can favor leaving signal
+unlearned to avoid the noise cost of further progress.
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics{../figures/tuned-decomposition/risk-components.pdf}
+  \caption{
+    The compromise at separately tuned choices. The two signal pairs, prevalence
+    $q = 10^{-4}$, and noise variance one match
+    \cref{fig:conference-tuned-intro}, with cap $M = 20{,}503$. Each method
+    selects its own rate and stop on that figure's finite search grid. Bars
+    separate common and rare contributions to rare-subgroup risk, weighting
+    coefficient errors by $a/2$ and $(1 - q)^2/2$, respectively. Colors separate
+    squared mean error (incomplete learning), feature-sampling variation, and
+    observation noise as in \cref{eq:conference-decomposition}. The two bars for
+    each method sum to the printed total risk; $\alpha$ is the rare-coordinate
+    step in \cref{eq:conference-oracle-rates}. These are numerical selections,
+    not certified continuous minimizers.
+  }
+  \label{fig:tuned-decomposition}
+\end{figure*}
 
 \begin{figure*}[t]
   \centering
@@ -1028,6 +1063,14 @@ interior to the grid. These checks assess numerical accuracy within the stated
 search; the theorem supplies the separate comparison over all nonnegative
 constant rates. The figure illustrates an existing theoretical result and is not
 a prospective evaluation of its predictions.
+
+\Cref{fig:tuned-decomposition} uses the same selections at cap $M = 20{,}503$.
+We compute the squared mean error, noiseless feature-sampling covariance, and
+observation-noise covariance with the full moment recurrence, then weight each
+coordinate by its contribution to rare risk. The saved summary retains these
+components for every selected endpoint. We check each component against the
+separately enumerated tensor operator and require its discrepancy, and that
+between the component sum and the selected risk, to be below $10^{-10}$.
 
 \subsection{Signal allocation and noise}
 \label{sec:signal-allocation}

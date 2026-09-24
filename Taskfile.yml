@@ -83,6 +83,12 @@ tasks:
           NAME: tuned-rare-risk
       - task: figure
         vars:
+          SCRIPT: tuned_decomposition
+          STUDY: tuned-decomposition
+          SUMMARY: results/predictive-intro/summary.json
+          NAME: risk-components
+      - task: figure
+        vars:
           SCRIPT: signal_allocation
           STUDY: signal-allocation
           SUMMARY: results/signal-allocation/summary.json

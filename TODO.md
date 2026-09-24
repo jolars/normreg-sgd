@@ -53,7 +53,7 @@ another empirical study.
   applied benchmark, but the current amount of empirical material makes the
   reader expect a stronger connection.
 
-- [ ] The explanation of the mechanism needs to connect two different
+- [x] The explanation of the mechanism needs to connect two different
   comparisons.
 
   In Section 2 (paper/main.tex:262), you match progress on the common

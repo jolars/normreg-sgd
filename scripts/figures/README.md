@@ -24,6 +24,7 @@ LaTeX renderer](https://matplotlib.org/stable/users/explain/text/usetex.html).
   | `plot_coefficient_paths.py`    | `coefficient-paths/`              |
   | `plot_signal_crossing.py`      | `signal-crossing/`                |
   | `plot_predictive_intro.py`     | `predictive-intro/`               |
+  | `plot_tuned_decomposition.py`  | `tuned-decomposition/`            |
   | `plot_signal_allocation.py`    | `signal-allocation/`              |
   | `plot_theory_bridge.py`        | `theory-bridge/`                  |
   | `plot_mushroom_final.py`       | `mushroom-final/`                 |
@@ -61,3 +62,10 @@ The coefficient-path illustration reads a constructed full-gradient example from
 `task experiment:coefficient-paths`. The signal-crossing figure reads a single
 budget and noise slice from the existing signal-allocation summary. Its simpler
 axis labels describe the same squared-coefficient allocation as the full map.
+
+The tuned decomposition reads the selected rates, stops, and weighted risk
+components from `results/predictive-intro/summary.json` at cap $M = 20{,}503$.
+Regenerate those components with `task experiment:predictive-intro`. Each common
+and rare coefficient contributes squared mean error, feature-sampling variation,
+and observation noise, weighted by its contribution to rare-subgroup risk. The
+plot uses the same choices as the risk curves and performs no new tuning.
