@@ -1,4 +1,4 @@
-"""Plot the expanded-search paths used in the manuscript supplement."""
+"""Compare five- and 17-rate searches in the manuscript supplement."""
 
 import json
 
@@ -38,7 +38,7 @@ def plot(summary):
                     [p[metric]["mean"] for p in values],
                     color=color,
                     linestyle=style,
-                    label=f"{scale}, {search}",
+                    label=f"{scale}, {5 if search == 'original' else 17} rates",
                 )
                 endpoint = next(
                     s

@@ -198,7 +198,7 @@ another empirical study.
   would make the finite-prevalence result more tangible. This could be a
   supplementary panel rather than another main figure.
 
-- [ ] The appendices contain too much development history.
+- [x] The appendices contain too much development history.
 
   The proof material has a sensible overall organization. The empirical
   appendices increasingly read as successive stages of the project: original
