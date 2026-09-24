@@ -144,7 +144,7 @@ another empirical study.
   role as a stronger-amplification comparison; otherwise it feels like another
   method introduced after the central question has already been answered.
 
-- [ ] Several passages would benefit from conceptual orientation before
+- [x] Several passages would benefit from conceptual orientation before
   technical distinctions.
 
   The related-work paragraphs (paper/main.tex:165) ask readers to distinguish
