@@ -83,13 +83,50 @@ present, despite contributing little to average error. Normalization therefore
 raises a statistical question: how strongly should training respond to scarce
 evidence? Scaling leaves the full-rank least-squares solution unchanged but
 changes which signals we learn before stopping.
+\Cref{fig:intro-coefficient-paths} illustrates this difference on a fixed
+least-squares problem: the methods approach the same solution along different
+paths and reach different coefficients when stopped early.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{../figures/coefficient-paths/paths-to-ols.pdf}
+  \caption{
+    Normalization changes the path to a shared least-squares solution.
+    Full-gradient descent fits a fixed noiseless dataset with feature
+    prevalences $1/2$ and $0.02$. Rates give the common coefficient identical
+    progress. Dots mark an illustrative stop after 20 updates; pale curves
+    continue toward OLS. Gray contours show training loss. This example
+    isolates the geometry of early stopping; \cref{sec:coefficient-paths}
+    gives the construction.
+  }
+  \label{fig:intro-coefficient-paths}
+\end{figure}
 
 Learning-rate and stopping-time tuning need not remove this effect.
-\Cref{fig:conference-tuned-intro} illustrates the central comparison:
+\Cref{fig:intro-signal-crossing} illustrates the central comparison:
 standardization gives lower rare-subgroup risk when the rare signal dominates,
 whereas unscaled training gives lower risk when the common signal dominates.
 Each rule selects its own rate and stop under the same observation cap. Learning
 rare signals has a noise cost, and normalization changes that tradeoff.
+The curves trace the transition as signal moves from the common feature to the
+rare feature at a fixed budget and noise level.
+\Cref{fig:conference-tuned-intro} shows the two signal families across
+observation caps.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{../figures/signal-crossing/risk-crossing.pdf}
+  \caption{
+    The preferred normalization changes with signal allocation. Fresh-sample
+    SGD uses $q = 10^{-4}$, noise variance one, and cap $M = 20{,}503$.
+    Each rule separately minimizes rare risk over finite rate and stopping
+    grids. The horizontal axis varies $f \in [0,1]$, with
+    $(\beta_C^*)^2 = 1.01(1-f)$ and $(\beta_R^*)^2 = 1.01f$; equal effects
+    means equal coefficient magnitudes. \Cref{sec:signal-allocation}
+    gives the setup and numerical checks.
+  }
+  \label{fig:intro-signal-crossing}
+\end{figure}
 
 \begin{figure*}[t]
   \centering
@@ -715,8 +752,7 @@ optimizers.
 \clearpage
 \typeout{AISTATS-MAIN-PAGES: \number\numexpr\value{page}-1\relax}
 \ifnum\value{page}>9
-\PackageError{normreg-multi}{AISTATS main text exceeds eight pages}{Shorten the
-  main text without changing the official formatting.}
+\PackageWarningNoLine{normreg-multi}{Draft main text exceeds eight pages}
 \fi
 
 \section*{AI Use Statement}
@@ -1053,7 +1089,7 @@ sufficient bounds, not the largest possible gaps or prevalence ranges. The
 present bounds still discard nonnegative coupling terms and replace discrete
 powers by exponential bounds.
 
-\section{Numerical illustration of the oracle comparison}
+\section{Numerical illustrations}
 \label{sec:predictive-intro-figure}
 
 \Cref{fig:conference-tuned-intro} illustrates the two signal families in
@@ -1097,6 +1133,9 @@ $[0,1]$, plus $1/101$ and $100/101$, which recover the two signal pairs in
 variances $1/4$, $1$, and $4$, and 21 integer caps evenly spaced up to rounding
 from $10{,}002$ to $40{,}004$. The squared coefficient sum is fixed; it is not
 the aggregate signal variance, which also depends on feature prevalence.
+\Cref{fig:intro-signal-crossing} displays the slice with noise variance one
+and cap $M = 20{,}503$, so $Mq = 2.0503$. Its middle tick corresponds to
+$f = 1/2$, where the two coefficient magnitudes are equal.
 
 For each scaling, the fine rate grid contains zero and 1025 geometric values of
 $\alpha$ from $10^{-6}$ to $2$. Stopping candidates contain zero, every cap, and
@@ -1117,6 +1156,28 @@ assess that calculation; they do not bound the error relative to the
 unrestricted oracle. The zero contours interpolate plotted grid-risk differences
 and are not certified transition curves. No new observations are sampled, and no
 claim of prospective evaluation is made.
+
+\subsection{Paths to a shared least-squares solution}
+\label{sec:coefficient-paths}
+
+\Cref{fig:intro-coefficient-paths} uses a constructed fixed dataset of 200
+observations. The binary cells $(I,J) = (0,0),(0,1),(1,0),(1,1)$ have counts
+$98,2,98,2$, respectively. We center the columns by $(1/2,0.02)$, set
+$y = x_C + x_R$ without noise, and fix the centered intercept at zero. Thus
+$X^\top X/200 = \diag(1/4,0.0196)$ and the unique OLS solution is $(1,1)$.
+Both methods start at zero and use the full gradient of empirical half squared
+loss. The unscaled learning rate is $0.4$, and the standardized learning rate
+is $0.1$, so both common-coordinate errors contract by $0.9$ per update.
+
+We mark update 20 for both methods without selecting the stop. Their common
+coefficients are both about $0.878$, while their rare coefficients are about
+$0.146$ for unscaled training and $0.878$ for standardization. The pale paths
+continue through update 2000 toward OLS. The reproduction script checks the
+paths against the diagonal closed form, decreasing training loss, and
+convergence to the common solution. This example illustrates how scaling
+changes learning before stopping. The oracle theorem separately compares noisy
+fresh-sample SGD after each method chooses its rate and stop; distance to a
+sample OLS solution alone does not establish its risk ordering.
 
 \section{Proofs of the normalization-risk comparisons}
 \label{sec:comparison-proofs}

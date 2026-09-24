@@ -98,6 +98,7 @@ run independently.
   | `synthetic`         | Sampled training, estimated preprocessing, and selection    | `results/synthetic/`         |
   | `exact-risk`        | Exact moments, rate comparisons, and paired simulations     | `results/exact-risk/`        |
   | `predictive-intro`  | Finite-grid oracle illustration                             | `results/predictive-intro/`  |
+  | `coefficient-paths` | Constructed full-gradient paths to a shared OLS solution    | `results/coefficient-paths/` |
   | `signal-allocation` | Intermediate signal-allocation illustration                 | `results/signal-allocation/` |
   | `diagnostics`       | Numerical discrepancies and prediction clipping             | `results/diagnostics/`       |
   | `precision`         | Decimal replay of selected synthetic paths                  | `results/synthetic/rates5/`  |
@@ -183,8 +184,10 @@ they do not independently certify the new extension.
 Use `task experiment:diagnostics` to regenerate the diagnostic records and
 tables, then `task check:results` to verify them. Use
 `task experiment:signal-allocation` to regenerate the signal-allocation
-illustration and `task check:illustrations` to verify the illustration
-summaries.
+illustration, `task experiment:coefficient-paths` to regenerate the constructed
+paths to OLS, and `task check:illustrations` to verify the illustration
+summaries. The introductory signal-crossing figure uses a slice of the existing
+signal-allocation results.
 
 Checks retain and report the known numerical discrepancies in extreme synthetic
 paths. They do not certify those paths merely because structural checks pass.

@@ -60,9 +60,21 @@ tasks:
       - cd paper && latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error -outdir=../build main.tex
 
   figures:
-    desc: Export the five manuscript figures to figures/.
+    desc: Export the manuscript figures to figures/.
     aliases: [paper-figures]
     cmds:
+      - task: figure
+        vars:
+          SCRIPT: coefficient_paths
+          STUDY: coefficient-paths
+          SUMMARY: results/coefficient-paths/summary.json
+          NAME: paths-to-ols
+      - task: figure
+        vars:
+          SCRIPT: signal_crossing
+          STUDY: signal-crossing
+          SUMMARY: results/signal-allocation/summary.json
+          NAME: risk-crossing
       - task: figure
         vars:
           SCRIPT: predictive_intro
@@ -210,8 +222,9 @@ tasks:
       - python -m checks.variance_scaling --numerics-only
 
   check:illustrations:
-    desc: Check the numerical data used in the two illustrations.
+    desc: Check the numerical data used in the illustrations.
     cmds:
+      - python -m experiments.coefficient_paths.run --check
       - python -m experiments.predictive_intro.run --check
       - python -m experiments.signal_allocation.run --check
 
@@ -295,6 +308,11 @@ tasks:
     desc: Compute the introduction illustration.
     cmds:
       - python -m experiments.predictive_intro.run
+
+  experiment:coefficient-paths:
+    desc: Compute the introductory full-gradient paths to OLS.
+    cmds:
+      - python -m experiments.coefficient_paths.run
 
   experiment:signal-allocation:
     desc: Compute the signal-allocation illustration.
