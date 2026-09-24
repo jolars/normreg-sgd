@@ -82,35 +82,16 @@ another empirical study.
   additional batch/dependence results already have an appropriate home in the
   appendix.
 
-- [ ] The technical setup introduces more machinery than the main result
-  initially needs.
+- [x] Simplify the technical setup and foreground the positive theorem gaps.
 
-  Across Section 2 (paper/main.tex:188), the reader encounters transformed
-  features and parameters, the scaling and preconditioning matrices, mini-
-  batches, two risk objectives, conditional second moments, three error
-  components, and a calibrated rate parameter. Section 3 then introduces a
-  different rate parameterization.
-
-  Each item is reasonable, but their accumulation slows the argument. I would
-  consider three changes:
-  - Begin with (B=1), which is the setting of the central theorem, and introduce
-    the general batch formula when needed.
-
-  - Explain rare risk first as a weighted sum of the two coefficient MSEs— the
-    simple expression already given in Appendix A—before introducing the general
-    trace formulation.
-
-  - Motivate the oracle parameterization by saying that (\alpha) is the
-    rare-coordinate step size. That gives the otherwise surprising
-    (\operatorname{diag}(4b\alpha,\alpha)) an immediate purpose.
-
-  The main theorem statement (paper/main.tex:325) could also foreground the
-  positive gaps directly. Currently, readers first encounter unnamed functions
-  defined much later, a prevalence range where their bounds need not be
-  positive, and then two narrower cutoffs. A simpler main-text statement with
-  the common range (q\leq 0.04) and explicit positive constants would
-  communicate the result faster. The sharper ranges and prevalence-dependent
-  bounds could remain in the appendix.
+  Section 2 starts with one fresh observation per update and introduces rare
+  risk as a weighted sum of coefficient mean squared errors. The general batch
+  update and trace formulation appear with the appendix's batch and dependence
+  comparisons. The scaling explanation and three-part error decomposition remain
+  in the main text, and Section 3 explains $\alpha$ as the rare-coordinate step.
+  Theorem 3.1 states the positive gaps $\sigma^2/1000$ and $\sigma^2/50$ on the
+  common range $0 < q \leq 0.04$. The appendix retains the wider ranges and
+  prevalence-dependent bounds.
 
 - [ ] The empirical figures should show the comparisons that carry the argument.
 

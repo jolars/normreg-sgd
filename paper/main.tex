@@ -212,11 +212,11 @@ following SGD update on the original coefficient scale:
 \begin{equation}
   \beta_{k+1}
   = \beta_k
-    - \frac{\eta S^{-2}}{B} \sum_{i=1}^B x_{k,i}(x_{k,i}^\top\beta_k - y_{k,i}). \label{eq:conference-update}
+    - \eta S^{-2}x_k(x_k^\top\beta_k - y_k). \label{eq:conference-update}
 \end{equation}
-We use average squared loss with a factor $1/2$. Each update uses $B$
-independent fresh observations, so $k$ updates require $M = kB$ observations. We
-compare unscaled features (U), with $P_U = I_2$, and standard-deviation scaling
+We use squared loss with a factor $1/2$. Each update uses one independent fresh
+observation, so an observation cap $M$ permits at most $M$ updates. We compare
+unscaled features (U), with $P_U = I_2$, and standard-deviation scaling
 (S, or SD), with $P_S = \diag(a^{-1},b^{-1})$, where $P = S^{-2}$. Both
 procedures use the final iterate.
 
@@ -229,25 +229,26 @@ separate comparison.
 
 \paragraph{Prediction where the rare feature is present.}
 
-Let $e_k = \E(\beta_k - \beta^*)$ and
-$V_k = \E\bigl((\beta_k - \beta^*)(\beta_k - \beta^*)^\top\bigr)$. We define
-aggregate and subgroup excess prediction risks using half squared loss:
+Our main objective is excess prediction risk where the rare feature is present,
+$J = 1$. Under half squared loss, independence gives a weighted sum of the two
+coefficient mean squared errors:
 \begin{equation}
-  R_k = \tfrac12\operatorname{tr}(CV_k),\qquad R_{G,k}
-      = \tfrac12\operatorname{tr}(C_GV_k), \label{eq:conference-risks}
+  \begin{aligned}
+    R_{R,k} & = \frac18\E\bigl[(\beta_{C,k} - \beta_C^*)^2\bigr] \\
+            & \quad + \frac{(1 - q)^2}{2}\E\bigl[(\beta_{R,k} - \beta_R^*)^2\bigr].
+  \end{aligned} \label{eq:conference-rare-risk}
 \end{equation}
-where $C_G = \E(xx^\top \mid G)$ is the conditional second moment, including the
-contribution of the conditional feature mean. Both risks exclude irreducible
-test noise. Our main objective is rare-presence risk, with $G = \{J = 1\}$ and
-$C_R = \diag(a,(1 - q)^2)$. A rare-coordinate error of one contributes
-$(1 - q)^2/2$ to rare risk but only $q(1 - q)/2$ to aggregate risk. Thus
-aggregate error can give little weight to an error that matters within the rare
-subgroup. We evaluate both objectives on the same trained predictor and retain
-the original training distribution.
+The expectations average over training randomness, and the risk excludes
+irreducible test noise. Aggregate excess risk $R_k$ replaces $(1 - q)^2$ by
+$q(1 - q)$ in this expression. Thus aggregate error can give little weight to an
+error that matters within the rare subgroup. We evaluate both objectives on the
+same trained predictor and retain the original training distribution.
 
 \paragraph{Learning signal and fitting noise.}
 
-Under fresh sampling, the error second moment decomposes as
+Let $e_k = \E(\beta_k - \beta^*)$ and
+$V_k = \E\bigl((\beta_k - \beta^*)(\beta_k - \beta^*)^\top\bigr)$. Under fresh
+sampling, the error second moment decomposes as
 \begin{equation}
   V_k = e_ke_k^\top + A_k + \sigma^2N_k, \label{eq:conference-decomposition}
 \end{equation}
@@ -266,7 +267,7 @@ To expose the tradeoff, temporarily fix $\eta_U = 4h$ and $\eta_S = h$. The
 common coefficient then has the same mean trajectory under both rules. SD
 scaling changes the contraction factor for the mean rare-coefficient error from
 $1 - 4hb$ to $1 - h$, while increasing the observation-noise variance added to
-that coefficient at each update from $16h^2b\sigma^2/B$ to $h^2\sigma^2/(bB)$.
+that coefficient at each update from $16h^2b\sigma^2$ to $h^2\sigma^2/b$.
 It learns the rare signal faster but also introduces more noise.
 
 At a fixed calibration, SD can have lower rare risk early and higher risk later,
@@ -281,7 +282,7 @@ deterministic stop within its budget.
 \label{sec:conference-predictive}
 
 We now compare the lowest attainable rare-presence risks of the two scaling
-rules in the independent model of \cref{sec:conference-setting}, with $B = 1$.
+rules in the independent model of \cref{sec:conference-setting}.
 The budget is chosen so that rare observations remain scarce:
 $1 \leq Mq(1 - q) \leq 4$ gives roughly one to four rare occurrences in
 expectation at the cap.
@@ -330,17 +331,13 @@ and stop. It is not a comparison under equal total tuning computation.
 
 \begin{theorem}[Opposite oracle rare-risk orderings]
   \label{thm:conference-predictive}
-  Suppose $\sigma^2 > 0$, $0 < q \leq 1/16$, and
-  $1 \leq \tau = Mq(1 - q) \leq 4$ in the independent binary model above. Let
-  $\Delta_R(q,\tau)$ and $\Delta_C(q,\tau)$ be the explicit bounds in
-  \cref{eq:predictive-finite-gaps}.
+  Suppose $\sigma^2 > 0$, $0 < q \leq 0.04$, and
+  $1 \leq \tau = Mq(1 - q) \leq 4$ in the independent binary model above.
   \begin{enumerate}
     \item If $(\beta_R^*)^2 = \sigma^2$ and $(\beta_C^*)^2 \leq \sigma^2/100$,
-          then $R_U^*(M) - R_S^*(M) \geq \sigma^2\Delta_R(q,\tau)$. This gap is
-          at least $\sigma^2/1000$ when $q \leq 1/20$.
+          then $R_U^*(M) - R_S^*(M) \geq \sigma^2/1000$.
     \item If $(\beta_C^*)^2 = \sigma^2$ and $(\beta_R^*)^2 \leq \sigma^2/100$,
-          then $R_S^*(M) - R_U^*(M) \geq \sigma^2\Delta_C(q,\tau)$. This gap is
-          at least $\sigma^2/50$ when $q \leq 1/25$.
+          then $R_S^*(M) - R_U^*(M) \geq \sigma^2/50$.
   \end{enumerate}
   Either sign is allowed for each coefficient. Both inequalities also hold if
   each rule searches only its mean-square-stable nonnegative constant rates,
@@ -354,11 +351,12 @@ though the stochastic updates couple the independent features. These bounds
 compare the best attainable risks without identifying the minimizing rates and
 stops.
 
-For example, at $q = 0.02$ and $M = 102$, the bounds give gaps greater than
-$0.009\sigma^2$ and $0.064\sigma^2$ for the respective full signal families. The
-sufficient prevalence cutoffs are not transition boundaries.
-\Cref{sec:predictive-certification} gives further positive regions and recovers
-the small-prevalence comparison with stronger constants.
+The prevalence-dependent bounds in \cref{sec:predictive-finite-bounds} give
+larger gaps in parts of this range. For example, at $q = 0.02$ and $M = 102$,
+they give gaps greater than $0.009\sigma^2$ and $0.064\sigma^2$ for the
+respective full signal families. \Cref{sec:predictive-certification} gives a
+wider prevalence range for the rare-signal family and stronger small-prevalence
+constants. These sufficient cutoffs are not transition boundaries.
 
 The expected number of rare occurrences at the cap is $Mq = \tau/(1 - q)$. Hence
 the positive gaps persist as the budget grows inversely with prevalence while
@@ -834,13 +832,22 @@ $\tau b\alpha_U^2G/4 \leq 1/960$, so $H_*$ is well defined. Define
     V_U(q,\tau) & = \frac{e^{-4}}8 + \frac G8 + \left( \frac w2 + \frac{bG}8 \right)H_*.
   \end{aligned} \label{eq:predictive-finite-upper}
 \end{equation}
-The theorem's gap bounds are the explicit finite expressions
+Define the gap bounds
 \begin{equation}
   \Delta_R(q,\tau) = L_R(q,\tau) - V_S(q,\tau),\qquad \Delta_C(q,\tau)
                    = L_C(q,\tau)
                      - V_U(q,\tau). \label{eq:predictive-finite-gaps}
 \end{equation}
-They need not be positive everywhere on the stated domain. A nonpositive bound
+For the rare-signal and common-signal families, respectively, we will prove
+\begin{equation}
+  \begin{aligned}
+    R_U^*(M) - R_S^*(M) & \geq \Delta_R(q,\tau), \\
+    R_S^*(M) - R_U^*(M) & \geq \Delta_C(q,\tau),
+  \end{aligned} \label{eq:predictive-oracle-gaps}
+\end{equation}
+throughout $0 < q \leq 1/16$ and $1 \leq \tau \leq 4$, with $\sigma^2 = 1$ as
+above. For general positive noise variance, multiply both bounds by $\sigma^2$.
+The bounds need not be positive everywhere on this domain. A nonpositive bound
 does not establish the opposite ordering.
 
 \subsection{Dominant rare signal}
@@ -947,11 +954,12 @@ $R_{R,M}^U \leq V_U(q,\tau)$. Every S rate and stop therefore exceeds this U
 candidate's risk by at least $\Delta_C(q,\tau)$, uniformly over the
 common-signal family.
 
-Taking the two oracle infima gives the claimed gap inequalities. Restricting
+Taking the two oracle infima proves \cref{eq:predictive-oracle-gaps}. Restricting
 each search to stable rates preserves both lower bounds and both candidates.
-Rescaling by $\sigma^2$ proves the theorem for general positive noise variance.
-The argument requires neither stability of the losing method's rate nor
-attainment of either infimum.
+Rescaling by $\sigma^2$ gives the bounds for general positive noise variance.
+The certificates below then imply \cref{thm:conference-predictive}. The argument
+requires neither stability of the losing method's rate nor attainment of either
+infimum.
 
 \subsection{Positive regions and the small-prevalence corollary}
 \label{sec:predictive-certification}
@@ -1044,6 +1052,18 @@ oracle theorem compares the larger families obtained by optimizing the rate and
 stop. We also allow dependence here to examine how aggregate and rare-presence
 objectives can disagree.
 
+\paragraph{Mini-batches and the observation budget.}
+
+For batches of $B$ independent fresh observations, the update in
+\cref{eq:conference-update} becomes
+\begin{equation}
+  \beta_{k+1}
+  = \beta_k
+    - \frac{\eta S^{-2}}{B}\sum_{i=1}^B x_{k,i}(x_{k,i}^\top\beta_k - y_{k,i}). \label{eq:comparison-batch-update}
+\end{equation}
+Each update averages the $B$ gradients, so $k$ updates use $M = kB$
+observations. The main theorem takes $B = 1$.
+
 \paragraph{Allowing dependent binary features.}
 
 Retain the marginal probabilities and centered features of
@@ -1051,8 +1071,16 @@ Retain the marginal probabilities and centered features of
 \[
   \Prob(I = 1,J = 1) = \frac{q(1 + \ell)}{2},\qquad - 1 \leq \ell \leq 1.
 \]
-For $0 < q < 1/2$, these ranges ensure nonnegative cell probabilities. With
-$a = 1/4$, $b = q(1 - q)$, and $c = q\ell/2$,
+For $0 < q < 1/2$, these ranges ensure nonnegative cell probabilities. To express
+the risks under dependence, let $C = \E(xx^\top)$ and
+$C_G = \E(xx^\top \mid G)$. Then
+\begin{equation}
+  R_k = \tfrac12\operatorname{tr}(CV_k),\qquad R_{G,k}
+      = \tfrac12\operatorname{tr}(C_GV_k). \label{eq:conference-risks}
+\end{equation}
+The conditional second moment $C_G$ includes the contribution of the conditional
+feature mean. For rare presence, $G = \{J = 1\}$. With $a = 1/4$,
+$b = q(1 - q)$, and $c = q\ell/2$,
 \[
   C = \begin{pmatrix}
         a & c \\
@@ -1063,9 +1091,9 @@ $a = 1/4$, $b = q(1 - q)$, and $c = q\ell/2$,
         \ell(1 - q)/2 & (1 - q)^2
       \end{pmatrix}.
 \]
-Independence corresponds to $\ell = 0$. Population preprocessing, zero
-initialization, the fixed zero intercept, and fresh sampling remain as in the
-main text.
+Independence corresponds to $\ell = 0$ and recovers
+\cref{eq:conference-rare-risk}. Population preprocessing, zero initialization,
+the fixed zero intercept, and fresh sampling remain as in the main text.
 
 In this section, we fix $\eta_U = 4h$ and $\eta_S = h$. Both rules then have
 diagonal drift $h$ in the common coordinate. Under independence, this gives the
