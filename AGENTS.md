@@ -73,3 +73,8 @@ characters. Link issues with `Fixes #N`, `Closes #N`, or `Refs #N` as
 appropriate. Pull requests should explain the change, identify affected
 scientific claims or artifacts, and report validation commands. Include figure
 previews when changing plots.
+
+## Paper Style and Format
+
+- Maximum length for the paper is 8 pages, but don't force the draft into that
+  limit. Instead raise this as an issue to the user.
