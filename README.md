@@ -100,6 +100,7 @@ run independently.
   | `predictive-intro`  | Finite-grid oracle illustration                             | `results/predictive-intro/`  |
   | `coefficient-paths` | Constructed full-gradient paths to a shared OLS solution    | `results/coefficient-paths/` |
   | `signal-allocation` | Intermediate signal-allocation illustration                 | `results/signal-allocation/` |
+  | `theory-bridge`     | Controlled departures from the oracle model                 | `results/theory-bridge/`     |
   | `diagnostics`       | Numerical discrepancies and prediction clipping             | `results/diagnostics/`       |
   | `precision`         | Decimal replay of selected synthetic paths                  | `results/synthetic/rates5/`  |
 
@@ -123,6 +124,29 @@ These tasks also work for synthetic data. Exact-risk calculations have separate
 one step. `task experiment:diagnostics` reconstructs discrepancies from saved
 paths and updates the diagnostic tables in the manuscript. Run `task --list` to
 see all tasks.
+
+The controlled bridge study compares representatives of the theorem's two signal
+families while separately introducing observation reuse, estimated scales,
+fitted intercepts, estimated centering, and initialization at the training mean.
+Rates and stops are calibrated on independent replications, then compared with
+finite-validation selection on the same candidate paths. Its
+[protocol](experiments/theory_bridge/PROTOCOL.md) specifies the candidate
+family, sampling, budgets, and interpretation. The [manuscript](paper/main.tex)
+presents the findings; the [saved summary](results/theory-bridge/summary.json)
+contains paired risk differences and numerical diagnostics.
+
+```sh
+task experiment:theory-bridge             # Run calibration and evaluation.
+task experiment:theory-bridge:summarize   # Reconstruct the saved summaries.
+task figure:theory-bridge                 # Plot without training.
+task check:theory-bridge                  # Check independent implementations.
+```
+
+The manuscript build includes both bridge figures. Raw samples, calibration risk
+sums, selected predictors, and selection indices remain in the result shards.
+The runner accepts `--workers`, `--output`, `--calibration-reps`, and
+`--evaluation-reps` for explicitly separate runs, through
+`task experiment:theory-bridge:run -- ...`.
 
 Experiments can take substantial time and replace the saved outputs for the
 selected configuration. Use a separate extracted copy to retain the supplied

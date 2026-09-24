@@ -25,6 +25,7 @@ LaTeX renderer](https://matplotlib.org/stable/users/explain/text/usetex.html).
   | `plot_signal_crossing.py`      | `signal-crossing/`                |
   | `plot_predictive_intro.py`     | `predictive-intro/`               |
   | `plot_signal_allocation.py`    | `signal-allocation/`              |
+  | `plot_theory_bridge.py`        | `theory-bridge/`                  |
   | `plot_mushroom_final.py`       | `mushroom-final/`                 |
   | `plot_practical_selection.py`  | `practical-selection/`            |
   | `plot_mushroom_rate_search.py` | `mushroom-rate-search/`           |
@@ -34,6 +35,11 @@ Run a single generator while editing, for example:
 ```sh
 python scripts/figures/plot_predictive_intro.py
 ```
+
+Run `task figure:theory-bridge` to export the controlled study's
+`figures/theory-bridge/controlled-gaps` and `validation-gaps` in all three
+formats. It reads `results/theory-bridge/summary.json` and never trains models.
+Both figures are also included in `task figures` and `task paper`.
 
 Only figures included by `paper/main.tex` are generated. The Mushroom
 rate-search script exports the $n = 2048$ paths under aggregate validation used

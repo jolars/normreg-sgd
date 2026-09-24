@@ -87,6 +87,7 @@ tasks:
           STUDY: signal-allocation
           SUMMARY: results/signal-allocation/summary.json
           NAME: risk-map
+      - task: figure:theory-bridge
       - task: figure
         vars:
           SCRIPT: mushroom_final
@@ -170,6 +171,12 @@ tasks:
       - task: check:matched-scaling
       - task: check:illustrations
       - task: check:workflow
+      - task: check:theory-bridge
+
+  check:theory-bridge:
+    desc: Check independent dynamics, risks, and selections for the bridge study.
+    cmds:
+      - python -m checks.theory_bridge
 
   check:moments:
     desc: Check moments calculations.
@@ -241,6 +248,8 @@ tasks:
       - python -m checks.mushroom_sensitivity
       - python -m checks.variance_scaling
       - python -m experiments.diagnostics.run --check
+      - python -m checks.theory_bridge --saved
+      - python -m experiments.theory_bridge.summarize --check
 
   check:exact-risk-results:
     desc: Check the large exact-risk outputs after running that experiment.
@@ -308,6 +317,41 @@ tasks:
     desc: Compute the introduction illustration.
     cmds:
       - python -m experiments.predictive_intro.run
+
+  experiment:theory-bridge:
+    desc: Run and summarize controlled departures from the oracle model.
+    cmds:
+      - task: experiment:theory-bridge:run
+      - task: experiment:theory-bridge:summarize
+
+  experiment:theory-bridge:run:
+    desc: Run independent calibration and evaluation for the bridge study.
+    cmds:
+      - 'python -m experiments.theory_bridge.run {{.CLI_ARGS}}'
+
+  experiment:theory-bridge:summarize:
+    desc: Summarize the saved bridge study without retraining.
+    cmds:
+      - python -m experiments.theory_bridge.summarize
+
+  figure:theory-bridge:
+    desc: Plot the saved controlled comparisons and validation selections.
+    sources:
+      - scripts/figures/plot_theory_bridge.py
+      - scripts/figures/style.py
+      - results/theory-bridge/summary.json
+      - Taskfile.yml
+      - devenv.nix
+      - devenv.lock
+    generates:
+      - figures/theory-bridge/controlled-gaps.pdf
+      - figures/theory-bridge/controlled-gaps.svg
+      - figures/theory-bridge/controlled-gaps.png
+      - figures/theory-bridge/validation-gaps.pdf
+      - figures/theory-bridge/validation-gaps.svg
+      - figures/theory-bridge/validation-gaps.png
+    cmds:
+      - python scripts/figures/plot_theory_bridge.py
 
   experiment:coefficient-paths:
     desc: Compute the introductory full-gradient paths to OLS.

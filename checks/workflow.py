@@ -75,6 +75,8 @@ def check_entry_points():
         "experiments.signal_allocation.run",
         "experiments.diagnostics.run",
         "experiments.precision.run",
+        "experiments.theory_bridge.run",
+        "experiments.theory_bridge.summarize",
     ):
         subprocess.run(
             [sys.executable, "-m", module, "--help"],

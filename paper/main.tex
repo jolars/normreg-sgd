@@ -55,9 +55,11 @@
   per update, the gaps remain bounded away from zero as prevalence decreases while the
   expected number of rare occurrences stays roughly between one and four.
   Exact moments explain the competing costs of incomplete learning and training
-  variation, and numerical comparisons explore intermediate signals. Separate
-  sampled-data studies examine tuning, validation coverage, and prediction
-  clipping without extending the oracle guarantee to these procedures.
+  variation, and numerical comparisons explore intermediate signals. In a
+  controlled study, both orderings persist under observation reuse, estimated
+  preprocessing, and intercept fitting when tuning choices are fixed before
+  evaluation. Selecting a predictor after observing training can reverse an
+  ordering, even when selection uses exact population risk.
 \end{abstract}
 
 \section{Introduction}
@@ -155,12 +157,14 @@ fixed-rate comparisons to illustrate the tradeoff and the need for oracle
 tuning, then prove the opposite orderings and explore intermediate signal
 allocations numerically.
 
-The final part of the paper turns from attainable risk to the selection of a
-predictor using finite validation data. Separate studies examine missing rare
-validation observations, sensitivity to the tuning search, and prediction clipping.
-They use fixed training sets and estimated preprocessing, so they address
-additional obstacles to practical comparisons rather than establish that the
-oracle ordering survives those changes.
+A controlled study then asks how these comparisons change when training reuses
+observations, estimates preprocessing, or fits an intercept. We retain the two
+illustrative signal pairs and find that both orderings persist when each
+method's tuning choices are fixed before evaluation. Selecting a predictor
+after observing training can reverse an ordering, even with exact population
+risk. We then examine further obstacles to practical comparisons: missing
+rare validation observations, sensitivity to the tuning search, and prediction
+clipping.
 
 \paragraph{Relation to prior work.}
 
@@ -364,16 +368,6 @@ transition between them. The guarantee concerns constant rates, deterministic
 stops, and population preprocessing; it leaves batch selection, learning-rate
 schedules, and data-dependent selection open.
 
-\paragraph{Intermediate signal allocations.}
-
-\Cref{fig:signal-allocation} holds the data model fixed and varies how the
-squared coefficient magnitude is allocated between the two features. The
-finite-grid comparison shows a transition between the orderings whose location
-depends on both budget and noise. At each plotted noise level, increasing the
-budget lowers the rare-signal share needed for SD to have lower grid-selected
-risk. This exploration supplies context for the two sufficient-condition
-families; it does not prove an oracle transition outside them.
-
 \begin{figure*}[t]
   \centering
   \includegraphics{../figures/signal-allocation/risk-map.pdf}
@@ -389,20 +383,86 @@ families; it does not prove an oracle transition outside them.
   \label{fig:signal-allocation}
 \end{figure*}
 
-\section{Selecting a predictor with finite validation data}
+\paragraph{Intermediate signal allocations.}
+
+\Cref{fig:signal-allocation} holds the data model fixed and varies how the
+squared coefficient magnitude is allocated between the two features. The
+finite-grid comparison shows a transition between the orderings whose location
+depends on both budget and noise. At each plotted noise level, increasing the
+budget lowers the rare-signal share needed for SD to have lower grid-selected
+risk. This exploration supplies context for the two sufficient-condition
+families; it does not prove an oracle transition outside them.
+
+\section{From oracle tuning to validation selection}
 \label{sec:conference-experiments}
 
-The oracle chooses its rate and stop using population risk. A practical
-procedure must estimate which predictor is best from finite validation data,
-where rare observations may be scarcer still. We examine three obstacles to
-interpreting practical comparisons: missing rare validation observations,
-sensitivity to the tuning search, and sensitivity to prediction postprocessing.
+The oracle fixes its rate and stop before observing training. Validation
+instead selects among fitted predictors. We first examine this distinction
+under controlled changes to the theorem's setup, then consider further
+obstacles to practical comparisons.
+
+\subsection{Controlled departures from the oracle model}
+\label{sec:theory-bridge}
+
+We retain the independent binary model, coefficient pairs $(0.1,1)$ and
+$(1,0.1)$, and noise variance one. At $q=.02$ and $.005$, caps give roughly
+one, two, or four expected rare occurrences. Eight training arms separately
+introduce observation reuse, estimated preprocessing, and intercept fitting,
+then combine them. Reuse draws from 256 noisy training rows. Empirical
+preprocessing uses all 256 rows, so its data requirements can exceed the SGD
+observation cap. \Cref{sec:theory-bridge-protocol} gives the full protocol.
+
+For each scaling and training arm, we calibrate a rate factor and stop to
+minimize mean rare risk, then evaluate those fixed choices on independent
+training runs. With estimated preprocessing, the factor determines a
+constant rate from the training data. Both orderings persist in all 96
+comparisons: SD has lower rare risk for the dominant rare signal, and U has
+lower rare risk for the dominant common signal
+(\cref{fig:bridge-controlled}). This evidence concerns the tested signal
+pairs and a conservative finite rate search; it does not extend the theorem
+to these training procedures.
+
+Selecting among the fitted predictors can reverse an ordering.
+\Cref{tab:bridge-selection} compares calibration, rare validation loss, and
+exact population rare risk on the same candidate paths. Both forms of
+selection after training favor U in this example, while calibration favors
+SD. Every validation set here contains rare observations. The reversal under
+exact selection shows that validation noise is not needed: choosing the best
+predictor in each training run is a different objective from choosing the
+best tuning settings on average.
+
+\begin{table}[t]
+  \centering
+  \begin{tabular}{lrr}
+    \toprule
+    Selection & Rare-risk gap & MCSE \\
+    \midrule
+    Separate calibration & $-.0855$ & $.00355$ \\
+    Validation (2048 rows) & $+.0370$ & $.00214$ \\
+    Exact population risk & $+.0460$ & $.00215$ \\
+    \bottomrule
+  \end{tabular}
+  \caption{
+    SD-minus-U rare risk with $(\beta_C^*,\beta_R^*)=(.1,1)$, $q=.02$,
+    and $M=204$, under reuse, estimated preprocessing, and a fitted intercept
+    (arm 8 in \cref{tab:bridge-arms}). Negative favors SD. MCSEs use 4096
+    paired evaluation runs and condition on the calibration choices.
+  }
+  \label{tab:bridge-selection}
+\end{table}
+
+\subsection{Further practical comparisons}
+
+We now examine further binary laws and a real dataset, focusing on missing
+rare validation observations, sensitivity to the tuning search, and
+sensitivity to prediction postprocessing.
 
 These studies sample with replacement from fixed noisy training sets, estimate
 preprocessing, and include fitted intercepts. Reusing a row also reuses its
 noise, and the processed-observation count $M$ can exceed the training-set size
-$n$. These changes separate the studies from the fresh-sample theorem; they do
-not test its ordering under otherwise matched assumptions. The source supplement
+$n$. Unlike \cref{sec:theory-bridge}, these studies also change the signal laws
+and candidate searches, so they do not isolate departures from the theorem.
+The source supplement
 contains the full protocols, code, data, and saved results
 (\cref{sec:practical,sec:reproducibility}).
 
@@ -423,7 +483,7 @@ scaling uses $s_j = v_j$, giving $P_{jj} = v_j^{-2}$ for positive variances.
 These additional rules examine how the amount of amplification affects the
 comparison; the theorem does not establish an optimal choice among them.
 
-\subsection{Missing rare validation observations}
+\paragraph{Missing rare validation observations.}
 
 The sampled binary study uses eight laws, 128 replications per law, 256 training
 observations, and 128 validation observations. It compares known preprocessing,
@@ -449,7 +509,7 @@ extreme mean risks. We do not use those means to rank normalization rules;
 \cref{tab:review-audit-impact} identifies the affected summaries and separates
 their evidence from the earlier high-precision investigation.
 
-\subsection{Sensitivity to tuning in categorical prediction}
+\paragraph{Sensitivity to tuning in categorical prediction.}
 
 We next examine how the tuning search and selection objective affect a
 comparison on UCI Mushroom. We predict the recorded poisonous label under
@@ -541,7 +601,7 @@ A converged prediction reference and identifiable prediction contrasts would be
 needed for that interpretation. Random partitions of these field-guide
 descriptions also do not establish generalization to new species or field data.
 
-\subsection{Sensitivity to prediction clipping}
+\paragraph{Sensitivity to prediction clipping.}
 
 For labels in $[0,1]$, clipping predictions to this interval cannot increase
 squared loss for any fixed predictor. This provides a further check on how much
@@ -577,14 +637,19 @@ noise, without proving a general transition boundary. Learning-rate schedules,
 batch selection, data-dependent stopping, and adaptive optimizers remain outside
 the comparison.
 
-The practical studies show why selecting a predictor requires additional care.
-Expanded tuning can remove an apparent scaling advantage, missing validation
-groups can conceal extreme errors, and clipping can change empirical orderings
-without further training. These findings qualify the interpretation of practical
-comparisons; they do not establish robustness of the oracle ordering. A study
-that separately introduces observation reuse, estimated scales, a fitted
-intercept, and validation selection would help determine where the theoretical
-tradeoff remains informative.
+The controlled study shows that both orderings can survive changes to the
+training procedure. They persist for the tested signal pairs under observation
+reuse, estimated preprocessing, and intercept fitting when tuning choices are
+fixed before evaluation. Selecting a predictor after observing training can
+reverse an ordering, even with exact population risk. An extension to adaptive
+selection would therefore need to account for the benefit each scaling gains
+from choosing among its realized predictors.
+
+The further practical studies show that expanded tuning can remove an apparent
+scaling advantage, missing validation groups can conceal extreme errors, and
+clipping can change empirical orderings without further training. Together,
+these findings make the selection procedure and candidate family part of the
+statistical comparison rather than incidental implementation choices.
 
 Feature normalization therefore belongs in the statistical specification of
 training under a finite budget: even in a two-feature model, tuning a global
@@ -1467,12 +1532,234 @@ agreement. The configuration, exact and simulated calculations, and
 conditional-absence calculation are in \path{experiments/exact_risk/}, with
 saved results in \path{results/exact-risk/}.
 
+\section{Protocol for controlled departures from the oracle model}
+\label{sec:theory-bridge-protocol}
+
+The study in \cref{sec:theory-bridge} uses $I \sim \operatorname{Bernoulli}(1/2)$
+and $J \sim \operatorname{Bernoulli}(q)$ independently, with
+$q \in \{.02,.005\}$. Responses are
+$Y = \beta_C^*(I-1/2) + \beta_R^*(J-q) + \varepsilon$, where
+$\varepsilon \sim N(0,1)$ is independent and the coefficient pairs are
+$(.1,1)$ and $(1,.1)$. Each update processes one observation. Caps are
+$(52,102,204)$ at $q=.02$ and $(202,402,804)$ at $q=.005$, all satisfying
+$1 \leq Mq(1-q) \leq 4$. Settings were specified before examining the study's
+outcomes; this is an exploratory extension of the existing theorem.
+
+\subsection{Training arms and pairing}
+
+\Cref{tab:bridge-arms} specifies the eight arms. The first 256 rows of an
+independent feature and noise stream form the fixed training pool. Fresh SGD
+uses successive rows of that stream; reuse samples pool indices independently
+with replacement, retaining each row's original noise. Common random numbers
+pair the two scalings, signal pairs, training arms, and candidate paths within
+each replication. Estimated preprocessing uses the entire pool, including
+rows beyond the SGD cap when $M<256$. These arms therefore use additional
+data for preprocessing, beyond the observations counted by the update cap.
+
+\begin{table}[ht]
+  \centering
+  \small
+  \begin{tabular}{cllll}
+    \toprule
+    Arm & Sampling & Centering & SD scales & Intercept \\
+    \midrule
+    1 & Fresh & Population & Population & Fixed zero \\
+    2 & Fresh & Population & Population & Fitted from zero \\
+    3 & Reuse & Population & Population & Fixed zero \\
+    4 & Reuse & Population & Estimated & Fixed zero \\
+    5 & Reuse & Population & Population & Fitted from zero \\
+    6 & Reuse & Population & Estimated & Fitted from zero \\
+    7 & Reuse & Estimated & Estimated & Fitted from zero \\
+    8 & Reuse & Estimated & Estimated & Fitted from response mean \\
+    \bottomrule
+  \end{tabular}
+  \caption{
+    Matched training arms, in the order shown in \cref{fig:bridge-controlled}.
+    U uses divisor one in every arm. Every fitted intercept is unscaled and
+    uses the same learning rate as the transformed coefficients.
+  }
+  \label{tab:bridge-arms}
+\end{table}
+
+All feature coefficients start at zero. Empirical variances use denominator
+256, and a zero variance receives divisor one. No additional coefficient
+freezing is applied. Thus empirical centering automatically makes a constant
+training column's gradient zero, while population centering can leave it
+nonzero. Only arm 8 initializes the fitted intercept at the training response
+mean. There are 21 training pools without rare observations at $q=.02$ and
+1148 at $q=.005$, out of 4096 evaluation replications each.
+
+\subsection{Candidate family and calibration}
+
+Let $z(i,j)$ denote the transformed feature vector under a given arm and
+scaling, augmented by a unit coordinate when fitting an intercept. Define
+\[
+  L = \max_{(i,j)\in\{0,1\}^2}\|z(i,j)\|^2,
+  \qquad \eta = t/L.
+\]
+The rate factors are zero and 129 geometric values from $10^{-4}$ to $1.9$.
+Each homogeneous update $I-\eta zz^\top$ is nonexpansive because
+$0 \leq \eta\|z\|^2 \leq 1.9<2$. This condition rules out expansion by an
+individual homogeneous update; it does not bound accumulated response noise
+or guarantee good predictions on an unseen subgroup. It is a conservative
+search restriction, not a characterization of every stable constant rate.
+For estimated preprocessing, $L$ depends on the training pool. Calibration
+fixes $t$, while each resulting trajectory retains one constant $\eta$.
+
+Stopping checkpoints are the distinct integers obtained by rounding 65
+geometric points from one to the largest cap, together with zero and all three
+caps. A nested coarse grid retains every second positive rate factor and
+every second checkpoint, always including zero and the caps. Both scalings
+receive the same number of trajectories. At cap $M$, nominal search cost is
+$130M$ processed observations per arm, scaling, signal, and replication;
+caps and selection policies share paths. Preprocessing, validation scoring,
+and calibration require additional resources.
+
+For each prevalence, 2048 calibration replications determine the mean exact
+population rare risk of every candidate. Each arm, scaling, signal, and cap
+then selects a rate factor and eligible stop. The fresh, fixed-intercept arm
+instead uses exact expected moments for this choice. An independent set of
+4096 evaluation replications assesses the frozen choices. The two stages use
+distinct random streams derived from seed 20260924. This procedure estimates
+a finite-family optimum conditional on the calibration run, rather than the
+unrestricted oracle in \cref{thm:conference-predictive}.
+
+\subsection{Effects of changing training}
+
+Both orderings persist in all 96 comparisons: SD has lower rare risk for the
+dominant rare signal, and U has lower rare risk for the dominant common signal
+(\cref{fig:bridge-controlled}). Each gap exceeds nine paired Monte Carlo
+standard errors in magnitude, conditional on the calibration choices. A
+coarser rate and stopping grid preserves all 96 signs. These results concern
+the two tested signal pairs and do not extend the theorem to the changed
+training procedures.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/theory-bridge/controlled-gaps.pdf}
+  \caption{
+    Both calibrated risk orderings persist across the eight training arms.
+    Negative SD-minus-U rare risk favors SD. Colors distinguish the three caps;
+    bars show two paired Monte Carlo standard errors over 4096 evaluation
+    replications, conditional on the calibration choices. The last two rows
+    successively add empirical centering and response-mean initialization to
+    reuse with estimated scales and a fitted intercept. These comparisons
+    concern two signal pairs and finite searches, not the full theorem families.
+  }
+  \label{fig:bridge-controlled}
+\end{figure}
+
+The size of the gap nevertheless depends on how training changes. For the
+dominant rare signal at $q=.005$ and $M=804$, the calibrated SD-minus-U gap
+is $-.0216$ under fresh training. Reuse changes the gap by $+.00943$, and
+estimating scales adds $+.00710$, with paired standard errors $.00093$ and
+$.00045$. Both changes narrow SD's advantage. Fitting an intercept with
+population preprocessing instead changes the reuse gap by $-.0440$
+(standard error $.00345$), widening that advantage. Thus the preferred
+scaling can stay the same while the cost of choosing the other scaling
+changes substantially.
+
+\subsection{Adaptive selection and exact evaluation}
+
+Each evaluation replication also supplies an independent validation dataset
+with 2048 rows. Nested prefixes of sizes 128, 512, and 2048 select candidates
+by rare validation half squared loss, using aggregate loss if the rare group
+is empty. Ties favor an earlier stop, then a smaller rate factor. Empty rare
+validation groups occur in $(306,1,0)$ replications at $q=.02$ and
+$(2206,326,0)$ at $q=.005$, in increasing sample-size order. The validation
+selectors never observe population risk.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/theory-bridge/validation-gaps.pdf}
+  \caption{
+    Changing selection on the same candidate paths at the largest cap for each
+    prevalence. Calibrated choices are fixed before evaluation; the other
+    points select by rare validation loss with the indicated sample size.
+    Negative gaps favor SD. The green curve includes all changes through arm 8.
+    Bars show two paired Monte Carlo standard errors, conditional on the
+    calibration choices. Each panel has its own symmetric logarithmic vertical
+    scale, linear for absolute gaps at most $.05$. Lines connect discrete
+    selection procedures and do not imply monotonic behavior with sample size.
+  }
+  \label{fig:bridge-validation}
+\end{figure}
+
+A further benchmark selects each replication's realized predictor with lowest
+exact population rare risk. To distinguish the two objectives, let
+$r_R(\widehat f_{D,a})$ be the population rare excess risk of candidate $a$
+trained on random data and sampling choices $D$. For a fixed finite candidate
+index set $\mathcal A$, including the allowed rate factors and stops,
+\[
+  \E_D\!\left[\min_{a\in\mathcal A}r_R(\widehat f_{D,a})\right]
+  \leq
+  \min_{a\in\mathcal A}\E_D\!\left[r_R(\widehat f_{D,a})\right].
+\]
+
+The left side allows adaptation to realized training randomness. The
+calibrated procedure approximates the right side, with its choices learned
+on separate replications. Neither side here is an unrestricted rate search,
+and a lower left side for each scaling does not preserve their ordering.
+The reversal under exact selection in \cref{tab:bridge-selection} therefore
+concerns a different objective from the theorem, even without validation noise.
+
+\Cref{fig:bridge-validation} shows how validation selection changes the
+comparisons across both prevalences and signals. Missing validation
+observations create a further problem. For the fresh baseline with $q=.005$,
+$M=804$, and a dominant rare signal, validation with 128 rows changes the
+gap from $-.0216$ to $+1.133$ (standard error $.062$). The rare group is
+absent in 2206 of 4096 validation sets. Conditional on its absence, the gap
+is $+2.193$; when it is present, the gap is $-.105$. Even within this
+conservative rate search, validation can miss the group on which the two
+scalings differ most.
+
+Evaluation enumerates the four binary cells analytically and excludes
+irreducible test noise. For a predictor written in population-centered
+coordinates as $a+b_C(I-1/2)+b_R(J-q)$, its rare excess risk is
+\[
+  r_R = \frac{(b_C-\beta_C^*)^2}{8}
+  + \frac{\{a+(1-q)(b_R-\beta_R^*)\}^2}{2}.
+\]
+This includes the fitted intercept and any shift induced by estimated
+centering. No prediction clipping is applied. We average paired SD-minus-U
+differences across evaluation replications and report their Monte Carlo
+standard errors. These errors condition on the frozen calibration choices;
+they exclude calibration uncertainty and adjustments for multiple comparisons.
+
+\subsection{Numerical checks and retained results}
+
+Independent implementations check transformed-coordinate SGD against
+original-coordinate updates, the analytical losses against four-cell
+enumeration, and baseline moments against a full tensor recurrence. Replaying
+one evaluation replication from every shard checks 73,728 selected endpoints,
+with maximum coefficient discrepancy below $1.7\times10^{-14}$. All saved
+selected predictors pass the cell-enumeration risk check. No calibration or
+evaluation candidate fails numerically, and no fine calibrated choice lies
+at a positive rate boundary.
+
+For the fresh fixed-intercept baseline, a denser exact search uses 1025 positive
+rate factors and every integer stop. The largest excess of the chosen fine-grid
+risk over this denser minimum is $.000109$ at $q=.02$ and $.000204$ at
+$q=.005$. Evaluation means differ from their exact expectations by at most
+$1.98$ Monte Carlo standard errors. These checks assess the baseline grids
+and simulation, not continuous optimality for all arms.
+
+The protocol and implementation are in \path{experiments/theory_bridge/};
+\path{results/theory-bridge/} retains settings, raw feature cells and noise,
+replacement indices, calibration summaries, selected predictors and their
+indices, numerical failure records, and the machine-readable summary.
+The summary includes aggregate and rare risks, matched changes between arms,
+coarse-grid comparisons, selection regret, and coverage diagnostics. The
+checks are in \path{checks/theory_bridge.py}. Summarization and plotting use
+saved results without training.
+
 \section{Estimated preprocessing and validation selection}
 \label{sec:practical}
 
-We next examine whether the effects in the controlled comparisons remain visible
-when we sample training data, estimate preprocessing, and select configurations
-by validation. We use a finite grid of candidates, so this experiment does not
+The additional studies in \cref{sec:conference-experiments} use broader binary
+laws and Mushroom data with estimated preprocessing and validation selection.
+Their training arms and candidate searches differ from the controlled study
+in \cref{sec:theory-bridge-protocol}. These finite-grid comparisons do not
 extend the population theorems to estimated scales. The settings and data
 generation are in \path{experiments/common/data.py}. Saved outputs are in
 \path{results/synthetic/rates5/} and \path{results/mushroom/rates5/}.
