@@ -782,8 +782,7 @@ with rational arithmetic and checks the moment bounds against observation-level
 tensor calculations.
 
 The source supplement also includes small-prevalence checks in
-\path{checks/predictive_theorem.py} and
-\path{checks/predictive_review.py}.
+\path{checks/predictive_theorem.py} and \path{checks/predictive_review.py}.
 
 \subsection{Exact moments}
 
@@ -828,9 +827,9 @@ Throughout, $0 < q \leq 1/16$ and $1 \leq \tau \leq 4$. Let $N = 4096$ and
 $a_j = j/N$, for $j = 0,\ldots,N$. Define
 \[
   \begin{aligned}
-    d_b(a) & = a(2 - a + 3ba), \\
-    n_j & = \min\left\{ w,\frac{wa_j}{2 - a_j + 3ba_j} + \frac{a_j}{8 - a_j} \right\}, \\
-    p_j & = \min\left\{ \frac18,\frac{wa_j}{2(2 - ba_j)} \right\},
+    d_b(a) & = a(2 - a + 3ba),                                                            \\
+    n_j    & = \min\left\{ w,\frac{wa_j}{2 - a_j + 3ba_j} + \frac{a_j}{8 - a_j} \right\}, \\
+    p_j    & = \min\left\{ \frac18,\frac{wa_j}{2(2 - ba_j)} \right\},
   \end{aligned}
 \]
 and
@@ -856,8 +855,7 @@ For the upper bounds, use $k = M$ and the stable rates
 Put
 \[
   \begin{gathered}
-    p_S = \frac{\alpha_S(1 - q)}{2 - (1 - q)\alpha_S},\qquad
-    G = \frac{\alpha_U}{2 - \alpha_U/4}, \\
+    p_S = \frac{\alpha_S(1 - q)}{2 - (1 - q)\alpha_S},\qquad G = \frac{\alpha_U}{2 - \alpha_U/4}, \\
     H_* = \frac{1/100 + b\alpha_U/(2 - \alpha_U/4) + \tau\alpha_U^2(1 + G/4)}
                {1 - \tau b\alpha_U^2G/4}.
   \end{gathered}
@@ -1171,7 +1169,8 @@ theorem persists.
 \label{sec:common-block-numerics}
 
 We use $m \in \{1,2,4,8,16,32,64\}$, $q \in \{0.02,0.005,10^{-4}\}$,
-$\sigma^2 = 1$, and $(s,r) \in \{(0.01,1),\allowbreak(1,0.01)\}$. The observation caps are
+$\sigma^2 = 1$, and $(s,r) \in \{(0.01,1),\allowbreak(1,0.01)\}$. The
+observation caps are
 \[
   \begin{array}{c|rrr}
        q    &     \multicolumn{3}{c}{M}      \\
@@ -1545,8 +1544,7 @@ Under independence, the diagonal moments satisfy a closed recurrence with matrix
             A & e   \\
             f & D_0
           \end{pmatrix},\qquad A = (1 - h)^2, \\
-    e = \frac{d_C^2ab}{B},\qquad f = \frac{d_R^2ab}{B},\qquad
-    D_0 = (1 - d_Rb)^2 + \frac{d_R^2b(1 - 4b)}B.
+    e = \frac{d_C^2ab}{B},\qquad f = \frac{d_R^2ab}{B},\qquad D_0 = (1 - d_Rb)^2 + \frac{d_R^2b(1 - 4b)}B.
   \end{gathered}
 \]
 Here $D_0$ is a scalar, distinct from $D$. All entries are nonnegative. Define
@@ -1952,7 +1950,7 @@ procedures.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\textwidth]{../figures/theory-bridge/controlled-gaps.pdf}
+  \includegraphics[]{../figures/theory-bridge/controlled-gaps.pdf}
   \caption{
     Both calibrated risk orderings persist across the eight training arms.
     Negative SD-minus-U rare risk favors SD. Colors distinguish the three caps;
@@ -1986,7 +1984,7 @@ observe population risk.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\textwidth]{../figures/theory-bridge/validation-gaps.pdf}
+  \includegraphics[]{../figures/theory-bridge/validation-gaps.pdf}
   \caption{
     Changing selection on the same candidate paths at the largest cap for each
     prevalence. Calibrated choices are fixed before evaluation; the other points
@@ -2144,8 +2142,8 @@ Synthetic data use batches $B \in \{1,16\}$ and caps $M \in \{128,512,2048\}$.
 Mushroom uses $B \in \{16,128\}$ and $M \in \{512,2048,8192\}$. The standard
 stopping sets are $S_{\mathrm{syn}} = \{0,128,512,2048\}$ and
 $S_{\mathrm{cat}} = \{0,512,2048,8192\}$. Refined stopping adds $256,1024$ for
-synthetic data and $128,256,\allowbreak1024,4096$ for Mushroom. At a smaller cap, only
-stops at or below it are eligible.
+synthetic data and $128,256,\allowbreak1024,4096$ for Mushroom. At a smaller
+cap, only stops at or below it are eligible.
 
 \begin{table}[ht]
   \centering

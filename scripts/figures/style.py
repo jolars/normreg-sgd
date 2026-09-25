@@ -42,7 +42,7 @@ def apply_style():
 
 
 def save(figure, directory, name):
-    """Export embedded fonts in PDF, portable SVG paths, and a PNG preview."""
+    """Export tightly cropped PDF, SVG, and PNG files with portable fonts."""
     directory.mkdir(parents=True, exist_ok=True)
     for extension in ("pdf", "svg", "png"):
         metadata = {
@@ -51,7 +51,9 @@ def save(figure, directory, name):
             "png": {},
         }[extension]
         destination = directory / f"{name}.{extension}"
-        figure.savefig(destination, metadata=metadata)
+        figure.savefig(
+            destination, metadata=metadata, bbox_inches="tight", pad_inches=0.02
+        )
         if extension == "svg":
             # Strip exporter whitespace so diffs remain readable when sharing SVGs.
             destination.write_text(

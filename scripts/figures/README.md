@@ -14,10 +14,13 @@ task figures
 ```
 
 This reads saved experiment summaries and moment archives, then writes PDF, SVG,
-and PNG files under `figures/`. PDFs embed their fonts, and SVGs contain glyph
-outlines so their appearance does not depend on installed viewer fonts. The
-environment includes the LaTeX packages and `dvipng` needed by [Matplotlib's
-LaTeX renderer](https://matplotlib.org/stable/users/explain/text/usetex.html).
+and PNG files under `figures/`. The shared exporter crops every format to the
+figure's content with Matplotlib's `bbox_inches="tight"` and a 0.02-inch margin.
+Cropping runs automatically for `task figures`, `task paper`, and individual
+plotting scripts. PDFs embed their fonts, and SVGs contain glyph outlines so
+their appearance does not depend on installed viewer fonts. The environment
+includes the LaTeX packages and `dvipng` needed by [Matplotlib's LaTeX
+renderer](https://matplotlib.org/stable/users/explain/text/usetex.html).
 
   | Script                         | Output directory under `figures/` |
   | ------------------------------ | --------------------------------- |
