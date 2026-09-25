@@ -88,9 +88,15 @@ observation cap. The supplementary figure shows all prevalences and budgets.
 Both read `results/common-block/summary.json` and are included in `task figures`
 and `task paper`.
 
-Only figures included by `paper/main.tex` are generated. The Mushroom
-rate-search script exports the $n = 2048$ paths under aggregate validation used
-in the supplement.
+By default, only figures included by `paper/main.tex` are generated. The
+Mushroom rate-search script exports the $n = 2048$ paths under aggregate
+validation used in the supplement.
+
+Run `task figure:oracle-finite` separately to export
+`figures/oracle-finite/limit-comparison` for the working notes. It reads
+`results/oracle-finite/summary.json` and compares finite-prevalence errors,
+signal allocation, noise reversals, and budget effects with the limiting
+predictions. It does not rerun searches or add a figure to the manuscript.
 
 `task paper` rebuilds its figures when the corresponding scripts, shared style,
 palette configuration, Taskfile, environment configuration, or saved summaries

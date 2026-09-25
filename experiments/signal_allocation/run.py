@@ -156,15 +156,54 @@ def calculate():
     return report
 
 
+def check_summary(saved, report):
+    """Compare computed floats numerically and retain exact settings and stops."""
+    absolute_tolerances = {
+        ("risk",): 1e-12,
+        ("coarse_risk",): 1e-12,
+        ("selected_alpha",): 0,
+        ("search", "alpha"): 0,
+        ("search", "coarse_alpha"): 0,
+        ("search", "max_risk_change_on_joint_refinement"): 1e-12,
+        ("search", "max_tensor_error"): 1e-12,
+    }
+
+    def compare(actual, expected, path=()):
+        label = ".".join(("summary", *path))
+        if path in absolute_tolerances:
+            actual, expected = np.asarray(actual), np.asarray(expected)
+            assert actual.shape == expected.shape, label
+            assert np.isfinite(actual).all() and np.isfinite(expected).all(), label
+            # Rounding can vary across numerical libraries. Relative-only rate
+            # tolerances keep zero and distinct small rates distinguishable.
+            np.testing.assert_allclose(
+                actual,
+                expected,
+                rtol=1e-12,
+                atol=absolute_tolerances[path],
+                equal_nan=False,
+                err_msg=label,
+            )
+        elif isinstance(expected, dict):
+            assert isinstance(actual, dict) and actual.keys() == expected.keys(), label
+            for key in expected:
+                compare(actual[key], expected[key], (*path, key))
+        else:
+            assert actual == expected, label
+
+    compare(report, saved)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
-    content = json.dumps(calculate(), indent=2, allow_nan=False) + "\n"
+    report = calculate()
     if args.check:
-        assert (OUTPUT / "summary.json").read_text() == content
+        check_summary(json.loads((OUTPUT / "summary.json").read_text()), report)
         print("Signal-allocation illustration numerical checks passed.")
     else:
+        content = json.dumps(report, indent=2, allow_nan=False) + "\n"
         OUTPUT.mkdir(parents=True, exist_ok=True)
         (OUTPUT / "summary.json").write_text(content)
         print(f"Wrote {OUTPUT.relative_to(ROOT) / 'summary.json'}.")

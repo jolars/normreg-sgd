@@ -265,5 +265,8 @@ python -m checks.oracle_variational > results/oracle-limits/variational-checks.j
 
 These are deterministic diagnostics of the limiting formulas. They neither
 certify a continuous finite-prevalence oracle nor replace independent
-mathematical review. The finite-prevalence theorem and the separate task of
-checking limiting predictions at finite prevalence remain unchanged.
+mathematical review. The [finite-prevalence comparison](oracle-finite.md) tests
+these predictions against exact moments over nested rate and stop grids. It
+recovers the predicted signs away from limiting ties at small prevalence and
+records a high-noise disagreement at larger prevalence. The existing theorem
+remains the quantitative finite-prevalence guarantee.

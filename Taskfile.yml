@@ -269,11 +269,17 @@ tasks:
       - python -m checks.oracle_limits
       - python -m checks.oracle_infima
       - task: check:oracle-variational
+      - task: check:oracle-finite
 
   check:oracle-variational:
     desc: Check the limiting oracle comparison across signals, noise, and budgets.
     cmds:
       - python -m checks.oracle_variational
+
+  check:oracle-finite:
+    desc: Replay finite-prevalence risks and limiting predictions (-- --rerun for full searches).
+    cmds:
+      - 'python -m checks.oracle_finite {{.CLI_ARGS}}'
 
   check:exact-risk:
     desc: Check exact risk calculations.
@@ -471,6 +477,27 @@ tasks:
     desc: Compute the signal-allocation illustration.
     cmds:
       - python -m experiments.signal_allocation.run
+
+  experiment:oracle-finite:
+    desc: Compute and summarize exact finite-prevalence comparisons with the limits.
+    cmds:
+      - task: experiment:oracle-finite:run
+      - task: experiment:oracle-finite:summarize
+
+  experiment:oracle-finite:run:
+    desc: Search nested rate and stop grids using exact moments.
+    cmds:
+      - python -m experiments.oracle_finite.run
+
+  experiment:oracle-finite:summarize:
+    desc: Compare saved finite-prevalence risks with the limiting formulas.
+    cmds:
+      - python -m experiments.oracle_finite.summarize
+
+  figure:oracle-finite:
+    desc: Plot saved finite-prevalence comparisons and limiting predictions.
+    cmds:
+      - python scripts/figures/plot_oracle_finite.py
 
   experiment:diagnostics:
     desc: Reconstruct numerical discrepancies and compute post hoc diagnostics.

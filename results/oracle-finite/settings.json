@@ -1,0 +1,387 @@
+{
+  "purpose": "Finite-grid exact-moment comparison with limiting oracle predictions.",
+  "model": "Independent binary features, fresh observations, population preprocessing; zero coefficients, fixed zero intercept, final iterates.",
+  "tuning": "Separate deterministic rate and stop for each scaling and case.",
+  "risk": "Half the mean squared prediction error conditional on rare presence, excluding irreducible test noise.",
+  "prevalences": [
+    0.04,
+    0.02,
+    0.002,
+    0.0002,
+    2e-05,
+    2e-06
+  ],
+  "cases": [
+    {
+      "name": "rare-anchor-1",
+      "group": "anchors",
+      "tau": 1,
+      "s": 0.01,
+      "r": 1,
+      "noise": 1.0
+    },
+    {
+      "name": "common-anchor-1",
+      "group": "anchors",
+      "tau": 1,
+      "s": 1,
+      "r": 0.01,
+      "noise": 1.0
+    },
+    {
+      "name": "common-crossing-1-0.9",
+      "group": "common-crossing",
+      "tau": 1,
+      "s": 0.43369657109145715,
+      "r": 1,
+      "noise": 1.0
+    },
+    {
+      "name": "common-crossing-1-1",
+      "group": "common-crossing",
+      "tau": 1,
+      "s": 0.4818850789905079,
+      "r": 1,
+      "noise": 1.0
+    },
+    {
+      "name": "common-crossing-1-1.1",
+      "group": "common-crossing",
+      "tau": 1,
+      "s": 0.5300735868895587,
+      "r": 1,
+      "noise": 1.0
+    },
+    {
+      "name": "rare-anchor-2",
+      "group": "anchors",
+      "tau": 2,
+      "s": 0.01,
+      "r": 1,
+      "noise": 1.0
+    },
+    {
+      "name": "common-anchor-2",
+      "group": "anchors",
+      "tau": 2,
+      "s": 1,
+      "r": 0.01,
+      "noise": 1.0
+    },
+    {
+      "name": "common-crossing-2-0.9",
+      "group": "common-crossing",
+      "tau": 2,
+      "s": 0.7061834864165891,
+      "r": 1,
+      "noise": 1.0
+    },
+    {
+      "name": "common-crossing-2-1",
+      "group": "common-crossing",
+      "tau": 2,
+      "s": 0.7846483182406545,
+      "r": 1,
+      "noise": 1.0
+    },
+    {
+      "name": "common-crossing-2-1.1",
+      "group": "common-crossing",
+      "tau": 2,
+      "s": 0.86311315006472,
+      "r": 1,
+      "noise": 1.0
+    },
+    {
+      "name": "rare-anchor-4",
+      "group": "anchors",
+      "tau": 4,
+      "s": 0.01,
+      "r": 1,
+      "noise": 1.0
+    },
+    {
+      "name": "common-anchor-4",
+      "group": "anchors",
+      "tau": 4,
+      "s": 1,
+      "r": 0.01,
+      "noise": 1.0
+    },
+    {
+      "name": "common-crossing-4-0.9",
+      "group": "common-crossing",
+      "tau": 4,
+      "s": 1.3034961381741297,
+      "r": 1,
+      "noise": 1.0
+    },
+    {
+      "name": "common-crossing-4-1",
+      "group": "common-crossing",
+      "tau": 4,
+      "s": 1.4483290424156996,
+      "r": 1,
+      "noise": 1.0
+    },
+    {
+      "name": "common-crossing-4-1.1",
+      "group": "common-crossing",
+      "tau": 4,
+      "s": 1.5931619466572697,
+      "r": 1,
+      "noise": 1.0
+    },
+    {
+      "name": "allocation-0.00000000",
+      "group": "allocation",
+      "tau": 2,
+      "s": 4,
+      "r": 0,
+      "noise": 1.0
+    },
+    {
+      "name": "allocation-0.25000000",
+      "group": "allocation",
+      "tau": 2,
+      "s": 3.0,
+      "r": 0.25,
+      "noise": 1.0
+    },
+    {
+      "name": "allocation-0.50000000",
+      "group": "allocation",
+      "tau": 2,
+      "s": 2.0,
+      "r": 0.5,
+      "noise": 1.0
+    },
+    {
+      "name": "allocation-0.75000000",
+      "group": "allocation",
+      "tau": 2,
+      "s": 1.0,
+      "r": 0.75,
+      "noise": 1.0
+    },
+    {
+      "name": "allocation-0.81770278",
+      "group": "allocation",
+      "tau": 2,
+      "s": 0.7291888683226238,
+      "r": 0.8177027829193441,
+      "noise": 1.0
+    },
+    {
+      "name": "allocation-0.83770278",
+      "group": "allocation",
+      "tau": 2,
+      "s": 0.6491888683226237,
+      "r": 0.8377027829193441,
+      "noise": 1.0
+    },
+    {
+      "name": "allocation-0.85770278",
+      "group": "allocation",
+      "tau": 2,
+      "s": 0.5691888683226236,
+      "r": 0.8577027829193441,
+      "noise": 1.0
+    },
+    {
+      "name": "allocation-1.00000000",
+      "group": "allocation",
+      "tau": 2,
+      "s": 0,
+      "r": 1,
+      "noise": 1.0
+    },
+    {
+      "name": "noise-0",
+      "group": "noise",
+      "tau": 2,
+      "s": 0.1,
+      "r": 1,
+      "noise": 0
+    },
+    {
+      "name": "noise-0.1",
+      "group": "noise",
+      "tau": 2,
+      "s": 0.1,
+      "r": 1,
+      "noise": 0.1
+    },
+    {
+      "name": "noise-1",
+      "group": "noise",
+      "tau": 2,
+      "s": 0.1,
+      "r": 1,
+      "noise": 1
+    },
+    {
+      "name": "noise-100",
+      "group": "noise",
+      "tau": 2,
+      "s": 0.1,
+      "r": 1,
+      "noise": 100
+    },
+    {
+      "name": "threshold-0.9",
+      "group": "threshold",
+      "tau": 2,
+      "s": 1,
+      "r": 0.028125,
+      "noise": 1.0
+    },
+    {
+      "name": "threshold-1",
+      "group": "threshold",
+      "tau": 2,
+      "s": 1,
+      "r": 0.03125,
+      "noise": 1.0
+    },
+    {
+      "name": "threshold-1.1",
+      "group": "threshold",
+      "tau": 2,
+      "s": 1,
+      "r": 0.034375,
+      "noise": 1.0
+    },
+    {
+      "name": "budget-0.01",
+      "group": "budget",
+      "tau": 0.01,
+      "s": 1,
+      "r": 1,
+      "noise": 1.0
+    },
+    {
+      "name": "budget-0.1",
+      "group": "budget",
+      "tau": 0.1,
+      "s": 1,
+      "r": 1,
+      "noise": 1.0
+    },
+    {
+      "name": "budget-1",
+      "group": "budget",
+      "tau": 1,
+      "s": 1,
+      "r": 1,
+      "noise": 1.0
+    },
+    {
+      "name": "budget-10",
+      "group": "budget",
+      "tau": 10,
+      "s": 1,
+      "r": 1,
+      "noise": 1.0
+    },
+    {
+      "name": "budget-100",
+      "group": "budget",
+      "tau": 100,
+      "s": 1,
+      "r": 1,
+      "noise": 1.0
+    },
+    {
+      "name": "budget-1000",
+      "group": "budget",
+      "tau": 1000,
+      "s": 1,
+      "r": 1,
+      "noise": 1.0
+    },
+    {
+      "name": "common-dependence-0",
+      "group": "common-dependence",
+      "tau": 2,
+      "s": 0,
+      "r": 1,
+      "noise": 1.0
+    },
+    {
+      "name": "common-dependence-1",
+      "group": "common-dependence",
+      "tau": 2,
+      "s": 1,
+      "r": 1,
+      "noise": 1.0
+    },
+    {
+      "name": "common-dependence-4",
+      "group": "common-dependence",
+      "tau": 2,
+      "s": 4,
+      "r": 1,
+      "noise": 1.0
+    },
+    {
+      "name": "no-rare",
+      "group": "endpoints",
+      "tau": 2,
+      "s": 1,
+      "r": 0,
+      "noise": 1
+    },
+    {
+      "name": "noiseless-common",
+      "group": "endpoints",
+      "tau": 2,
+      "s": 1,
+      "r": 0,
+      "noise": 0
+    },
+    {
+      "name": "pure-noise",
+      "group": "endpoints",
+      "tau": 2,
+      "s": 0,
+      "r": 0,
+      "noise": 1
+    },
+    {
+      "name": "zero",
+      "group": "endpoints",
+      "tau": 2,
+      "s": 0,
+      "r": 0,
+      "noise": 0
+    }
+  ],
+  "searches": [
+    "coarse",
+    "fine-rates",
+    "fine-stops",
+    "fine"
+  ],
+  "scalings": [
+    "U",
+    "S"
+  ],
+  "axes": [
+    "case",
+    "search",
+    "scaling"
+  ],
+  "cap_rounding": "Ceiling, except floor at tau=4 to stay within the theorem range.",
+  "rate_search": "Union of linear and logarithmic fractions of the stability limit; zero included, fractions from 1e-10 through 1-1e-6. No limiting rates injected.",
+  "stop_search": "Rounded geometric stops, all integers through 64, initialization, and every cap; coarse grids take every second linear/geometric point.",
+  "resolution": 1024,
+  "continuous_optimality_certified": false,
+  "seed": null,
+  "numerical_failures": 0,
+  "environment": {
+    "python": "3.13.15",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1"
+  }
+}

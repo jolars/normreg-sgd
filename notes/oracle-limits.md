@@ -732,3 +732,8 @@ prevalence. Numerical checks exercise the estimates but do not prove coverage of
 a continuous rate domain or replace independent mathematical review, which
 remains outstanding. The manuscript's existing theorem remains the certified
 quantitative finite-prevalence guarantee.
+
+The [finite-prevalence comparison](oracle-finite.md) extends these diagnostics
+to the signal-allocation, noise, and budget predictions across six prevalences.
+It reports search resolution and finite-prevalence disagreements, with saved
+risks and independent observation-tensor replays.

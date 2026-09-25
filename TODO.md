@@ -37,7 +37,7 @@ limiting oracle characterization before rewriting the main narrative.
   the rare effect largely unchanged.
 
   The working derivation now gives the full U transient through
-  $k_q\alpha_q\to\ell$, uniform bounds over allowed stops, and large-rate
+  $k_q\alpha_q \to \ell$, uniform bounds over allowed stops, and large-rate
   exclusions for both scalings. Checks cover 32 joint rate-and-stop sequences,
   zero signal and noise, and exact geometric lower bounds. The uniform control
   below completes the passage to oracle infima.
@@ -50,7 +50,7 @@ limiting oracle characterization before rewriting the main narrative.
   uniform lower bounds over all rates and stops and explicit recovery choices,
   with errors $O(b)$ for S and $O(b\log(1/b))$ for U. It permits all fixed
   finite nonnegative signals and noise, including zeros, and requires
-  $Mb\to\tau\in(0,\infty)$. A zero-budget counterexample explains that
+  $Mb \to \tau \in (0,\infty)$. A zero-budget counterexample explains that
   restriction. `task check:oracle-limits` also runs the [uniform-control
   diagnostics](checks/oracle_infima.py). Independent mathematical review remains
   outstanding.
@@ -67,9 +67,18 @@ limiting oracle characterization before rewriting the main narrative.
   large-budget risk ratio tends to $4/5$ for positive rare signal and noise.
   These limiting claims still await independent mathematical review.
 
-- [ ] Check the limiting predictions against finite-prevalence exact risks, and
+- [x] Check the limiting predictions against finite-prevalence exact risks, and
   retain the existing theorem as the quantitative finite-prevalence
   guarantee.
+
+  The [finite-prevalence comparison](notes/oracle-finite.md) checks 43 settings
+  at six prevalences with independent tensor replays and nested rate and stop
+  grids. It recovers the limiting signs away from ties at small prevalence and
+  records a high-noise disagreement at larger prevalence. Saved risks, rates,
+  stops, refinement diagnostics, and a figure are reproducible with
+  `task experiment:oracle-finite`, `task check:oracle-finite -- --rerun`, and
+  `task figure:oracle-finite`. The manuscript's theorem and certificates remain
+  unchanged; these numerical searches do not certify continuous optima.
 
 ## 3. Explain the adaptive-selection reversal
 

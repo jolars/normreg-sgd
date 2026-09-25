@@ -119,6 +119,7 @@ run independently.
   | `predictive-intro`  | Finite-grid oracle illustration                             | `results/predictive-intro/`  |
   | `coefficient-paths` | Constructed full-gradient paths to a shared OLS solution    | `results/coefficient-paths/` |
   | `signal-allocation` | Intermediate signal-allocation illustration                 | `results/signal-allocation/` |
+  | `oracle-finite`     | Limiting predictions against finite-prevalence exact risks  | `results/oracle-finite/`     |
   | `theory-bridge`     | Controlled departures from the oracle model                 | `results/theory-bridge/`     |
   | `diagnostics`       | Numerical discrepancies and prediction clipping             | `results/diagnostics/`       |
   | `precision`         | Decimal replay of selected synthetic paths                  | `results/synthetic/rates5/`  |
@@ -212,6 +213,7 @@ task check:predictive-fixed-q # Certify the finite-prevalence gap bounds.
 task check:predictive-review  # Run the independent certificate implementation.
 task check:oracle-limits      # Check limiting risks, infimum control, and comparisons.
 task check:oracle-variational # Check signal, noise, and budget decision rules.
+task check:oracle-finite      # Replay finite-prevalence comparisons with the limits.
 task check:normalization-risk # Check the supporting comparison certificates.
 task check:workflow           # Exercise the workflow with small configurations.
 task check:results            # Reconstruct saved losses and selections.
@@ -248,12 +250,24 @@ unrestricted rate-and-stop infima for fixed finite signals and noise and finite
 positive rescaled budgets. The [variational
 comparison](notes/oracle-variational.md) gives unique scalar rate equations and
 explains the signal, noise, and budget regimes. `task check:oracle-limits` runs
-the limit diagnostics, uniform-control checks, and variational checks. Their
-recorded outputs are [limit checks](results/oracle-limits/checks.json) and
-[infimum checks](results/oracle-limits/infimum-checks.json), plus [variational
+the limit diagnostics, uniform-control checks, variational checks, and
+finite-prevalence comparisons. The earlier recorded outputs are [limit
+checks](results/oracle-limits/checks.json) and [infimum
+checks](results/oracle-limits/infimum-checks.json), plus [variational
 checks](results/oracle-limits/variational-checks.json). These numerical
 diagnostics are separate from the finite-prevalence certificates; the new proof
 has not received independent mathematical review.
+
+The [finite-prevalence comparison](notes/oracle-finite.md) tests 43 settings at
+six prevalences, retaining the theorem as the quantitative guarantee. It
+recovers the limiting signal, noise, and budget predictions at small prevalence
+and records a high-noise disagreement at larger prevalence. The [saved
+summary](results/oracle-finite/summary.json) retains absolute risks, rates,
+stops, and separate rate and stop refinement diagnostics. Run
+`task experiment:oracle-finite` to regenerate the exact-moment searches and
+summary, `task check:oracle-finite -- --rerun` to replay every search, and
+`task figure:oracle-finite` to plot the saved comparisons. These finite-grid
+searches do not certify continuous optima.
 
 Use `task experiment:diagnostics` to regenerate the diagnostic records and
 tables, then `task check:results` to verify them. Use

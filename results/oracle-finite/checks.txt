@@ -1,0 +1,9 @@
+All four nested search combinations match independent tensor enumeration.
+Recomputed every saved candidate selection at q=0.04.
+Recomputed every saved candidate selection at q=0.02.
+Recomputed every saved candidate selection at q=0.002.
+Recomputed every saved candidate selection at q=0.0002.
+Recomputed every saved candidate selection at q=2e-05.
+Recomputed every saved candidate selection at q=2e-06.
+2064 independent long-double tensor replays; maximum risk error 7.38e-11.
+Saved comparisons, convergence, transition signs, and degenerate cases passed.
