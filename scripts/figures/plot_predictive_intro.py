@@ -59,7 +59,7 @@ def plot(report):
     )
     axes[1].text(
         2.5,
-        0.18,
+        0.14,
         "Unscaled training helps",
         color=METHOD_STYLES["none"]["color"],
         ha="center",

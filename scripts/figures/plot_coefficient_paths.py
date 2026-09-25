@@ -64,7 +64,7 @@ def plot(report):
         axis.annotate(
             rf"Stop: $k={stop}$",
             xy=path[stop],
-            xytext=(0.30, 0.29 if scaling == 0 else 0.94),
+            xytext=(0.5, 0.29 if scaling == 0 else 0.94),
             fontsize=8,
             color=color,
             arrowprops=dict(arrowstyle="-", color=color, lw=0.6),
