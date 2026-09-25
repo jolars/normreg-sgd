@@ -22,6 +22,7 @@ let
         ".github"
         ".gitignore"
         "README.md"
+        "REPRODUCING.md"
         "Taskfile.yml"
         "checks"
         "data"
@@ -43,9 +44,19 @@ let
         builtins.elem part [
           "__pycache__"
           ".lake"
+          ".git"
+          "notes"
+          "reviews"
         ]
       ) parts)
+      && !(builtins.elem (lib.toLower (baseNameOf path)) [
+        "agents.md"
+        "agents.override.md"
+        "skill.md"
+        "todo.md"
+      ])
       && !(lib.hasSuffix ".pyc" relative)
+      && !(lib.hasSuffix ".pyo" relative)
       && !(builtins.elem relative [
         "results/exact-risk/paths.npz"
         "results/exact-risk/summary.json"

@@ -47,13 +47,15 @@ environment files. It can be extracted and used without Git history. The image
 and archive take their contents from the same definition in
 [nix/release.nix](nix/release.nix).
 
-`task review:package` creates the smaller
+`task review:package` derives the anonymous
 `build/normreg-multi-review-<version>.tar.gz` supplement used by private paper
-reviews. It includes the computational and formal-support source plus
-human-readable results needed to inspect the paper's claims. It excludes the
-repository README, task and environment files, paper source, local reviews, TODO
-files, build products, and raw numerical arrays. The full package remains
-available when exact numerical artifacts are needed for reproduction.
+reviews from the complete release archive. It retains the manuscript source,
+task and environment files, source data, saved arrays, and numerical and formal
+checks described in Appendix L. It replaces the repository README with the
+anonymous [reproduction guide](REPRODUCING.md) and omits repository CI metadata.
+Both archives exclude private notes, local reviews, instruction files, build
+products, and downloaded caches. `task check:packages` builds both archives and
+checks their reproduction contents and README links.
 
 For the current ALT rehearsal, run `task review-alt`. It builds the manuscript,
 creates the curated supplement, and passes both to `codex-alt-review`; it never
@@ -247,21 +249,19 @@ saved output summarizes completed checks and does not replace rerunning them.
 
 The [manuscript proof](paper/oracle-proofs.tex) establishes convergence of the
 unrestricted rate-and-stop infima for fixed finite signals and noise and finite
-positive rescaled budgets. The [variational
-comparison](notes/oracle-variational.md) gives unique scalar rate equations and
-explains the signal, noise, and budget regimes. `task check:oracle-limits` runs
-the limit diagnostics, uniform-control checks, variational checks, and
-finite-prevalence comparisons. The earlier recorded outputs are [limit
-checks](results/oracle-limits/checks.json) and [infimum
+positive rescaled budgets. The same manuscript source gives unique scalar rate
+equations and explains the signal, noise, and budget regimes.
+`task check:oracle-limits` runs the limit diagnostics, uniform-control checks,
+variational checks, and finite-prevalence comparisons. The earlier recorded
+outputs are [limit checks](results/oracle-limits/checks.json) and [infimum
 checks](results/oracle-limits/infimum-checks.json), plus [variational
 checks](results/oracle-limits/variational-checks.json). These numerical
 diagnostics supplement the analytic proofs and are separate from the
-finite-prevalence certificates. The original
-[derivation](notes/oracle-limits.md) and variational notes retain additional
-boundary-sequence details.
+finite-prevalence certificates. The proof includes the boundary-sequence
+arguments needed for unrestricted rate and stopping optimization.
 
-The [finite-prevalence comparison](notes/oracle-finite.md) tests 43 settings at
-six prevalences, retaining the theorem as the quantitative guarantee. It
+The [finite-prevalence comparison](paper/oracle-numerics.tex) tests 43 settings
+at six prevalences, retaining the theorem as the quantitative guarantee. It
 recovers the limiting signal, noise, and budget predictions at small prevalence
 and records a high-noise disagreement at larger prevalence. The [saved
 summary](results/oracle-finite/summary.json) retains absolute risks, rates,

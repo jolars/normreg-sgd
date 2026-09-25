@@ -20,21 +20,26 @@ tasks:
         install -m 644 "$release_output"/*.tar.gz build/
 
   review:package:
-    desc: Create the curated source supplement used for private paper reviews.
+    desc: Create an anonymous review supplement from the complete release archive.
     vars:
       REVIEW_VERSION:
         sh: python -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])'
     cmds:
-      - mkdir -p build
+      - task: package
       - >-
-        tar --hard-dereference --sort=name --mtime=@1 --owner=0 --group=0
-        --numeric-owner --mode=u+rwX,go+rX
-        --exclude='*.npz' --exclude='*.npy' --exclude='*.pkl'
-        --exclude='*.pickle' --exclude='*.parquet' --exclude='*.h5'
-        --exclude='*.hdf5'
-        -czf 'build/normreg-multi-review-{{.REVIEW_VERSION}}.tar.gz'
-        --transform='s,^,normreg-multi-review-{{.REVIEW_VERSION}}/,'
-        checks data experiments lean results scripts
+        python -m scripts.package_review
+        'build/normreg-multi-{{.REVIEW_VERSION}}.tar.gz'
+        'build/normreg-multi-review-{{.REVIEW_VERSION}}.tar.gz'
+
+  check:packages:
+    desc: Build and inspect release and review archives for reproduction contents.
+    vars:
+      RELEASE_VERSION:
+        sh: python -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])'
+    cmds:
+      - task: review:package
+      - python -m checks.packaging 'build/normreg-multi-{{.RELEASE_VERSION}}.tar.gz'
+      - python -m checks.packaging 'build/normreg-multi-review-{{.RELEASE_VERSION}}.tar.gz' --review
 
   review:
     desc: Build the paper and curated source supplement, then run a private mock review.

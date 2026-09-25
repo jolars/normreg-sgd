@@ -1,10 +1,9 @@
 # Lean proof pilot
 
-This project formalizes the two large-rate lower bounds in the [predictive proof
-review](../notes/predictive-proof-review.md#addendum-the-predictive-rate-cap-can-be-removed).
-It treats the exact moment recurrence (T5) as an explicit hypothesis and defines
-the risk by (T4) from the [direct theorem](../notes/predictive-theorem.md).
-Noise variance is normalized to one.
+This project formalizes the two large-rate lower bounds used in Appendix A of
+the [manuscript](../paper/main.tex), restricted here to small prevalence. It
+treats the exact moment recurrence as an explicit hypothesis and uses the
+manuscript's rare-subgroup risk. Noise variance is normalized to one.
 
 ## Checked statements
 
@@ -23,7 +22,7 @@ large finite rates, without a stability assumption or an observation-budget
 restriction. The other signal coordinate only needs a nonnegative initial second
 moment; its upper signal bound in the full theorem is unnecessary here.
 
-`MomentRecurrence` records both equations in (T5). The theorem
+`MomentRecurrence` records both moment equations. The theorem
 `momentRecurrence_exists` constructs sequences satisfying it for arbitrary real
 parameters and initial values, establishing that the hypotheses are satisfiable.
 The lemma `MomentRecurrence.nonneg` derives nonnegativity of both moment
@@ -38,9 +37,9 @@ so it also covers rates above the stability threshold.
 For U, `rare_moment_floor` proves $H_k\geq1/(1+3b)$ by induction. The main
 theorem then bounds the risk using the prevalence restriction.
 
-For S, `scaled_weighted_floor` gives a shorter proof than the geometric-sum
-argument in the note. For any $w\geq2$, put $W_k=C_k+wH_k$ and
-$A=(1-b\theta)^2$. Nonnegative coupling and $D_b\geq A$ imply
+For S, `scaled_weighted_floor` uses a weighted moment bound. For any $w\geq2$,
+put $W_k=C_k+wH_k$ and $A=(1-b\theta)^2$. Nonnegative coupling and $D_b\geq A$
+imply
 
 $$
   W_{k+1}\geq A W_k+wb\theta^2,
@@ -57,17 +56,16 @@ $b\theta=2$ without dividing by $1-A$.
 The recurrence and risk formula correspond to independent centered Bernoulli
 features, fresh observations with $B=1$, known population preprocessing, a fixed
 zero intercept, zero coefficient initialization, and conditional mean-zero noise
-with variance one. These probabilistic assumptions and the derivation of (T4)
-and (T5) are described in the manuscript; they have not been formalized here.
-The Lean theorems quantify over real sequences satisfying the displayed
-recurrence. They do not assume the lower bounds they prove.
+with variance one. These probabilistic assumptions and the derivation of the
+risk and moment recurrence are described in the manuscript; they have not been
+formalized here. The Lean theorems quantify over real sequences satisfying the
+displayed recurrence. They do not assume the lower bounds they prove.
 
 This pilot does not formalize the original rate-domain comparisons, winning
 candidate bounds, continuous exponential certificate, infimum argument, or
 rescaling by $\sigma^2$. It therefore does not certify the full predictive
-theorem or the entire unrestricted-rate addendum. Human review of the
-correspondence between these statements and the statistical model remains
-necessary, as do the outstanding scientific and source-comparison reviews.
+theorem. Human review of the correspondence between these statements and the
+statistical model remains necessary.
 
 ## Build and audit
 
