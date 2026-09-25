@@ -109,35 +109,9 @@ tasks:
           STUDY: tuned-decomposition
           SUMMARY: results/predictive-intro/summary.json
           NAME: risk-components
-      - task: figure
-        vars:
-          SCRIPT: signal_allocation
-          STUDY: signal-allocation
-          SUMMARY: results/signal-allocation/summary.json
-          NAME: risk-map
       - task: figure:common-block
       - task: figure:oracle-finite
       - task: figure:theory-bridge
-      - task: figure
-        vars:
-          SCRIPT: mushroom_final
-          STUDY: mushroom-final
-          SUMMARY: results/mushroom/rates25/mushroom-summary-c1.json
-          EXTRA_SUMMARY: results/diagnostics/summary.json
-          NAME: selected-risks
-      - task: figure
-        vars:
-          SCRIPT: practical_selection
-          STUDY: practical-selection
-          SUMMARY: results/synthetic/rates5/summary.json
-          EXTRA_SUMMARY: results/mushroom/rates5/summary.json
-          NAME: practical-selection
-      - task: figure
-        vars:
-          SCRIPT: mushroom_rate_search
-          STUDY: mushroom-rate-search
-          SUMMARY: results/mushroom/rates17/summary.json
-          NAME: paths-n2048-aggregate
 
   figure:intro:
     desc: Plot the introductory subfigures and their shared legend.
@@ -515,7 +489,7 @@ tasks:
     desc: Reconstruct numerical discrepancies and compute post hoc diagnostics.
     cmds:
       - python -m checks.variance_scaling --write-audit
-      - python -m experiments.diagnostics.run --update-paper
+      - python -m experiments.diagnostics.run
 
   experiment:precision:
     desc: Replay selected synthetic paths at 160-digit precision.

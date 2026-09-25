@@ -6,7 +6,6 @@ reselected, or removed from the original summaries.
 
 import argparse
 import json
-import re
 from collections import defaultdict
 from pathlib import Path
 
@@ -321,8 +320,8 @@ def tables(report):
             r"    \bottomrule",
             r"  \end{tabular}",
             r"  \caption{",
-            "    Post hoc clipping to $[0,1]$ of the saved Mushroom predictors in",
-            r"    \cref{fig:conference-practical}, with $n=2048$, cap $8192$,",
+            "    Post hoc clipping to $[0,1]$ of the saved Mushroom predictors",
+            "    with $n=2048$, cap $8192$,",
             "    centered predictors, and a fitted intercept. Means include all 32",
             "    partitions. Selection retains the original unclipped validation",
             "    scores; clipping requires no additional training. The diagnostic",
@@ -338,38 +337,12 @@ def tables(report):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true")
-    parser.add_argument("--update-paper", action="store_true")
     args = parser.parse_args()
     report = calculate()
     artifacts = {
         "summary.json": json.dumps(report, indent=2, allow_nan=False) + "\n",
         "tables.tex": tables(report),
     }
-    paper = ROOT / "paper/main.tex"
-    manuscript = paper.read_text()
-    for name, content in zip(
-        ("AUDIT", "CLIPPING"),
-        artifacts["tables.tex"].strip().split("\n\n"),
-        strict=True,
-    ):
-        start = f"% BEGIN GENERATED REVIEW {name} TABLE\n"
-        end = f"% END GENERATED REVIEW {name} TABLE"
-        pattern = re.escape(start) + r".*?" + re.escape(end)
-        assert len(re.findall(pattern, manuscript, re.DOTALL)) == 1
-        if args.update_paper:
-            assert not args.check
-            manuscript = re.sub(
-                pattern,
-                lambda _: start + content + "\n" + end,
-                manuscript,
-                flags=re.DOTALL,
-            )
-        elif args.check:
-            assert re.search(pattern, manuscript, re.DOTALL)[0] == (
-                start + content + "\n" + end
-            ), f"Regenerate the {name.lower()} table in paper/main.tex."
-    if args.update_paper:
-        paper.write_text(manuscript)
     if args.check:
         for name, content in artifacts.items():
             assert (

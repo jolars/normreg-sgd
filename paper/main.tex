@@ -170,8 +170,7 @@ observations, estimates preprocessing, or fits an intercept. We retain the two
 illustrative signal pairs and find that both orderings persist when each
 method's tuning choices are fixed before evaluation. Selecting a predictor after
 observing training can reverse an ordering, even with exact population risk. We
-then examine further obstacles to practical comparisons: missing rare validation
-observations, sensitivity to the tuning search, and prediction clipping.
+also examine how missing rare validation observations affect selection.
 
 \paragraph{Relation to prior work.}
 
@@ -194,9 +193,28 @@ under the same observation cap. For final iterates of fresh-sample SGD, our
 limiting theorem characterizes the optimized total risk for arbitrary fixed
 signals and noise, with uniform control over the full rate-and-stop domain.
 Our finite-prevalence theorem establishes opposite positive gaps on two fixed
-signal families. \Cref{sec:comparison-proofs} gives
-detailed comparisons with prior work and discusses the established mechanisms
-supporting our analysis.
+signal families.
+
+Our calculations build on established mechanisms. Early stopping changes
+least-squares regularization \citep{ali2019early}. \citet{ali2020stochastic}
+compare stochastic gradient flow with ridge along the training path for a fixed
+design. Their Lemma 1 matches discrete SGD's first two moments to an Euler
+discretization of the flow; the continuous process is an approximation to SGD.
+Analyses of least-mean-squares methods separate bias and variance while
+accounting for sampling and batching \citep{defossez2015averaged,
+jain2018parallelizing}. AdaBatch connects sparse mini-batch aggregation with
+coordinate rescaling \citep{defossez2017adabatch}, while moment operators
+characterize exact mean-square stability \citep{mulayoff2024exact}. For explicit
+regularization, \citet{larsson2025normalization} analyze how feature scaling
+affects shrinkage.
+
+The risks of scaling rare features also have precedents.
+\citet[Section 5.4]{bordes2010erratum} warn that standardizing very rare
+features can hurt test performance. In a study of deterministic graph neural
+network training, \citet[Section 5]{milligan2024normalization} identify
+increased stochastic variance as a possible cost of standardizing rare binary
+features. These observations motivate quantitative risk comparisons but do not
+establish our oracle inequalities.
 
 \section{Normalization, learning, and rare-subgroup risk}
 \label{sec:conference-setting}
@@ -264,7 +282,8 @@ sampling, the error second moment decomposes as
 where $A_k \succeq 0$ is the covariance of the noiseless process under random
 feature sampling and $\sigma^2N_k \succeq 0$ is the covariance contributed by
 observation noise. This separates incomplete learning from the two sources of
-training variation. \Cref{sec:comparison-proofs} derives the exact recurrence.
+training variation. \Cref{sec:variance-decomposition} derives the decomposition
+and its moment formula.
 
 The mean error obeys $e_{k+1,j} = (1 - \eta C_{jj}/s_j^2)e_{k,j}$. SD scaling
 therefore gives every coordinate the multiplier $1 - \eta$. For
@@ -278,14 +297,6 @@ scaling changes the contraction factor for the mean rare-coefficient error from
 $1 - 4hb$ to $1 - h$, while increasing the observation-noise variance added to
 that coefficient at each update from $16h^2b\sigma^2$ to $h^2\sigma^2/b$. It
 learns the rare signal faster but also introduces more noise.
-
-At a fixed calibration, SD can have lower rare risk early and higher risk later,
-as observation noise overtakes its learning advantage. Separate rate and
-stopping adjustment on a finite grid removes this reversal in the example of
-\cref{sec:conference-comparisons,tab:conference-adjustment}. That example
-illustrates the tradeoff, but does not establish a difference after tuning. We
-now allow each method to choose any nonnegative constant rate and any
-deterministic stop within its budget.
 
 \section{Oracle risks and the preferred scaling}
 \label{sec:conference-predictive}
@@ -433,9 +444,9 @@ not asserted for this larger model.
 \label{sec:conference-experiments}
 
 The oracle fixes its rate and stop before observing training. Validation instead
-selects among fitted predictors. We first examine this distinction under
-controlled changes to the theorem's setup, then consider further obstacles to
-practical comparisons.
+selects among fitted predictors. We examine this distinction under controlled
+changes to the theorem's setup and assess how missing rare validation
+observations affect selection.
 
 \subsection{Controlled departures from the oracle model}
 \label{sec:theory-bridge}
@@ -506,7 +517,7 @@ by $.1457$; U's larger gain overturns SD's advantage under calibration.
   \label{tab:bridge-selection}
 \end{table}
 
-\paragraph{Further practical comparisons.}
+\paragraph{Missing rare validation observations.}
 
 Missing rare validation observations create a separate obstacle. For the fresh
 baseline at $q = .005$, $M = 804$, and the dominant rare signal, selection with
@@ -516,14 +527,6 @@ the declared fallback to aggregate loss. Conditional on absence, the gap is
 $+2.193$; when the group is present, it is $-.105$. Even this conservative
 search can miss the group on which the methods differ most
 (\cref{sec:theory-bridge-protocol,fig:bridge-validation}).
-
-Further synthetic and Mushroom studies examine sensitivity to the candidate
-search, preprocessing, and prediction clipping
-(\cref{sec:practical-comparisons}). Expanded tuning can narrow an apparent
-scaling advantage, and clipping can change empirical orderings. These studies
-also retain extreme failures and unresolved replay discrepancies, which limit
-what their raw mean risks can establish. The supplement reports the full
-protocols, results, and qualifications.
 
 \section{Discussion}
 
@@ -568,12 +571,6 @@ reverse an ordering, even with exact population risk. An extension to adaptive
 selection would therefore need to account for the benefit each scaling gains
 from choosing among its realized predictors.
 
-The further practical studies show that expanded tuning can remove an apparent
-scaling advantage, missing validation groups can conceal extreme errors, and
-clipping can change empirical orderings without further training. Together,
-these findings make the selection procedure and candidate family part of the
-statistical comparison rather than incidental implementation choices.
-
 Feature normalization therefore belongs in the statistical specification of
 training under a finite budget: even in a two-feature model, tuning a global
 learning rate and stopping time need not make different relative scalings
@@ -607,17 +604,13 @@ manuscript.
 The supplement gives the finite-prevalence oracle proof and certificates
 (\cref{sec:predictive-proofs}), the limiting oracle proof
 (\cref{sec:oracle-limit-proofs}), and its variational consequences
-(\cref{sec:oracle-variational}). Fixed-calibration comparisons and certificates
-are in \cref{sec:conference-comparisons}. \Cref{sec:common-block-details} gives
-the common-feature extension and its numerical study.
+(\cref{sec:oracle-variational}). \Cref{sec:common-block-details} gives the
+common-feature extension and its numerical study.
 \Cref{sec:predictive-intro-figure} describes the numerical illustrations and
 finite-prevalence checks of the limiting predictions.
-\Cref{sec:empirical-methods} specifies the empirical methods and search
-protocols; \cref{sec:mushroom-rate-search,sec:preprocessing-sensitivity} examine
-sensitivity to the search, preprocessing, and damping.
-\Cref{sec:review-diagnostics} collects numerical checks, unresolved
-discrepancies, and prediction-clipping diagnostics. Reproduction instructions
-are in \cref{sec:reproducibility}.
+\Cref{sec:empirical-methods} specifies the controlled study's training,
+calibration, and selection protocols and reports its numerical checks.
+Reproduction instructions are in \cref{sec:reproducibility}.
 
 \section{Proof of the comparison after oracle tuning}
 \label{sec:predictive-proofs}
@@ -1143,442 +1136,6 @@ task check:common-block -- --saved
 \end{verbatim}
 Summarizing and plotting use saved arrays without rerunning the search.
 
-\section{Fixed-calibration comparisons and certificates}
-\label{sec:conference-comparisons}
-
-These comparisons make the learning--noise tradeoff explicit at prescribed
-rates. They support the motivation in \cref{sec:conference-setting}, while the
-oracle theorem compares the larger families obtained by optimizing the rate and
-stop. We also allow dependence here to examine how aggregate and rare-presence
-objectives can disagree.
-
-\paragraph{Mini-batches and the observation budget.}
-
-For batches of $B$ independent fresh observations, the update in
-\cref{eq:conference-update} becomes
-\begin{equation}
-  \beta_{k+1}
-  = \beta_k
-    - \frac{\eta S^{-2}}{B}\sum_{i=1}^B x_{k,i}(x_{k,i}^\top\beta_k - y_{k,i}). \label{eq:comparison-batch-update}
-\end{equation}
-Each update averages the $B$ gradients, so $k$ updates use $M = kB$
-observations. The main theorem takes $B = 1$.
-
-\paragraph{Allowing dependent binary features.}
-
-Retain the marginal probabilities and centered features of
-\cref{sec:conference-setting}, but allow
-\[
-  \Prob(I = 1,J = 1) = \frac{q(1 + \ell)}{2},\qquad - 1 \leq \ell \leq 1.
-\]
-For $0 < q < 1/2$, these ranges ensure nonnegative cell probabilities. To
-express the risks under dependence, let $C = \E(xx^\top)$ and
-$C_G = \E(xx^\top \mid G)$. Then
-\begin{equation}
-  R_k = \tfrac12\operatorname{tr}(CV_k),\qquad R_{G,k}
-      = \tfrac12\operatorname{tr}(C_GV_k). \label{eq:conference-risks}
-\end{equation}
-The conditional second moment $C_G$ includes the contribution of the conditional
-feature mean. For rare presence, $G = \{J = 1\}$. With $a = 1/4$,
-$b = q(1 - q)$, and $c = q\ell/2$,
-\[
-  C = \begin{pmatrix}
-        a & c \\
-        c & b
-      \end{pmatrix}, \qquad C_R
-    = \begin{pmatrix}
-        a             & \ell(1 - q)/2 \\
-        \ell(1 - q)/2 & (1 - q)^2
-      \end{pmatrix}.
-\]
-Independence corresponds to $\ell = 0$ and recovers
-\cref{eq:conference-rare-risk}. Population preprocessing, zero initialization,
-the fixed zero intercept, and fresh sampling remain as in the main text.
-
-In this section, we fix $\eta_U = 4h$ and $\eta_S = h$. Both rules then have
-diagonal drift $h$ in the common coordinate. Under independence, this gives the
-common coefficient the same mean trajectory for both rules, although dependence
-generally breaks the match. We specify $h$ in advance and use it for both
-methods.
-
-\subsection{Learning the rare signal versus fitting noise}
-
-Under independence, SD scaling changes the contraction factor for the mean rare
-coefficient error from $1 - 4hb$ to $1 - h$. At the same time, it increases the
-observation-noise variance added to that coefficient at each update from
-$16h^2b\sigma^2/B$ to $h^2\sigma^2/(bB)$. Standardization therefore speeds up
-learning while introducing more noise. Random feature sampling contributes
-additional variance to both procedures.
-
-The diagonal error moments satisfy a nonnegative two-dimensional recurrence. By
-omitting the terms that couple the two coordinates, we obtain a scalar
-approximation to rare risk with an explicit nonnegative remainder. Let $F$ and
-$N$ denote the noiseless and unit-noise parts of the SD-minus-U risk difference.
-The approximation gives bounds $F_- \leq F \leq F_+$ and $N_- \leq N \leq N_+$.
-When $F_+ < 0 < N_-$, the noise-variance threshold
-$\sigma_{\mathrm{crit}}^2 = -F/N$ satisfies
-\begin{equation}
-  \frac{-F_+}{N_+} \leq \sigma_{\mathrm{crit}}^2
-                   \leq \frac{-F_-}{N_-}. \label{eq:conference-threshold}
-\end{equation}
-The remainder accounts for the dependence that the sampled updates introduce
-between coefficient errors, even when the features are independent. We derive
-the approximation and define its terms in \cref{sec:comparison-proofs}.
-
-\begin{theorem}[Stopping and batch reversal]
-  \label{thm:conference-c1}
-  In the binary model with $\ell = 0$, suppose
-  \begin{gather*}
-    q \in[0.019,0.021] ,\quad h \in[0.0019,0.0021] ,               \\
-    \beta_C^*,\beta_R^* \in[0.95,1.05] ,\quad\sigma^2 \in[1.5,5] .
-  \end{gather*}
-  Both U and S are mean-square stable for $B \in \{1,10\}$. Their rare-risk
-  contrast $\Delta_{B,k} = R_{R,k}^S - R_{R,k}^U$ lies in the intervals in
-  \cref{tab:conference-c1} throughout this parameter box.
-\end{theorem}
-
-\begin{table}[t]
-  \centering
-  \begin{tabular}{rrrr}
-    \toprule
-    $B$ &    $k$ & $M = kB$ &    $\Delta_{B,k}$ \\
-    \midrule
-      1 &  1,000 &    1,000 &   $[-.353,-.160]$ \\
-      1 & 10,000 &   10,000 &    $[.0021,.125]$ \\
-     10 &  1,000 &   10,000 &   $[-.386,-.286]$ \\
-     10 & 10,000 &  100,000 & $[-.0281,-.0016]$ \\
-    \bottomrule
-  \end{tabular}
-  \caption{
-    Bounds on the rare-risk difference in \cref{thm:conference-c1}, valid
-    throughout the parameter box. Negative values favor SD scaling. The
-    intervals enclose the exact risk differences and do not represent Monte
-    Carlo uncertainty.
-  }
-  \label{tab:conference-c1}
-\end{table}
-
-At $B = 1$, the ordering reverses as training continues. With the same budget
-$M = 10{,}000$, it also differs between $B = 1$ and $B = 10$. These are
-comparisons between normalization rules at each batch size and budget. They do
-not establish which batch size is better for either rule.
-
-For the anchor $q = .02$, $h = .002$, $\beta^* = (1,1)^\top$, and
-$\sigma^2 = 3$, the early $B = 1$ rare risk is $.356678$ for U and $.090407$ for
-S. Squared bias contributes $.353207$ and $.011040$, respectively, so the early
-advantage comes mainly from learning the rare signal more quickly. By
-$k = 10{,}000$, U has learned enough of that signal to reach risk $.028145$,
-whereas S has risk $.078788$, almost entirely due to observation noise. The
-exact calculation includes variation from feature sampling at every step.
-
-\subsection{Aggregate and rare-presence objectives}
-
-Dependence can make the two prediction objectives favor different rules. Let
-$\Delta V = V_k^S - V_k^U$. Direct substitution into \cref{eq:conference-risks}
-gives
-\begin{equation}
-  \Delta_R - \Delta_A = \frac{1 - 2q}{2}\bigl\{(1 - q)\Delta V_{RR} + \ell\Delta V_{CR}\bigr\}, \label{eq:conference-objectives}
-\end{equation}
-where $\Delta_A$ and $\Delta_R$ denote the aggregate and rare-risk differences.
-The cross moment is the sum of the product of the coefficient biases and the
-covariance of their errors.
-
-\begin{proposition}[Objective disagreement under fixed calibration]
-  \label{thm:conference-c2}
-  Take $q = .02$, $\ell \in[.9,1]$, $\beta^* = (2,1)^\top$, $h = .01$, $B = 1$,
-  $k = M = 100$, and $\sigma^2 \in[3.8,4.1]$. Both U and S are mean-square
-  stable, and uniformly over these intervals,
-  \begin{align*}
-    .00077 & \leq R_k^S - R_k^U \leq .00194,         \\
-    -.0983 & \leq R_{R,k}^S - R_{R,k}^U \leq -.0233.
-  \end{align*}
-  Moreover, $V_{CC,k}^S > V_{CC,k}^U$ and $V_{RR,k}^S > V_{RR,k}^U$.
-\end{proposition}
-
-SD scaling increases each coefficient's mean squared error but improves
-rare-presence prediction. At $\ell = 1$ and $\sigma^2 = 4$,
-\[
-  \Delta V \approx \begin{pmatrix}
-                     .022743  & -.615146 \\
-                     -.615146 & .470335
-                   \end{pmatrix}.
-\]
-The reduction in the cross moment offsets the larger individual errors when
-predicting for the rare subgroup. Aggregate risk gives this moment weight $.01$,
-whereas rare risk gives it weight $.49$. Looking only at the individual
-coefficient errors would therefore miss the improvement in rare prediction.
-
-We prove both comparisons using rational interval arithmetic with outward
-rounding over the full parameter boxes. \Cref{sec:comparison-proofs} gives the
-recurrences and enclosure arguments. The results apply to the specified training
-procedures, whereas \cref{thm:conference-predictive} compares risks after
-optimizing over all constant rates and deterministic stops. Adaptive stopping
-and the choice of an optimal normalization remain outside these results. The
-identity relating the two risk objectives is elementary.
-
-\subsection{Proofs and certificates}
-\label{sec:comparison-proofs}
-
-\citet[Section 3.2]{wadia2021whitening} explain how whitening changes
-early-stopped predictions in full-rank least squares despite leaving the unique
-optimum unchanged. Their gradient-flow calculation shows that whitening removes
-differences in learning speed across covariance eigendirections, which can cause
-signal and noise to be learned together. This is a precedent for the mechanism
-illustrated in \cref{fig:intro-coefficient-paths}. Our theorem compares total
-rare-subgroup risk for final iterates of fresh-sample SGD, with each scaling
-optimizing its constant rate and deterministic stop under a finite observation
-cap.
-
-The closest preconditioning results differ in their risk objectives and training
-procedures. \citet[Proposition 7]{amari2020preconditioning} show that signal
-alignment affects the preferred preconditioner after optimizing aggregate
-prediction bias over stopping times. They study gradient flow on a fixed
-training sample in an overparameterized model, averaging over signal priors. For
-fresh-sample SGD, \citet[Theorems 4.2--4.4]{su2024preconditioning} bound the
-aggregate excess risk of tail-averaged iterates and tune preconditioning to
-match ridge regression up to constant factors.
-
-The target-risk literature also studies different comparisons.
-\citet[Remark 3.1]{lei2021shift} give a minimax target-risk separation from
-optimally tuned ridge with a fixed design and Gaussian noise.
-\citet[Corollary 3.3]{wu2022pretraining} analyze target risk of the final
-online-SGD iterate with geometric step decay, and \citet{liu2025precondition}
-study minimax preconditioning and accelerated SGD under covariate shift. These
-results do not supply our explicit opposite gaps for fixed signal families. Our
-theorem compares total rare-subgroup risk of final iterates after optimizing all
-nonnegative constant rates and deterministic stops under one observation cap.
-
-Our calculations build on established mechanisms. Early stopping changes
-least-squares regularization \citep{ali2019early}. \citet{ali2020stochastic}
-compare stochastic gradient flow with ridge along the training path for a fixed
-design. Their Lemma 1 matches discrete SGD's first two moments to an Euler
-discretization of the flow; the continuous process is an approximation to SGD.
-Analyses of least-mean-squares methods separate bias and variance while
-accounting for sampling and batching \citep{defossez2015averaged,
-jain2018parallelizing}. AdaBatch connects sparse mini-batch aggregation with
-coordinate rescaling \citep{defossez2017adabatch}, while moment operators
-characterize exact mean-square stability \citep{mulayoff2024exact}. For explicit
-regularization, \citet{larsson2025normalization} analyze how feature scaling
-affects shrinkage.
-
-The risks of scaling rare features also have precedents.
-\citet[Section 5.4]{bordes2010erratum} warn that standardizing very rare
-features can hurt test performance. In a study of deterministic graph neural
-network training, \citet[Section 5]{milligan2024normalization} identify
-increased stochastic variance as a possible cost of standardizing rare binary
-features. These observations motivate quantitative risk comparisons but do not
-establish our oracle inequalities.
-
-In this appendix, we derive the moment recurrences and approximation bounds used
-to prove \cref{thm:conference-c1,thm:conference-c2}. We then describe the
-interval certificates. Throughout, we use the binary model, fresh sampling, and
-population preprocessing of \cref{sec:conference-setting}, allowing the
-dependence introduced in \cref{sec:conference-comparisons}. The implementation
-is in \path{checks/normalization_risk_theorem.py}. The source supplement
-includes this implementation, which checks both the certificates and independent
-numerical calculations; its \texttt{README.md} gives reproduction instructions.
-
-\subsubsection{Exact moments and the variance decomposition}
-
-Write $D = \eta P = \diag(d_C,d_R)$ and
-$s_k = (V_{CC,k},V_{CR,k},V_{RR,k})^\top$. Set
-\[
-  t_B = c^2 + \frac{ab - c^2}{B},\qquad m_B
-      = c\left( b + \frac{1 - 4b}{B} \right).
-\]
-The exact recurrence is $s_{k+1} = L_Ds_k + \sigma^2g_D$, where
-\[
-  L_D
-  = \begin{pmatrix}
-      (1 - d_Ca)^2    & -2d_C(1 - d_Ca)c                 & d_C^2t_B                        \\
-      -d_R(1 - d_Ca)c & (1 - d_Ca)(1 - d_Rb) + d_Cd_Rt_B & -d_Cc + d_Cd_Rm_B               \\
-      d_R^2t_B        & -2d_Rc + 2d_R^2m_B               & (1 - d_Rb)^2 + d_R^2b(1 - 4b)/B
-    \end{pmatrix},
-\]
-\[
-  g_D = \frac1B(d_C^2a,d_Cd_Rc,d_R^2b)^\top,\qquad s_0
-      = ((\beta_C^*)^2,\beta_C^*\beta_R^*,(\beta_R^*)^2)^\top.
-\]
-To verify the recurrence, let $\widehat C$ be the average second moment in a
-batch. The squared common coordinate is always $a$, and the binary law gives
-\[
-  \E(x_R^4) = b(1 - 3b),\quad \E(x_C^2x_R^2)
-            = ab,\quad \E(x_Cx_R^3)
-            = c(1 - 3b).
-\]
-Consequently, $\E(\widehat c^2) = t_B$, $\E(\widehat c\widehat b) = m_B$, and
-$\E(\widehat b^2) = b^2 + b(1 - 4b)/B$. Expanding
-$\E\bigl((I - D\widehat C)V_k(I - \widehat CD)\bigr)$ yields $L_D$. The
-conditional mean-zero noise assumption removes the cross terms, and the added
-noise has covariance $\sigma^2DCD/B$. Because each batch is fresh, its update
-matrix is independent of the previous error.
-
-To prove \cref{eq:conference-decomposition}, we run the noiseless recursion on
-the same feature stream. Its mean error is $e_k = -(I - DC)^k\beta^*$ and its
-covariance is $A_k \succeq 0$. Conditional on all sampled features, the
-component due to noise has mean zero, so its cross moment with the noiseless
-component vanishes. Its covariance is $\sigma^2N_k \succeq 0$, which proves the
-decomposition. Equivalently, if
-$\mathcal T_D(V) = \E\bigl((I - D\widehat C)V(I - \widehat CD)\bigr)$, then
-\[
-  V_k = \mathcal T_D^k(\beta^*\beta^{*\top})
-        + \frac{\sigma^2}{B}\sum_{j=0}^{k-1}\mathcal T_D^j(DCD).
-\]
-
-\subsubsection{A scalar approximation with a controlled remainder}
-
-Under independence, the diagonal moments satisfy a closed recurrence with matrix
-\[
-  \begin{gathered}
-    K_D = \begin{pmatrix}
-            A & e   \\
-            f & D_0
-          \end{pmatrix},\qquad A = (1 - h)^2, \\
-    e = \frac{d_C^2ab}{B},\qquad f = \frac{d_R^2ab}{B},\qquad D_0 = (1 - d_Rb)^2 + \frac{d_R^2b(1 - 4b)}B.
-  \end{gathered}
-\]
-Here $D_0$ is a scalar, distinct from $D$. All entries are nonnegative. Define
-\[
-  w = \tfrac12(a,(1 - q)^2)^\top,\quad v_0
-    = ((\beta_C^*)^2,(\beta_R^*)^2)^\top,\quad g
-    = (d_C^2a,d_R^2b)^\top/B,
-\]
-and let $E_0 = \max(e,f)$ and $\|K_D\|_\infty \leq \rho < 1$. For
-$\phi_k(z) = \sum_{j=0}^{k-1}z^j$, define
-\[
-  \widetilde R_{R,k} = w_C\{A^k(\beta_C^*)^2 + \sigma^2g_C\phi_k(A)\}
-                       + w_R\{D_0^k(\beta_R^*)^2 + \sigma^2g_R\phi_k(D_0)\}.
-\]
-For every $k \geq 1$,
-\begin{equation}
-  0
-  \leq R_{R,k} - \widetilde R_{R,k}
-  \leq E_F + \sigma^2E_N,\qquad E_F
-  = \|w\|_1\|v_0\|_\infty E_0k\rho^{k-1},\quad E_N
-  = \frac{\|w\|_1\|g\|_\infty E_0}{(1 - \rho)^2}. \label{eq:comparison-remainder}
-\end{equation}
-Indeed, with $K_0 = \diag(A,D_0)$ and $E = K_D - K_0 \geq 0$ entrywise,
-\[
-  K_D^k - K_0^k = \sum_{j=0}^{k-1}K_D^{k-1-j}EK_0^j \geq 0.
-\]
-The difference has infinity norm at most $E_0k\rho^{k-1}$. Multiplying by $w$
-and $v_0$ proves the homogeneous bound. We obtain the noise bound by applying
-the same identity to the noise sum and using
-$\sum_{j=1}^{k-1}j\rho^{j-1} \leq (1 - \rho)^{-2}$.
-
-The common-coordinate terms cancel when we subtract the U approximation from the
-S approximation. Write
-\[
-  \widetilde F = w_R(\beta_R^*)^2(D_S^k - D_U^k),\qquad \widetilde N
-               = w_R\{g_{R,S}\phi_k(D_S) - g_{R,U}\phi_k(D_U)\},
-\]
-where $D_S,D_U$ are the respective scalar $D_0$ values. For the exact difference
-$F + \sigma^2N$, subtracting the two nonnegative remainders gives
-\[
-  F_- := \widetilde F - E_{F,U} \leq F \leq \widetilde F + E_{F,S} = :F_+,
-\]
-\[
-  N_- := \widetilde N - E_{N,U} \leq N \leq \widetilde N + E_{N,S} = :N_+.
-\]
-When $F_+ < 0 < N_-$, division by positive denominators gives
-\cref{eq:conference-threshold}. In particular, $F_+ + \sigma^2N_+ < 0$
-guarantees lower rare risk for S, whereas $F_- + \sigma^2N_- > 0$ guarantees
-lower rare risk for U. The homogeneous approximation includes variation from
-rare-feature sampling through $D_0$, in addition to the squared mean error.
-
-\subsubsection{
-  Certificate for
-  \texorpdfstring{\Cref{thm:conference-c1}}{Theorem~\ref*{thm:conference-c1}}
-}
-
-We partition each of the $q$ and $h$ intervals into eight equal closed pieces.
-On each of the resulting 64 rectangles, we evaluate the preceding bounds using
-interval arithmetic and $(\beta_C^*)^2,(\beta_R^*)^2 \in[.9025,1.1025]$. For
-each configuration, we use upper bounds on $\rho = \max(A + e,D_0 + f)$ and
-$E_0 = \max(e,f)$. This gives $\rho < .999719$ throughout. The remaining cross
-moment is multiplied at each step by
-\[
-  \gamma = (1 - d_Ca)(1 - d_Rb) + d_Cd_Rab/B
-\]
-with no added noise term. The certificate verifies $0 \leq \gamma < 1$ on every
-rectangle. The full homogeneous second-moment map is therefore stable, and the
-moments remain bounded when we include the fixed finite noise term.
-
-Every rectangle satisfies $F_+ < 0 < N_-$. Taking the hull of the resulting
-$F + \sigma^2N$ intervals gives the bounds in \cref{tab:conference-c1}. In table
-order, the enclosures for the noise threshold are $[10.46,17.76]$,
-$[.53,1.405]$, $[112.61,184.22]$, and $[5.69,14.49]$. They imply the four signs
-uniformly whenever $1.405 < \sigma^2 < 5.69$. The narrower interval in the
-theorem gives the displayed risk-gap bounds. Because the rectangles are closed,
-the certificate also covers their shared boundaries.
-
-\subsubsection{Outward-rounded arithmetic}
-
-We represent each interval endpoint as an integer multiple of $10^{-60}$ and
-read inputs as rational strings or integers. Addition is exact. For
-multiplication, we take the minimum and maximum of all four endpoint products
-and round outward using integer division. If $[l,u]$ stores the integer
-endpoints of a positive denominator interval, we enclose its reciprocal by
-\[
-  \left[ \frac{\lfloor10^{120}/u\rfloor}{10^{60}}, \frac{\lceil10^{120}/l\rceil}{10^{60}} \right].
-\]
-We reduce negative denominators to this case and compute powers and finite sums
-by repeated squaring and addition. Induction over these operations shows that
-each interval contains the exact rational expression. All acceptance checks
-compare integer endpoints, including the check that they lie within the reported
-decimal bounds. We convert to floating point only for display. The enclosure
-calculations therefore cover the full parameter boxes.
-
-\subsubsection{
-  Proof of
-  \texorpdfstring{\Cref{thm:conference-c2}}{Theorem~\ref*{thm:conference-c2}}
-}
-
-To establish stability, we use the fact that a feature vector with
-$\|z\|^2 \leq L$ satisfies
-\[
-  \E\bigl((I - \eta zz^\top)^2\bigr) \preceq I - \eta(2 - \eta L)H, \qquad H
-                                     = \E(zz^\top).
-\]
-If $H \succ 0$ and $0 < \eta < 2/L$, this contracts expected squared error. For
-U, take $L = .25 + .98^2 = 1.2104$, $\eta = .04$, and use
-$\lambda_{\min}(C) \geq .0196 - .01 = .0096$. For S, $L = 50$, $\eta = .01$, and
-\[
-  H = \begin{pmatrix}
-        1      & \ell/7 \\
-        \ell/7 & 1
-      \end{pmatrix},\qquad \lambda_{\min}(H)
-    \geq 6/7.
-\]
-These sufficient stability bounds hold throughout the claimed interval.
-
-To bound the risks, we augment $L_D$ with the unit-noise column $g_D$ and a
-final row $(0,0,0,1)$. Raising this matrix to the $100$th power gives the
-homogeneous map and finite noise sum. The aggregate and rare risk weights on
-$s_k$ are
-\[
-  w_A = (a/2,c,b/2)^\top,\qquad w_R = (a/2,\ell(1 - q)/2,(1 - q)^2/2)^\top.
-\]
-We partition $[.9,1]$ into 128 equal closed intervals. On each interval, we use
-the same integer arithmetic to enclose the two augmented powers, their action on
-$s_0 = (4,2,1)^\top$, and the contrasts $F_W + \sigma^2N_W$ for
-$\sigma^2 \in[3.8,4.1]$. Signed matrix entries use all four endpoint products;
-no entrywise positivity is assumed. The union satisfies both risk enclosures in
-the theorem. Before risk weighting, the same powers certify positive diagonal
-contrasts and a negative cross-moment contrast throughout. This proves the
-coefficient MSE inequalities as well.
-
-\subsubsection{Checks distinct from the certificates}
-
-We independently check the three-moment formulas against gradient updates by
-enumerating ordered batches and short paths. We also compare them with a
-separate full moment operator at 64 endpoints, including signals with mixed
-signs, boundaries of the dependence range, an interior law, and $B = 1,2$. These
-floating-point checks validate the implementations. The interval arithmetic
-above certifies the inequalities over the continuous parameter boxes. Neither
-check establishes priority or extends the results to procedures outside the
-stated comparisons.
-
 \section{Numerical illustrations}
 \label{sec:predictive-intro-figure}
 
@@ -1621,60 +1178,25 @@ components for every selected endpoint. We check each component against the
 separately enumerated tensor operator and require its discrepancy, and that
 between the component sum and the selected risk, to be below $10^{-10}$.
 
+\subsubsection{Variance decomposition}
+\label{sec:variance-decomposition}
+
+Write $D = \eta P$ and $C = \E(xx^\top)$. To prove
+\cref{eq:conference-decomposition}, we run the noiseless recursion on the same
+feature stream. Its mean error is $e_k = -(I - DC)^k\beta^*$ and its covariance
+is $A_k \succeq 0$. Conditional on all sampled features, the component due to
+noise has mean zero, so its cross moment with the noiseless component vanishes.
+Its covariance is $\sigma^2N_k \succeq 0$, which proves the decomposition.
+Equivalently, if
+$\mathcal T_D(V) = \E\bigl((I - Dxx^\top)V(I - xx^\top D)\bigr)$, then
+\[
+  V_k = \mathcal T_D^k(\beta^*\beta^{*\top})
+        + \sigma^2\sum_{j=0}^{k-1}\mathcal T_D^j(DCD).
+\]
+The first term is the noiseless second moment $e_ke_k^\top + A_k$, and the
+second is the observation-noise covariance $\sigma^2N_k$.
+
 \input{oracle-numerics}
-
-\subsection{Exploring allocation at fixed squared coefficient sum}
-\label{sec:signal-allocation}
-
-\begin{figure}[t]
-  \centering
-  \includegraphics{../figures/signal-allocation/risk-map.pdf}
-  \caption{
-    Intermediate signals in the theorem's data model, with $q = 10^{-4}$ and
-    $(\beta_C^*)^2 = 1.01(1 - f)$, $(\beta_R^*)^2 = 1.01f$. Positive values
-    favor SD and negative values favor U after separate selection over finite
-    rate and stopping grids. Black contours interpolate zero grid-risk
-    difference. Columns vary noise variance, and the vertical axis varies the
-    observation cap. These are numerical comparisons, not certified boundaries
-    for unrestricted oracle tuning. \Cref{sec:signal-allocation} gives the grids
-    and accuracy checks.
-  }
-  \label{fig:signal-allocation}
-\end{figure}
-
-\Cref{fig:signal-allocation} is a separate post hoc exploration with the same
-fresh-sample model, $q = 10^{-4}$, population preprocessing, zero
-initialization, and fixed intercept. We set $(\beta_C^*)^2 = 1.01(1 - f)$ and
-$(\beta_R^*)^2 = 1.01f$. The grid contains 41 equally spaced values of $f$ in
-$[0,1]$, plus $1/101$ and $100/101$, which recover the two signal pairs in
-\cref{fig:conference-tuned-intro}. We cross these 43 allocations with noise
-variances $1/4$, $1$, and $4$, and 21 integer caps evenly spaced up to rounding
-from $10{,}002$ to $40{,}004$. The squared coefficient sum is fixed; it is not
-the aggregate signal variance, which also depends on feature prevalence. This
-allocation differs from \cref{cor:oracle-allocation,fig:intro-signal-crossing},
-which hold $s/4 + r$ fixed. The map is a numerical exploration of a different
-path through signal space, and the corollary's uniqueness statement is not
-asserted for its contours.
-
-For each scaling, the fine rate grid contains zero and 1025 geometric values of
-$\alpha$ from $10^{-6}$ to $2$. Stopping candidates contain zero, every cap, and
-the distinct rounded values of 1025 geometric points from one to the largest
-cap. We evaluate the exact diagonal-moment recurrence by powers of its affine
-matrix, and minimize risk over the eligible rate/stop pairs at each cap. The
-coarse search keeps every second positive rate and every second geometric
-stopping point, together with zero and all caps. Joint refinement changes any
-reported risk by less than $3 \times 10^{-5}$. All positive-stop selections have
-interior rates. Replaying 112 selected endpoints with the separately enumerated
-full tensor operator gives maximum absolute risk discrepancy below $10^{-9}$.
-
-The saved results include both grids, all selected rates and stops, and both
-risk arrays. The source supplement's \texttt{README.md} gives regeneration and
-verification commands. Unlike \cref{fig:conference-tuned-intro}, this search
-uses a finite stopping grid as well as a finite rate grid. Refinement and replay
-assess that calculation; they do not bound the error relative to the
-unrestricted oracle. The zero contours interpolate plotted grid-risk differences
-and are not certified transition curves. No new observations are sampled, and no
-claim of prospective evaluation is made.
 
 \subsection{Paths to a shared least-squares solution}
 \label{sec:coefficient-paths}
@@ -1699,61 +1221,12 @@ learning before stopping. The oracle theorem separately compares noisy
 fresh-sample SGD after each method chooses its rate and stop; distance to a
 sample OLS solution alone does not establish its risk ordering.
 
-\subsection{Retuning the calibrated anchors}
-\label{sec:retuned-anchors}
-
-Both fixed-calibration anchor comparisons disappear after rate and stopping
-adjustment. \Cref{tab:conference-adjustment} compares the fixed independent
-anchor with selection among stable configurations on a declared coarse grid,
-using the same observation cap. At the dependent anchor, selection favors U
-under both objectives. Thus the fixed-calibration comparisons do not establish
-the ordering after tuning that \cref{thm:conference-predictive} addresses. The
-wider study retains failures of unrestricted moment calculations and a Monte
-Carlo covariance gate (\cref{sec:exact-risk-diagnostics}). Those failures
-prevent a claim of complete agreement with simulation; they do not enter the
-oracle theorem's certificates.
-
-\begin{table}[t]
-  \centering
-  \begin{tabular}{rrrr}
-    \toprule
-    $B$ & $k$ (cap) &  Fixed gap & Adjusted gap \\
-    \midrule
-      1 &     1,000 & $-.266270$ &   $-.005695$ \\
-      1 &    10,000 & $+.050643$ &   $-.002562$ \\
-     10 &     1,000 & $-.334899$ &   $-.001381$ \\
-     10 &    10,000 & $-.014046$ &   $-.000103$ \\
-    \bottomrule
-  \end{tabular}
-  \caption{
-    SD-minus-U rare-risk differences at the independent anchor. For the adjusted
-    gaps, we select among stable configurations on the declared coarse grid,
-    using the same observation cap. This search removes the fixed-rate stopping
-    reversal.
-  }
-  \label{tab:conference-adjustment}
-\end{table}
-
-The broader exact-moment study underlying \cref{tab:conference-adjustment}
-covers 228 binary laws, 51,048 training configurations, and 2,571,800 endpoints.
-It varies prevalence, dependence, signal, noise, learning rate, batch size, and
-stopping, comparing both equal update counts and equal observation counts. The
-primary adjusted comparison minimizes known population risk among
-mean-square-stable candidates and initialization, on a coarse rate grid from
-$1.953125 \times 10^{-6}$ to $.64$. A separate resolution check uses 16 laws. At
-the independent anchor's late $B = 1$ stop, selected rates $h_U = .004$ and
-$h_S = .0003125$ remove the fixed-rate SD disadvantage. At the dependent anchor,
-adjustment favors U under both objectives. Reversals and objective disagreements
-remain for other laws, within the stated finite searches.
-
 \section{Empirical methods}
 \label{sec:empirical-methods}
 
 The controlled study isolates changes to the oracle training model and compares
-calibration with adaptive selection. The sampled binary and Mushroom studies ask
-how validation coverage, the candidate search, and preprocessing affect
-practical comparisons. All comparisons pair the scaling rules within each
-replication or partition. The protocols below specify which data and candidates
+calibration with adaptive selection. All comparisons pair the scaling rules
+within each replication. The protocols below specify which data and candidates
 each comparison uses.
 
 \subsection{Controlled departures from the oracle model}
@@ -1930,708 +1403,7 @@ across evaluation replications and report their Monte Carlo standard errors.
 These errors condition on the frozen calibration choices; they exclude
 calibration uncertainty and adjustments for multiple comparisons.
 
-\subsection{Sampled binary laws and categorical data}
-\label{sec:practical}
-
-The additional studies in \cref{sec:conference-experiments} use broader binary
-laws and Mushroom data with estimated preprocessing and validation selection.
-Their training arms and candidate searches differ from the controlled study in
-\cref{sec:theory-bridge-protocol}. These finite-grid comparisons do not extend
-the population theorems to estimated scales. The settings and data generation
-are in \path{experiments/common/data.py}. The searches share data and sampling
-streams within each study; \cref{tab:search-protocols} identifies their
-candidate sets and costs. Saved outputs are grouped by search in
-\path{results/synthetic/} and \path{results/mushroom/}.
-
-\subsubsection{Binary data and preprocessing}
-
-For the synthetic experiment, we use eight feasible binary laws with 128
-independent replications per law, 256 training observations, and 128 independent
-validation observations. \Cref{tab:synthetic-laws} lists every law. We compare
-known preprocessing with estimated scales, training centering with a fixed or
-fitted intercept, and uncentered predictors with a fitted intercept. We estimate
-variances with denominator $n$ and give constant training columns divisor one
-and coefficient zero. Absent features therefore cannot acquire a fitted effect
-in the estimated preprocessing arms. Fitted intercepts start at the training
-response mean, while the population-oracle arms start at the true centered
-intercept of zero. SGD samples with replacement from a fixed noisy training set,
-so revisiting an observation also reuses its noise.
-
-\begin{table}[ht]
-  \centering
-  \begin{tabular}{lrrrrr}
-    \toprule
-    Law                &  $q$ & $\ell$ & $\beta_C^*$ & $\beta_R^*$ & $\sigma^2$ \\
-    \midrule
-    C1                 &  .02 &      0 &           1 &           1 &          3 \\
-    Rarer C1           & .002 &      0 &           1 &           1 &          3 \\
-    C2                 &  .02 &      1 &           2 &           1 &          4 \\
-    Rarer C2           & .002 &      1 &           2 &           1 &          4 \\
-    Opposite, nested   &  .02 &      1 &           2 &          -1 &          4 \\
-    Opposite, disjoint &  .02 &     -1 &           2 &          -1 &          4 \\
-    Rare only          &  .02 &      0 &           0 &           1 &          1 \\
-    Common only        &  .02 &      0 &           1 &           0 &          1 \\
-    \bottomrule
-  \end{tabular}
-  \caption{
-    Sampled binary laws. The common prevalence is $1/2$ and
-    $\Prob(I = 1,J = 1) = q(1 + \ell)/2$. Responses use population-centered
-    features and independent Gaussian noise with the stated variance.
-  }
-  \label{tab:synthetic-laws}
-\end{table}
-
-\subsubsection{Mushroom data and partitions}
-
-We fit a squared-loss linear predictor to the recorded poisonous label in the
-UCI Mushroom dataset \citep{uciMushroom}, using all 22 categorical predictors.
-The declared subgroup consists of mushrooms with green spore-print color, which
-accounts for 72 of 8124 records. The records are hypothetical descriptions
-derived from a field guide, so evaluation on random partitions does not
-establish generalization to new species or field data. There are no duplicate
-predictor rows. We construct the vocabulary and estimate centering and scales
-from training data alone, treat missingness as a category, and map unknown
-categories to zero blocks. We store the one-hot design sparsely and implement
-centering algebraically. Because the full one-hot design is rank deficient, its
-coefficients depend on the optimizer and cannot be interpreted as uniquely
-identified effects.
-
-We use 32 random partitions for each pair of training and validation sizes,
-$(256,128)$ and $(2048,1024)$, holding out the remaining records for testing.
-All candidates share partitions and replacement index streams. We use batches
-$B \in \{16,128\}$ and caps $M \in \{512,2048,8192\}$, and do not clip
-predictions.
-
-\subsection{Candidate searches and validation rules}
-\label{sec:practical-searches}
-
-The main Mushroom comparison uses four rules: no scaling, SD, damping with
-$\lambda = .01$, and variance scaling, with divisors $1$, $\sqrt{v_j}$,
-$\sqrt{v_j + .01}$, and $v_j$, respectively. Population variances are used only
-in the synthetic arm with known preprocessing; all other arms use training
-variances with denominator $n$. Each rule receives the same 25-rate search. The
-five-rate reference compares no scaling, SD, and damping. The 17-rate Mushroom
-search compares these three rules across preprocessing arms; the separate
-damping comparison adds variance scaling and four other fixed offsets in the
-centered arm with a fitted intercept.
-
-All these searches set $\eta = a/\max(L,10^{-12})$, where $L$ is the largest
-empirical curvature, including the unscaled intercept coordinate when fitted.
-This calibration does not guarantee stochastic stability. The five-rate grid is
-\[
-  a \in \{.001,.01,.05,.2,.8\}.
-\]
-The 17-rate grid contains
-\[
-  a \in \{.001,.01,.05,.2,.4,.6,.8,1,1.2,1.4,1.6,1.8,2,2.4,3.2,4.8,6.4\}.
-\]
-The 25-rate grid adds $10^{-5}$, $10^{-4}$, and six successive doublings from
-$12.8$ through $409.6$. The grids are nested, so the smaller searches measure
-sensitivity to rate range and search effort on the same data. Each grid was
-specified before evaluating its added candidates; test outcomes enter neither
-grid choice nor validation selection. Reusing these data does not provide
-independent confirmation on new data.
-
-Synthetic data use batches $B \in \{1,16\}$ and caps $M \in \{128,512,2048\}$.
-Mushroom uses $B \in \{16,128\}$ and $M \in \{512,2048,8192\}$. The standard
-stopping sets are $S_{\mathrm{syn}} = \{0,128,512,2048\}$ and
-$S_{\mathrm{cat}} = \{0,512,2048,8192\}$. Refined stopping adds $256,1024$ for
-synthetic data and $128,256,\allowbreak1024,4096$ for Mushroom. At a smaller
-cap, only stops at or below it are eligible.
-
-\begin{table}[ht]
-  \centering
-  \small
-  \begin{tabular}{llllrl}
-    \toprule
-    Study     & Rates (count; range)    & Batches  & Stops              &  Cost & Rate boundaries \\
-    \midrule
-    Mushroom  & $25;\ 10^{-5}$--$409.6$ & $16,128$ & $S_{\mathrm{cat}}$ & $50M$ & None selected   \\
-    Mushroom  & Same 25                 & $16,128$ & Refined            & $50M$ & None selected   \\
-    Mushroom  & $17;\ .001$--$6.4$      & $16,128$ & Standard/refined   & $34M$ & Some arms/stops \\
-    Mushroom  & $5;\ .001$--$.8$        & $16,128$ & $S_{\mathrm{cat}}$ & $10M$ & Upper edge      \\
-    Synthetic & $25;\ 10^{-5}$--$409.6$ & $1,16$   & Standard/refined   & $50M$ & Both edges      \\
-    Synthetic & $5;\ .001$--$.8$        & $1,16$   & $S_{\mathrm{syn}}$ & $10M$ & Retained        \\
-    \bottomrule
-  \end{tabular}
-  \caption{
-    Search protocols for the practical comparisons. The main Mushroom results
-    use the first row. Rate factors divide the largest empirical curvature.
-    Costs are per scaling rule, preprocessing arm, and replication or partition
-    at cap $M$. The damping comparison also uses the 17-rate protocol,
-    separately for each fixed offset. Boundary statements describe
-    positive-budget selections across the reported arms and caps, not continuous
-    optimality.
-  }
-  \label{tab:search-protocols}
-\end{table}
-
-We jointly select rate, batch size, and stopping count by aggregate or
-rare-presence validation half squared loss. If the rare validation group is
-empty, its selector falls back to aggregate loss. We retain initialization,
-numerical failures, and extreme finite selections, and do not refit models on
-validation data. The five-rate reference also reports fixed $a = .05$, $B = 16$
-and selection of rate and batch at fixed stops.
-
-\Cref{tab:search-protocols} counts nominal training observations; early
-numerical failures can reduce executed work. Checkpoints share paths, so
-refining the stopping grid adds scoring but no training. Preprocessing,
-curvature calibration, and validation scoring are outside these counts.
-Comparing five fixed damping offsets costs five times as much as evaluating one
-fixed rule.
-
-\section{Further practical comparisons}
-\label{sec:practical-comparisons}
-
-We now examine further binary laws and a real dataset, focusing on missing rare
-validation observations, sensitivity to the tuning search, and sensitivity to
-prediction postprocessing.
-
-These studies sample with replacement from fixed noisy training sets, estimate
-preprocessing, and include fitted intercepts. Reusing a row also reuses its
-noise, and the processed-observation count $M$ can exceed the training-set size
-$n$. Unlike \cref{sec:theory-bridge}, these studies also change the signal laws
-and candidate searches, so they do not isolate departures from the theorem. The
-source supplement contains the full protocols, code, data, and saved results
-(\cref{sec:practical,sec:reproducibility}).
-
-\paragraph{Scaling rules.}
-
-Alongside U and SD, we include damping to limit amplification of low-variance
-features and variance scaling to examine stronger amplification. Let $v_j$ be
-the population feature variance or its training-data estimate. Damping uses a
-fixed offset $\lambda > 0$:
-\begin{equation}
-  s_j = \sqrt{v_j + \lambda},\qquad P_{jj}
-      = \frac{1}{v_j + \lambda}. \label{eq:conference-damped}
-\end{equation}
-We use $\lambda = 0.01$ as a heuristic, fixed before evaluation. At the same
-learning rate, it approximately halves the SD update at binary prevalence $0.01$
-while retaining $0.96$ of the update for a balanced feature. Variance scaling
-uses $s_j = v_j$, giving $P_{jj} = v_j^{-2}$ for positive variances. These
-additional rules examine how the amount of amplification affects the comparison;
-the theorem does not establish an optimal choice among them.
-
-\paragraph{Missing rare validation observations.}
-
-The sampled binary study uses eight laws, 128 replications per law, 256 training
-observations, and 128 validation observations. It compares known preprocessing,
-estimated scales, training centering with a fixed or fitted intercept, and
-uncentered predictors with a fitted intercept. Rates are calibrated by the
-largest empirical curvature, which does not guarantee stochastic stability.
-\Cref{sec:practical,sec:practical-searches} give the laws and candidate
-searches.
-
-For the two laws with $q = .002$, there are no rare validation observations in
-106 and 105 of 128 replications. The declared selection rule then falls back to
-aggregate loss. One selected SD predictor has validation half squared loss
-$2.086$ but rare loss about $2.257 \times 10^{33}$. High-precision replay of the
-worst selected replication in each combination of law and scaling preserves
-those selections in the five-rate search (\cref{sec:five-rate-replay}). This is
-a coverage failure for the admitted candidate family: validation can select a
-predictor whose extreme errors occur in a group absent from validation. It does
-not show that such losses persist under a stability-screened search or arise
-from the stable tradeoff in the theorem.
-
-The 25-rate synthetic search has unresolved replay discrepancies affecting
-extreme mean risks. We do not use those means to rank normalization rules;
-\cref{tab:review-audit-impact} identifies the affected summaries and separates
-their evidence from the five-rate high-precision investigation.
-
-\paragraph{Sensitivity to tuning in categorical prediction.}
-
-We next examine how the tuning search and selection objective affect a
-comparison on UCI Mushroom. We predict the recorded poisonous label under
-squared loss using all 22 categorical predictors \citep{uciMushroom}. The
-declared rare subgroup contains the 72 green-spore-print records among 8124
-observations. One-hot vocabularies, means, and scales use training data alone;
-missingness is a category and unknown categories map to zero blocks. We use 32
-paired partitions at each training/validation size, $(256,128)$ and
-$(2048,1024)$, and test on the remaining records. MCSEs describe variation
-across partitions and optimization within this fixed dataset, not population
-confidence intervals.
-
-Each of the four rules receives the same 25 curvature-relative rate factors from
-$10^{-5}$ to $409.6$, batches $B \in \{16,128\}$, and stopping checkpoints
-$0,512,2048,8192$. Each selects its rate, batch, and stop by aggregate or rare
-validation loss. At cap $M$, the 50 trajectories cost up to $50M$ processed
-training observations per rule and preprocessing arm; scoring, preprocessing,
-and curvature calibration are additional work. The damping offset remains fixed
-at $.01$. \Cref{tab:search-protocols} documents this search and the smaller
-grids used to assess tuning sensitivity.
-
-\begin{figure}[t]
-  \centering
-  \includegraphics{../figures/mushroom-final/selected-risks.pdf}
-  \caption{
-    Search and clipping change the Mushroom comparison. Both panels use
-    $n = 2048$, 1024 validation records, cap $M = 8192$, centered predictors,
-    and a fitted intercept. Left: SD-minus-U rare half squared loss under five-
-    and 25-rate searches, with unchanged stopping checkpoints. Negative favors
-    SD; work counts nominal training observations per scaling. Right: aggregate
-    half squared loss before and after clipping to $[0,1]$, using the same
-    predictors selected by rare validation in the 25-rate search. Points show
-    means with one MCSE across 32 partitions, paired between scalings on the
-    left. \Cref{tab:review-clipping} gives both losses under both selection
-    objectives.
-  }
-  \label{fig:conference-practical}
-\end{figure}
-
-\Cref{fig:conference-practical} shows how the search and clipping affect the
-comparison at the larger sample size. Under aggregate selection, the SD-minus-U
-rare-risk gap changes from $-.006570$ (paired MCSE $.001526$) in the five-rate
-search to $-.001192$ ($.001318$) in the 25-rate search. The paired change is
-$+.005379$ ($.001061$). The expanded search therefore reduces the SD advantage
-and leaves the gap within two MCSE of zero, without establishing equivalence.
-Under rare selection, the gap changes from $-.009307$ ($.001315$) to $-.001421$
-($.000470$), a paired change of $+.007886$ ($.001247$). SD retains lower rare
-loss in this comparison, but its raw aggregate loss varies widely. Both the
-search and the selection objective matter when interpreting the comparison.
-
-Damping has lower aggregate and rare loss than no scaling under aggregate
-selection, with differences $-.000532$ ($.000056$) and $-.005273$ ($.000797$).
-Variance scaling has higher rare loss, with difference $.045630$ ($.008323$),
-while its aggregate contrast is unresolved. Several fixed damping offsets also
-improve the larger-sample comparison, but comparing the five-offset family uses
-more total work and does not establish a deployable offset-selection rule
-(\cref{sec:mushroom-sensitivity}).
-
-Across both sample sizes and the standard and refined stopping searches, no
-positive-budget Mushroom selection reaches a rate boundary. This resolves the
-tested grid edges, not continuous optimality. At the smaller sample size, five
-training partitions and thirteen validation partitions lack green observations;
-we retain them with their declared fallbacks.
-
-The experiment measures held-out prediction differences in a rank-deficient
-one-hot representation. It does not isolate transient learning from solution
-selection, so these differences cannot be attributed to early stopping alone. A
-converged prediction reference and identifiable prediction contrasts would be
-needed for that interpretation. Random partitions of these field-guide
-descriptions also do not establish generalization to new species or field data.
-
-\paragraph{Sensitivity to prediction clipping.}
-
-For labels in $[0,1]$, clipping predictions to this interval cannot increase
-squared loss for any fixed predictor. This provides a further check on how much
-the observed comparisons depend on extreme predictions.
-\Cref{fig:conference-practical} shows the aggregate losses under rare selection;
-\cref{tab:review-clipping} reports both losses under both selection objectives.
-Clipping retains the original validation scores and requires no additional
-training.
-
-Under rare validation, clipping changes the aggregate mean ordering of SD and
-unscaled training and sharply reduces variance scaling's aggregate loss. Damping
-retains the lowest mean of both losses among the four rules under either
-selection objective. These are descriptive comparisons of the clipped
-predictors. Their changed magnitudes show why raw catastrophic losses cannot
-support general recommendations about normalization. Selecting by clipped
-validation loss would define a different procedure, which this post hoc
-diagnostic does not evaluate.
-
-\section{Search sensitivity}
-\label{sec:mushroom-rate-search}
-
-To assess how the tuning search affects apparent scaling advantages, we compare
-nested five-, 17-, and 25-rate searches on the same data and sampling streams,
-with the costs and checkpoints in \cref{tab:search-protocols}. The five-rate
-results provide a reference for this comparison. The main Mushroom results use
-the 25-rate search.
-
-\subsection{Five-rate reference}
-\label{sec:five-rate-reference}
-
-\begin{figure}[ht]
-  \centering
-  \includegraphics{../figures/practical-selection/practical-selection.pdf}
-  \caption{
-    Five-rate reference for the search-sensitivity comparison. Top: fixed
-    configurations for the independent and dependent binary laws, with known
-    preprocessing or training centering and a fitted intercept
-    (\cref{sec:fixed-preprocessing}). Rates use empirical curvature. Bottom:
-    Mushroom results from the five-rate search. The large-sample SD advantage
-    under aggregate selection is within two MCSE of zero in the 25-rate search
-    of \cref{fig:conference-practical}. Error bars are one MCSE.
-  }
-  \label{fig:practical-original}
-\end{figure}
-
-\Cref{tab:practical} reports five-rate Mushroom results with centered predictors
-and a fitted intercept at the largest cap, jointly selecting the rate, batch
-size, and stopping count. We separately retain the other preprocessing arms,
-shorter caps, fixed stops, all paths, and the search across scaling rules, which
-requires three times as much work.
-
-\begin{table}[t]
-  \centering
-  \small
-  \begin{tabular}{llrr}
-    \toprule
-    Validation objective & Scaling &    Aggregate loss &         Rare loss \\
-    \midrule
-    Aggregate            & None    & .001754 (.000060) & .012482 (.001386) \\
-    Aggregate            & SD      & .004617 (.002125) & .005912 (.001054) \\
-    Aggregate            & Damped  & .001175 (.000034) & .004151 (.000465) \\
-    Rare                 & None    & .001878 (.000130) & .012465 (.001382) \\
-    Rare                 & SD      & .123905 (.075527) & .003158 (.000451) \\
-    Rare                 & Damped  & .014966 (.009145) & .003984 (.000495) \\
-    \bottomrule
-  \end{tabular}
-  \caption{
-    Mushroom held-out half squared loss (MCSE), with $n = 2048$, 1024 validation
-    records, and cap $M = 8192$, in the five-rate search. Each scaling receives
-    ten trajectories. MCSE describes variation across partitions and
-    optimization runs conditional on this dataset. It does not give a population
-    confidence interval.
-  }
-  \label{tab:practical}
-\end{table}
-
-Under aggregate selection, the SD-minus-none rare-loss difference is $-0.00657$
-(paired MCSE $0.00153$), and the aggregate difference is $+0.002863$
-($0.00213$). Selecting SD by rare rather than aggregate validation loss reduces
-rare loss by $0.002754$ ($0.000967$), while increasing aggregate loss by
-$0.11929$ ($0.0756$). The green coefficient on the original scale averages
-$0.4822$, $0.7462$, and $0.7678$ for none, SD, and damped scaling under
-aggregate selection. Other categorical coefficients partly offset its larger
-contribution. These results show that relative scaling affects prediction under
-a finite budget, with the ordering depending on the objective and tuning.
-
-At the smaller sample size, five training partitions and thirteen validation
-partitions contain no green observations. At the larger size, aggregate
-validation selects the largest rate factor for unscaled training in every
-partition, leaving the optimum unresolved. These limits in coverage and search
-range preclude a general normalization recommendation. Independent checks
-reconstruct every archived validation and test loss, selection, and paired
-uncertainty estimate, and replay representative complete paths in transformed
-coordinates. The saved results retain the reported numerical failures.
-
-\subsection{Rate range and stopping checkpoints}
-
-The five-rate search selects the upper factor $.8$ for unscaled training in all
-32 large-sample partitions under aggregate validation. The 17-rate search tests
-whether this boundary explains the apparent SD advantage. It uses the same three
-scaling rules, sample sizes, preprocessing arms, partitions, and replacement
-streams. The primary arm centers predictors and fits an intercept. Each rule
-receives 34 trajectories, compared with ten in the five-rate search; the refined
-stopping search reuses those trajectories.
-
-\begin{table}[ht]
-  \centering
-  \small
-  \begin{tabular}{rllrrr}
-    \toprule
-     $n$ & Validation & Scaling &            Five rates &              17 rates & 17 rates, refined stops \\
-    \midrule
-     256 & Aggregate  & SD      & $-.027793\ (.006479)$ & $-.022763\ (.007829)$ &   $-.020067\ (.005373)$ \\
-     256 & Aggregate  & Damped  & $-.023451\ (.006277)$ & $-.020637\ (.007882)$ &   $-.018331\ (.005449)$ \\
-     256 & Rare       & SD      & $-.020538\ (.005816)$ & $-.023897\ (.014940)$ &   $-.002463\ (.006956)$ \\
-     256 & Rare       & Damped  & $-.018312\ (.005436)$ & $-.024033\ (.014674)$ &   $-.003186\ (.005178)$ \\
-    2048 & Aggregate  & SD      & $-.006570\ (.001526)$ & $-.001192\ (.001318)$ &   $-.000597\ (.001204)$ \\
-    2048 & Aggregate  & Damped  & $-.008331\ (.001158)$ & $-.005273\ (.000797)$ &   $-.004649\ (.000519)$ \\
-    2048 & Rare       & SD      & $-.009307\ (.001315)$ & $-.001421\ (.000470)$ &   $-.001309\ (.000342)$ \\
-    2048 & Rare       & Damped  & $-.008481\ (.001122)$ & $-.003179\ (.000312)$ &   $-.002730\ (.000298)$ \\
-    \bottomrule
-  \end{tabular}
-  \caption{
-    Scaling-minus-none rare half squared loss at cap $M = 8192$, with paired
-    MCSE in parentheses, for centered predictors and a fitted intercept. Each
-    column uses all 32 partitions per size. The five- and 17-rate columns use
-    standard stops, while the last column adds stopping checkpoints. MCSEs
-    describe variation across partitions and optimization runs within this
-    dataset.
-  }
-  \label{tab:mushroom-expanded-gaps}
-\end{table}
-
-\Cref{tab:mushroom-expanded-gaps} shows how expanding the rate search changes
-the comparisons. At the larger sample size, aggregate selection gives unscaled
-aggregate loss $.001341\ (.000074)$ and rare loss $.005955\ (.000888)$, compared
-with $.001754\ (.000060)$ and $.012482\ (.001386)$ in the five-rate search. SD's
-rare-risk advantage is within two MCSE of zero. Damping retains lower aggregate
-and rare loss, at $.000810\ (.000039)$ and $.000682\ (.000133)$. At the smaller
-sample size, aggregate selection gives rare losses $.098799\ (.032694)$,
-$.076035\ (.028437)$, and $.078161\ (.028979)$ for none, SD, and damping.
-Pairing resolves differences that the marginal error bars alone do not show.
-
-Selecting by rare validation loss can increase aggregate loss. At $n = 2048$,
-switching the 17-rate SD search from aggregate to rare validation reduces rare
-loss by $.002507\ (.000951)$ but raises aggregate loss by $.136592\ (.079298)$.
-Under rare selection, the aggregate mean is $.141068$, median $.004357$, and
-maximum $2.36513$. For unscaled training, the corresponding mean is $.039395$,
-median $.002703$, and maximum $.509963$. We retain extreme finite outcomes in
-every mean.
-
-\begin{figure}[tp]
-  \centering
-  \includegraphics{../figures/mushroom-rate-search/paths-n2048-aggregate.pdf}
-  \caption{
-    Paths on the original coefficient scale and selected endpoints under
-    aggregate validation at $n = 2048$. Dotted curves use the rates and batches
-    selected from the five-rate grid, and solid curves use those selected from
-    the 17-rate grid. Crosses and circles to the right show the selected
-    endpoints at a separate plotting position. Curves beyond each selected stop
-    illustrate how training would continue. Means use all 32 partitions. Risk
-    axes are logarithmic, while coefficient and contribution axes use a
-    symmetric logarithmic scale with a linear region within $.1$ of zero. Other
-    features offset part of the larger green coefficient's contribution. The
-    artifact also includes paths for the smaller sample and for rare-objective
-    selection.
-  }
-  \label{fig:mushroom-expanded-paths}
-\end{figure}
-
-Expanding the search increases the mean unscaled green coefficient to $.59990$
-from $.48216$, while SD and damping give means $.77633$ and $.91262$.
-\Cref{fig:mushroom-expanded-paths} shows both risks alongside the coefficient
-paths. The centered green contributions are $.59460$, $.76948$, and $.90456$,
-with other features contributing $-.14755$, $-.30233$, and $-.40205$ in the
-subgroup. Centered intercepts are approximately $.485$. Because the full one-hot
-design is rank deficient, its coefficients still depend on the optimizer.
-
-All 32 unscaled aggregate selections in the 17-rate primary search use $B = 16$,
-$M = 8192$, and factors $.6$--$1.8$. At the same batch size and stop, the next
-higher tested factor always gives worse validation loss, with a smallest gap of
-$9.57 \times 10^{-7}$. No primary selection uses the upper factor $6.4$. The
-17-rate grid therefore resolves the five-rate boundary, although it establishes
-neither a continuous optimum nor equal approximation error across scaling rules.
-In the separate search with uncentered predictors, rare validation, and extra
-early stops, 49 selections across sample sizes and budget caps still use the
-upper boundary. The 25-rate search below assesses these remaining boundary
-selections.
-
-SD retains larger rare-risk advantages at shorter budgets. At large-sample caps
-512 and 2048, the primary aggregate-selected differences are
-$-.072857\ (.011815)$ and $-.012679\ (.004061)$. At cap 8192, fixing the
-centered intercept gives a difference of $-.000925\ (.001250)$, while using
-uncentered predictors with a fitted intercept gives $-.038224\ (.004383)$ under
-the standard stopping grid. The result at the longest budget with centered
-predictors therefore does not apply to every preprocessing setting.
-
-The archives retain 156,672 endpoints and 20,736 selection decisions, including
-2950 failed endpoints from 1798 trajectories. We record the update at which each
-trajectory first fails, defined as nonfinite arithmetic or a coefficient or
-centered intercept exceeding $10^{100}$. All later endpoints remain flagged.
-Finite unstable candidates stay eligible, and no selection requires the fallback
-for an entirely failed candidate set. Five small-sample training partitions and
-thirteen validation partitions lack the green category. The specified fallback
-to aggregate validation loss provides no subgroup information. Under 17-rate
-aggregate selection, mean rare loss on the five partitions without green
-training observations is $.51233$, $.43994$, and $.44841$ for none, SD, and
-damping.
-
-We store the protocol, declaration, and complete summaries separately for the
-searches over five and 17 rate factors. Independent checks reconstruct all
-losses, selections, paired summaries, coefficient contributions, and boundary
-diagnostics. They also replay all paths for replication zero of each size and
-every selected path for the remaining partitions in transformed coordinates, and
-compare results for the five-factor subset with the saved results from
-\cref{sec:five-rate-reference}.
-
-\subsection{Boundaries of the 25-rate search}
-
-In the centered Mushroom arm with a fitted intercept, the 17-rate search selects
-factor $6.4$ for two large-sample variance-scaling fits. The 25-rate search
-includes the neighbor $12.8$, which gives finite but worse validation scores for
-both fits. Across both Mushroom sample sizes, all preprocessing arms, caps,
-objectives, and both stopping searches, no selection with a positive budget
-reaches either grid boundary. With the standard stops, every selected predictor
-matches the nested 17-factor search. Sixty candidate indices change because the
-deterministic tie rule assigns the same initialization a lower factor. The
-refined stopping search selects some added rates, up to $102.4$, and we report
-it separately.
-
-Across the standard and refined 25-rate searches, synthetic selections reach the
-lower rate boundary 106 times and the upper boundary 52 times, counting repeated
-queries on the same replications. Only variance scaling reaches the upper
-boundary, under known preprocessing in the two rarer anchor laws. Resolving the
-Mushroom boundaries therefore leaves these synthetic cases open. Across both
-datasets, the 25-rate archives retain 6,451,200 endpoints and 387,072 choices,
-including 1,031,540 failed endpoints on 330,918 failed paths.
-
-\section{Preprocessing and damping sensitivity}
-\label{sec:preprocessing-sensitivity}
-
-These comparisons examine how centering, intercept fitting, and the strength of
-feature amplification affect risk under fixed configurations and validation
-selection. The comparison across preprocessing arms uses the 25-rate search for
-all four scaling rules. The damping comparison varies the offset over five fixed
-values, using the 17-rate search for each. Neither comparison selects a scaling
-rule or damping offset by test loss.
-
-\subsection{Estimated preprocessing at fixed rates}
-\label{sec:fixed-preprocessing}
-
-The upper panels of \cref{fig:practical-original} compare known preprocessing
-with training centering and a fitted intercept, using the fixed rate factor
-$a = .05$ and batch size $B = 16$ from the five-rate reference.
-
-Differences in how quickly the coefficients are learned remain visible with
-estimated preprocessing. For the independent $(1,1)$ signal at $q = 0.02$ and
-noise variance three, the fixed configuration gives an SD-minus-none rare excess
-half squared loss of $-0.1653$ (paired MCSE $0.0295$) at $M = 128$ and $+0.0901$
-($0.0697$) at $M = 2048$ with training centering and a fitted intercept. The
-early advantage is clear, while the later disadvantage is within two MCSE of
-zero. At the latter budget, the rare-only signal favors SD by $0.2320$
-($0.0233$), whereas the common-only signal favors no scaling by $0.1272$
-($0.0159$). These observations concern the declared configurations with sampled
-data, rather than the exact calibrations of the population comparisons.
-
-\subsection{Scaling across preprocessing arms}
-\label{sec:variance-scaling-followup}
-
-Variance scaling uses $s_j = v_j$, so its coordinate multiplier is $\eta/v_j^2$.
-It amplifies low-variance features more strongly than SD at a fixed rate, while
-empirical-curvature calibration also changes $\eta$. We compare the resulting
-learning, noise, and stability under a finite budget.
-
-At $n = 2048$ and $M = 8192$, aggregate selection with the standard stops gives
-variance scaling aggregate loss $.311988$ (MCSE $.201772$) and rare loss
-$.051586$ ($.008319$) when predictors are centered and the intercept is fitted.
-Its rare-loss differences relative to none, SD, and damping are $.045630$
-($.008323$), $.046822$ ($.008189$), and $.050904$ ($.008322$), respectively.
-Each exceeds two paired MCSE, while the aggregate differences do not. For
-variance scaling, aggregate loss has median $.069802$ and maximum $6.505207$.
-Selecting by rare validation raises its aggregate mean to $25.5720$ (MCSE
-$8.0453$).
-
-\begin{table}[ht]
-  \centering
-  \begin{tabular}{rlrrrr}
-    \toprule
-     $n$ & Preprocessing      &    None &      SD &  Damped & Variance \\
-    \midrule
-     256 & Centered, fixed    & .101062 & .075937 & .077910 &  .079580 \\
-     256 & Centered, fitted   & .098799 & .076035 & .078161 &  .079579 \\
-     256 & Uncentered, fitted & .136151 & .076391 & .082727 &  .079542 \\
-    2048 & Centered, fixed    & .005647 & .004722 & .000652 &  .051601 \\
-    2048 & Centered, fitted   & .005955 & .004764 & .000682 &  .051586 \\
-    2048 & Uncentered, fitted & .043284 & .005060 & .007037 &  .049465 \\
-    \bottomrule
-  \end{tabular}
-  \caption{
-    Mean Mushroom rare-group loss under aggregate validation, cap $8192$, and
-    the standard stops, using the same 25-factor search for every rule. The
-    artifacts report both risks, paired uncertainty, and extreme outcomes for
-    every preprocessing arm.
-  }
-\end{table}
-
-At $n = 256$ with centered predictors and a fitted intercept, variance scaling
-increases aggregate loss relative to none by $.007047$ (MCSE $.000555$). The
-rare-loss difference of $-.019220$ ($.012351$) is unresolved. Five training
-partitions and thirteen validation partitions lack green observations, and we
-retain all of them. With uncentered predictors, variance scaling gives aggregate
-means $.179701$ (MCSE $.150890$) and $13.787223$ ($12.294085$) at the two sample
-sizes. These MCSEs describe variation across partitions of one fixed dataset.
-
-\paragraph{Extreme synthetic outcomes and unresolved cases.}
-
-We evaluate all eight laws and five preprocessing arms at equal effort. Some
-extreme synthetic risks have unresolved replay discrepancies
-(\cref{tab:review-audit-impact}); we do not use those means to rank the rules.
-For the rarer C2 law with centered predictors and a fitted intercept, aggregate
-selection at cap $2048$ gives variance scaling an archived rare-risk median of
-$.6836$, mean $1.727 \times 10^{30}$, MCSE $1.552 \times 10^{30}$, and maximum
-$1.974 \times 10^{32}$. Flagged selections dominate this mean, so its magnitude
-remains unverified. Extreme outcomes also dominate means for SD and damping, so
-they do not precisely estimate expected risk. Empty rare validation groups can
-still conceal severe prediction errors. For the rare-only signal, variance
-scaling gives aggregate mean $.01065$ ($.00311$) but rare mean $.4122$
-($.1467$), compared with $.2326$ ($.0319$) for no scaling.
-
-\subsection{Fixed damping offsets}
-\label{sec:mushroom-sensitivity}
-
-Damping limits the amplification of low-variance features, since
-$P_{jj} \leq 1/\lambda$. At the same learning rate, it multiplies the SD update
-on the original coefficient scale by $v_j/(v_j + \lambda)$. Thus $\lambda$ is
-the feature variance at which damping halves the SD update; features with much
-larger variance remain close to SD scaling. We fix the offset in variance units
-before evaluation, without deriving it from theory or selecting it by
-validation.
-
-For diagonal $C$, the population rule $P_\lambda = (C + \lambda I)^{-1}$
-satisfies $\lambda P_\lambda = (\lambda^{-1}C + I)^{-1}$. It therefore belongs,
-up to a scalar absorbed into the learning rate, to the preconditioner family of
-\citet{su2024preconditioning}.
-
-To examine sensitivity to the fixed heuristic offset $0.01$ in
-\cref{eq:conference-damped}, we compare five offsets
-$\lambda \in \{0.001,0.003,0.01,0.03,0.1\}$ for $s_j = \sqrt{v_j + \lambda}$,
-together with no scaling, SD ($\lambda = 0$), and variance scaling
-($s_j = v_j$). We reuse both sample sizes and all 32 partitions per size, and
-restrict the comparison to centered predictors with a fitted intercept. Each
-fixed rule receives the same 17 rate factors, two batch sizes, and stopping
-searches from \cref{sec:practical-searches}. Comparing the five positive offsets
-therefore requires five times the work of evaluating one fixed rule. We do not
-select an offset by test loss.
-
-\begin{table}[ht]
-  \centering
-  \begin{tabular}{lrr}
-    \toprule
-    Scaling          &    Aggregate loss &   Rare-group loss \\
-    \midrule
-    None             & .001341 (.000074) & .005955 (.000888) \\
-    SD               & .004476 (.001498) & .004764 (.001079) \\
-    Variance         & .311988 (.201772) & .051586 (.008319) \\
-    $\lambda = .001$ & .001282 (.000054) & .001543 (.000323) \\
-    $\lambda = .003$ & .001075 (.000031) & .001149 (.000165) \\
-    $\lambda = .01$  & .000810 (.000039) & .000682 (.000133) \\
-    $\lambda = .03$  & .000727 (.000044) & .000911 (.000277) \\
-    $\lambda = .1$   & .000812 (.000053) & .001858 (.000525) \\
-    \bottomrule
-  \end{tabular}
-  \caption{
-    Sensitivity to fixed damping offsets: mean held-out half squared loss (MCSE)
-    at $n = 2048$, $M = 8192$, under aggregate validation and the standard
-    stopping checkpoints. Each row receives 34 training paths per split.
-  }
-  \label{tab:mushroom-sensitivity}
-\end{table}
-
-Every tested positive offset reduces rare loss relative to no scaling by more
-than two paired MCSE. At offsets $.003$, $.01$, $.03$, and $.1$, both risks
-improve by this criterion, including when we add stopping checkpoints. At
-$.001$, however, the aggregate difference is $-.000059$ ($.000069$). The results
-therefore do not meet the predeclared criterion that both risks should improve
-at every positive offset. Offset $.03$ reduces aggregate loss relative to $.01$
-by $.000083$ ($.000019$), while the rare-loss difference is unresolved. These
-comparisons neither establish an optimal offset nor cover untested values.
-
-At $n = 256$, all five positive offsets improve both risks over no scaling at
-$M = 8192$ under aggregate validation. Selection by rare validation loss,
-however, has a severe failure at $\lambda = .03$. Aggregate loss has mean
-$42.6229$, median $.004108$, and maximum $1356.8142$, while rare loss has mean
-$4.7479$ and maximum $150.2734$. The partition responsible for most of this loss
-contains two green training examples and one green validation example. It
-selects a finite path with $B = 16$, $M = 2048$, and rate factor $1.4$, whose
-rare validation loss is $.000893$. Independent replay passes the declared
-numerical tolerance. We retain this failure in every summary.
-
-Variance scaling gives larger losses on the 17-rate grid, but two primary
-large-sample selections use the upper rate factor $6.4$. Across caps and
-objectives, it reaches the upper boundary in 31 selections, counting repeated
-partitions. No other rule reaches a rate boundary in this arm. The search
-boundary limits that comparison; the 25-rate search in
-\cref{sec:mushroom-rate-search} resolves these Mushroom boundary selections. The
-damping archive retains 139,264 endpoints, 6,144 selections, 1,501 failed paths,
-and 2,403 failed endpoints. We report all paired differences, selected paths,
-and results by feature-absence status in \path{results/mushroom/damping/}.
-
-\section{Numerical diagnostics}
-\label{sec:review-diagnostics}
-
-We assess the calculations separately for each study, distinguishing passing
-checks from unresolved discrepancies. These diagnostics use saved results
-without changing candidates or validation selections. The audit-impact and
-clipping records are in \path{results/diagnostics/}, and their generated tables
-are in \path{paper/generated/review-diagnostics.tex}. The source supplement's
-\texttt{README.md} gives regeneration and verification commands. These
-retrospective checks do not constitute a new prospective experiment.
-
-\subsection{Controlled training comparisons}
+\subsection{Numerical checks}
 
 Independent implementations check transformed-coordinate SGD against
 original-coordinate updates, the analytical losses against four-cell
@@ -2658,189 +1430,6 @@ coarse-grid comparisons, selection regret, and coverage diagnostics. The checks
 are in \path{checks/theory_bridge.py}. Summarization and plotting use saved
 results without training.
 
-\subsection{Exact-moment calculations and simulation}
-\label{sec:exact-risk-diagnostics}
-
-The exact-moment study in \cref{sec:retuned-anchors} retains invalid candidates
-in its unrestricted reports, including overflow and invalid moment calculations.
-Their incomplete comparisons do not establish an ordering of full grid minima. A
-separate paired simulation also retains a failed six-MCSE covariance gate: in
-the greater-rarity panel, a rare event with no rare training observations
-accounts for most of the exact noiseless rare-coefficient variance but occurs in
-none of the simulated feature streams. Conditioning the moment recurrence on
-that absence event explains most of the discrepancy. The investigation does not
-relax the gate or establish complete simulation agreement. The configuration,
-exact and simulated calculations, and conditional-absence calculation are in
-\path{experiments/exact_risk/}, with saved results in
-\path{results/exact-risk/}.
-
-\subsection{Validation coverage and high-precision replay}
-\label{sec:five-rate-replay}
-
-In the five-rate synthetic search, the two laws with $q = 0.002$ have no rare
-validation observations in 106 and 105 of 128 replications. Validation can then
-select a finite but explosive rare coefficient because no rare cases are
-available to reveal its error. One SD fit with centered predictors has a rare
-coefficient of about $-6.719 \times 10^{16}$ and validation half squared loss
-$2.086$, yet its exact rare loss over the binary cells is about
-$2.257 \times 10^{33}$. We retain this path in the results. In a separate
-investigation, we replay every eligible trajectory for the worst selected
-replication in each of 24 combinations of law and scaling, using 160-digit
-decimal arithmetic. All 24 selections remain unchanged, so the detected
-floating-point cancellation does not explain the failure. Means dominated by
-these extreme finite outcomes do not precisely estimate population risk. We also
-retain all 151 failed synthetic endpoints, flagged in the archive.
-
-\subsection{Replay discrepancies in the 25-rate search}
-
-The audit reconstructs every loss and selection and replays 100,271 paths in
-explicitly transformed coordinates. Coefficient paths shared with the five- and
-17-rate searches reproduce exactly. Reconstructed losses have maximum normwise
-discrepancy $1.36 \times 10^{-14}$ and leave every selection unchanged. Mushroom
-passes the declared trajectory and prediction tolerances. For synthetic data,
-however, the audit retains 63 discrepancies in twelve replications, all of which
-have empty rare validation groups. These comprise 60 checks of selected
-predictions, two first-failure times, and one trajectory check. Repeated queries
-can refer to the same selected path. The maximum normwise coefficient and
-prediction discrepancies are $.003747$ and $.004184$, exceeding the declared
-tolerances of $2 \times 10^{-9}$ and $10^{-8}$. All stored checkpoint statuses
-agree.
-
-The transformed replay therefore does not certify these extreme synthetic paths.
-Flagged selections dominate the rarer C2 mean in
-\cref{sec:variance-scaling-followup}, so its magnitude and its ranking against
-other scaling rules remain unverified. The records below map all retained
-discrepancies to their queries and affected summaries. We retain all candidates
-and selections in the archive. The audit records the affected configurations and
-disagreements in failure times. The settings are in
-\path{experiments/common/rates25.py}; saved outputs are in
-\path{results/synthetic/rates25/} and \path{results/mushroom/rates25/}.
-
-\subsubsection{Effects on reported risks}
-
-All 60 selected-prediction discrepancies occur in the centered/fitted synthetic
-arm, in the four laws listed in \cref{tab:review-audit-impact}. Each affected
-replication has an empty rare validation group, so aggregate and rare selection
-can repeat the same choice. The machine-readable record identifies every query,
-including its rate, batch, stop, objective, search, and archived test risks. The
-table groups these queries and reports their contribution to the mean rare risk
-under the 25-rate search with standard stops. Rounded to two decimal places,
-flagged selections account for $100\%$ of that mean for damping in rarer C1, and
-for SD, damping, and variance scaling in rarer C2. We therefore do not use those
-extreme means to rank normalization rules or estimate the severity of a
-practical failure. A dash does not certify every aspect of the corresponding
-law; it identifies a primary query without a flagged selected-prediction check.
-
-% BEGIN GENERATED REVIEW AUDIT TABLE
-\begin{table}[ht]
-  \centering
-  \small
-  \begin{tabular}{llrrl}
-    \toprule
-    Law & Scaling & Checks & Primary share & Replications (zero-based) \\
-    \midrule
-    Rarer C1 & Damped & 4 & 100.00\% & 103 \\
-    Rarer C1 & SD & 2 & --- & 82 \\
-    Rarer C1 & Variance & 10 & --- & 29, 82 \\
-    Rarer C2 & Damped & 6 & 100.00\% & 52 \\
-    Rarer C2 & SD & 10 & 100.00\% & 16, 52 \\
-    Rarer C2 & Variance & 22 & 100.00\% & 17, 68, 100, 108 \\
-    Opposite, disjoint & Damped & 4 & --- & 72 \\
-    Common only & SD & 2 & --- & 75 \\
-    \bottomrule
-  \end{tabular}
-  \caption{
-    Selected-prediction discrepancies in the centered/fitted synthetic
-    arm. Checks count selection queries, including repeated choices.
-    Primary share is the fraction of the archived mean rare risk
-    contributed by flagged selections at cap $2048$, under aggregate
-    validation and the 25-rate grid with standard stops. A dash
-    means this primary query has no flagged selection. These shares
-    locate dependence on discrepant paths; they do not correct
-    their risks.
-  }
-  \label{tab:review-audit-impact}
-\end{table}
-% END GENERATED REVIEW AUDIT TABLE
-
-The three remaining records concern rarer C2, replication zero, which lacks rare
-training and validation observations. Two centered/fitted SD paths with $B = 1$
-reach the failure threshold at different updates: factor $4.8$ fails at update
-198 in original coordinates versus 206 in transformed coordinates, and factor
-$6.4$ at 177 versus 179. The batch-one replay also exceeds the coefficient-path
-tolerance. Both implementations agree on statuses at stored checkpoints, and no
-selected reference endpoint is failed. These records limit claims about
-trajectory agreement and precise failure times; they are distinct from the 60
-selected-prediction checks.
-
-Higher-precision replay and reselection of the 25-rate candidate collections
-remain open. The 160-digit investigation in \cref{sec:five-rate-replay} covers
-the worst selected replications of the five-rate, three-rule search and
-preserves its 24 selections; it does not certify the 25-rate searches. The
-coverage failure in that investigation, the passing Mushroom replay, and the
-oracle theorem's moment certificates have separate evidence. The discrepancy
-records qualify the affected synthetic summaries without removing any path or
-resolving the failed numerical checks.
-
-\clearpage
-
-\subsection{Clipping without changing selection}
-
-For $y \in[0,1]$, projection of any prediction onto $[0,1]$ satisfies
-\[
-  \bigl(\Pi_{[0,1]}(\widehat y) - y\bigr)^2 \leq (\widehat y - y)^2.
-\]
-We apply this transformation to the saved predictors selected by the 25-factor
-search, with standard stopping checkpoints, cap $8192$, training centering, and
-a fitted intercept. Both sample sizes retain all 32 partitions and both
-validation objectives. We reconstruct test predictions from the saved
-original-scale coefficients and the training-derived vocabulary, check their raw
-losses against the archive, and verify the clipping inequality for every test
-observation. This changes neither training nor validation selection. In
-particular, we do not rescore candidates using clipped validation predictions.
-
-% BEGIN GENERATED REVIEW CLIPPING TABLE
-\begin{table}[ht]
-  \centering
-  \small
-  \begin{tabular}{llrrrr}
-    \toprule
-    Selection & Scaling & Raw aggregate & Clipped aggregate
-      & Raw rare & Clipped rare \\
-    \midrule
-    Aggregate & None & 0.001341 & 0.001102 & 0.005955 & 0.005504 \\
-    Aggregate & SD & 0.004476 & 0.001543 & 0.004764 & 0.004280 \\
-    Aggregate & Damped & 0.000810 & 0.000660 & 0.000682 & 0.000519 \\
-    Aggregate & Variance & 0.311988 & 0.052641 & 0.051586 & 0.051000 \\
-    Rare & None & 0.039395 & 0.031451 & 0.003678 & 0.002887 \\
-    Rare & SD & 0.141068 & 0.001864 & 0.002257 & 0.001826 \\
-    Rare & Damped & 0.002611 & 0.001452 & 0.000499 & 0.000324 \\
-    Rare & Variance & 25.572030 & 0.056872 & 0.019374 & 0.014308 \\
-    \bottomrule
-  \end{tabular}
-  \caption{
-    Post hoc clipping to $[0,1]$ of the saved Mushroom predictors in
-    \cref{fig:conference-practical}, with $n=2048$, cap $8192$,
-    centered predictors, and a fitted intercept. Means include all 32
-    partitions. Selection retains the original unclipped validation
-    scores; clipping requires no additional training. The diagnostic
-    archive also reports MCSEs, quantiles, and the smaller sample size.
-  }
-  \label{tab:review-clipping}
-\end{table}
-% END GENERATED REVIEW CLIPPING TABLE
-
-\Cref{tab:review-clipping} shows the larger-sample means. Under rare validation,
-SD has higher raw aggregate mean loss than no scaling but lower clipped
-aggregate mean loss. Variance scaling's large aggregate mean is also greatly
-reduced. Clipping bounds every test half squared loss by $1/2$, so the unbounded
-raw losses cannot describe this postprocessed procedure. The diagnostic
-preserves the descriptive mean advantage of damping in both risks under both
-objectives; it does not establish optimal damping or a uniform ranking.
-Quantiles, MCSEs, and all paired partition results remain in the diagnostic
-archive. The unbounded-response synthetic model has no analogous known label
-interval.
-
 \section{Source supplement}
 \label{sec:reproducibility}
 
@@ -2859,21 +1448,17 @@ finite-prevalence selections. Recorded diagnostics are in
 \path{results/oracle-limits/} and \path{results/oracle-finite/}; these checks
 supplement the analytic proofs.
 
-The certificate checkers are \path{checks/predictive_fixed_q.py} for
-\cref{thm:conference-predictive} and \path{checks/normalization_risk_theorem.py}
-for \cref{thm:conference-c1,thm:conference-c2}. Their recorded standard output
-is in \path{results/certificates/predictive-fixed-q.txt} and
-\path{results/certificates/normalization-risk.txt}. From the extracted archive,
+The certificate checker for \cref{thm:conference-predictive} is
+\path{checks/predictive_fixed_q.py}. Its recorded standard output is in
+\path{results/certificates/predictive-fixed-q.txt}. From the extracted archive,
 enter \texttt{devenv shell} and run
 \begin{verbatim}
 task check:predictive-fixed-q
-task check:normalization-risk
 \end{verbatim}
-These commands recompute the certificates without training models. The first
-checks the six continuous parameter regions in \cref{sec:predictive-proofs},
-including exact rational bounds and coverage volumes; the second checks the
-supporting fixed-calibration comparisons. The recorded output is a summary of
-the completed checks, not a substitute for rerunning the checkers.
+This command recomputes the certificates without training models. It checks the
+six continuous parameter regions in \cref{sec:predictive-proofs}, including
+exact rational bounds and coverage volumes. The recorded output is a summary of
+the completed checks, not a substitute for rerunning the checker.
 
 We ran the experiments on a local NixOS workstation with an AMD Ryzen 9 7900 CPU
 (12 cores, 24 hardware threads) and approximately 62\,GiB of usable RAM. The

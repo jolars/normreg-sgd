@@ -13,7 +13,40 @@ from numpy.testing import assert_allclose
 
 from checks.practical_selection import reference_path
 from experiments.common import data, five_rates, matched, rates25
+from experiments.diagnostics import run as diagnostics
 from experiments.signal_allocation import run as signal_allocation
+
+
+def check_diagnostics_without_manuscript():
+    """Keep archived diagnostics reproducible independently of the paper's scope."""
+    report = json.loads((diagnostics.OUTPUT / "summary.json").read_text())
+    expected_tables = (
+        diagnostics.ROOT / "paper/generated/review-diagnostics.tex"
+    ).read_text()
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        output = root / "results/diagnostics"
+        generated = root / "paper/generated/review-diagnostics.tex"
+        generated.parent.mkdir(parents=True)
+        with (
+            patch.object(diagnostics, "ROOT", root),
+            patch.object(diagnostics, "OUTPUT", output),
+            patch.object(diagnostics, "calculate", return_value=report),
+        ):
+            with patch.object(sys, "argv", ["diagnostics"]):
+                diagnostics.main()
+            assert not (root / "paper/main.tex").exists()
+            assert json.loads((output / "summary.json").read_text()) == report
+            assert generated.read_text() == expected_tables
+            with patch.object(sys, "argv", ["diagnostics", "--check"]):
+                diagnostics.main()
+                for artifact in (output / "summary.json", generated):
+                    content = artifact.read_text()
+                    artifact.write_text(content + "changed")
+                    with np.testing.assert_raises(AssertionError):
+                        diagnostics.main()
+                    artifact.write_text(content)
+    print("Archived diagnostics reproduce and check without manuscript tables.")
 
 
 def check_signal_allocation_summary():
@@ -180,6 +213,7 @@ def check_entry_points():
 
 
 if __name__ == "__main__":
+    check_diagnostics_without_manuscript()
     check_small_run()
     check_signal_allocation_summary()
     check_entry_points()

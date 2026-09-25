@@ -3,14 +3,20 @@
 This archive accompanies *Feature Normalization under Finite Training Budgets*.
 It contains the manuscript source, experiment and plotting code, source data,
 saved numerical arrays and summaries, certificate checkers, Lean proofs, and
-pinned environment definitions described in Appendix L. Commands below run from
-the extracted archive's root and do not require a Git checkout.
+pinned environment definitions described in the source-supplement appendix.
+Commands below run from the extracted archive's root and do not require a Git
+checkout.
 
 The anonymous review archive uses this document as its root `README.md` and
 omits repository CI and publishing documentation. It contains the same
 reproduction inputs as the complete source release. Private notes, mock reviews,
 instruction files, local environments, Python caches, and Lean's downloaded
 dependencies are excluded from both archives.
+
+The manuscript presents the oracle results, their numerical illustrations, the
+common-feature extension, and the controlled training study. The archive also
+retains earlier fixed-calibration, signal-allocation, synthetic, and Mushroom
+investigations with their numerical diagnostics.
 
 ## Environment and paper build
 
@@ -36,7 +42,7 @@ python -m venv .venv
 . .venv/bin/activate
 python -m pip install 'numpy>=2.0' 'scipy>=1.14' 'matplotlib>=3.10'
 python -m checks.predictive_fixed_q
-python -m checks.normalization_risk_theorem
+python -m checks.oracle_limits
 ```
 
 This alternative uses compatible dependency versions; the devenv environment
@@ -75,28 +81,30 @@ Inside `devenv shell`, run:
 
 ```sh
 task check:predictive-fixed-q
-task check:normalization-risk
 task check:oracle-limits
 task check:common-block
+task check:theory-bridge
 task check:results
 ```
 
-The first two commands recompute the certificates without training models. Their
-recorded output is in [`results/certificates/`](results/certificates/). The
-finite-prevalence checker covers all six continuous parameter regions using
-exact rational enclosures and coverage checks. The other commands check the
-limiting characterization, finite-prevalence selections, common-feature
-extension, and saved empirical losses and selections. `task check-experiments`
-runs the broader numerical checks, including small test experiments in temporary
-directories.
+The first command recomputes the finite-prevalence certificates without training
+models. Its recorded output is in
+[`results/certificates/`](results/certificates/). The checker covers all six
+continuous parameter regions using exact rational enclosures and coverage
+checks. The other commands check the limiting characterization,
+finite-prevalence selections, common-feature extension, and saved empirical
+losses and selections. `task check-experiments` runs the broader numerical
+checks, including small test experiments in temporary directories.
 
 The analytic limiting proof and its variational consequences are in
 [`paper/oracle-proofs.tex`](paper/oracle-proofs.tex). The controlled study's
 candidate families, calibration, evaluation, and selection rules are specified
 in
 [`experiments/theory_bridge/PROTOCOL.md`](experiments/theory_bridge/PROTOCOL.md).
-Recorded numerical discrepancies and their interpretation remain in the
-manuscript and saved diagnostics; passing the checks does not erase them.
+The earlier fixed-calibration certificates can be recomputed with
+`task check:normalization-risk`. Recorded numerical discrepancies in the earlier
+synthetic studies remain in the saved diagnostics; passing the checks does not
+certify the affected paths.
 
 For the formal proof pilot, run `task prepare-lean`, then `task check-lean`. The
 preparation downloads Mathlib caches and needs network access. The

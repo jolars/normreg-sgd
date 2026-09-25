@@ -4,6 +4,12 @@ This repository contains the [manuscript](paper/main.tex), experiment code,
 source data, saved results, and numerical checks for the study. The repository
 and release archive use the same layout and commands.
 
+The manuscript focuses on the oracle results, their numerical illustrations, the
+common-feature extension, and the controlled training study. Earlier
+fixed-calibration, signal-allocation, synthetic, and Mushroom investigations
+remain reproducible from the code and saved results, but are outside the
+manuscript.
+
 The manuscript uses the anonymous ALT 2027 template supplied in
 `alt2027-template.zip`. Its unmodified class files and sample are vendored in
 [`paper/vendor/alt2027/`](paper/vendor/alt2027/README.md). ALT has no page
@@ -51,11 +57,11 @@ and archive take their contents from the same definition in
 `build/normreg-multi-review-<version>.tar.gz` supplement used by private paper
 reviews from the complete release archive. It retains the manuscript source,
 task and environment files, source data, saved arrays, and numerical and formal
-checks described in Appendix L. It replaces the repository README with the
-anonymous [reproduction guide](REPRODUCING.md) and omits repository CI metadata.
-Both archives exclude private notes, local reviews, instruction files, build
-products, and downloaded caches. `task check:packages` builds both archives and
-checks their reproduction contents and README links.
+checks described in the source-supplement appendix. It replaces the repository
+README with the anonymous [reproduction guide](REPRODUCING.md) and omits
+repository CI metadata. Both archives exclude private notes, local reviews,
+instruction files, build products, and downloaded caches. `task check:packages`
+builds both archives and checks their reproduction contents and README links.
 
 For the current ALT rehearsal, run `task review-alt`. It builds the manuscript,
 creates the curated supplement, and passes both to `codex-alt-review`; it never
@@ -144,8 +150,8 @@ task experiment:mushroom:summarize -- --config rates17
 These tasks also work for synthetic data. Exact-risk calculations have separate
 `:run` and `:summarize` tasks. The two illustrations compute their summaries in
 one step. `task experiment:diagnostics` reconstructs discrepancies from saved
-paths and updates the diagnostic tables in the manuscript. Run `task --list` to
-see all tasks.
+paths and updates the separate diagnostic tables. Run `task --list` to see all
+tasks.
 
 The controlled bridge study compares representatives of the theorem's two signal
 families while separately introducing observation reuse, estimated scales,
@@ -216,7 +222,7 @@ task check:predictive-review  # Run the independent certificate implementation.
 task check:oracle-limits      # Check limiting risks, infimum control, and comparisons.
 task check:oracle-variational # Check signal, noise, and budget decision rules.
 task check:oracle-finite      # Replay finite-prevalence comparisons with the limits.
-task check:normalization-risk # Check the supporting comparison certificates.
+task check:normalization-risk # Check the earlier fixed-calibration certificates.
 task check:workflow           # Exercise the workflow with small configurations.
 task check:results            # Reconstruct saved losses and selections.
 task check:exact-risk-results # Check the large exact-risk outputs, if generated.
@@ -244,8 +250,9 @@ commands recompute the certificates without training models. The first reports
 all six certified regions, accepted box counts, exact coverage volumes, and the
 smallest certified margins. Its exponential enclosures and volume checks use
 exact rational arithmetic; displayed decimal margins are rounded. The second
-reports the supporting interval bounds and separate numerical diagnostics. The
-saved output summarizes completed checks and does not replace rerunning them.
+reports the earlier fixed-calibration bounds and separate numerical diagnostics.
+The saved output summarizes completed checks and does not replace rerunning
+them.
 
 The [manuscript proof](paper/oracle-proofs.tex) establishes convergence of the
 unrestricted rate-and-stop infima for fixed finite signals and noise and finite
@@ -278,13 +285,13 @@ illustration, `task experiment:coefficient-paths` to regenerate the constructed
 paths to OLS, and `task check:illustrations` to verify the illustration
 summaries. The introductory signal-crossing figure holds $s/4+r$ fixed,
 evaluates the limiting scalar characterization, and overlays saved
-`oracle-finite` selections. The earlier allocation map at fixed $s+r$ remains in
-the supplement.
+`oracle-finite` selections. The earlier allocation map at fixed $s+r$ remains
+available through its experiment and plotting script.
 
 Checks retain and report the known numerical discrepancies in extreme synthetic
 paths. They do not certify those paths merely because structural checks pass.
-Successful numerical checks also do not replace the mathematical verification
-that the manuscript identifies as unfinished.
+These archived investigations are outside the current manuscript. Numerical
+checks supplement the retained mathematical proofs.
 
 Edit manuscript plots in [scripts/figures/](scripts/figures/README.md).
 Generated PDF, SVG, and PNG files go in `figures/`; LaTeX output goes in
