@@ -26,10 +26,10 @@ limiting oracle characterization before rewriting the main narrative.
   proposed scalar SD risk equation.
 
   The [working derivation](notes/oracle-limits.md) gives both limiting risks,
-  proposes a proof for the unrestricted oracle limits, and derives a unique
-  signal-allocation crossing at positive noise and rare signal. Numerical checks
-  pass with `task check:oracle-limits`. The oracle-infimum proof and
-  signal-allocation consequences still need independent mathematical review.
+  proves the unrestricted oracle limits, and derives a unique signal-allocation
+  crossing at positive noise and rare signal. Numerical checks pass with
+  `task check:oracle-limits`. The oracle-infimum proof and signal-allocation
+  consequences still need independent mathematical review.
 
 - [x] Account for rates and stops that depend on prevalence, including
   initialization, vanishing rates, and large rates. For U, examine
@@ -39,12 +39,21 @@ limiting oracle characterization before rewriting the main narrative.
   The working derivation now gives the full U transient through
   $k_q\alpha_q\to\ell$, uniform bounds over allowed stops, and large-rate
   exclusions for both scalings. Checks cover 32 joint rate-and-stop sequences,
-  zero signal and noise, and exact geometric lower bounds. The oracle-infimum
-  task below remains open.
+  zero signal and noise, and exact geometric lower bounds. The uniform control
+  below completes the passage to oracle infima.
 
-- [ ] Establish the control needed to pass from fixed-rate limits to limits of
+- [x] Establish the control needed to pass from fixed-rate limits to limits of
   the oracle infima. Identify any restrictions on signals, noise, and
   budgets.
+
+  The [proof](notes/oracle-limits.md#completing-the-oracle-argument) gives
+  uniform lower bounds over all rates and stops and explicit recovery choices,
+  with errors $O(b)$ for S and $O(b\log(1/b))$ for U. It permits all fixed
+  finite nonnegative signals and noise, including zeros, and requires
+  $Mb\to\tau\in(0,\infty)$. A zero-budget counterexample explains that
+  restriction. `task check:oracle-limits` also runs the [uniform-control
+  diagnostics](checks/oracle_infima.py). Independent mathematical review remains
+  outstanding.
 
 - [ ] Obtain a usable variational characterization and explain how signal
   allocation, noise, and budget determine the preferred scaling. Treat a

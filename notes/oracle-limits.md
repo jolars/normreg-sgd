@@ -7,10 +7,10 @@ variance in the two-feature model. It has numerical checks, but has not received
 an independent mathematical review and is not yet part of the manuscript.
 
 The rate-and-stop analysis below includes the common-coordinate transient when
-the unscaled rate vanishes. It gives limits for every potentially improving
-sequence and lower bounds for the remaining large rates. The subsequent passage
-to oracle infima and signal-allocation consequences remain working claims for
-separate review.
+the unscaled rate vanishes. Uniform lower bounds over all rates and stops,
+paired with explicit recovery choices, justify the passage to oracle infima. The
+proof also gives error orders on compact positive rescaled-budget intervals. The
+signal-allocation consequences remain working claims for separate review.
 
 ## Statement
 
@@ -54,7 +54,7 @@ $$
   \end{aligned}
 $$
 
-**Oracle-limit claim.** Under these assumptions,
+**Oracle-limit theorem.** Under these assumptions,
 
 $$
   \lim_{q\to0}R_S^*(M_q)
@@ -69,8 +69,19 @@ $b\ll\alpha_q\ll1$ at the full cap. It does **not** represent literal zero-rate
 training, whose limiting risk is $s/8+r/2$. In contrast, $F_S(0)=(s/4+r)/2$ is
 the initialization risk.
 
-The proof below handles prevalence-dependent rates and stops explicitly. It does
-not interchange an infimum and a pointwise limit without further control.
+More precisely, write $T_q=M_qb$ and let $L_A(T)$ denote the displayed minimum
+with budget $T$. Fix $0<T_0<T_1<\infty$. For all sufficiently small $q$ and
+every integer cap with $T_q\in[T_0,T_1]$, constants depending only on
+$s,r,\nu,T_0,T_1$ give
+
+$$
+  |R_S^*(M_q)-L_S(T_q)|\leq C_S b,\qquad
+  |R_U^*(M_q)-L_U(T_q)|\leq C_U b\log(1/b).
+$$
+
+These bounds apply to the unrestricted infima, including prevalence-dependent
+rates and stops. Their constants are not optimized, and the bounds are not
+numerical certificates at a specified prevalence.
 
 ## Exact recurrence
 
@@ -338,35 +349,245 @@ $\nu$ was used.
 
 ## Completing the oracle argument
 
-For the lower bound, choose rates and stops within an error tending to zero of
-each finite-prevalence infimum, then take a subsequence attaining the lower
-limit. The large-rate bounds either finish the comparison or restrict the rates
-to a compact interval. Extract convergent rate and rescaled-stop subsequences.
-The preceding cases give exactly the limiting trajectories or the initialization
-and $r/2$ lower bounds.
+The following uniform estimates strengthen the preceding sequence analysis.
+Throughout this section, $T=M_qb\in[T_0,T_1]$, $G_0=s/4$, and $v=G_0+r$. Every
+$O(b)$ constant is independent of the rate, stop, and cap in its stated range.
+Take $q$ small enough that $q\leq1/2$ and both large-rate cutoffs lie below
+three. Then $1-w\leq4b$.
 
-For a rate $0<a<2$, each limiting trajectory is monotone in $t$: it moves from
-its initial rare moment toward a fixed equilibrium. Under S, stopping at zero
-dominates any increasing trajectory. Under U, the attainable $r/2$ dominates any
-increasing trajectory, whose initial value is $(g(a)+r)/2$. Every potentially
-improving trajectory therefore takes $t=\tau$.
+### Uniform approximation with the U transient retained
 
-Rates in $(1,2)$ are dominated by $2-a\in(0,1)$ at the same rescaled time. The
-decay $d(a)$ is unchanged, while each of
+For U, let $0\leq\alpha\leq c_U(b):=2/(1-3b)$. Set
+
+$$
+  A=(1-\alpha/4)^2,\qquad h=\frac{\alpha}{8-\alpha},
+  \qquad g=\nu h,\qquad c=bh,
+$$
+
+and define
+
+$$
+  B=\frac{r+T\alpha^2(G_0+g+\nu)}{1-T\alpha^2c}.
+$$
+
+Here $D_b\leq1$, $h\leq3/5$, and $T\alpha^2c\leq27T_1b/5$. Thus the denominator
+is at least $1/2$ for sufficiently small $b$, uniformly even when $\alpha$ tends
+to zero. The common recurrence and positivity give
+
+$$
+  H_{\max}\leq B\leq
+    2\{r+9T_1(G_0+8\nu/5)\},
+  \qquad
+  0\leq G_j-A^jG_0-(1-A^j)g\leq cB.
+$$
+
+To justify the first inequality, bound the common moment by $G_0+g+cH_{\max}$,
+sum the rare recurrence using $D_b\leq1$, and move $T\alpha^2cH_{\max}$ to the
+left. This is the same absorption argument as for vanishing rates, now over the
+entire retained rate interval.
+
+Let $\widetilde H_0=r$ and
+$\widetilde H_{j+1}=D_b\widetilde H_j+b\alpha^2(\nu+g)$. Since $0\leq D_b\leq1$,
+
+$$
+  \begin{aligned}
+  |H_k-\widetilde H_k|
+    &\leq b\alpha^2\sum_{j<k}|G_j-g|\\
+    &\leq b\{16h|G_0-g|+T\alpha^2hB\}.
+  \end{aligned}
+$$
+
+For $\alpha>0$, use $\alpha^2/(1-A)=16h$ in the geometric sum. At $\alpha=0$,
+both sides are zero. The factor $\alpha^2$ cancels the apparently singular
+common-coordinate relaxation time. No lower bound on $\alpha$ is needed.
+
+Write $H^\circ_\alpha(t)$ for the solution of
+
+$$
+  \dot H^\circ=-d(\alpha)H^\circ+f,\qquad
+  H^\circ(0)=r,\qquad f=\alpha^2(\nu+g).
+$$
+
+The affine scalar map for $\widetilde H$ differs from this flow over one step
+$b$ by $O(b^2)$, uniformly for $\alpha\in[0,3]$. Telescoping gives
+$\widetilde H_k=H^\circ_\alpha(kb)+O(b)$ for $k\leq M_q$. An explicit bound,
+also used by the numerical checks, is
+
+$$
+  |\widetilde H_k-H^\circ_\alpha(kb)|
+  \leq Tb\left[
+    \left\{3\alpha^2+\tfrac12d(\alpha)^2e^{b|d(\alpha)|}\right\}\overline H
+    +\tfrac12|d(\alpha)|e^{b|d(\alpha)|}f
+  \right],
+  \qquad
+  \overline H=e^{T\max\{-d(\alpha),0\}}(r+Tf).
+$$
+
+Indeed, $H^\circ_\alpha(t)\leq\overline H$ for $t\leq T$. The exponential Taylor
+remainder bounds the coefficient error in one step by
+$b^2\{3\alpha^2+d(\alpha)^2e^{b|d(\alpha)|}/2\}$ and the forcing error by
+$b^2|d(\alpha)|e^{b|d(\alpha)|}f/2$. Errors propagate with multiplier
+$D_b\leq1$.
+
+Consequently, uniformly over every retained U rate and every allowed stop,
+
+$$
+  R^U_{R,k}(\alpha)
+    =\frac12\{A^kG_0+(1-A^k)g+H^\circ_\alpha(kb)\}+O(b).
+$$
+
+This approximation retains the finite-stop transient. Replacing its common term
+by $g$ uniformly would be false, including at initialization.
+
+### Reducing the limiting trajectories
+
+Define $\Psi_S(a,t)=W_a(t)/2$ using the scalar S equation and
+$\Psi_U(a,t)=\{g(a)+H^\circ_a(t)\}/2$. These formulas extend smoothly through
+$a=0$ and $a=2$ by their differential equations. In particular,
+$\Psi_S(0,t)=v/2$ and $\Psi_U(0,t)=r/2$.
+
+For $0<a<2$, each trajectory is monotone in $t$. Under S, an increasing
+trajectory stays above $v/2$. Under U, an increasing trajectory stays above
+$(g(a)+r)/2\geq r/2$. Both baselines occur at $a=0$ in the corresponding
+limiting minimization. A decreasing trajectory is smallest at $t=T$.
+
+Rates in $(1,2)$ are dominated by $2-a\in(0,1)$ at the same time. The decay
+$d(a)$ is unchanged, while each of
 
 $$
   g(a),\qquad \frac{\nu a}{2-a},\qquad
   \frac{a\{\nu+g(a)\}}{2-a}
 $$
 
-is nondecreasing in $a$. Rates zero and two are covered by their boundary
-values. The remaining lower bounds are therefore the displayed minima over
-$[0,1]$.
+is nondecreasing in $a$. At $a=2$, the trajectories are respectively
+$(v+4\nu t)/2$ and $\{g(2)+r+4(\nu+g(2))t\}/2$, again above their baselines. It
+follows that, for $A\in\{S,U\}$,
 
-For the upper bound, hold any positive minimizing rate fixed and use the full
-cap $M_q$. The corresponding positive-time limit attains its displayed value.
-Use literal initialization when the S minimizer is zero, and the vanishing-rate
-recovery sequence when the U minimizer is zero. This proves both oracle limits.
+$$
+  \Psi_A(a,t)\geq L_A(T)
+  \qquad(0\leq a\leq2,\ 0\leq t\leq T).
+$$
+
+On $[0,3]\times[0,T_1]$, both flows and their derivatives with respect to $a$
+are bounded. One can see this by differentiating their finite-dimensional matrix
+exponentials. Thus a retained rate in $(2,c_A(b)]$ changes $\Psi_A$ by only
+$O(b)$ when replaced by two, since $c_A(b)-2=O(b)$. This treats the small
+interval above two without imposing a stability restriction.
+
+### A lower bound over all rates and stops
+
+For S, the uniform matrix approximation from the bounded-rate argument and
+$1-w=O(b)$ give
+
+$$
+  R^S_{R,k}(\alpha)=\Psi_S(\alpha,kb)+O(b)
+    \geq L_S(T)-O(b)
+  \qquad(0\leq\alpha\leq c_S(b)).
+$$
+
+Above $c_S(b)=2/(1-3b+b^2)$, the exact scalar bound gives
+$R^S_{R,k}\geq wv/2\geq L_S(T)-2bv$. Therefore the same lower bound holds for
+**every** $\alpha\geq0$ and $0\leq k\leq M_q$.
+
+For U, split the retained rates and stops using $J_b=2\log(1/b)$. If
+$k\alpha\geq J_b$, then $A^k\leq e^{-k\alpha/2}\leq b$. The uniform
+approximation above therefore gives
+$R^U_{R,k}(\alpha)=\Psi_U(\alpha,kb)+O(b)\geq L_U(T)-O(b)$.
+
+If $k\alpha<J_b$, take $b$ small enough that $1-2b\alpha\geq0$. Positivity and
+Bernoulli's inequality give
+
+$$
+  H_k\geq D_b^kr\geq(1-2b\alpha)^kr
+      \geq r(1-2bk\alpha),
+$$
+
+and hence
+
+$$
+  R^U_{R,k}(\alpha)\geq\frac r2-2br-rbJ_b
+       \geq L_U(T)-2br-2rb\log(1/b).
+$$
+
+Finally, rates above $c_U(b)$ satisfy $R^U_{R,k}\geq wr/2\geq L_U(T)-2br$.
+Combining these three cases gives a lower bound uniform over the entire oracle
+domain:
+
+$$
+  \inf_{\alpha\geq0,\ 0\leq k\leq M_q}R^U_{R,k}(\alpha)
+       \geq L_U(T)-O\{b\log(1/b)\}.
+$$
+
+These bounds allow the infima directly. They do not require finite-prevalence
+minimizers to exist, or near-minimizing controls to converge.
+
+### Recovery choices and convergence of the infima
+
+Let $a_A(T)\in[0,1]$ minimize $F_A$ at budget $T$. For S, choose $\alpha=a_S(T)$
+and $k=M_q$. Uniform convergence on the compact rate interval gives risk
+$L_S(T)+O(b)$, including when $a_S(T)=0$.
+
+For U, use the full cap and choose
+
+$$
+  \alpha_q=\max\left\{a_U(T),\frac{2b\log(1/b)}{T}\right\}.
+$$
+
+The second term is at most one for sufficiently small $b$, uniformly for
+$T\geq T_0$. This choice ensures $M_q\alpha_q\geq J_b$, so the common transient
+is $O(b)$. The bounded rate derivative of $F_U$ on $[0,1]\times[T_0,T_1]$ gives
+
+$$
+  R^U_{R,M_q}(\alpha_q)
+    =F_U(\alpha_q;r,\nu,T)+O(b)
+    \leq L_U(T)+O\{b\log(1/b)\}.
+$$
+
+This recovery works even when the minimizing rate is zero or approaches zero as
+$T$ varies. It also covers $s=0$, $r=0$, $\nu=0$, and the all-zero case.
+Together with the lower bounds, it proves the two error orders in the theorem.
+
+For passage to a specified $\tau$, the limiting minima are Lipschitz in budget.
+The defining formulas on $[0,1]$ give
+
+$$
+  |L_S(T)-L_S(\tau)|\leq\frac{v+\nu}{2}|T-\tau|,
+  \qquad
+  |L_U(T)-L_U(\tau)|\leq\frac{r+8\nu/7}{2}|T-\tau|.
+$$
+
+These follow by bounding the time derivatives uniformly in the rate and then
+taking minima. Since $T_q\to\tau\in(0,\infty)$, both oracle limits follow. If
+$M_q$ rounds $\tau/b$ to an integer, the budget discrepancy is $O(b)$.
+
+### Restrictions and boundary cases
+
+No signal dominance, positive signal, positive noise, or stability assumption is
+needed. Signals and noise must be finite and fixed as $q\to0$. The error
+constants can grow with these quantities and with the budget interval; the
+theorem does not assert uniformity for diverging signals, noise, or budgets. The
+upper bound for U uses a positive lower bound on $M_qb$ to remove the common
+transient at a vanishing rate.
+
+The condition $\tau>0$ cannot simply be dropped while keeping the same formula
+for every cap sequence. For example, take $s=4$, $r=0$, and $\nu=1$. When
+$M_q=1$, exact one-step minimization for U gives
+
+$$
+  R_U^*(1)=\frac12-\frac{1}{4(1+16bw)}\longrightarrow\frac14.
+$$
+
+In contrast, if $M_q\to\infty$ but $M_qb\to0$, the choice $\alpha_q=M_q^{-1/2}$
+makes the U risk tend to zero for the same signals and noise. The vanishing-rate
+bounds prove this since $M_q\alpha_q\to\infty$. Both cap sequences have
+$\tau=0$. Thus that boundary requires additional information about the unscaled
+number of observations. The case $M_qb\to\infty$ also requires a separate
+argument.
+
+The controls here are deterministic constant rates and deterministic stops for
+final iterates. The proof does not cover rates or stops selected from realized
+training paths, step schedules, averaging, fitted intercepts, or estimated
+preprocessing.
 
 ## Consequences for signal allocation
 
@@ -450,7 +671,7 @@ one-dimensional numerical optimization, not certified interval bounds.
 
 ## Numerical checks and current limits
 
-Run `devenv shell -- task check:oracle-limits`. The checker reconstructs moment
+Run `devenv shell -- task check:oracle-limits`. The checkers reconstruct moment
 updates from individual observations, checks the scalar lower bound, compares
 finite-prevalence risks with the limiting formulas, and exercises
 vanishing-rate, short-stop, large-rate, and zero-noise cases. Joint
@@ -480,9 +701,29 @@ comparisons test the explicit vanishing-rate bounds before taking a limit, and
 initialization and positive stops. The saved output records rates, stops, and
 separate moment errors for each sequence.
 
-The proof gives limiting oracle values for all fixed signal strengths and finite
-positive rescaled budgets. It does not give a uniform finite-prevalence error
-bound for the optimized risks, rates of convergence near a boundary minimizer,
-or a result for adaptive stopping, averaging, schedules, fitted intercepts, or
-estimated preprocessing. The manuscript's existing theorem remains the
+The [uniform-control checker](../checks/oracle_infima.py) adds 168 exact
+rational checks of the U tracking bounds, 3,570 moment comparisons across the
+retained rate intervals and short-stop boundaries, 756 checks of the limiting
+trajectory reduction, and 126 recovery comparisons. It tests pure common signal,
+pure rare signal, and pure noise separately when checking moment approximations.
+The recovery comparisons also include zero signal, zero noise, and the all-zero
+case. The [recorded output](../results/oracle-limits/infimum-checks.json) gives
+the settings and errors, including the two different limits at zero rescaled
+budget. Across recovery comparisons, the largest risk discrepancy decreases from
+$0.00437$ at $q=10^{-3}$ to $8.53\times10^{-7}$ at $q=10^{-7}$.
+
+To regenerate the two records separately, run these commands inside
+`devenv shell`:
+
+```sh
+python -m checks.oracle_limits > results/oracle-limits/checks.json
+python -m checks.oracle_infima > results/oracle-limits/infimum-checks.json
+```
+
+The proof gives uniform error orders for the optimized risks on compact positive
+rescaled-budget intervals, including boundary minimizers. It does not supply
+optimized numerical constants or interval certificates at a specified
+prevalence. Numerical checks exercise the estimates but do not prove coverage of
+a continuous rate domain or replace independent mathematical review, which
+remains outstanding. The manuscript's existing theorem remains the certified
 quantitative finite-prevalence guarantee.

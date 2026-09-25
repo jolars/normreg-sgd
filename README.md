@@ -51,8 +51,8 @@ and archive take their contents from the same definition in
 `build/normreg-multi-review-<version>.tar.gz` supplement used by private paper
 reviews. It includes the computational and formal-support source plus
 human-readable results needed to inspect the paper's claims. It excludes the
-repository README, task and environment files, paper source, local reviews,
-TODO files, build products, and raw numerical arrays. The full package remains
+repository README, task and environment files, paper source, local reviews, TODO
+files, build products, and raw numerical arrays. The full package remains
 available when exact numerical artifacts are needed for reproduction.
 
 For the current ALT rehearsal, run `task review-alt`. It builds the manuscript,
@@ -210,6 +210,7 @@ experiments.
 task check:predictive-theorem # Check the oracle-tuning certificates.
 task check:predictive-fixed-q # Certify the finite-prevalence gap bounds.
 task check:predictive-review  # Run the independent certificate implementation.
+task check:oracle-limits      # Check limiting risks and oracle-infimum control.
 task check:normalization-risk # Check the supporting comparison certificates.
 task check:workflow           # Exercise the workflow with small configurations.
 task check:results            # Reconstruct saved losses and selections.
@@ -240,6 +241,15 @@ smallest certified margins. Its exponential enclosures and volume checks use
 exact rational arithmetic; displayed decimal margins are rounded. The second
 reports the supporting interval bounds and separate numerical diagnostics. The
 saved output summarizes completed checks and does not replace rerunning them.
+
+The [oracle-limit notes](notes/oracle-limits.md) prove convergence of the
+unrestricted rate-and-stop infima for fixed finite signals and noise and finite
+positive rescaled budgets. `task check:oracle-limits` runs both the limit
+diagnostics and the uniform-control checks. Their recorded outputs are [limit
+checks](results/oracle-limits/checks.json) and [infimum
+checks](results/oracle-limits/infimum-checks.json). These numerical diagnostics
+are separate from the finite-prevalence certificates; the new proof has not
+received independent mathematical review.
 
 Use `task experiment:diagnostics` to regenerate the diagnostic records and
 tables, then `task check:results` to verify them. Use

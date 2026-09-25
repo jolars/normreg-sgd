@@ -264,9 +264,10 @@ tasks:
       - python -m checks.predictive_fixed_q
 
   check:oracle-limits:
-    desc: Check the working small-prevalence oracle-limit derivation.
+    desc: Check the small-prevalence limits and uniform oracle-infimum control.
     cmds:
       - python -m checks.oracle_limits
+      - python -m checks.oracle_infima
 
   check:exact-risk:
     desc: Check exact risk calculations.
