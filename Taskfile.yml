@@ -93,6 +93,7 @@ tasks:
           STUDY: signal-allocation
           SUMMARY: results/signal-allocation/summary.json
           NAME: risk-map
+      - task: figure:common-block
       - task: figure:theory-bridge
       - task: figure
         vars:
@@ -179,6 +180,12 @@ tasks:
       - task: check:illustrations
       - task: check:workflow
       - task: check:theory-bridge
+      - task: check:common-block
+
+  check:common-block:
+    desc: Check the common-block reduction, dimension search, and fixed-rate limits.
+    cmds:
+      - 'python -m checks.common_block {{.CLI_ARGS}}'
 
   check:theory-bridge:
     desc: Check independent dynamics, risks, and selections for the bridge study.
@@ -364,6 +371,41 @@ tasks:
     desc: Compute the introductory full-gradient paths to OLS.
     cmds:
       - python -m experiments.coefficient_paths.run
+
+  experiment:common-block:
+    desc: Run and summarize one rare feature with a growing common block.
+    cmds:
+      - task: experiment:common-block:run
+      - task: experiment:common-block:summarize
+
+  experiment:common-block:run:
+    desc: Compute exact-moment searches over common-feature dimension.
+    cmds:
+      - python -m experiments.common_block.run
+
+  experiment:common-block:summarize:
+    desc: Summarize saved common-block searches without new trajectories.
+    cmds:
+      - python -m experiments.common_block.summarize
+
+  figure:common-block:
+    desc: Plot the saved common-feature dimension comparisons.
+    sources:
+      - scripts/figures/plot_common_block.py
+      - scripts/figures/style.py
+      - results/common-block/summary.json
+      - Taskfile.yml
+      - devenv.nix
+      - devenv.lock
+    generates:
+      - figures/common-block/budget-slice.pdf
+      - figures/common-block/budget-slice.svg
+      - figures/common-block/budget-slice.png
+      - figures/common-block/dimension-gaps.pdf
+      - figures/common-block/dimension-gaps.svg
+      - figures/common-block/dimension-gaps.png
+    cmds:
+      - python scripts/figures/plot_common_block.py
 
   experiment:signal-allocation:
     desc: Compute the signal-allocation illustration.

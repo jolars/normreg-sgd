@@ -55,11 +55,11 @@
   bounded away from zero as prevalence decreases while the expected number of
   rare occurrences stays roughly between one and four. Exact moments explain the
   competing costs of incomplete learning and training variation, and numerical
-  comparisons explore intermediate signals. In a controlled study, both
-  orderings persist under observation reuse, estimated preprocessing, and
-  intercept fitting when tuning choices are fixed before evaluation. Selecting a
-  predictor after observing training can reverse an ordering, even when
-  selection uses exact population risk.
+  comparisons explore intermediate signals and additional common features. In a
+  controlled study, both orderings persist under observation reuse, estimated
+  preprocessing, and intercept fitting when tuning choices are fixed before
+  evaluation. Selecting a predictor after observing training can reverse an
+  ordering, even when selection uses exact population risk.
 \end{abstract}
 
 \section{Introduction}
@@ -155,7 +155,11 @@ introduces noise in the rare coefficient. Exact moments separate these costs
 from incomplete learning and variation due to feature sampling. We first use
 fixed-rate comparisons to illustrate the tradeoff and the need for oracle
 tuning, then prove the opposite orderings and explore intermediate signal
-allocations numerically.
+allocations numerically. We also replace the common feature with several
+independent common features while holding their total squared signal fixed.
+Their combined error and the rare-coefficient error still satisfy an exact
+two-moment recurrence. Numerical comparisons retain both orderings with up to 64
+common features.
 
 A controlled study then asks how these comparisons change when training reuses
 observations, estimates preprocessing, or fits an intercept. We retain the two
@@ -422,6 +426,67 @@ budget lowers the rare-signal share needed for SD to have lower grid-selected
 risk. This exploration supplies context for the two sufficient-condition
 families; it does not prove an oracle transition outside them.
 
+\subsection{Adding common features}
+\label{sec:common-block}
+
+Adding common features gives training more coefficients in which to fit noise.
+To examine this effect, replace $I$ with $m$ independent binary features
+$I_1,\ldots,I_m$, each with prevalence $1/2$ and independent of $J$. Retain the
+remaining population assumptions and write $s = \sum_{j=1}^m(\beta_j^*)^2$ and
+$r = (\beta_R^*)^2$. We hold $s$ and $r$ fixed as $m$ increases, so the
+comparison changes dimension without adding signal.
+
+The common features enter rare risk through their combined error. Define
+\[
+  \begin{aligned}
+    G_k & = \frac14\sum_{j=1}^m\E[(\beta_{j,k} - \beta_j^*)^2], \\
+    H_k & = \E[(\beta_{R,k} - \beta_R^*)^2].
+  \end{aligned}
+\]
+Then $R_{R,k} = \{G_k + (1 - q)^2H_k\}/2$. With the rare-coordinate step
+$\alpha$ used above, set $u = \alpha/4$ for U or $u = b\alpha$ for S, and
+$D_b = 1 - b\alpha(2 - \alpha + 3b\alpha)$. The exact update is
+\begin{equation}
+  \begin{aligned}
+    G_{k+1} & = (1 - 2u + mu^2)G_k + mu^2(bH_k + \sigma^2), \\
+    H_{k+1} & = D_bH_k + b\alpha^2(G_k + \sigma^2),
+  \end{aligned} \label{eq:common-block-moments}
+\end{equation}
+starting from $(G_0,H_0) = (s/4,r)$. The factors of $m$ show how additional
+common features increase the noise cost, even if their true coefficients are
+zero. The recurrence also implies that increasing $m$ cannot lower either
+method's oracle risk at fixed $s$ and $r$. This comparison does not determine
+which method has lower risk. \Cref{sec:common-block-details} derives the
+recurrence and proves the dimension comparison.
+
+Both orderings persist in all 126 numerical comparisons over seven dimensions,
+three prevalences, three caps, and the two signal allocations. Each scaling
+searches its own finite grid of stable rates and every integer stop within the
+cap. \Cref{fig:common-block} shows the slice with roughly two expected rare
+observations. When the rare signal dominates and $q = 10^{-4}$, increasing $m$
+from one to 64 raises U's selected risk from $0.256$ to $0.500$, while SD's
+changes from $0.229$ to $0.230$. When the common signal dominates, U retains its
+advantage, though that advantage narrows with dimension, especially at the
+larger prevalence. These comparisons extend the numerical evidence to more
+features; they do not extend the uniform gaps in
+\cref{thm:conference-predictive}.
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics{../figures/common-block/budget-slice.pdf}
+  \caption{
+    Additional common features change the cost of normalization at fixed signal
+    strength. The total squared common and rare coefficients are
+    $(s,r) = (0.01,1)$ (left) or $(1,0.01)$ (right), with noise variance one.
+    Caps are $M = 102$ at $q = 0.02$ and $M = 20{,}002$ at $q = 10^{-4}$, giving
+    $Mq(1 - q) \approx 2$. Curves show SD-minus-U rare risk after separate
+    searches over finite stable-rate grids and all integer stops; negative
+    values favor SD. Each panel has its own vertical scale.
+    \Cref{sec:common-block-numerics} gives all settings and checks.
+  }
+  \label{fig:common-block}
+\end{figure*}
+
 \section{From oracle tuning to validation selection}
 \label{sec:conference-experiments}
 
@@ -651,6 +716,13 @@ noise, without proving a general transition boundary. Learning-rate schedules,
 batch selection, data-dependent stopping, and adaptive optimizers remain outside
 the comparison.
 
+Replacing the common feature with an independent block preserves the exact
+moment reduction. At fixed total signal strength, increasing the number of
+common features cannot lower either method's oracle risk. The numerical
+comparison retains both orderings through 64 common features, with dimension
+changing the size of the gaps. Uniform separation bounds for this larger model
+remain open.
+
 The controlled study shows that both orderings can survive changes to the
 training procedure. They persist for the tested signal pairs under observation
 reuse, estimated preprocessing, and intercept fitting when tuning choices are
@@ -705,10 +777,11 @@ manuscript.
 The supplement first gives the oracle proof and the fixed-calibration
 comparisons with their certificates
 (\cref{sec:predictive-proofs,sec:conference-comparisons}).
-\Cref{sec:predictive-intro-figure} describes the numerical illustrations.
-\Cref{sec:empirical-methods} specifies the empirical methods and search
-protocols; \cref{sec:mushroom-rate-search,sec:preprocessing-sensitivity} examine
-sensitivity to the search, preprocessing, and damping.
+\Cref{sec:common-block-details} gives the common-feature extension and its
+numerical study. \Cref{sec:predictive-intro-figure} describes the numerical
+illustrations. \Cref{sec:empirical-methods} specifies the empirical methods and
+search protocols; \cref{sec:mushroom-rate-search,sec:preprocessing-sensitivity}
+examine sensitivity to the search, preprocessing, and damping.
 \Cref{sec:review-diagnostics} collects numerical checks, unresolved
 discrepancies, and prediction-clipping diagnostics. Reproduction instructions
 are in \cref{sec:reproducibility}.
@@ -1020,6 +1093,179 @@ The last two rows of the table prove the corollary. The certified gaps grow as
 the prevalence range narrows. These are sufficient bounds, not the largest
 possible gaps or prevalence ranges: the proof discards nonnegative coupling
 terms and replaces discrete powers by exponential bounds.
+
+\section{One rare feature and several common features}
+\label{sec:common-block-details}
+
+\subsection{Moment reduction}
+
+Let $I_1,\ldots,I_m$ be independent Bernoulli variables with prevalence $1/2$,
+and let $J$ be an independent Bernoulli variable with prevalence $q$, where
+$m \geq 1$ and $0 < q < 1/2$. With population-centered features, the response is
+\[
+  y = \sum_{j=1}^m\beta_j^*(I_j - 1/2)
+      + \beta_R^*(J - q)
+      + \varepsilon, \qquad \E(\varepsilon \mid x)
+    = 0, \qquad \E(\varepsilon^2 \mid x)
+    = \sigma^2.
+\]
+Training uses fresh observations, zero initialization, and a fixed zero
+intercept. On the original coefficient scale, the rare-coordinate step is
+$\alpha$ and every common-coordinate step is $4u$, with $u = \alpha/4$ for U or
+$u = b\alpha$ for S. Here $b = q(1 - q)$, as before. Define
+$s = \sum_{j=1}^m(\beta_j^*)^2$, $r = (\beta_R^*)^2$, and
+\[
+  V_{j,k} = \E[(\beta_{j,k} - \beta_j^*)^2],\qquad G_k
+          = \frac14\sum_{j=1}^m V_{j,k},\qquad H_k
+          = \E[(\beta_{R,k} - \beta_R^*)^2].
+\]
+
+Expanding the squared SGD update for a common coefficient gives
+\[
+  V_{j,k+1} = (1 - u)^2V_{j,k}
+              + u^2\sum_{\substack{\ell=1\\\ell\ne j}}^m V_{\ell,k}
+              + 4u^2bH_k
+              + 4u^2\sigma^2.
+\]
+The common feature has second moment $1/4$ and fourth moment $1/16$.
+Independence and centering remove terms involving two distinct coefficient
+errors from this diagonal equation, even when those errors are correlated.
+Summing over $j$ and dividing by four gives the first line of
+\cref{eq:common-block-moments}. The rare equation follows from
+$\E[(J - q)^4] = b(1 - 3b)$ and the same expansion. Conditioning the test
+distribution on $J = 1$ leaves the common features centered and independent, so
+the conditional second-moment matrix is diagonal and
+$R_{R,k} = \{G_k + (1 - q)^2H_k\}/2$.
+
+The recurrence depends on the common coefficients only through $s$. Thus the
+expected rare risk is unchanged if the same squared signal is concentrated in
+one common feature or spread across the block. Coefficient signs also have no
+effect on this risk. Setting $m = 1$ recovers \cref{eq:predictive-moments}, with
+$G_k = C_k/4$ and with the observation-noise terms multiplied by $\sigma^2$.
+
+\subsection{Comparison across dimensions}
+
+For fixed $q,s,r,\sigma^2$, write $R_A^*(M;m)$ for the infimum of rare risk
+under scaling $A$ over every nonnegative constant rate and deterministic stop
+$k \in \{0,\ldots,M\}$ in the model with $m$ common features.
+
+\begin{proposition}[Increasing the common-feature dimension]
+  \label{prop:common-block-dimension}
+  For either scaling $A \in \{U,S\}$ and integers $m_2 \geq m_1 \geq 1$,
+  \[
+    R_A^*(M;m_2) \geq R_A^*(M;m_1).
+  \]
+  The same inequality holds at each fixed nonnegative rare-coordinate step
+  $\alpha$ and stop $k$.
+\end{proposition}
+
+\begin{proof}
+  At fixed $\alpha$, the value of $u$ does not depend on $m$. Every coefficient
+  in \cref{eq:common-block-moments} is nonnegative. In particular,
+  \[
+    1 - 2u + mu^2 = (1 - u)^2 + (m - 1)u^2
+                  \geq 0, \qquad D_b
+                  = (1 - b\alpha)^2 + b\alpha^2(1 - 4b)
+                  \geq 0.
+  \]
+  Increasing $m$ increases the coefficients and noise term in the common
+  equation and leaves the rare equation unchanged. Both systems start at
+  $(s/4,r)$, so induction gives coordinatewise larger moments at every stop. The
+  risk weights are nonnegative and independent of $m$, proving the fixed-rate
+  comparison. Taking the infimum over the same rates and stops proves the oracle
+  comparison.
+\end{proof}
+
+The proposition applies separately to each method. It does not imply that their
+risk difference is monotone in $m$, or that either ordering from the two-feature
+theorem persists.
+
+\subsection{Numerical comparisons}
+\label{sec:common-block-numerics}
+
+We use $m \in \{1,2,4,8,16,32,64\}$, $q \in \{0.02,0.005,10^{-4}\}$,
+$\sigma^2 = 1$, and $(s,r) \in \{(0.01,1),(1,0.01)\}$. The observation caps are
+\[
+  \begin{array}{c|rrr}
+       q    &     \multicolumn{3}{c}{M}      \\
+    \hline
+     0.02   &       52 &      102 &      204 \\
+     0.005  &      202 &      402 &      804 \\
+    10^{-4} & 10{,}002 & 20{,}002 & 40{,}004
+  \end{array}
+\]
+These approximate $Mq(1 - q) = 1,2,4$ while remaining in $[1,4]$. The initial
+values $(G_0,H_0) = (s/4,r)$ are the same across dimensions. The study uses
+exact expected moments evaluated in floating point; it does not simulate
+training or estimate risks from a test sample.
+
+Each scaling uses zero rate and 1,025 positive rates geometrically spaced
+between $10^{-7}$ and $0.999$ times its mean-square stability limit. To compute
+that limit, write $u = c\alpha$, where $c = 1/4$ for U or $c = b$ for S, and let
+$T$ be the homogeneous transition in \cref{eq:common-block-moments}. Then
+\[
+  \det(I - T) = bc\alpha^2(4 - L\alpha + K\alpha^2),\qquad L
+              = 2(1 - 3b + mc),\qquad K
+              = mc(1 - 4b).
+\]
+The first positive root gives
+\[
+  \alpha_{\mathrm{stab}} = \frac{8}{L + \sqrt{L^2 - 16K}}.
+\]
+The search includes every integer stop from zero through each cap. It selects
+the rate and stop that minimize expected rare risk, before any training
+realization is observed. This finite stable-rate search is narrower than the
+unrestricted oracle in \cref{thm:conference-predictive}.
+
+Both signal orderings persist in all 126 paired comparisons. The smallest
+selected gaps are $0.01959$ in favor of SD for the dominant rare signal and
+$0.00633$ in favor of U for the dominant common signal. A nested coarse search
+retains alternate positive rates and zero, giving 513 positive rates. Refining
+this grid changes individual selected risks by at most $3.50 \times 10^{-5}$ and
+preserves every ordering. No positive-stop selection uses either endpoint of the
+positive rate grid. These checks measure sensitivity to the tested grid; they do
+not certify its distance from the continuous optimum.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics{../figures/common-block/dimension-gaps.pdf}
+  \caption{
+    Dimension comparisons across all three prevalences and budgets. The top row
+    uses $(s,r) = (0.01,1)$ and the bottom row uses $(1,0.01)$, holding total
+    squared signal fixed within each row. Negative SD-minus-U rare risk favors
+    standardization. Each scaling searches its own finite grid of stable rates
+    and every integer stop through the cap. The rows have different vertical
+    scales. At the larger prevalences, the size of SD's rare-signal advantage
+    can decrease after initially increasing with dimension.
+  }
+  \label{fig:common-block-full}
+\end{figure}
+
+\Cref{fig:common-block-full} shows all slices. At $q = 0.02$ and $M = 102$,
+increasing $m$ from one to 64 raises U's common-signal risk from $0.01578$ to
+$0.09894$, while SD's rises from $0.09049$ to $0.10901$. Thus U's advantage
+narrows as both risks increase. At $q = 10^{-4}$, SD's rare-signal risk changes
+little over the tested dimensions, while U's increases substantially, as shown
+in \cref{fig:common-block}.
+
+The checker \path{checks/common_block.py} verifies 60 one-step reductions by
+enumerating individual observations with rational arithmetic in dimensions two
+through six. These cases include nonzero cross-error moments and rates above the
+stability range. Further checks compare full second-moment tensor powers,
+concentrated and spread common signals, and a small rate-and-stop search with
+independent observation-level calculations. All 252 selected risks are replayed
+with matrix powers rather than sequential updates; the largest discrepancy is
+less than $8 \times 10^{-13}$.
+
+The saved arrays in \path{results/common-block/search.npz} retain each rate's
+lowest risk and earliest attaining stop at every cap. The settings and summary
+files record the grids, selected rates and stops, and refinement diagnostics. To
+regenerate the study and verify the selected results, run
+\begin{verbatim}
+task experiment:common-block
+task check:common-block -- --saved
+\end{verbatim}
+Summarizing and plotting use saved arrays without rerunning the search.
 
 \section{Fixed-calibration comparisons and certificates}
 \label{sec:conference-comparisons}

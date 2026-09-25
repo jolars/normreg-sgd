@@ -22,7 +22,7 @@ limiting oracle characterization before rewriting the main narrative.
 ## 2. Characterize the limiting oracle risks
 
 - [ ] Derive limiting risks for both scalings as $q \to 0$ with
-  $Mq(1-q) \to \tau$, starting from the exact moment recurrence and the
+  $Mq(1 - q) \to \tau$, starting from the exact moment recurrence and the
   proposed scalar SD risk equation.
 - [ ] Account for rates and stops that depend on prevalence, including
   initialization, vanishing rates, and large rates. For U, examine
@@ -42,8 +42,8 @@ limiting oracle characterization before rewriting the main narrative.
 
 The saved study preserves both orderings under exact-risk selection in all 12
 fresh, fixed-intercept baseline settings. Adding only a fitted intercept already
-produces a reversal. For the rare-dominant signal at $q=.02$ and $M=204$, the
-SD-minus-U gap changes from $-.01915$ to $-.00589$ in the baseline and from
+produces a reversal. For the rare-dominant signal at $q = .02$ and $M = 204$,
+the SD-minus-U gap changes from $-.01915$ to $-.00589$ in the baseline and from
 $-.10456$ to $+.01643$ with a fitted intercept.
 
 - [ ] Use the fresh, fitted-intercept arm as the primary example and report the

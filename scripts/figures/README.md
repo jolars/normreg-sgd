@@ -26,6 +26,7 @@ LaTeX renderer](https://matplotlib.org/stable/users/explain/text/usetex.html).
   | `plot_predictive_intro.py`     | `predictive-intro/`               |
   | `plot_tuned_decomposition.py`  | `tuned-decomposition/`            |
   | `plot_signal_allocation.py`    | `signal-allocation/`              |
+  | `plot_common_block.py`         | `common-block/`                   |
   | `plot_theory_bridge.py`        | `theory-bridge/`                  |
   | `plot_mushroom_final.py`       | `mushroom-final/`                 |
   | `plot_practical_selection.py`  | `practical-selection/`            |
@@ -41,6 +42,13 @@ Run `task figure:theory-bridge` to export the controlled study's
 `figures/theory-bridge/controlled-gaps` and `validation-gaps` in all three
 formats. It reads `results/theory-bridge/summary.json` and never trains models.
 Both figures are also included in `task figures` and `task paper`.
+
+Run `task figure:common-block` to export the dimension comparison's
+`figures/common-block/budget-slice` and `dimension-gaps` in all three formats.
+The main figure shows both signal allocations at two prevalences and the middle
+observation cap. The supplementary figure shows all prevalences and budgets.
+Both read `results/common-block/summary.json` and are included in `task figures`
+and `task paper`.
 
 Only figures included by `paper/main.tex` are generated. The Mushroom
 rate-search script exports the $n = 2048$ paths under aggregate validation used
