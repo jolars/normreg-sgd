@@ -111,6 +111,7 @@ tasks:
           SUMMARY: results/signal-allocation/summary.json
           NAME: risk-map
       - task: figure:common-block
+      - task: figure:oracle-finite
       - task: figure:theory-bridge
       - task: figure
         vars:
@@ -138,10 +139,11 @@ tasks:
     sources:
       - scripts/figures/plot_coefficient_paths.py
       - scripts/figures/plot_signal_crossing.py
+      - experiments/common/limiting_oracle.py
       - scripts/figures/style.py
       - scripts/figures/palette.toml
       - results/coefficient-paths/summary.json
-      - results/signal-allocation/summary.json
+      - results/oracle-finite/summary.json
       - Taskfile.yml
       - devenv.nix
       - devenv.lock
@@ -158,7 +160,7 @@ tasks:
       - figures/signal-crossing/risk-crossing.png
     cmds:
       - python scripts/figures/plot_coefficient_paths.py
-      - python scripts/figures/plot_signal_crossing.py
+      - python -m scripts.figures.plot_signal_crossing
 
   figure:
     internal: true
@@ -497,7 +499,12 @@ tasks:
   figure:oracle-finite:
     desc: Plot saved finite-prevalence comparisons and limiting predictions.
     cmds:
-      - python scripts/figures/plot_oracle_finite.py
+      - task: figure
+        vars:
+          SCRIPT: oracle_finite
+          STUDY: oracle-finite
+          SUMMARY: results/oracle-finite/summary.json
+          NAME: limit-comparison
 
   experiment:diagnostics:
     desc: Reconstruct numerical discrepancies and compute post hoc diagnostics.

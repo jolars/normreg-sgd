@@ -1,0 +1,435 @@
+\section{Proof of the limiting oracle characterization}
+\label{sec:oracle-limit-proofs}
+
+We prove \cref{thm:oracle-limits} uniformly over the original rate-and-stop
+domain. Throughout, $s,r,\nu\geq0$ are fixed and finite,
+$b=q(1-q)$, $w=(1-q)^2$, $v=s/4+r$, and $T=M_qb\in[T_0,T_1]$ for fixed
+$0<T_0<T_1<\infty$. Constants in the $O(\cdot)$ terms may depend on these
+fixed quantities, but not on the rate, stop, or cap in the stated ranges.
+
+\subsection{Exact moments and large-rate bounds}
+
+Rescale the common moment in \cref{eq:predictive-moments} by setting
+$G_k=C_k/4$ and restore the arbitrary noise variance $\nu$. The recurrence is
+\begin{equation}
+  \begin{aligned}
+    G_{k+1}&=(1-u)^2G_k+u^2bH_k+u^2\nu,\\
+    H_{k+1}&=D_b(\alpha)H_k+b\alpha^2(G_k+\nu),\\
+    D_b(\alpha)&=1-b\alpha(2-\alpha+3b\alpha),
+  \end{aligned}
+  \label{eq:limit-moments}
+\end{equation}
+with $u=b\alpha$ for S and $u=\alpha/4$ for U. Initially
+$(G_0,H_0)=(s/4,r)$, and $R_{R,k}=(G_k+wH_k)/2$. All coefficients are
+nonnegative, since
+$D_b=(1-b\alpha)^2+b\alpha^2(1-4b)\geq0$.
+
+For S, let $W_k=G_k+H_k$. Summing the two equations gives
+\[
+  W_{k+1}\geq\lambda_b(\alpha)W_k+b\alpha^2\nu,
+  \qquad
+  \lambda_b(\alpha)=1-2b\alpha+b\alpha^2(1-3b+b^2).
+\]
+The coefficient of $H_k$ is exactly $\lambda_b$, and that of $G_k$ exceeds it
+by $b^2\alpha^2(4-b)$. The exact noise term is $b\alpha^2(1+b)\nu$.
+Also $\lambda_b\geq1-b/(1-3b+b^2)>0$ for $0<b\leq1/4$. Consequently,
+\[
+  R^S_{R,k}(\alpha)\geq\frac w2\left[
+    \lambda_b^kv+b\alpha^2\nu\sum_{j=0}^{k-1}\lambda_b^j\right].
+\]
+In particular, for $\alpha\geq c_S(b):=2/(1-3b+b^2)$, this risk is at least
+$wv/2$ at every stop, including initialization.
+
+For U, positivity gives the analogous bound
+\[
+  R^U_{R,k}(\alpha)\geq\frac w2\left[
+    D_b^kr+b\alpha^2\nu\sum_{j=0}^{k-1}D_b^j\right].
+\]
+If $\alpha\geq c_U(b):=2/(1-3b)$, then $D_b\geq1$ and the risk is at least
+$wr/2$. Empty sums cover $k=0$. These bounds require no stability assumption
+and hold even when rates diverge or stops are chosen to offset their growth.
+For sufficiently small $q$, both cutoffs are below three and $1-w\leq4b$.
+
+\subsection{Uniform approximation for standardization}
+
+On $\alpha\in[0,3]$, the affine transition for $(G,H,1)$ under S is
+$I+b\mathcal L_\alpha+O(b^2)$ uniformly, where
+\[
+  \mathcal L_\alpha=
+  \begin{pmatrix}
+    -2\alpha&0&0\\
+    \alpha^2&-d(\alpha)&\alpha^2\nu\\
+    0&0&0
+  \end{pmatrix}.
+\]
+Its difference from $e^{b\mathcal L_\alpha}$ is $O(b^2)$, and both operators
+have norm at most $1+O(b)$. Telescoping their powers over $k\leq T_1/b$
+steps therefore gives an $O(b)$ error uniformly in rate and stop. At time
+$t=kb$, the limiting moments solve
+\[
+  \dot G=-2\alpha G,\qquad
+  \dot H=-d(\alpha)H+\alpha^2(G+\nu).
+\]
+Their sum solves
+\[
+  \dot W=-d(\alpha)W+\alpha^2\nu,\qquad W(0)=v.
+\]
+Define $\Psi_S(\alpha,t)=W(t)/2$. The risk weights differ from their limits
+by $O(b)$, so
+\begin{equation}
+  R^S_{R,k}(\alpha)=\Psi_S(\alpha,kb)+O(b)
+  \label{eq:limit-s-uniform}
+\end{equation}
+uniformly over the retained rates and all allowed stops. For $0<\alpha<2$,
+solving the scalar equation gives $F_S$ with budget $t$. The flow also defines
+the endpoints smoothly: $\Psi_S(0,t)=v/2$ and
+$\Psi_S(2,t)=(v+4\nu t)/2$. A vanishing SD rate retains both initial
+moments uniformly over all stops.
+
+\subsection{Uniform approximation with the unscaled transient}
+
+For U, retain $0\leq\alpha\leq c_U(b)$ and write
+\[
+  A=(1-\alpha/4)^2,\qquad
+  h=\frac{\alpha}{8-\alpha},\qquad g=\nu h,\qquad c=bh,
+  \qquad
+  B=\frac{r+T\alpha^2(G_0+g+\nu)}{1-T\alpha^2c}.
+\]
+Here $0\leq D_b\leq1$, $h\leq3/5$, and
+$T\alpha^2c\leq27T_1b/5$. The denominator is at least $1/2$ for small $b$.
+With $H_{\max}=\max_{j\leq M_q}H_j$, summing the common recurrence gives
+\[
+  0\leq G_j-A^jG_0-(1-A^j)g\leq cH_{\max}.
+\]
+Using $G_j\leq G_0+g+cH_{\max}$ in the rare recurrence then gives
+\[
+  H_{\max}\leq r+T\alpha^2(G_0+g+\nu+cH_{\max}).
+\]
+Absorbing the last term yields
+\[
+  H_{\max}\leq B\leq2\{r+9T_1(G_0+8\nu/5)\},\qquad
+  0\leq G_j-A^jG_0-(1-A^j)g\leq cB.
+\]
+
+Let $\widetilde H_0=r$ and
+$\widetilde H_{j+1}=D_b\widetilde H_j+b\alpha^2(\nu+g)$. Since $D_b\leq1$,
+\begin{align*}
+  |H_k-\widetilde H_k|
+  &\leq b\alpha^2\sum_{j<k}|G_j-g|\\
+  &\leq b\{16h|G_0-g|+T\alpha^2hB\}=O(b).
+\end{align*}
+For $\alpha>0$, the geometric sum uses
+$\alpha^2/(1-A)=16h$. At $\alpha=0$, both sides are zero. This cancellation
+removes the apparent singularity in the common-coordinate relaxation time.
+
+Let $H^\circ_\alpha$ solve
+\[
+  \dot H^\circ=-d(\alpha)H^\circ+\alpha^2(\nu+g),
+  \qquad H^\circ(0)=r.
+\]
+The scalar affine map for $\widetilde H$ differs from this flow over time $b$
+by $O(b^2)$ uniformly on the retained rate interval. The flow is uniformly
+bounded for $t\leq T_1$, and errors propagate with multiplier $D_b\leq1$.
+Telescoping gives $\widetilde H_k=H^\circ_\alpha(kb)+O(b)$. Hence
+\begin{equation}
+  R^U_{R,k}(\alpha)
+    =\frac12\{A^kG_0+(1-A^k)g+H^\circ_\alpha(kb)\}+O(b)
+    \label{eq:limit-u-uniform}
+\end{equation}
+uniformly over every retained rate and stop. Replacing the common term by $g$
+uniformly would be false, including at initialization.
+
+For clarity, this approximation also describes the boundary sequences. If
+$\alpha_q\to0$, positivity and Bernoulli's inequality give
+\[
+  r-2rT\alpha_q\leq H_j\leq B=r+O(\alpha_q^2),\qquad
+  0\leq G_j-A^jG_0\leq g+cB=O(\alpha_q).
+\]
+If $k_q\alpha_q\to\ell\in[0,\infty]$, the limiting risk is therefore
+\begin{equation}
+  R^U_{R,k_q}(\alpha_q)\longrightarrow
+    \frac{s}{8}e^{-\ell/2}+\frac r2.
+  \label{eq:limit-u-transient}
+\end{equation}
+For finite $\ell$, use $\log A=-\alpha_q/2+O(\alpha_q^2)$ and
+$k_q\alpha_q^2\to0$. For infinite $\ell$, use
+$A^{k_q}\leq e^{-k_q\alpha_q/2}$. Thus $b\ll\alpha_q\ll1$ at the full
+cap learns the common signal and attains $r/2$.
+
+If instead $\alpha_q\to\alpha_0\in(0,2]$ and $k_qb\to0$, the rare moment
+tends to $r$. Along subsequences with $k_q=K$ fixed or $k_q\to\infty$, the
+common moment tends, respectively, to
+$A(\alpha_0)^KG_0+\{1-A(\alpha_0)^K\}g(\alpha_0)$ or $g(\alpha_0)$.
+Both give risk at least $r/2$. These cases explain why substituting time zero
+into the positive-time limit alone would miss some attainable transients.
+
+\subsection{Reduction of the limiting trajectories}
+
+Set $\Psi_U(\alpha,t)=\{g(\alpha)+H^\circ_\alpha(t)\}/2$. Both $\Psi_A$
+are smooth through $\alpha=0,2$ when defined by their differential equations,
+and $\Psi_U(0,t)=r/2$. For $0<\alpha<2$, each trajectory is monotone in
+time. An increasing S trajectory stays above $v/2$, and an increasing U
+trajectory stays above $(g+r)/2\geq r/2$. The respective baselines are the
+values at rate zero in the limiting problems. A decreasing trajectory reaches
+its minimum at the full cap $T$.
+
+Rates $\alpha\in(1,2)$ are dominated by $2-\alpha\in(0,1)$ at the same time:
+the decay $d(\alpha)$ is unchanged, while each noise term
+\[
+  g(\alpha),\qquad \frac{\nu\alpha}{2-\alpha},\qquad
+  \frac{\alpha\{\nu+g(\alpha)\}}{2-\alpha}
+\]
+is nondecreasing in $\alpha$. At rate two the risks are
+$(v+4\nu t)/2$ and $\{g(2)+r+4(\nu+g(2))t\}/2$, also above the baselines.
+Consequently,
+\begin{equation}
+  \Psi_A(\alpha,t)\geq L_A(T),
+  \qquad 0\leq\alpha\leq2,\quad 0\leq t\leq T.
+  \label{eq:limit-trajectory-reduction}
+\end{equation}
+On $[0,3]\times[0,T_1]$, both flows and their rate derivatives are bounded,
+as follows by differentiating their finite-dimensional matrix exponentials.
+Since $c_A(b)-2=O(b)$, replacing a retained rate above two by two changes its
+limiting risk by only $O(b)$.
+
+\subsection{Lower bounds and recovery over the full oracle domain}
+
+Combining \cref{eq:limit-s-uniform,eq:limit-trajectory-reduction} gives
+$R^S_{R,k}(\alpha)\geq L_S(T)-O(b)$ at every retained rate and stop. Above
+$c_S(b)$, the exact bound gives
+$R^S_{R,k}\geq wv/2\geq L_S(T)-2bv$. The same lower bound therefore holds
+over the entire S oracle domain.
+
+For U, split the retained controls at $J_b=2\log(1/b)$. If
+$k\alpha\geq J_b$, then $A^k\leq e^{-k\alpha/2}\leq b$, so
+\cref{eq:limit-u-uniform,eq:limit-trajectory-reduction} give
+$R^U_{R,k}(\alpha)\geq L_U(T)-O(b)$. If $k\alpha<J_b$, take $b$ small
+enough that $1-2b\alpha\geq0$. Positivity gives
+\[
+  H_k\geq D_b^kr\geq(1-2b\alpha)^kr\geq r(1-2bk\alpha).
+\]
+It follows that
+\[
+  R^U_{R,k}(\alpha)\geq\frac r2-2br-rbJ_b
+    \geq L_U(T)-2br-2rb\log(1/b).
+\]
+Above $c_U(b)$, the bound $R^U_{R,k}\geq wr/2\geq L_U(T)-2br$ suffices.
+Thus the U oracle is bounded below by $L_U(T)-O(b\log(1/b))$. These bounds
+permit taking infima directly, without requiring finite-prevalence minimizers
+to exist or their controls to converge.
+
+For matching upper bounds, let $\alpha_A(T)\in[0,1]$ minimize $F_A$.
+Continuity ensures existence. For S, use $\alpha_S(T)$ at $k=M_q$;
+\cref{eq:limit-s-uniform} gives risk $L_S(T)+O(b)$. For U, use the full cap
+and the rate
+\[
+  \alpha_q=\max\left\{\alpha_U(T),\frac{2b\log(1/b)}{T}\right\}.
+\]
+This lies in $[0,1]$ for small $b$ and ensures $M_q\alpha_q\geq J_b$.
+The common transient is $O(b)$, and $F_U$ has a bounded rate derivative on
+$[0,1]\times[T_0,T_1]$. Hence
+\[
+  R^U_{R,M_q}(\alpha_q)=F_U(\alpha_q;T)+O(b)
+    \leq L_U(T)+O(b\log(1/b)).
+\]
+This construction includes zero or vanishing minimizing rates and zero signal
+or noise. Together with the lower bounds, it proves
+\cref{eq:oracle-limit-errors}.
+
+Finally, bounding the time derivatives of the objectives uniformly in rate and
+taking minima yields
+\[
+  |L_S(T)-L_S(\tau)|\leq\frac{v+\nu}{2}|T-\tau|,\qquad
+  |L_U(T)-L_U(\tau)|\leq\frac{r+8\nu/7}{2}|T-\tau|.
+\]
+Since $T\to\tau\in(0,\infty)$, both oracle limits follow. Rounding $\tau/b$
+to an integer introduces an additional budget discrepancy of only $O(b)$.
+
+\paragraph{Why the positive-budget assumption matters.}
+
+The theorem does not assert uniformity for diverging signals, noise, or budgets.
+Nor can $\tau>0$ be dropped without specifying the cap sequence. For
+$s=4,r=0,\nu=1$, exact one-step minimization gives
+\[
+  R_U^*(1)=\frac12-\frac{1}{4(1+16bw)}\longrightarrow\frac14.
+\]
+If instead $M_q\to\infty$ and $M_qb\to0$, taking
+$\alpha_q=M_q^{-1/2}$ gives risk tending to zero by the vanishing-rate bounds.
+Both sequences have zero limiting rescaled budget, but different oracle limits.
+
+\section{Variational decisions from the limiting risks}
+\label{sec:oracle-variational}
+
+\subsection{Unique optimal rates}
+
+For $\nu>0$, write $x=v/\nu$, $\rho=r/\nu$, and, for $\alpha\in[0,1]$,
+\[
+  p=\frac{\alpha}{2-\alpha},\qquad
+  h=\frac{\alpha}{8-\alpha},\qquad P=p(1+h),\qquad z=e^{-\tau d(\alpha)}.
+\]
+Then $L_S=\nu J_S/2$ and $L_U=\nu J_U/2$, where
+\begin{equation}
+  J_S(x,\tau)=\min_{[0,1]}\{xz+p(1-z)\},\qquad
+  J_U(\rho,\tau)=\min_{[0,1]}\{\rho z+h+P(1-z)\}.
+  \label{eq:dimensionless-oracles}
+\end{equation}
+Only the two signal-to-noise ratios and the rescaled budget determine the
+preferred scaling. Multiplying $s,r,\nu$ by the same positive number scales
+both risks by that number and leaves the optimal rates unchanged.
+
+On $0<\alpha<1$, define
+\[
+  Q_S=p+\frac{p'(e^{\tau d}-1)}{\tau d'},\qquad
+  Q_U=P+\frac{h'e^{\tau d}+P'(e^{\tau d}-1)}{\tau d'},
+  \qquad d'=2(1-\alpha).
+\]
+Primes denote rate derivatives. Both functions increase strictly: $p,h,P$ have
+positive first and second derivatives, and $e^{\tau d}$ and $1/d'$ increase
+on this interval. Their endpoint limits are
+\[
+  Q_S(0)=0,\qquad Q_U(0)=\frac{1}{16\tau},\qquad
+  Q_S(1-)=Q_U(1-)=\infty.
+\]
+The derivatives of the respective objectives in
+\cref{eq:dimensionless-oracles} are $\tau d'z(Q_S-x)$ and
+$\tau d'z(Q_U-\rho)$. Thus, if $v,\nu>0$, S has one minimizer in $(0,1)$,
+given by $Q_S=x$. U has one minimizer in $(0,1)$ when
+$r\tau>\nu/16$, given by $Q_U=\rho$, and otherwise its unique minimizer is
+zero, including at equality. If $v=0$, S also minimizes uniquely at zero for
+$\nu>0$. If $\nu=0$, choosing rate one gives
+$L_S=ve^{-\tau}/2$ and $L_U=re^{-\tau}/2$; a zero signal makes the
+corresponding objective identically zero.
+
+The implementation in \path{experiments/common/limiting_oracle.py} brackets
+these roots and multiplies the derivative by $z$ to avoid growing exponentials.
+It evaluates the proved characterization in floating-point arithmetic; its
+answers are not interval certificates.
+
+\subsection{Allocation boundaries}
+
+\Cref{cor:oracle-allocation} holds the total initial signal contribution $v$
+fixed. Its boundary can be written
+\begin{equation}
+  \theta_*=
+  \frac1x\max_{0\leq\alpha\leq1}
+    \left[\{J_S(x,\tau)-h-P(1-z)\}e^{\tau d}\right].
+  \label{eq:allocation-boundary}
+\end{equation}
+For each rate, the bracketed expression is the rare signal-to-noise ratio at
+which that U trajectory equals $J_S$. U wins if at least one trajectory lies
+below $J_S$, which explains the maximum. The lower and upper slope bounds used
+in the corollary also give
+\[
+  \frac{e^{-\tau}}2(r_2-r_1)
+  \leq L_U(r_2)-L_U(r_1)\leq\frac12(r_2-r_1).
+\]
+
+An equivalent comparison fixes $r,\nu,\tau>0$ and varies $s$. U's limiting
+risk is constant, while
+\[
+  \frac{e^{-\tau}}8(s_2-s_1)
+  \leq L_S(s_2)-L_S(s_1)\leq\frac18(s_2-s_1).
+\]
+At $s=0$, S wins by the same endpoint argument as in
+\cref{cor:oracle-allocation}; its risk then grows without bound with $s$.
+There is therefore exactly one $s_*>0$ giving equality, with S preferred below
+it and U above it. Its variational expression and a bracket are
+\[
+  s_*=4\nu\max_{0\leq\alpha\leq1}
+    \left[\{J_U(\rho,\tau)-p\}e^{\tau d}+p-\rho\right],
+  \qquad 0<s_*\leq4r(e^\tau-1).
+\]
+The bracket follows from $L_S\geq ve^{-\tau}/2$ and $L_U\leq r/2$.
+Either boundary can also be computed by scalar bisection of the optimized risk
+difference. Uniqueness does not ensure good conditioning when $\tau$ is large.
+These results concern the stated allocation paths and do not assert a unique
+transition under every constraint on signal strength.
+
+\subsection{Noise and budget regimes}
+\label{sec:oracle-noise-budget}
+
+For fixed signals and budget, both limiting risks are nondecreasing and concave
+in $\nu$, because they are minima of affine functions with nonnegative noise
+coefficients. Their difference need not be monotone. If $s>0$, zero noise
+gives $L_S-L_U=se^{-\tau}/8>0$, so sufficiently small positive noise also
+favors U. Once $\nu\geq16r\tau$, U has risk $r/2$. As $\nu\to\infty$,
+the S minimizing rate must tend to zero, since rates bounded away from zero
+have unbounded noise cost. Its signal term tends to $v/2$, while initialization
+provides the matching upper bound. Hence
+\[
+  L_S\longrightarrow v/2,\qquad L_U\longrightarrow r/2,
+  \qquad L_S-L_U\longrightarrow s/8.
+\]
+U also wins at sufficiently large noise when $s>0$. For positive common
+signals in the rare-dominant family of \cref{thm:conference-predictive}, S wins
+at noise variance $\nu=r$ and $\tau\in[1,4]$. Continuity then implies at least
+two noise crossings. It does not imply exactly two, or crossings for every
+signal pair. As a numerical illustration, $s=0.1,r=1,\tau=2$ gives:
+\begin{center}
+  \begin{tabular}{rrrr}
+    \toprule
+    $\nu$ & $L_U$ & $L_S$ & Preferred scaling\\
+    \midrule
+    0 & 0.067668 & 0.069359 & U\\
+    0.1 & 0.109877 & 0.103572 & S\\
+    1 & 0.256267 & 0.232599 & S\\
+    100 & 0.500000 & 0.502306 & U\\
+    \bottomrule
+  \end{tabular}
+\end{center}
+
+Each limiting oracle risk is nonincreasing in $\tau$: the trajectory reduction
+allows the earlier stopping choice under every larger cap. For fixed
+$v,\nu>0$ and $\tau\downarrow0$, expanding uniformly on $\alpha\in[0,1]$
+gives
+\[
+  L_S=\frac v2-\frac{\tau v^2}{2(v+\nu)}+O(\tau^2),\qquad
+  \alpha_S\longrightarrow\frac{v}{v+\nu}.
+\]
+The first-order improvement in twice the risk is
+$\tau\{2\alpha v-\alpha^2(v+\nu)\}$, a strictly concave quadratic.
+For sufficiently small $\tau$, U has risk $r/2$ by its endpoint threshold.
+Thus small positive rescaled budgets favor U when $s>0$. This statement takes
+the prevalence limit first; the common coordinate has already been learned.
+
+For fixed $r,\nu>0$ and finite $s\geq0$, the large-budget expansions are
+\begin{equation}
+  \begin{aligned}
+    L_S&=\frac{\nu}{8\tau}
+      \left[1+\log\!\left(\frac{4\tau v}{\nu}\right)\right]
+      +o(\tau^{-1}),\\
+    L_U&=\frac{5\nu}{32\tau}
+      \left[1+\log\!\left(\frac{16\tau r}{5\nu}\right)\right]
+      +o(\tau^{-1}).
+  \end{aligned}
+  \label{eq:large-budget-oracles}
+\end{equation}
+To justify them, the candidate $\alpha=(\log\tau)/(2\tau)$ gives risk
+$O((\log\tau)/\tau)$. At any minimizer, the positive signal term forces
+$z=O((\log\tau)/\tau)$. Under S, the noise term $\nu p(1-z)$ then bounds
+$\alpha$ by the same order; under U, $\nu h$ does so directly. Thus
+$\tau\alpha^2\to0$. Uniformly in this minimizing range, twice the risks are
+\[
+  ve^{-2\tau\alpha}+\frac{\nu\alpha}{2}+o(\tau^{-1}),\qquad
+  re^{-2\tau\alpha}+\frac{5\nu\alpha}{8}+o(\tau^{-1}).
+\]
+The remainders are $O((\log\tau)^3/\tau^2)$ at both the exact minimizers and
+the minimizers of these approximations. Minimizing
+$Be^{-2\tau\alpha}+c\alpha$ gives
+$\alpha=\log(2\tau B/c)/(2\tau)$ for large $\tau$, proving
+\cref{eq:large-budget-oracles}. U pays $\nu\alpha/8$ in common-coordinate
+noise in addition to $\nu\alpha/2$ in rare-coordinate noise, while S has only
+the latter at leading order. Consequently $L_S/L_U\to4/5$.
+
+For $s>0$, the small- and large-budget signs imply at least one budget crossing,
+without asserting uniqueness. At $s=r=\nu=1$, numerical risks favor U at
+$\tau=1$ and S at $\tau=10$. Convergence can be slow: for $s=10,r=0.1,\nu=2$,
+U still wins at $\tau=10^5$, while S wins at $\tau=10^7$. The assumptions
+matter: with $\nu=0$, U is always weakly better; with $r=0$, its limiting risk
+is zero; with $s=0,r,\nu>0$, S wins at every finite positive budget.
+
+The deterministic checks in \path{checks/oracle_limits.py},
+\path{checks/oracle_infima.py}, and \path{checks/oracle_variational.py}
+exercise the moment approximations, unrestricted-infimum bounds, scalar roots,
+boundaries, and expansions. They supplement the proofs and are separate from
+the finite-prevalence certificates.

@@ -58,6 +58,7 @@ renderer](https://matplotlib.org/stable/users/explain/text/usetex.html).
   | `plot_predictive_intro.py`     | `predictive-intro/`               |
   | `plot_tuned_decomposition.py`  | `tuned-decomposition/`            |
   | `plot_signal_allocation.py`    | `signal-allocation/`              |
+  | `plot_oracle_finite.py`        | `oracle-finite/`                  |
   | `plot_common_block.py`         | `common-block/`                   |
   | `plot_theory_bridge.py`        | `theory-bridge/`                  |
   | `plot_mushroom_final.py`       | `mushroom-final/`                 |
@@ -83,20 +84,21 @@ Both figures are also included in `task figures` and `task paper`.
 
 Run `task figure:common-block` to export the dimension comparison's
 `figures/common-block/budget-slice` and `dimension-gaps` in all three formats.
-The main figure shows both signal allocations at two prevalences and the middle
-observation cap. The supplementary figure shows all prevalences and budgets.
-Both read `results/common-block/summary.json` and are included in `task figures`
-and `task paper`.
+The budget-slice figure shows both signal allocations at two prevalences and the
+middle observation cap; the full figure shows all prevalences and budgets. Both
+appear in the supplement. Both read `results/common-block/summary.json` and are
+included in `task figures` and `task paper`.
 
 By default, only figures included by `paper/main.tex` are generated. The
 Mushroom rate-search script exports the $n = 2048$ paths under aggregate
 validation used in the supplement.
 
-Run `task figure:oracle-finite` separately to export
-`figures/oracle-finite/limit-comparison` for the working notes. It reads
+Run `task figure:oracle-finite` to export
+`figures/oracle-finite/limit-comparison` for the manuscript supplement. It reads
 `results/oracle-finite/summary.json` and compares finite-prevalence errors,
 signal allocation, noise reversals, and budget effects with the limiting
-predictions. It does not rerun searches or add a figure to the manuscript.
+predictions. It does not rerun searches and is included in `task figures` and
+`task paper`.
 
 `task paper` rebuilds its figures when the corresponding scripts, shared style,
 palette configuration, Taskfile, environment configuration, or saved summaries
@@ -104,16 +106,20 @@ change. Missing PDF, SVG, or PNG exports also trigger a rebuild.
 `task paper-figures` performs that step without compiling LaTeX.
 
 Numerical results and summaries live in `results/<experiment>/`. These scripts
-read saved summaries and write the figures used by the manuscript. They do not
-train models or select new configurations. To change an analysis, run the
+read saved summaries and write the figures used by the manuscript. The
+introductory allocation panel also evaluates the proved limiting formulas. They
+do not train models or select new configurations. To change an analysis, run the
 experiment's `:summarize` task before regenerating figures. Git preserves
 earlier versions of plotting code and results.
 
 The coefficient-path illustration reads a constructed full-gradient example from
 `results/coefficient-paths/summary.json`. Regenerate it explicitly with
-`task experiment:coefficient-paths`. The signal-crossing figure reads a single
-budget and noise slice from the existing signal-allocation summary. Its simpler
-axis labels describe the same squared-coefficient allocation as the full map.
+`task experiment:coefficient-paths`. The signal-crossing figure holds $s/4+r=1$
+fixed at noise variance one and rescaled budget two. It evaluates the limiting
+scalar solver at 401 allocations and overlays eight saved allocations at each of
+two prevalences from `results/oracle-finite/summary.json`. Run it from the
+repository root with `python -m scripts.figures.plot_signal_crossing`. The
+supplementary allocation map retains the earlier, different constraint on $s+r$.
 
 The tuned decomposition reads the selected rates, stops, and weighted risk
 components from `results/predictive-intro/summary.json` at cap $M = 20{,}503$.

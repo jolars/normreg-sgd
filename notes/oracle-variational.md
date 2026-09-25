@@ -5,8 +5,8 @@ constant-rate and deterministic-stop tuning to two scalar minimizations. This
 note makes those minimizations usable and explains how signal allocation, noise,
 and budget affect the preferred scaling. It concerns final iterates with
 population preprocessing, fresh observations, zero initialization, and a fixed
-zero intercept. The results remain working mathematical claims awaiting
-independent review.
+zero intercept. The checked results and proofs are now integrated into the
+[manuscript](../paper/oracle-proofs.tex).
 
 Write $s=(\beta_C^*)^2$, $r=(\beta_R^*)^2$, $\nu=\sigma^2$, and $v=s/4+r$. First
 take $q\to0$ with $Mq(1-q)\to\tau\in(0,\infty)$ and fixed finite $s,r,\nu\geq0$.

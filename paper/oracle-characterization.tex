@@ -1,0 +1,131 @@
+\subsection{Limiting oracle risks}
+\label{sec:oracle-limits}
+
+The finite-prevalence theorem gives explicit gaps for two signal families. We
+next characterize both oracles for arbitrary fixed signals and noise as rare
+prevalence decreases. Write $s=(\beta_C^*)^2$, $r=(\beta_R^*)^2$,
+$\nu=\sigma^2$, and $v=s/4+r$. The limiting initial rare-subgroup risk is $v/2$.
+For $\alpha\in[0,1]$, define
+\[
+  d(\alpha)=\alpha(2-\alpha),\qquad
+  z_\tau(\alpha)=e^{-\tau d(\alpha)},\qquad
+  g(\alpha)=\frac{\nu\alpha}{8-\alpha},
+\]
+and, suppressing the arguments of $z_\tau$ and $g$,
+\begin{equation}
+  \begin{aligned}
+    F_S(\alpha;s,r,\nu,\tau)
+      &=\frac12\left[vz_\tau+
+        \frac{\nu\alpha}{2-\alpha}(1-z_\tau)\right],\\
+    F_U(\alpha;r,\nu,\tau)
+      &=\frac12\left[g+rz_\tau+
+        \frac{\alpha(\nu+g)}{2-\alpha}(1-z_\tau)\right].
+  \end{aligned}
+  \label{eq:limiting-objectives}
+\end{equation}
+
+\begin{theorem}[Limiting oracle risks]
+  \label{thm:oracle-limits}
+  In the model of \cref{sec:conference-setting}, fix finite $s,r,\nu\geq0$.
+  If $q\to0$ and integer observation caps satisfy
+  $M_qb\to\tau\in(0,\infty)$, then
+  \[
+    R_A^*(M_q)\longrightarrow L_A(\tau)
+      :=\min_{0\leq\alpha\leq1}F_A(\alpha;\tau),
+      \qquad A\in\{U,S\},
+  \]
+  with the signal and noise arguments as in \cref{eq:limiting-objectives}.
+  More precisely, for every $0<T_0<T_1<\infty$, uniformly over integer caps
+  with $T_q=M_qb\in[T_0,T_1]$,
+  \begin{equation}
+    |R_S^*(M_q)-L_S(T_q)|\leq C_Sb,\qquad
+    |R_U^*(M_q)-L_U(T_q)|\leq C_Ub\log(1/b)
+    \label{eq:oracle-limit-errors}
+  \end{equation}
+  for all sufficiently small $q$. The constants depend only on
+  $s,r,\nu,T_0,T_1$.
+\end{theorem}
+
+The oracle in this theorem still searches every nonnegative constant rate and
+every deterministic stop, including prevalence-dependent choices and unstable
+rates. Reduction to $\alpha\in[0,1]$ and the full cap is a conclusion about the
+limiting optimization. The approximation constants are not optimized numerical
+certificates at a specified prevalence; \cref{thm:conference-predictive}
+provides that separate guarantee.
+
+\paragraph{Why the limits differ.}
+
+SD's limiting risk depends on the signal only through $v$. U's depends on $r$
+but loses its dependence on the initial common signal. At a positive limiting
+rate, U learns that signal quickly and retains common-coordinate noise $g$,
+which also feeds into the rare error. By taking $b\ll\alpha_q\ll1$, U instead
+learns the common signal with vanishing noise cost and leaves the rare effect
+unchanged. This gives the endpoint $F_U(0)=r/2$. Literal zero-rate training
+retains both signal errors and has limiting risk $v/2$.
+
+For $\nu>0$, U uses this endpoint exactly when $r\tau\leq\nu/16$; above that
+threshold, its unique minimizer is positive. SD has a unique positive minimizer
+whenever $v,\nu>0$. The scalar equations in \cref{sec:oracle-variational}
+determine these rates without a grid search.
+
+\paragraph{Proof outline.}
+
+Let $G$ and $H$ denote the common and rare contributions before the factor
+$1/2$ in the limiting risk. Under SD, their sum obeys
+$\dot W=-d(\alpha)W+\alpha^2\nu$, starting at $W(0)=v$. Under U, the common
+moment rapidly approaches $g(\alpha)$, and the rare moment obeys
+$\dot H=-d(\alpha)H+\alpha^2(\nu+g)$, starting at $H(0)=r$. Solving these
+equations gives \cref{eq:limiting-objectives}. Passing to the oracle infima
+also requires uniform bounds for large rates, early stops, and vanishing rates.
+We retain U's common-coordinate transient in those bounds and construct rates
+that attain each limiting minimum, including its zero endpoint.
+\Cref{sec:oracle-limit-proofs} gives the full argument.
+
+\subsection{A unique signal-allocation crossing}
+\label{sec:oracle-allocation}
+
+Hold the initial limiting subgroup risk fixed while moving signal between the
+features. With $v>0$, write $r=\theta v$ and $s=4(1-\theta)v$ for
+$\theta\in[0,1]$. Thus $\theta$ measures the rare feature's share of $s/4+r$,
+rather than its share of the unweighted squared coefficient sum.
+
+\begin{corollary}[Signal allocation]
+  \label{cor:oracle-allocation}
+  Fix $v,\nu,\tau>0$. Along this allocation path, $L_S$ is constant and $L_U$
+  increases strictly with $\theta$. There is a unique
+  $\theta_*\in(0,1)$ such that $L_S=L_U$. Unscaled training has lower limiting
+  risk for $\theta<\theta_*$, and standardization has lower limiting risk for
+  $\theta>\theta_*$.
+\end{corollary}
+
+\begin{proof}
+  The SD objective depends only on $v$. Each U objective has slope
+  $vz_\tau(\alpha)/2\in[ve^{-\tau}/2,v/2]$ in $\theta$, so its minimum is
+  continuous and strictly increasing. At $\theta=0$, U has zero risk and SD
+  has positive risk. At $\theta=1$, a positive U minimizer incurs strictly
+  more noise than the same SD rate. If U instead minimizes at zero, a small
+  positive SD rate improves on $v/2$. The endpoint signs give the unique crossing.
+\end{proof}
+
+\Cref{fig:intro-signal-crossing} illustrates this corollary. At $v=\nu=1$
+and $\tau=2$, the crossing is numerically $\theta_*\approx0.8377$.
+\Cref{sec:oracle-variational} gives a variational formula and an equivalent
+boundary obtained by varying the common signal at fixed rare signal.
+
+\paragraph{Noise, budget, and finite prevalence.}
+
+The comparison need not be monotone in noise: with positive common signal, U
+wins at sufficiently small and sufficiently large noise, while SD can win
+between them. For fixed $r,\nu>0$ and finite $s\geq0$, the limiting risks
+also satisfy $L_S(\tau)/L_U(\tau)\to4/5$ as $\tau\to\infty$. Thus SD
+eventually wins as the rescaled budget grows, although convergence can be slow.
+This is an ordered limit, taking $q\to0$ first; it makes no claim about a joint
+limit with $M_qb\to\infty$. The expansions and examples are in
+\cref{sec:oracle-noise-budget}.
+
+Exact-moment searches at six prevalences recover the predicted signs away from
+limiting ties at the smallest prevalence. At larger prevalence, a high-noise
+example instead favors SD on the finite grids where the limit favors U.
+\Cref{sec:oracle-finite} reports this disagreement and the search refinements.
+These numerical comparisons assess the approximation and do not certify
+continuous finite-prevalence optima.

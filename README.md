@@ -231,10 +231,10 @@ they do not independently certify the new extension.
 The source archive includes the certificate checkers and their recorded standard
 output:
 
-  | Claim                      | Checker                                                           | Recorded output                                                         |
-  | -------------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------------- |
-  | Theorem 3.1 and Appendix A | [Finite-prevalence checker](checks/predictive_fixed_q.py)         | [Finite-prevalence output](results/certificates/predictive-fixed-q.txt) |
-  | Appendix B comparisons     | [Fixed-calibration checker](checks/normalization_risk_theorem.py) | [Fixed-calibration output](results/certificates/normalization-risk.txt) |
+  | Claim                         | Checker                                                           | Recorded output                                                         |
+  | ----------------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------------- |
+  | Theorem 3.1 and Appendix A    | [Finite-prevalence checker](checks/predictive_fixed_q.py)         | [Finite-prevalence output](results/certificates/predictive-fixed-q.txt) |
+  | Fixed-calibration comparisons | [Fixed-calibration checker](checks/normalization_risk_theorem.py) | [Fixed-calibration output](results/certificates/normalization-risk.txt) |
 
 From the extracted archive, enter `devenv shell` and run
 `task check:predictive-fixed-q` and `task check:normalization-risk`. These
@@ -245,7 +245,7 @@ exact rational arithmetic; displayed decimal margins are rounded. The second
 reports the supporting interval bounds and separate numerical diagnostics. The
 saved output summarizes completed checks and does not replace rerunning them.
 
-The [oracle-limit notes](notes/oracle-limits.md) prove convergence of the
+The [manuscript proof](paper/oracle-proofs.tex) establishes convergence of the
 unrestricted rate-and-stop infima for fixed finite signals and noise and finite
 positive rescaled budgets. The [variational
 comparison](notes/oracle-variational.md) gives unique scalar rate equations and
@@ -255,8 +255,10 @@ finite-prevalence comparisons. The earlier recorded outputs are [limit
 checks](results/oracle-limits/checks.json) and [infimum
 checks](results/oracle-limits/infimum-checks.json), plus [variational
 checks](results/oracle-limits/variational-checks.json). These numerical
-diagnostics are separate from the finite-prevalence certificates; the new proof
-has not received independent mathematical review.
+diagnostics supplement the analytic proofs and are separate from the
+finite-prevalence certificates. The original
+[derivation](notes/oracle-limits.md) and variational notes retain additional
+boundary-sequence details.
 
 The [finite-prevalence comparison](notes/oracle-finite.md) tests 43 settings at
 six prevalences, retaining the theorem as the quantitative guarantee. It
@@ -274,8 +276,10 @@ tables, then `task check:results` to verify them. Use
 `task experiment:signal-allocation` to regenerate the signal-allocation
 illustration, `task experiment:coefficient-paths` to regenerate the constructed
 paths to OLS, and `task check:illustrations` to verify the illustration
-summaries. The introductory signal-crossing figure uses a slice of the existing
-signal-allocation results.
+summaries. The introductory signal-crossing figure holds $s/4+r$ fixed,
+evaluates the limiting scalar characterization, and overlays saved
+`oracle-finite` selections. The earlier allocation map at fixed $s+r$ remains in
+the supplement.
 
 Checks retain and report the known numerical discrepancies in extreme synthetic
 paths. They do not certify those paths merely because structural checks pass.

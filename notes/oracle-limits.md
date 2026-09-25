@@ -1,16 +1,18 @@
 # Limiting oracle risks for the two-feature model
 
-This working derivation extends the fixed-rate limits in [the common-feature
+This derivation extends the fixed-rate limits in [the common-feature
 notes](../experiments/common_block/README.md) to the unrestricted rate-and-stop
 oracles in the manuscript. It covers arbitrary fixed signal strengths and noise
-variance in the two-feature model. It has numerical checks, but has not received
-an independent mathematical review and is not yet part of the manuscript.
+variance in the two-feature model. The checked proof is now integrated into the
+[manuscript](../paper/oracle-proofs.tex), with the theorem and allocation
+corollary in the [main text](../paper/oracle-characterization.tex).
 
 The rate-and-stop analysis below includes the common-coordinate transient when
 the unscaled rate vanishes. Uniform lower bounds over all rates and stops,
 paired with explicit recovery choices, justify the passage to oracle infima. The
 proof also gives error orders on compact positive rescaled-budget intervals. The
-signal-allocation consequences remain working claims for separate review.
+[variational consequences](oracle-variational.md) are also integrated into the
+manuscript.
 
 ## Statement
 
@@ -729,9 +731,9 @@ The proof gives uniform error orders for the optimized risks on compact positive
 rescaled-budget intervals, including boundary minimizers. It does not supply
 optimized numerical constants or interval certificates at a specified
 prevalence. Numerical checks exercise the estimates but do not prove coverage of
-a continuous rate domain or replace independent mathematical review, which
-remains outstanding. The manuscript's existing theorem remains the certified
-quantitative finite-prevalence guarantee.
+a continuous rate domain; the analytic proof establishes the unrestricted oracle
+statements. The manuscript's existing theorem remains the certified quantitative
+finite-prevalence guarantee.
 
 The [finite-prevalence comparison](oracle-finite.md) extends these diagnostics
 to the signal-allocation, noise, and budget predictions across six prevalences.

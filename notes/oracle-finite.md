@@ -10,8 +10,8 @@ high-noise example favors SD at prevalences where its limiting prediction favors
 These are numerical comparisons over finite candidate families. The manuscript's
 existing Theorem 3.1 and its finite-prevalence certificates remain the
 quantitative guarantee over all nonnegative constant rates and deterministic
-stops. Neither the theorem nor its proof has been changed. The limiting proofs
-still await independent mathematical review.
+stops. Neither that theorem nor its proof has been changed. The checked limiting
+proofs and these comparisons are now integrated into the manuscript.
 
 ## Model and search
 

@@ -1,8 +1,9 @@
 # Current paper tasks
 
-Keep the finite-prevalence oracle theorem as the central result. Start with the
-averaging comparison to assess the scope of the mechanism, then pursue a
-limiting oracle characterization before rewriting the main narrative.
+The manuscript now pairs the finite-prevalence oracle theorem with the limiting
+characterization and a unique signal-allocation crossing. The proof has been
+checked and integrated. Tail averaging and the adaptive-selection mechanism
+remain the next substantive questions.
 
 ## 1. Test robustness to tail averaging
 
@@ -25,22 +26,22 @@ limiting oracle characterization before rewriting the main narrative.
   $Mq(1 - q) \to \tau$, starting from the exact moment recurrence and the
   proposed scalar SD risk equation.
 
-  The [working derivation](notes/oracle-limits.md) gives both limiting risks,
-  proves the unrestricted oracle limits, and derives a unique signal-allocation
-  crossing at positive noise and rare signal. Numerical checks pass with
-  `task check:oracle-limits`. The oracle-infimum proof and signal-allocation
-  consequences still need independent mathematical review.
+  The [derivation](notes/oracle-limits.md) gives both limiting risks, proves the
+  unrestricted oracle limits, and derives a unique signal-allocation crossing at
+  positive noise and rare signal. Numerical checks pass with
+  `task check:oracle-limits`. The checked oracle-infimum proof and
+  signal-allocation consequences are integrated into the manuscript.
 
 - [x] Account for rates and stops that depend on prevalence, including
   initialization, vanishing rates, and large rates. For U, examine
   $q \ll \alpha(q) \ll 1$, which can learn the common signal while leaving
   the rare effect largely unchanged.
 
-  The working derivation now gives the full U transient through
-  $k_q\alpha_q \to \ell$, uniform bounds over allowed stops, and large-rate
-  exclusions for both scalings. Checks cover 32 joint rate-and-stop sequences,
-  zero signal and noise, and exact geometric lower bounds. The uniform control
-  below completes the passage to oracle infima.
+  The derivation gives the full U transient through $k_q\alpha_q \to \ell$,
+  uniform bounds over allowed stops, and large-rate exclusions for both
+  scalings. Checks cover 32 joint rate-and-stop sequences, zero signal and
+  noise, and exact geometric lower bounds. The uniform control below completes
+  the passage to oracle infima.
 
 - [x] Establish the control needed to pass from fixed-rate limits to limits of
   the oracle infima. Identify any restrictions on signals, noise, and
@@ -52,8 +53,8 @@ limiting oracle characterization before rewriting the main narrative.
   finite nonnegative signals and noise, including zeros, and requires
   $Mb \to \tau \in (0,\infty)$. A zero-budget counterexample explains that
   restriction. `task check:oracle-limits` also runs the [uniform-control
-  diagnostics](checks/oracle_infima.py). Independent mathematical review remains
-  outstanding.
+  diagnostics](checks/oracle_infima.py). The manuscript includes the uniform
+  argument and recovery choices in full.
 
 - [x] Obtain a usable variational characterization and explain how signal
   allocation, noise, and budget determine the preferred scaling. Treat a
@@ -64,8 +65,8 @@ limiting oracle characterization before rewriting the main narrative.
   regimes. A [root solver](experiments/common/limiting_oracle.py) implements the
   characterization. `task check:oracle-variational` checks it independently
   against objective searches and records examples with two noise reversals. The
-  large-budget risk ratio tends to $4/5$ for positive rare signal and noise.
-  These limiting claims still await independent mathematical review.
+  large-budget risk ratio tends to $4/5$ for positive rare signal and noise. The
+  manuscript includes these consequences and their proofs.
 
 - [x] Check the limiting predictions against finite-prevalence exact risks, and
   retain the existing theorem as the quantitative finite-prevalence
@@ -77,8 +78,13 @@ limiting oracle characterization before rewriting the main narrative.
   records a high-noise disagreement at larger prevalence. Saved risks, rates,
   stops, refinement diagnostics, and a figure are reproducible with
   `task experiment:oracle-finite`, `task check:oracle-finite -- --rerun`, and
-  `task figure:oracle-finite`. The manuscript's theorem and certificates remain
-  unchanged; these numerical searches do not certify continuous optima.
+  `task figure:oracle-finite`. The finite-prevalence theorem and certificates
+  remain unchanged; these numerical searches do not certify continuous optima.
+
+- [x] Integrate the limiting theorem, allocation corollary, variational
+  consequences, and finite-prevalence checks into the paper. Redraw the
+  introductory crossing at fixed $s/4+r$ and retain the earlier $s+r$ map in
+  the supplement.
 
 ## 3. Explain the adaptive-selection reversal
 
@@ -103,13 +109,13 @@ $-.10456$ to $+.01643$ with a fitted intercept.
 
 ## 4. Focus the manuscript and empirical narrative
 
-- [ ] Organize the introduction around total rare-subgroup risk after separate
+- [x] Organize the introduction around total rare-subgroup risk after separate
   rate and stopping optimization under a finite observation cap. State the
   distinction from prior optimal-stopping bias and tail-averaged SGD
   results.
-- [ ] Promote the controlled-persistence figure into the main paper, and
+- [x] Promote the controlled-persistence figure into the main paper, and
   emphasize the controlled missing-validation example.
-- [ ] Move most extreme synthetic-path diagnostics and Mushroom discussion to
+- [x] Move most extreme synthetic-path diagnostics and Mushroom discussion to
   the supplement, preserving reported failures and qualifications.
 - [ ] Give adaptive selection a central role if the analysis explains its
   mechanism; otherwise present it as a focused qualification of the oracle
