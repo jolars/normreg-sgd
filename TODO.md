@@ -21,9 +21,16 @@ limiting oracle characterization before rewriting the main narrative.
 
 ## 2. Characterize the limiting oracle risks
 
-- [ ] Derive limiting risks for both scalings as $q \to 0$ with
+- [x] Derive limiting risks for both scalings as $q \to 0$ with
   $Mq(1 - q) \to \tau$, starting from the exact moment recurrence and the
   proposed scalar SD risk equation.
+
+The [working derivation](notes/oracle-limits.md) gives both limiting risks,
+proposes a proof for the unrestricted oracle limits, and derives a unique
+signal-allocation crossing at positive noise and rare signal. Numerical checks
+pass with `task check:oracle-limits`. Review that argument independently before
+treating the remaining oracle-limit tasks as settled.
+
 - [ ] Account for rates and stops that depend on prevalence, including
   initialization, vanishing rates, and large rates. For U, examine
   $q \ll \alpha(q) \ll 1$, which can learn the common signal while leaving

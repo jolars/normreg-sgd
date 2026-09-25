@@ -47,6 +47,18 @@ environment files. It can be extracted and used without Git history. The image
 and archive take their contents from the same definition in
 [nix/release.nix](nix/release.nix).
 
+`task review:package` creates the smaller
+`build/normreg-multi-review-<version>.tar.gz` supplement used by private paper
+reviews. It includes the computational and formal-support source plus
+human-readable results needed to inspect the paper's claims. It excludes the
+repository README, task and environment files, paper source, local reviews,
+TODO files, build products, and raw numerical arrays. The full package remains
+available when exact numerical artifacts are needed for reproduction.
+
+For the current ALT rehearsal, run `task review-alt`. It builds the manuscript,
+creates the curated supplement, and passes both to `codex-alt-review`; it never
+passes the repository checkout itself.
+
 Local environments, build products, private mock reviews, and Lean's downloaded
 caches are excluded. As in the repository, the two large exact-risk outputs must
 be generated with `task experiment:exact-risk`; they are not needed to build the
