@@ -2,10 +2,10 @@
 
 Edit the plotting scripts in this directory. All use `style.py` for Matplotlib's
 `rcParams`, font sizes, and export settings. Text and equations render through
-LaTeX with `lmodern`, matching the manuscript. Change `RC_PARAMS` to adjust the
+LaTeX with `times`, matching the ALT template. Change `RC_PARAMS` to adjust the
 shared typography. Set figure dimensions in each script; `PAPER_WIDTH` is the
-manuscript's full text width in inches. `COLUMN_WIDTH` accounts for the gap
-between columns and is used by the two single-column introductory figures.
+manuscript's six-inch text width. `SINGLE_PANEL_WIDTH` is used by the two
+smaller introductory figures.
 
 Inside `devenv shell`, run:
 
@@ -14,9 +14,9 @@ task figures
 ```
 
 This reads saved experiment summaries and moment archives, then writes PDF, SVG,
-and PNG files under `figures/`. PDFs embed Latin Modern fonts, and SVGs contain
-glyph outlines so their appearance does not depend on installed viewer fonts.
-The environment includes the LaTeX packages and `dvipng` needed by [Matplotlib's
+and PNG files under `figures/`. PDFs embed their fonts, and SVGs contain glyph
+outlines so their appearance does not depend on installed viewer fonts. The
+environment includes the LaTeX packages and `dvipng` needed by [Matplotlib's
 LaTeX renderer](https://matplotlib.org/stable/users/explain/text/usetex.html).
 
   | Script                         | Output directory under `figures/` |

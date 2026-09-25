@@ -91,10 +91,12 @@ changes when preparing the supplied artifact.
 - [ ] Verify that the supplied source archive includes the certificate checkers,
   dependencies, minimal commands, and expected outputs. Run the certificate
   commands from an extracted archive without launching experiments.
-- [ ] Reconcile verification status across the manuscript, checklist, and README
-  with the checks and mathematical review actually completed.
+- [ ] Reconcile verification status across the manuscript and README with the
+  checks and mathematical review actually completed.
 - [ ] Update the Su et al. citation to acknowledge the 2026 journal version and
   its author list, retaining version-specific references where needed.
 - [ ] Check proposition/theorem naming and cross-references after restructuring.
-- [ ] Check the main-paper length after revision and flag any excess over eight
-  pages before making substantive cuts to meet the limit.
+- [ ] Check the main-paper length after revision and flag material beyond the
+  first 12 pages, excluding references, that ALT reviewers may not read. ALT
+  2027 has no page limit; do not make substantive cuts just to fit this
+  threshold.

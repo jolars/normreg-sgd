@@ -3,7 +3,7 @@
 import json
 
 import numpy as np
-from style import COLUMN_WIDTH, OUTPUT, ROOT, apply_style, plt, save
+from style import OUTPUT, ROOT, SINGLE_PANEL_WIDTH, apply_style, plt, save
 
 COLORS = ("#0072B2", "#D55E00")
 LABELS = ("Unscaled", "Standardized")
@@ -18,7 +18,7 @@ def plot(report):
     fractions = np.array(model["rare_signal_fractions"])
     risk = np.array(report["risk"])[cap_index, noise_index]
     gap = risk[:, 0] - risk[:, 1]
-    figure, axis = plt.subplots(figsize=(COLUMN_WIDTH, 2.75))
+    figure, axis = plt.subplots(figsize=(SINGLE_PANEL_WIDTH, 2.75))
     figure.subplots_adjust(left=0.18, right=0.96, bottom=0.24, top=0.84)
     for scaling, (label, color, linestyle) in enumerate(
         zip(LABELS, COLORS, ("--", "-"), strict=True)

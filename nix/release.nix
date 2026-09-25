@@ -58,6 +58,7 @@ let
           ".tex"
           ".bib"
           ".sty"
+          ".cls"
           ".md"
         ]
       );

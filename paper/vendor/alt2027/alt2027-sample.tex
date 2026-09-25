@@ -1,0 +1,95 @@
+\documentclass[anon]{alt2027} % submission template (anonymized)
+%\documentclass[final]{alt2027} % camera-ready template (de-anonymized)
+
+% The following packages will be automatically loaded:
+% amsmath, amssymb, natbib, graphicx, url, xcolor, hyperref, algorithm2e
+% Keep alt2027.cls, jmlr.cls, and jmlrutils.sty in the same directory as
+% this file. Compile with latexmk -pdf alt2027-sample.tex or your usual
+% LaTeX workflow.
+
+\title[Short Title]{Full Title of Article}
+\usepackage{times}
+% Use \Name{Author Name} to specify the name.
+% If the surname contains spaces, enclose the surname
+% in braces, e.g. \Name{John {Smith Jones}} similarly
+% if the name has a "von" part, e.g \Name{Jane {de Winter}}.
+% If the first letter in the forenames is a diacritic
+% enclose the diacritic in braces, e.g. \Name{{\'E}louise Smith}
+
+% Two authors with the same address
+% \altauthor{\Name{Author Name1} \Email{abc@sample.com}\and
+%  \Name{Author Name2} \Email{xyz@sample.com}\\
+%  \addr Address}
+
+% Three or more authors with the same address:
+% \altauthor{\Name{Author Name1} \Email{an1@sample.com}\\
+%  \Name{Author Name2} \Email{an2@sample.com}\\
+%  \Name{Author Name3} \Email{an3@sample.com}\\
+%  \addr Address}
+
+% Authors with different addresses:
+\altauthor{%
+ \Name{Author Name1} \Email{abc@sample.com}\\
+ \addr Address 1
+ \AND
+ \Name{Author Name2} \Email{xyz@sample.com}\\
+ \addr Address 2%
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}%
+  This is a great paper and it has a concise abstract.%
+\end{abstract}
+
+\begin{keywords}%
+  keyword one, keyword two, keyword three
+\end{keywords}
+
+\section{Introduction}
+
+This is where the content of your paper goes.
+\begin{itemize}
+  \item When submitting, use \texttt{\textbackslash documentclass[anon]\{alt2027\}}
+    --- this automatically hides the author names listed under \texttt{\textbackslash altauthor}.
+    
+  \item Use \texttt{\textbackslash documentclass[final]\{alt2027\}} only during camera-ready submission.
+
+  \item
+    Including author names or any other information anywhere in the submission is grounds for rejection;
+    please double-check your submission carefully.
+
+  \item There is no page limit, but reviewers may not read content beyond the
+    first 12 pages, excluding references. Include all proofs and technical
+    details needed to understand the results.
+
+\end{itemize}
+
+% Authors are strongly encouraged to include an anonymous AI Disclosure section
+% if generative AI was used substantively. Uncomment and replace the example:
+% \section*{AI Disclosure}
+% We used [tool] to [briefly explain how it was used].
+
+% Acknowledgments---Will not appear in anonymized version
+\acks{We thank our colleagues and funding agencies;
+  \texttt{\textbackslash documentclass[anon]\{alt2027\}}
+automatically hides this text.}
+
+% Replace yourbibfile with the name of your BibTeX database and uncomment:
+% \bibliography{yourbibfile}
+
+\appendix
+
+% \crefalias{section}{appendix} % uncomment if you are using cleveref
+
+\section{Deferred proofs}
+
+Here is the proof of the main lemma from the paper body.
+
+\begin{proofof}{Theorem 1}
+  Follows from the concavity of $\ln(\cdot)$ and Jensen's inequality.
+\end{proofof}
+
+\end{document}

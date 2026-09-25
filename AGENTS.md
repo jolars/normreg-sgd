@@ -5,7 +5,8 @@
 This research repository studies feature normalization under finite training
 budgets.
 
-- `paper/` contains `main.tex`, the bibliography, and vendored AISTATS styles.
+- `paper/` contains `main.tex`, the bibliography, and the vendored ALT 2027
+  template.
 - `experiments/<name>/` contains each experiment's configuration, runner, and
   summary generator. Shared numerical routines live in `experiments/common/`.
 - `checks/` contains mathematical, numerical, and saved-result checks.
@@ -76,5 +77,6 @@ previews when changing plots.
 
 ## Paper Style and Format
 
-- Maximum length for the paper is 8 pages, but don't force the draft into that
-  limit. Instead raise this as an issue to the user.
+- ALT 2027 has no page limit, but reviewers may stop after the first 12 pages,
+  excluding references. Flag material beyond that point to the user instead of
+  cutting the draft to fit.

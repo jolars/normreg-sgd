@@ -1,4 +1,4 @@
-"""Shared Latin Modern typography and figure exports for the manuscript."""
+"""Shared ALT typography and figure exports for the manuscript."""
 
 from pathlib import Path
 
@@ -9,13 +9,13 @@ import matplotlib.pyplot as plt
 
 ROOT = Path(__file__).resolve().parents[2]
 OUTPUT = ROOT / "figures"
-PAPER_WIDTH = 6.75
-COLUMN_WIDTH = (PAPER_WIDTH - 0.25) / 2
+PAPER_WIDTH = 6.0
+SINGLE_PANEL_WIDTH = 3.25
 
 # LaTeX renders text and math with the same font package as the manuscript.
 RC_PARAMS = {
     "text.usetex": True,
-    "text.latex.preamble": r"\usepackage[T1]{fontenc}\usepackage{lmodern}",
+    "text.latex.preamble": r"\usepackage[T1]{fontenc}\usepackage{times}",
     "font.family": "serif",
     "font.serif": ["Computer Modern Roman"],
     "font.sans-serif": ["Computer Modern Sans Serif"],

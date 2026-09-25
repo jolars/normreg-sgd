@@ -3,7 +3,7 @@
 import json
 
 import numpy as np
-from style import COLUMN_WIDTH, OUTPUT, ROOT, apply_style, plt, save
+from style import OUTPUT, ROOT, SINGLE_PANEL_WIDTH, apply_style, plt, save
 
 COLORS = ("#0072B2", "#D55E00")
 STYLES = ("--", "-")
@@ -11,7 +11,7 @@ STYLES = ("--", "-")
 
 def plot(report):
     apply_style()
-    figure, axis = plt.subplots(figsize=(COLUMN_WIDTH, 2.75))
+    figure, axis = plt.subplots(figsize=(SINGLE_PANEL_WIDTH, 2.75))
     figure.subplots_adjust(left=0.18, right=0.97, bottom=0.18, top=0.84)
     ols = np.array(report["ols"])
     values = np.linspace(-0.08, 1.18, 250)

@@ -4,6 +4,13 @@ This repository contains the [manuscript](paper/main.tex), experiment code,
 source data, saved results, and numerical checks for the study. The repository
 and release archive use the same layout and commands.
 
+The manuscript uses the anonymous ALT 2027 template supplied in
+`alt2027-template.zip`. Its unmodified class files and sample are vendored in
+[`paper/vendor/alt2027/`](paper/vendor/alt2027/README.md). ALT has no page
+limit, but reviewers may stop after the first 12 pages, excluding references.
+The paper build reports the main-text page count and flags drafts beyond that
+threshold.
+
 To build the complete paper from the saved results, install
 [Nix](https://nixos.org/download/) and
 [devenv](https://devenv.sh/getting-started/), then run this command from the

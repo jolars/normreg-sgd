@@ -38,6 +38,13 @@
       "natbib"
       "booktabs"
       "cleveref"
+      "algorithm2e"
+      "ifoddpage"
+      "relsize"
+      "placeins"
+      "courier"
+      "helvetic"
+      "xurl"
     ];
   };
 

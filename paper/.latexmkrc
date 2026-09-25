@@ -1,2 +1,2 @@
-# Prefer the unmodified conference bundle, including its fancyhdr version.
-$ENV{'TEXINPUTS'} = './vendor/aistats2027//:' . ($ENV{'TEXINPUTS'} // '');
+# Prefer the unmodified ALT class and its bundled JMLR dependencies.
+$ENV{'TEXINPUTS'} = './vendor/alt2027//:' . ($ENV{'TEXINPUTS'} // '');
