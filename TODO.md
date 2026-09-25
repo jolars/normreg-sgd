@@ -25,22 +25,25 @@ limiting oracle characterization before rewriting the main narrative.
   $Mq(1 - q) \to \tau$, starting from the exact moment recurrence and the
   proposed scalar SD risk equation.
 
-The [working derivation](notes/oracle-limits.md) gives both limiting risks,
-proposes a proof for the unrestricted oracle limits, and derives a unique
-signal-allocation crossing at positive noise and rare signal. Numerical checks
-pass with `task check:oracle-limits`. Review that argument independently before
-treating the remaining oracle-limit tasks as settled.
+  The [working derivation](notes/oracle-limits.md) gives both limiting risks,
+  proposes a proof for the unrestricted oracle limits, and derives a unique
+  signal-allocation crossing at positive noise and rare signal. Numerical checks
+  pass with `task check:oracle-limits`. Review that argument independently
+  before treating the remaining oracle-limit tasks as settled.
 
 - [ ] Account for rates and stops that depend on prevalence, including
   initialization, vanishing rates, and large rates. For U, examine
   $q \ll \alpha(q) \ll 1$, which can learn the common signal while leaving
   the rare effect largely unchanged.
+
 - [ ] Establish the control needed to pass from fixed-rate limits to limits of
   the oracle infima. Identify any restrictions on signals, noise, and
   budgets.
+
 - [ ] Obtain a usable variational characterization and explain how signal
   allocation, noise, and budget determine the preferred scaling. Treat a
   complete closed-form transition boundary as optional additional work.
+
 - [ ] Check the limiting predictions against finite-prevalence exact risks, and
   retain the existing theorem as the quantitative finite-prevalence
   guarantee.
