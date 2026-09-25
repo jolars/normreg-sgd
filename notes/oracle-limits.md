@@ -6,6 +6,12 @@ oracles in the manuscript. It covers arbitrary fixed signal strengths and noise
 variance in the two-feature model. It has numerical checks, but has not received
 an independent mathematical review and is not yet part of the manuscript.
 
+The rate-and-stop analysis below includes the common-coordinate transient when
+the unscaled rate vanishes. It gives limits for every potentially improving
+sequence and lower bounds for the remaining large rates. The subsequent passage
+to oracle infima and signal-allocation consequences remain working claims for
+separate review.
+
 ## Statement
 
 Retain the independent binary model, population preprocessing, fresh
@@ -84,6 +90,11 @@ $$
 where $u=b\alpha$ for S and $u=\alpha/4$ for U. All update coefficients are
 nonnegative. In particular, $D_b=(1-b\alpha)^2+b\alpha^2(1-4b)\geq0$.
 
+At $k=0$, both scalings have risk $(s/4+wr)/2$, regardless of the rate. Literal
+zero-rate training has this same risk at every stop. Its limit is $v/2$, where
+$v=s/4+r$. All sequences below satisfy $0\leq k_q\leq M_q$. Each rate is
+constant during a training run and varies only with prevalence.
+
 ## Standardization
 
 ### Bounded rates
@@ -120,6 +131,12 @@ $$
 The limiting risk is $W(t)/2$. For $0<a<2$ this is $F_S$ with $\tau$ replaced by
 $t$. At $a=0$ it is $v/2$, and at $a=2$ it is $(v+4\nu t)/2$.
 
+In particular, under S every vanishing-rate sequence retains both initial
+moments: $G_{k_q}\to s/4$ and $H_{k_q}\to r$. This holds uniformly over all
+allowed stops. A bounded rate with $k_qb\to0$ also retains both initial moments.
+Thus no additional limit arises from coupling a vanishing rate with an earlier
+stop under S.
+
 ### Rates escaping to infinity
 
 An exact scalar lower bound controls this case. Summing the recurrences gives
@@ -141,6 +158,18 @@ For $\alpha\geq2/(1-3b+b^2)$, $\lambda_b\geq1$, so $W_k\geq v$ at every stop and
 $R_{R,k}\geq wv/2$. These rates cannot beat initialization in the limit. This is
 an asymptotic exclusion, not a claim that they are dominated at every finite
 prevalence.
+
+The same bound covers arbitrarily early stops, even when $b\alpha$ does not
+vanish. More explicitly, positivity gives, for every integer $k\geq0$,
+
+$$
+  R_{R,k}\geq\frac w2\left[
+    \lambda_b^k v+b\alpha^2\nu\sum_{j=0}^{k-1}\lambda_b^j
+  \right],
+$$
+
+with an empty sum at initialization. The bound still applies when the noise or
+either signal is zero.
 
 All remaining rates lie in a compact interval as $q\to0$. The bounded-rate limit
 therefore covers every potentially improving sequence, including rates tending
@@ -190,32 +219,96 @@ At positive rescaled time, $G_{k_q}\to g(a)$. For $0<a<2$, the limiting risk is
 $F_U$ with $\tau$ replaced by $t$. At $a=2$ the limit is
 $\{g(2)+r+4(\nu+g(2))t\}/2\geq r/2$.
 
-### Vanishing rates and short stops
+### Vanishing rates: the common-coordinate transient
 
-If $\alpha_q\to0$, positivity and $D_b\geq1-2b\alpha_q$ give
-
-$$
-  H_{k_q}\geq D_b^{k_q}r
-     \geq(1-2b\alpha_q)^{M_q}r\longrightarrow r.
-$$
-
-Thus the limiting lower bound is $r/2$, whatever happens to the common moment.
-If rates instead have a positive bounded limit but $k_qb\to0$, the same
-conclusion follows from $D_b=1+O(b)$ and $H_{k_q}\geq D_b^{k_q}r$.
-
-The bound $r/2$ is attainable. Take $\alpha_q=\sqrt b$ and $k_q=M_q$. More
-generally, any $b\ll\alpha_q\ll1$ works. The rare recurrence has $D_b\leq1$ for
-small $q$, and the preceding common bound implies $H_{\max}\leq r+O(\alpha_q^2)$
-after absorbing its feedback term. Together with the rare lower bound, this
-yields $H_{M_q}\to r$. Meanwhile,
+Suppose $\alpha_q\to0$. There is an explicit bound uniform over every allowed
+stop, not just a lower bound on the rare moment. To derive it, take
+$0\leq\alpha\leq1$, write $T=M_qb$, and set
 
 $$
-  G_{M_q}\leq (1-\alpha_q/4)^{2M_q}s/4
-    +g(\alpha_q)+\frac{b\alpha_q}{8-\alpha_q}H_{\max}
-    \longrightarrow0,
+  A=(1-\alpha/4)^2,\qquad
+  c=\frac{b\alpha}{8-\alpha},\qquad
+  B=\frac{r+T\alpha^2\{s/4+g(\alpha)+\nu\}}
+           {1-T\alpha^2c}.
 $$
 
-because $M_q\alpha_q\to\infty$ and $g(\alpha_q)\to0$.
+The denominator is positive for all sufficiently small $q$. Iterating the common
+recurrence and using $D_b\leq1$ gives
+
+$$
+  \begin{aligned}
+  G_j&\leq A^j s/4+g(\alpha)(1-A^j)+cH_{\max},\\
+  H_{\max}&\leq r+T\alpha^2\{s/4+g(\alpha)+\nu+cH_{\max}\}.
+  \end{aligned}
+$$
+
+Moving the feedback term to the left yields $H_{\max}\leq B$. Positivity,
+$D_b\geq1-2b\alpha\geq0$, and Bernoulli's inequality then give the following
+bounds for every $0\leq j\leq M_q$:
+
+$$
+  \begin{aligned}
+  r-2rT\alpha&\leq H_j\leq B=r+O(\alpha^2),\\
+  0&\leq G_j-A^j s/4\leq g(\alpha)+cB=O(\alpha).
+  \end{aligned}
+$$
+
+The constants depend only on fixed $s,r,\nu$ and an upper bound for $M_qb$.
+These estimates also include $\alpha=0$ and zero signal or noise.
+
+Consequently, if $k_q\alpha_q\to\ell\in[0,\infty]$, then
+
+$$
+  G_{k_q}\longrightarrow\frac s4e^{-\ell/2},\qquad
+  H_{k_q}\longrightarrow r,\qquad
+  R_{R,k_q}\longrightarrow\frac s8e^{-\ell/2}+\frac r2,
+$$
+
+where $e^{-\infty}=0$. For finite $\ell$, use $\log A=-\alpha/2+O(\alpha^2)$ and
+$k_q\alpha_q^2\to0$. For infinite $\ell$,
+$0\leq A^{k_q}\leq e^{-k_q\alpha_q/2}\to0$ suffices; no additional restriction
+on $k_q\alpha_q^2$ is needed.
+
+At the full cap, this separates the vanishing rates into three regimes:
+
+  | Rate regime                    | Limiting common moment | Limiting risk           |
+  | ------------------------------ | ---------------------- | ----------------------- |
+  | $\alpha_q/b\to0$               | $s/4$                  | $s/8+r/2$               |
+  | $\alpha_q/b\to c\in(0,\infty)$ | $(s/4)e^{-c\tau/2}$    | $(s/8)e^{-c\tau/2}+r/2$ |
+  | $b\ll\alpha_q\ll1$             | $0$                    | $r/2$                   |
+
+Since $b/q\to1$, the last row is exactly $q\ll\alpha_q\ll1$. It learns the
+common signal while leaving the rare moment at its initialization value. The
+choice $\alpha_q=\sqrt b$ is one recovery sequence; $b\log(1/b)$ also works.
+Under earlier stopping, the rate condition alone does not suffice: common
+learning requires $k_q\alpha_q\to\infty$ when $s>0$. It can finish even with
+$k_qb\to0$, for example at $\alpha_q=b^{1/2}$ and $k_q=\lfloor b^{-3/4}\rfloor$.
+The same rate stopped at $\lfloor\ell/\alpha_q\rfloor$ instead retains the
+fraction $e^{-\ell/2}$ of the initial common moment.
+
+### Positive rates and short stops
+
+Suppose $\alpha_q\to a\in(0,2]$ but $k_qb\to0$. The uniform moment bound from
+the positive-time argument gives $H_{k_q}=r+O(k_qb)\to r$. Solving the common
+recurrence more precisely gives
+
+$$
+  G_{k_q}=A_q^{k_q}s/4+g(\alpha_q)(1-A_q^{k_q})+O(b),
+  \qquad A_q=(1-\alpha_q/4)^2.
+$$
+
+Along a subsequence, the integer stops either equal a fixed $K\geq0$ or tend to
+infinity. Writing $A(a)=(1-a/4)^2$, the limiting risk is respectively
+
+$$
+  \frac12\left[r+A(a)^K s/4+\{1-A(a)^K\}g(a)\right],
+  \qquad\frac12\{r+g(a)\}.
+$$
+
+Both are at least $r/2$. The first includes initialization at $K=0$; the second
+includes stops that diverge more slowly than $1/b$. Substituting $t=0$ into the
+positive-time U formula gives only the second value and would miss the
+finite-stop transient.
 
 ### Large rates
 
@@ -223,6 +316,25 @@ For $\alpha\geq2/(1-3b)$, $D_b\geq1$, so $H_k\geq r$ at every stop and
 $R_{R,k}\geq wr/2$. These rates cannot improve on the vanishing-rate recovery
 sequence in the limit. All other rates have subsequences converging into
 $[0,2]$, already covered above. No stability assumption is needed.
+
+As with S, the exclusion is uniform over stops, including initialization and
+stops chosen to offset a diverging rate. The explicit bound is
+
+$$
+  R_{R,k}\geq\frac w2\left[
+    D_b^k r+b\alpha^2\nu\sum_{j=0}^{k-1}D_b^j
+  \right].
+$$
+
+Together, these cases exhaust arbitrary prevalence-dependent choices. Split each
+sequence according to whether its rate exceeds the relevant large-rate cutoff.
+The bounds apply on that part. On the remaining part, the rates are bounded by
+$2+O(b)$, and $k_qb$ is bounded by $M_qb\to\tau$. Extract limits of both. For U,
+further extract a limit of $k_q\alpha_q$ in $[0,\infty]$ when the rate vanishes,
+or of $k_q$ in $\{0,1,\ldots,\infty\}$ when the rate is positive and rescaled
+time vanishes. This also covers oscillating choices without assuming that the
+original sequence has a risk limit. No positivity assumption on $s$, $r$, or
+$\nu$ was used.
 
 ## Completing the oracle argument
 
@@ -341,9 +453,12 @@ one-dimensional numerical optimization, not certified interval bounds.
 Run `devenv shell -- task check:oracle-limits`. The checker reconstructs moment
 updates from individual observations, checks the scalar lower bound, compares
 finite-prevalence risks with the limiting formulas, and exercises
-vanishing-rate, short-stop, large-rate, and zero-noise cases. A finite rate grid
-with every integer stop provides a separate diagnostic of the optimized limit.
-That search does not certify a continuous finite-prevalence optimum.
+vanishing-rate, short-stop, large-rate, and zero-noise cases. Joint
+rate-and-stop sequences check the common and rare moments separately, so a
+correct total risk cannot conceal an incorrect allocation between coordinates. A
+finite rate grid with every integer stop provides a separate diagnostic of the
+optimized limit. That search does not certify a continuous finite-prevalence
+optimum.
 
 The [recorded output](../results/oracle-limits/checks.json) includes 30 exact
 rational checks of the large-rate bounds, 486 fixed-rate comparisons, ten
@@ -353,6 +468,17 @@ at $q=10^{-3}$ to $5.37\times10^{-7}$ at $q=10^{-7}$. For four signal pairs at
 $\tau=2$, the largest finite-grid risk discrepancy from the limiting oracle
 decreases from 0.01234 at $q=0.02$ to 0.0001311 at $q=0.0002$. The largest
 change on rate-grid refinement is $7.76\times10^{-6}$.
+
+The expanded rate-and-stop checks add 768 moment comparisons: 32 sequences at
+four prevalences for six signal-and-noise configurations, including zero common
+signal, zero rare signal, zero noise, pure noise, and the all-zero case. The
+largest error in either moment decreases from 0.9752 at $q=10^{-3}$ to
+$9.43\times10^{-4}$ at $q=10^{-9}$. These sequences include rates approaching
+two from both sides and recovery with vanishing rescaled time. Another 240
+comparisons test the explicit vanishing-rate bounds before taking a limit, and
+72 exact rational comparisons test the geometric large-rate bounds at
+initialization and positive stops. The saved output records rates, stops, and
+separate moment errors for each sequence.
 
 The proof gives limiting oracle values for all fixed signal strengths and finite
 positive rescaled budgets. It does not give a uniform finite-prevalence error

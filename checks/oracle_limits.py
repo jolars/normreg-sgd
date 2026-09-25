@@ -58,8 +58,8 @@ def limiting_minimum(standardized, tau, s, r, noise=1.0):
     return min(candidates)
 
 
-def reference_risk(q, alpha, standardized, stop, s, r, noise=1.0):
-    """Power the full tensor map constructed from individual observations."""
+def reference_moments(q, alpha, standardized, stop, s, r, noise=1.0):
+    """Return (G, H) from the full tensor map of individual observations."""
     operator = observation_operator(F(q), F(float(alpha)), standardized)
     operator = np.array(
         [
@@ -69,8 +69,13 @@ def reference_risk(q, alpha, standardized, stop, s, r, noise=1.0):
     )
     initial = np.array([s, 0, 0, r, noise], dtype=np.longdouble)
     endpoint = np.linalg.matrix_power(operator, int(stop)) @ initial
+    return np.array([endpoint[0] / 4, endpoint[3]], dtype=np.longdouble)
+
+
+def reference_risk(q, alpha, standardized, stop, s, r, noise=1.0):
+    common, rare = reference_moments(q, alpha, standardized, stop, s, r, noise)
     prevalence = np.longdouble(q.numerator) / np.longdouble(q.denominator)
-    return float(endpoint[0] / 8 + (1 - prevalence) ** 2 * endpoint[3] / 2)
+    return float((common + (1 - prevalence) ** 2 * rare) / 2)
 
 
 def check_scalar_bound():
@@ -95,6 +100,42 @@ def check_scalar_bound():
             operator = observation_operator(q, alpha, False)
             assert operator[3, 3] >= 1
             cases += 1
+    return cases
+
+
+def check_large_rate_stops():
+    """Check the geometric lower bounds with exact observation-level powers."""
+    cases = 0
+    for q, scaled in itertools.product((F(1, 2), F(1, 50), F(1, 10000)), (False, True)):
+        b = q * (1 - q)
+        weight = (1 - q) ** 2
+        coefficient = 1 - 3 * b + (b**2 if scaled else 0)
+        cutoff = 2 / coefficient
+        for alpha in (cutoff, (1 + b) * cutoff, cutoff / b):
+            operator = observation_operator(q, alpha, scaled)
+            multiplier = 1 - 2 * b * alpha + b * alpha**2 * coefficient
+            assert multiplier >= 1
+            for stop in (0, 1, 3, 7):
+                power = np.linalg.matrix_power(operator, stop)
+                # At stop zero, NumPy's object identity contains integers.
+                risk = F(1, 8) * power[0] + (weight / 2) * power[3]
+                geometric_sum = sum(multiplier**j for j in range(stop))
+                lower = (
+                    weight
+                    / 2
+                    * np.array(
+                        [
+                            multiplier**stop / 4 if scaled else F(0),
+                            multiplier**stop,
+                            b * alpha**2 * geometric_sum,
+                        ],
+                        dtype=object,
+                    )
+                )
+                # Coefficient bounds cover all nonnegative signals and noise.
+                assert np.all(risk[[0, 3, 4]] >= lower)
+                assert np.all(risk[[1, 2]] == 0)
+                cases += 1
     return cases
 
 
@@ -192,6 +233,192 @@ def check_boundary_sequences():
         actual = reference_risk(q, alpha, scaled, count, s, r, noise)
         assert actual >= (1 - float(q)) ** 2 * baseline - 1e-12
     return errors
+
+
+def check_rate_stop_sequences():
+    """Check both moments along joint rate-and-stop sequences, including zeros."""
+    prevalences = [F(1, 10**power) for power in (3, 5, 7, 9)]
+    signals = [(1.3, 0.7, 0.8), (1.3, 0.7, 0), (1.3, 0, 0.8), (0, 0.7, 0.8)]
+    signals.extend([(0, 0, 0.8), (0, 0, 0)])
+    tau = 2.0
+    reports = {}
+    cases = 0
+    for q in prevalences:
+        b = float(q * (1 - q))
+        cap = int(tau / b)
+        for s, r, noise in signals:
+            initial = s / 4
+            sequences = []
+
+            def add(name, scaled, alpha, stop, common, rare):
+                sequences.append((name, scaled, alpha, stop, [common, rare]))
+
+            for scaled in (False, True):
+                add("initialization with divergent rate", scaled, 1 / b, 0, initial, r)
+                add("literal zero rate", scaled, 0.0, cap, initial, r)
+                for exponent in (0.5, 0.75, 1.0, 2.0):
+                    if scaled or exponent > 1:
+                        target = initial
+                    elif exponent == 1:
+                        target = initial * np.exp(-tau / 2)
+                    else:
+                        target = 0.0
+                    add(
+                        f"rate b^{exponent}, full cap",
+                        scaled,
+                        b**exponent,
+                        cap,
+                        target,
+                        r,
+                    )
+
+            for multiple in (0.25, 3.0):
+                add(
+                    f"rate {multiple}b, full cap",
+                    False,
+                    multiple * b,
+                    cap,
+                    initial * np.exp(-multiple * tau / 2),
+                    r,
+                )
+            add("rate b log(1/b)", False, b * np.log(1 / b), cap, 0, r)
+            add(
+                "vanishing rate, k alpha to zero",
+                False,
+                b**0.75,
+                int(b**-0.25),
+                initial,
+                r,
+            )
+            add(
+                "vanishing rate, k alpha to 0.7",
+                False,
+                b**0.5,
+                int(0.7 / b**0.5),
+                initial * np.exp(-0.7 / 2),
+                r,
+            )
+            add("vanishing rate, short recovery", False, b**0.5, int(b**-0.75), 0, r)
+
+            a = 0.6
+            g = noise * a / (8 - a)
+            for stop in (1, 5):
+                common = (1 - a / 4) ** (2 * stop)
+                for scaled in (False, True):
+                    target = initial if scaled else common * initial + (1 - common) * g
+                    add(
+                        f"positive rate, fixed stop {stop}",
+                        scaled,
+                        a + b**0.5,
+                        stop,
+                        target,
+                        r,
+                    )
+            for scaled in (False, True):
+                add(
+                    "positive rate, diverging short stop",
+                    scaled,
+                    a + b**0.5,
+                    int(b**-0.5),
+                    initial if scaled else g,
+                    r,
+                )
+                for fraction in (1 / 3, 1.0):
+                    time = tau * fraction
+                    decay = np.exp(-a * (2 - a) * time)
+                    if scaled:
+                        common = initial * np.exp(-2 * a * time)
+                        total = (initial + r) * decay + noise * a / (2 - a) * (
+                            1 - decay
+                        )
+                        rare = total - common
+                    else:
+                        common = g
+                        rare = r * decay + a * (noise + g) / (2 - a) * (1 - decay)
+                    add(
+                        f"positive rate, cap fraction {fraction:g}",
+                        scaled,
+                        a + b**0.5,
+                        int(time / b),
+                        common,
+                        rare,
+                    )
+                for direction in (-1, 1):
+                    common = initial * np.exp(-4 * tau) if scaled else noise / 3
+                    total = initial + r + 4 * noise * tau
+                    rare = total - common if scaled else r + 4 * (noise + common) * tau
+                    side = "below" if direction < 0 else "above"
+                    add(
+                        f"rate approaching two from {side}",
+                        scaled,
+                        2 + direction * b**0.5,
+                        cap,
+                        common,
+                        rare,
+                    )
+
+            for name, scaled, alpha, stop, target in sequences:
+                assert 0 <= stop <= cap
+                actual = reference_moments(q, alpha, scaled, stop, s, r, noise)
+                error = np.asarray(abs(actual - target), dtype=float)
+                key = (name, scaled)
+                if key not in reports:
+                    reports[key] = {
+                        "sequence": name,
+                        "scaling": "S" if scaled else "U",
+                        "rates": [],
+                        "stops": [],
+                        "maximum_moment_errors": [],
+                    }
+                report = reports[key]
+                if (s, r, noise) == signals[0]:
+                    report["rates"].append(float(alpha))
+                    report["stops"].append(stop)
+                    report["maximum_moment_errors"].append([0.0, 0.0])
+                report["maximum_moment_errors"][-1] = np.maximum(
+                    report["maximum_moment_errors"][-1], error
+                ).tolist()
+                cases += 1
+    for report in reports.values():
+        errors = np.max(report["maximum_moment_errors"], axis=1)
+        assert np.isfinite(errors).all(), report
+        assert errors[-1] < 1e-3, report
+        assert np.all(errors[1:] <= 0.3 * errors[:-1] + 1e-9), report
+    return {
+        "cases": cases,
+        "prevalences": [float(q) for q in prevalences],
+        "scaled_budget": tau,
+        "signals_squared_common_rare_noise_variance": signals,
+        "moment_order": ["G", "H"],
+        "sequences": list(reports.values()),
+    }
+
+
+def check_vanishing_rate_bounds():
+    """Test the uniform bounds before taking a limit, using both moments."""
+    cases = 0
+    for q, alpha, (s, r, noise) in itertools.product(
+        (F(1, 50), F(1, 10000), F(1, 10**7)),
+        (0.0, 1e-5, 0.02, 0.2),
+        ((1.3, 0.7, 0.8), (1.3, 0.7, 0), (1.3, 0, 0.8), (0, 0, 0.8)),
+    ):
+        b = float(q * (1 - q))
+        cap = int(2 / b)
+        time = cap * b
+        g = noise * alpha / (8 - alpha)
+        feedback = b * alpha / (8 - alpha)
+        denominator = 1 - time * alpha**2 * feedback
+        assert denominator > 0
+        upper = (r + time * alpha**2 * (s / 4 + g + noise)) / denominator
+        for stop in (0, 1, int(cap**0.5), cap // 2, cap):
+            common, rare = reference_moments(q, alpha, False, stop, s, r, noise)
+            transient = np.exp(2 * stop * np.log1p(-alpha / 4)) * s / 4
+            assert (
+                transient - 1e-10 <= common <= transient + g + feedback * upper + 1e-10
+            )
+            assert r - 2 * r * time * alpha - 1e-10 <= rare <= upper + 1e-10
+            cases += 1
+    return cases
 
 
 def check_signal_consequences():
@@ -352,8 +579,11 @@ def main():
                     "tensor_power_decimal_precision": np.finfo(np.longdouble).precision,
                 },
                 "exact_scalar_bound_cases": check_scalar_bound(),
+                "exact_large_rate_stop_cases": check_large_rate_stops(),
                 "fixed_rate_limits": check_fixed_rate_limits(),
                 "boundary_sequence_errors": check_boundary_sequences(),
+                "rate_stop_sequences": check_rate_stop_sequences(),
+                "vanishing_rate_bound_cases": check_vanishing_rate_bounds(),
                 "signal_consequence_cases": check_signal_consequences(),
                 "optimized_limits": check_optimized_limits(),
                 "numerical_examples_unit_noise": numerical_examples(),

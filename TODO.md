@@ -28,13 +28,19 @@ limiting oracle characterization before rewriting the main narrative.
   The [working derivation](notes/oracle-limits.md) gives both limiting risks,
   proposes a proof for the unrestricted oracle limits, and derives a unique
   signal-allocation crossing at positive noise and rare signal. Numerical checks
-  pass with `task check:oracle-limits`. Review that argument independently
-  before treating the remaining oracle-limit tasks as settled.
+  pass with `task check:oracle-limits`. The oracle-infimum proof and
+  signal-allocation consequences still need independent mathematical review.
 
-- [ ] Account for rates and stops that depend on prevalence, including
+- [x] Account for rates and stops that depend on prevalence, including
   initialization, vanishing rates, and large rates. For U, examine
   $q \ll \alpha(q) \ll 1$, which can learn the common signal while leaving
   the rare effect largely unchanged.
+
+  The working derivation now gives the full U transient through
+  $k_q\alpha_q\to\ell$, uniform bounds over allowed stops, and large-rate
+  exclusions for both scalings. Checks cover 32 joint rate-and-stop sequences,
+  zero signal and noise, and exact geometric lower bounds. The oracle-infimum
+  task below remains open.
 
 - [ ] Establish the control needed to pass from fixed-rate limits to limits of
   the oracle infima. Identify any restrictions on signals, noise, and
