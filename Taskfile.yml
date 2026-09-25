@@ -264,10 +264,16 @@ tasks:
       - python -m checks.predictive_fixed_q
 
   check:oracle-limits:
-    desc: Check the small-prevalence limits and uniform oracle-infimum control.
+    desc: Check the oracle limits, uniform control, and variational comparison.
     cmds:
       - python -m checks.oracle_limits
       - python -m checks.oracle_infima
+      - task: check:oracle-variational
+
+  check:oracle-variational:
+    desc: Check the limiting oracle comparison across signals, noise, and budgets.
+    cmds:
+      - python -m checks.oracle_variational
 
   check:exact-risk:
     desc: Check exact risk calculations.

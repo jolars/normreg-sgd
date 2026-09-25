@@ -210,7 +210,8 @@ experiments.
 task check:predictive-theorem # Check the oracle-tuning certificates.
 task check:predictive-fixed-q # Certify the finite-prevalence gap bounds.
 task check:predictive-review  # Run the independent certificate implementation.
-task check:oracle-limits      # Check limiting risks and oracle-infimum control.
+task check:oracle-limits      # Check limiting risks, infimum control, and comparisons.
+task check:oracle-variational # Check signal, noise, and budget decision rules.
 task check:normalization-risk # Check the supporting comparison certificates.
 task check:workflow           # Exercise the workflow with small configurations.
 task check:results            # Reconstruct saved losses and selections.
@@ -244,12 +245,15 @@ saved output summarizes completed checks and does not replace rerunning them.
 
 The [oracle-limit notes](notes/oracle-limits.md) prove convergence of the
 unrestricted rate-and-stop infima for fixed finite signals and noise and finite
-positive rescaled budgets. `task check:oracle-limits` runs both the limit
-diagnostics and the uniform-control checks. Their recorded outputs are [limit
-checks](results/oracle-limits/checks.json) and [infimum
-checks](results/oracle-limits/infimum-checks.json). These numerical diagnostics
-are separate from the finite-prevalence certificates; the new proof has not
-received independent mathematical review.
+positive rescaled budgets. The [variational
+comparison](notes/oracle-variational.md) gives unique scalar rate equations and
+explains the signal, noise, and budget regimes. `task check:oracle-limits` runs
+the limit diagnostics, uniform-control checks, and variational checks. Their
+recorded outputs are [limit checks](results/oracle-limits/checks.json) and
+[infimum checks](results/oracle-limits/infimum-checks.json), plus [variational
+checks](results/oracle-limits/variational-checks.json). These numerical
+diagnostics are separate from the finite-prevalence certificates; the new proof
+has not received independent mathematical review.
 
 Use `task experiment:diagnostics` to regenerate the diagnostic records and
 tables, then `task check:results` to verify them. Use

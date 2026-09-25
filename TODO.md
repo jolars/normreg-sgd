@@ -55,9 +55,17 @@ limiting oracle characterization before rewriting the main narrative.
   diagnostics](checks/oracle_infima.py). Independent mathematical review remains
   outstanding.
 
-- [ ] Obtain a usable variational characterization and explain how signal
+- [x] Obtain a usable variational characterization and explain how signal
   allocation, noise, and budget determine the preferred scaling. Treat a
   complete closed-form transition boundary as optional additional work.
+
+  The [variational comparison](notes/oracle-variational.md) gives unique scalar
+  equations for optimal rates, allocation boundaries, and noise and budget
+  regimes. A [root solver](experiments/common/limiting_oracle.py) implements the
+  characterization. `task check:oracle-variational` checks it independently
+  against objective searches and records examples with two noise reversals. The
+  large-budget risk ratio tends to $4/5$ for positive rare signal and noise.
+  These limiting claims still await independent mathematical review.
 
 - [ ] Check the limiting predictions against finite-prevalence exact risks, and
   retain the existing theorem as the quantitative finite-prevalence

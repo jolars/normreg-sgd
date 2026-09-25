@@ -591,6 +591,11 @@ preprocessing.
 
 ## Consequences for signal allocation
 
+The [variational comparison](oracle-variational.md) develops the results below
+into a scalar root solver, proves uniqueness of the optimal positive rates, and
+gives decision rules for common signal and allocation at fixed initial risk. It
+also examines noise reversals and the small- and large-budget regimes.
+
 The unscaled limiting oracle depends on $r,\nu,\tau$, but not on $s$.
 Standardization depends on the signal through $v=s/4+r$. This difference is
 specific to the scarce-occurrence limit; common signal strength still affects
