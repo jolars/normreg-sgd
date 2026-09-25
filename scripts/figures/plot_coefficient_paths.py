@@ -3,10 +3,15 @@
 import json
 
 import numpy as np
-from style import OUTPUT, ROOT, SINGLE_PANEL_WIDTH, apply_style, plt, save
-
-COLORS = ("#0072B2", "#D55E00")
-STYLES = ("--", "-")
+from style import (
+    METHOD_STYLES,
+    OUTPUT,
+    ROOT,
+    SINGLE_PANEL_WIDTH,
+    apply_style,
+    plt,
+    save,
+)
 
 
 def plot(report):
@@ -27,25 +32,34 @@ def plot(report):
         linewidths=0.6,
     )
     stop = report["stop"]
-    for scaling, method in enumerate(report["methods"]):
+    for scaling, (scale, method) in enumerate(
+        zip(("none", "sd"), report["methods"], strict=True)
+    ):
         path = np.array(method["path"])
-        color = COLORS[scaling]
+        style = METHOD_STYLES[scale]
+        color = style["color"]
         axis.plot(
             *path[stop:].T,
             color=color,
-            linestyle=STYLES[scaling],
+            linestyle=style["linestyle"],
             linewidth=1.2,
             alpha=0.4,
         )
         axis.plot(
             *path[: stop + 1].T,
             color=color,
-            linestyle=STYLES[scaling],
+            linestyle=style["linestyle"],
             linewidth=1.8,
             label=method["name"],
         )
         axis.scatter(
-            *path[stop], s=32, color=color, edgecolors="white", linewidths=0.5, zorder=5
+            *path[stop],
+            s=32,
+            color=color,
+            marker=style["marker"],
+            edgecolors="white",
+            linewidths=0.5,
+            zorder=5,
         )
         axis.annotate(
             rf"Stop: $k={stop}$",

@@ -3,11 +3,23 @@
 import json
 
 import numpy as np
-from style import OUTPUT, PAPER_WIDTH, ROOT, apply_style, plt, save
+from style import (
+    BAR_EDGE_COLOR,
+    COMPONENT_STYLES,
+    OUTPUT,
+    PAPER_WIDTH,
+    ROOT,
+    apply_style,
+    plt,
+    save,
+)
 
 CAP = 20503
-COMPONENTS = ("Incomplete learning", "Feature sampling", "Observation noise")
-COLORS = ("#0072B2", "#E69F00", "#009E73")
+COMPONENTS = (
+    ("incomplete_learning", "Incomplete learning"),
+    ("feature_sampling", "Feature sampling"),
+    ("observation_noise", "Observation noise"),
+)
 
 
 def plot(report):
@@ -28,16 +40,16 @@ def plot(report):
         )
     ):
         bottom = np.zeros((2, 2))
-        for component, (label, color) in enumerate(
-            zip(COMPONENTS, COLORS, strict=True)
-        ):
+        for component, (key, label) in enumerate(COMPONENTS):
             heights = parts[signal, :, :, component]
             axis.bar(
                 positions.ravel(),
                 heights.ravel(),
                 bottom=bottom.ravel(),
                 width=0.62,
-                color=color,
+                **COMPONENT_STYLES[key],
+                edgecolor=BAR_EDGE_COLOR,
+                linewidth=0.35,
                 label=label,
             )
             bottom += heights

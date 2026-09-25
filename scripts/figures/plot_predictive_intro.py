@@ -3,10 +3,16 @@
 import json
 
 import numpy as np
-from style import OUTPUT, PAPER_WIDTH, ROOT, apply_style, plt, save
-
-SCALINGS = ("Unscaled", "Standardized")
-COLORS = ("#0072B2", "#D55E00")
+from style import (
+    METHOD_LABELS,
+    METHOD_STYLES,
+    OUTPUT,
+    PAPER_WIDTH,
+    ROOT,
+    apply_style,
+    plt,
+    save,
+)
 
 
 def plot(report):
@@ -24,15 +30,14 @@ def plot(report):
             strict=True,
         )
     ):
-        for scaling, (label, color, linestyle) in enumerate(
-            zip(SCALINGS, COLORS, ("--", "-"), strict=True)
-        ):
+        for scaling, scale in enumerate(("none", "sd")):
+            style = METHOD_STYLES[scale]
             axis.plot(
                 budgets,
                 risk[:, signal, scaling],
-                label=label,
-                color=color,
-                linestyle=linestyle,
+                label=METHOD_LABELS[scale],
+                color=style["color"],
+                linestyle=style["linestyle"],
                 linewidth=1.8,
             )
         axis.fill_between(
@@ -45,8 +50,20 @@ def plot(report):
         axis.grid(axis="y", color="0.9", linewidth=0.6)
         axis.set_axisbelow(True)
     axes[0].set_ylabel("Rare-subgroup excess risk")
-    axes[0].text(2.25, 0.12, "Standardization helps", color=COLORS[1], ha="center")
-    axes[1].text(2.5, 0.18, "Unscaled training helps", color=COLORS[0], ha="center")
+    axes[0].text(
+        2.25,
+        0.12,
+        "Standardization helps",
+        color=METHOD_STYLES["sd"]["color"],
+        ha="center",
+    )
+    axes[1].text(
+        2.5,
+        0.18,
+        "Unscaled training helps",
+        color=METHOD_STYLES["none"]["color"],
+        ha="center",
+    )
     figure.supxlabel(r"Expected rare observations at the budget cap, $Mq$", y=0.025)
     figure.legend(
         *axes[0].get_legend_handles_labels(), loc="upper center", ncol=2, frameon=False

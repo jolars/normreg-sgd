@@ -3,7 +3,19 @@
 import json
 
 import numpy as np
-from style import OUTPUT, PAPER_WIDTH, ROOT, apply_style, plt, save
+from style import (
+    INTERCEPT_STYLES,
+    METHOD_LABELS,
+    METHOD_STYLES,
+    OUTPUT,
+    PAPER_WIDTH,
+    ROOT,
+    SAMPLE_SIZE_STYLES,
+    VALIDATION_STYLES,
+    apply_style,
+    plt,
+    save,
+)
 
 SCALES = ("none", "sd", "damped")
 
@@ -12,8 +24,11 @@ def plot(summary):
     apply_style()
     fig, axes = plt.subplots(2, 2, figsize=(PAPER_WIDTH, 5), layout="constrained")
     for ax, case in zip(axes[0], (0, 2), strict=True):
-        for scale, color in zip(("none", "sd"), ("#276678", "#c45c32"), strict=True):
-            for arm, style in (("known", "--"), ("centered_fitted", "-")):
+        for scale in ("none", "sd"):
+            for arm, label in (
+                ("known", "known intercept"),
+                ("centered_fitted", "fitted intercept"),
+            ):
                 rows = [
                     r
                     for r in summary["synthetic"]["curves"]
@@ -26,9 +41,10 @@ def plot(summary):
                 ax.plot(
                     [r["observations"] for r in rows],
                     [r["rare"]["mean"] for r in rows],
-                    style,
-                    color=color,
-                    label=f"{scale}, {arm}",
+                    **(METHOD_STYLES[scale] | INTERCEPT_STYLES[arm]),
+                    markevery=max(1, len(rows) // 5),
+                    markersize=3.5,
+                    label=f"{METHOD_LABELS[scale]}, {label}",
                 )
         ax.set(
             title=(
@@ -41,8 +57,9 @@ def plot(summary):
         ax.set_xscale("symlog", linthresh=128)
         ax.legend(fontsize=7)
     for ax, objective in zip(axes[1], ("aggregate", "rare"), strict=True):
-        for size, marker in ((0, "o"), (1, "s")):
-            for selection, offset in ((0, -0.12), (1, 0.12)):
+        for size, n in enumerate((256, 2048)):
+            for selection, name in enumerate(("aggregate", "rare")):
+                offset = (2 * size + selection - 1.5) * 0.13
                 rows = [
                     r
                     for r in summary["mushroom"]["selections"]
@@ -58,15 +75,15 @@ def plot(summary):
                     np.arange(3) + offset,
                     [r[objective]["mean"] for r in rows],
                     yerr=[r[objective]["mcse"] for r in rows],
-                    fmt=marker,
+                    **SAMPLE_SIZE_STYLES[n],
+                    color=VALIDATION_STYLES[name]["color"],
                     linestyle="none",
                     capsize=3,
-                    label=f"n={256 if size == 0 else 2048}, "
-                    f"{'rare' if selection else 'aggregate'} selection",
+                    label=f"n={n}, {name} selection",
                 )
         ax.set(
             xticks=range(3),
-            xticklabels=SCALES,
+            xticklabels=[METHOD_LABELS[scale] for scale in SCALES],
             title=f"Mushroom: {objective} test loss",
             ylabel="Half squared loss",
         )

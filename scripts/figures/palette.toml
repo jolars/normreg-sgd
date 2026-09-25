@@ -1,0 +1,129 @@
+# Edit these values to change the palette; edit the tables below to reassign it.
+# Colors follow Okabe and Ito: https://jfly.uni-koeln.de/color/
+[colors]
+blue = "#0072B2"
+vermilion = "#D55E00"
+green = "#009E73"
+purple = "#CC79A7"
+orange = "#E69F00"
+sky_blue = "#56B4E9"
+yellow = "#F0E442"
+black = "#000000"
+gray = "#888888"
+charcoal = "#555555"
+dark_gray = "#222222"
+
+[defaults]
+cycle = ["blue", "vermilion", "green", "purple", "orange", "sky_blue", "black"]
+risk_colormap = "RdBu_r"
+bar_edgecolor = "charcoal"
+
+# Methods retain these colors even when another factor determines line style.
+[methods.none]
+color = "blue"
+marker = "o"
+linestyle = "--"
+
+[methods.sd]
+color = "vermilion"
+marker = "s"
+linestyle = "-"
+
+[methods.damped]
+color = "green"
+marker = "^"
+linestyle = "-."
+
+[methods.variance]
+color = "purple"
+marker = "D"
+linestyle = ":"
+
+[validation.aggregate]
+color = "charcoal"
+marker = "o"
+linestyle = "-"
+
+[validation.rare]
+color = "purple"
+marker = "s"
+linestyle = "-"
+
+# Each figure retains its own scaled-budget definition in the labels.
+[budgets."1"]
+color = "gray"
+marker = "o"
+linestyle = ":"
+
+[budgets."2"]
+color = "charcoal"
+marker = "s"
+linestyle = "--"
+
+[budgets."4"]
+color = "dark_gray"
+marker = "^"
+linestyle = "-"
+
+[prevalences."0.02"]
+color = "orange"
+marker = "o"
+linestyle = "-"
+
+[prevalences."0.0001"]
+color = "sky_blue"
+marker = "s"
+linestyle = "--"
+
+[arms.fresh]
+color = "charcoal"
+marker = "o"
+linestyle = "-"
+
+[arms.reuse]
+color = "orange"
+marker = "s"
+linestyle = "--"
+
+[arms.reuse_mean_initialized]
+color = "sky_blue"
+marker = "^"
+linestyle = "-."
+
+[components.incomplete_learning]
+color = "charcoal"
+
+[components.feature_sampling]
+color = "orange"
+
+[components.observation_noise]
+color = "sky_blue"
+
+[clipping.raw]
+color = "charcoal"
+marker = "o"
+
+[clipping.clipped]
+color = "green"
+marker = "s"
+
+# Secondary factors use line style, fill, or shape rather than extra colors.
+[searches.original]
+linestyle = ":"
+fillstyle = "none"
+
+[searches.expanded]
+linestyle = "-"
+fillstyle = "full"
+
+[intercepts.known]
+linestyle = "--"
+
+[intercepts.centered_fitted]
+linestyle = "-"
+
+[sample_sizes."256"]
+marker = "o"
+
+[sample_sizes."2048"]
+marker = "s"

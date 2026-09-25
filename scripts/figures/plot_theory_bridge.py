@@ -3,9 +3,17 @@
 import json
 
 import numpy as np
-from style import OUTPUT, PAPER_WIDTH, ROOT, apply_style, plt, save
+from style import (
+    ARM_STYLES,
+    BUDGET_STYLES,
+    OUTPUT,
+    PAPER_WIDTH,
+    ROOT,
+    apply_style,
+    plt,
+    save,
+)
 
-COLORS = ("#0072B2", "#D55E00", "#009E73")
 LABELS = (
     "Fresh observations",
     "Fresh + fitted intercept",
@@ -42,9 +50,8 @@ def controlled(report):
     for row, q in enumerate((0.02, 0.005)):
         for col, signal in enumerate(("rare", "common")):
             axis = axes[row, col]
-            for budget, (color, offset) in enumerate(
-                zip(COLORS, (-0.22, 0, 0.22), strict=True)
-            ):
+            for budget, offset in enumerate((-0.22, 0, 0.22)):
+                style = BUDGET_STYLES[2**budget]
                 values = [
                     select(report, q, signal, arm, "calibrated")[budget]["gap"]
                     for arm in report["arms"]
@@ -53,9 +60,10 @@ def controlled(report):
                     [v["mean"] for v in values],
                     np.arange(len(values)) + offset,
                     xerr=[2 * v["mcse"] for v in values],
-                    fmt="o",
+                    marker=style["marker"],
+                    linestyle="none",
                     markersize=3.2,
-                    color=color,
+                    color=style["color"],
                     capsize=2,
                     label=rf"$Mq\approx {2**budget}$",
                 )
@@ -94,7 +102,7 @@ def validation(report):
         for col, signal in enumerate(("rare", "common")):
             axis = axes[row, col]
             bounds = [0.0]
-            for arm, name, color in zip(arms, names, COLORS, strict=True):
+            for arm, name in zip(arms, names, strict=True):
                 values = [
                     select(report, q, signal, arm, policy)[-1]["gap"]
                     for policy in policies
@@ -103,8 +111,7 @@ def validation(report):
                     np.arange(4),
                     [v["mean"] for v in values],
                     yerr=[2 * v["mcse"] for v in values],
-                    fmt="o-",
-                    color=color,
+                    **ARM_STYLES[arm],
                     label=name,
                     markersize=3.5,
                     capsize=2,
@@ -131,7 +138,10 @@ def validation(report):
             )
             axis.grid(axis="y", color="0.92", linewidth=0.5)
             axis.set_axisbelow(True)
-    figure.supylabel("SD minus unscaled rare risk (symmetric log scale)", x=0.015)
+    figure.supylabel(
+        "SD minus unscaled rare risk\n(negative favors SD; symmetric log scale)",
+        x=0.015,
+    )
     figure.supxlabel("Selection policy / validation sample size", y=0.13)
     figure.text(
         0.54, 0.09, r"Linear for $|\mathrm{gap}|\leq 0.05$", ha="center", fontsize=7

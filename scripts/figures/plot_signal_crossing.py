@@ -3,10 +3,16 @@
 import json
 
 import numpy as np
-from style import OUTPUT, ROOT, SINGLE_PANEL_WIDTH, apply_style, plt, save
-
-COLORS = ("#0072B2", "#D55E00")
-LABELS = ("Unscaled", "Standardized")
+from style import (
+    METHOD_LABELS,
+    METHOD_STYLES,
+    OUTPUT,
+    ROOT,
+    SINGLE_PANEL_WIDTH,
+    apply_style,
+    plt,
+    save,
+)
 
 
 def plot(report):
@@ -20,15 +26,14 @@ def plot(report):
     gap = risk[:, 0] - risk[:, 1]
     figure, axis = plt.subplots(figsize=(SINGLE_PANEL_WIDTH, 2.75))
     figure.subplots_adjust(left=0.18, right=0.96, bottom=0.24, top=0.84)
-    for scaling, (label, color, linestyle) in enumerate(
-        zip(LABELS, COLORS, ("--", "-"), strict=True)
-    ):
+    for scaling, scale in enumerate(("none", "sd")):
+        style = METHOD_STYLES[scale]
         axis.plot(
             fractions,
             risk[:, scaling],
-            label=label,
-            color=color,
-            linestyle=linestyle,
+            label=METHOD_LABELS[scale],
+            color=style["color"],
+            linestyle=style["linestyle"],
             linewidth=1.8,
         )
     axis.fill_between(
@@ -37,7 +42,7 @@ def plot(report):
         risk[:, 1],
         where=gap < 0,
         interpolate=True,
-        color=COLORS[0],
+        color=METHOD_STYLES["none"]["color"],
         alpha=0.1,
     )
     axis.fill_between(
@@ -46,11 +51,19 @@ def plot(report):
         risk[:, 1],
         where=gap > 0,
         interpolate=True,
-        color=COLORS[1],
+        color=METHOD_STYLES["sd"]["color"],
         alpha=0.1,
     )
-    axis.text(0.05, 0.19, "Unscaled\nhelps", color=COLORS[0], fontsize=8)
-    axis.text(0.62, 0.07, "Standardization\nhelps", color=COLORS[1], fontsize=8)
+    axis.text(
+        0.05, 0.19, "Unscaled\nhelps", color=METHOD_STYLES["none"]["color"], fontsize=8
+    )
+    axis.text(
+        0.62,
+        0.07,
+        "Standardization\nhelps",
+        color=METHOD_STYLES["sd"]["color"],
+        fontsize=8,
+    )
     axis.set(
         xlim=(0, 1),
         ylim=(0, 0.28),

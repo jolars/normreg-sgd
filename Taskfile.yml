@@ -123,6 +123,7 @@ tasks:
       - Taskfile.yml
       - 'scripts/figures/plot_{{.SCRIPT}}.py'
       - scripts/figures/style.py
+      - scripts/figures/palette.toml
       - '{{.SUMMARY}}'
       - '{{.EXTRA_SUMMARY | default .SUMMARY}}'
       - devenv.nix
@@ -353,6 +354,7 @@ tasks:
     sources:
       - scripts/figures/plot_theory_bridge.py
       - scripts/figures/style.py
+      - scripts/figures/palette.toml
       - results/theory-bridge/summary.json
       - Taskfile.yml
       - devenv.nix
@@ -393,6 +395,7 @@ tasks:
     sources:
       - scripts/figures/plot_common_block.py
       - scripts/figures/style.py
+      - scripts/figures/palette.toml
       - results/common-block/summary.json
       - Taskfile.yml
       - devenv.nix

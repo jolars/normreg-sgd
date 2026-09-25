@@ -4,7 +4,7 @@ import json
 
 import numpy as np
 from matplotlib.colors import TwoSlopeNorm
-from style import OUTPUT, PAPER_WIDTH, ROOT, apply_style, plt, save
+from style import OUTPUT, PAPER_WIDTH, RISK_COLORMAP, ROOT, apply_style, plt, save
 
 
 def plot(report):
@@ -28,7 +28,7 @@ def plot(report):
             budgets,
             gap[:, index],
             shading="nearest",
-            cmap="RdBu_r",
+            cmap=RISK_COLORMAP,
             norm=TwoSlopeNorm(vmin=-limit, vcenter=0, vmax=limit),
             rasterized=True,
         )
@@ -46,6 +46,16 @@ def plot(report):
     figure.supxlabel(r"Rare share of squared coefficients, $f$", fontsize=9)
     colorbar = figure.colorbar(mesh, ax=axes, fraction=0.035, pad=0.025)
     colorbar.set_label(r"$(R_U^{\mathrm{grid}}-R_S^{\mathrm{grid}})/\sigma^2$")
+    colorbar.ax.set_title("SD lower\nrisk", fontsize=7, pad=5)
+    colorbar.ax.text(
+        0.5,
+        -0.08,
+        "U lower\nrisk",
+        transform=colorbar.ax.transAxes,
+        ha="center",
+        va="top",
+        fontsize=7,
+    )
     save(figure, OUTPUT / "signal-allocation", "risk-map")
 
 

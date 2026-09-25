@@ -7,6 +7,33 @@ shared typography. Set figure dimensions in each script; `PAPER_WIDTH` is the
 manuscript's six-inch text width. `SINGLE_PANEL_WIDTH` is used by the two
 smaller introductory figures.
 
+Edit [`palette.toml`](palette.toml) to change colors and their meanings across
+all figures. The `[colors]` table defines the Okabe–Ito colors and neutral
+grays. The remaining tables assign those named colors, markers, and line styles
+to methods, validation objectives, budgets, prevalences, experimental arms, risk
+components, and clipping treatments. For example, change `blue = "#0072B2"` to
+replace that color everywhere, or change `color = "blue"` under `[methods.none]`
+to another named color to change only the unscaled method's assignment. Run
+`task figures` after editing; the build tracks the configuration and regenerates
+every figure automatically.
+
+The method mapping is unscaled/blue, standardized/vermilion, damped/green, and
+variance scaling/reddish purple. Simple method curves also use distinct line
+styles. When line styles encode another factor, method markers preserve the
+distinction. Aggregate and rare validation use charcoal and reddish purple;
+budget levels 1, 2, and 4 use increasingly dark grays. Risk components use
+charcoal, orange, and sky blue with solid fills and thin borders. Colors can
+recur across these explicitly labeled contexts, while the blue–vermilion pair
+stays associated with the main method comparison.
+
+The `[defaults]` table controls the fallback color cycle, bar borders, and
+continuous risk colormap. The heatmap uses `RdBu_r`, with zero centered between
+negative values favoring U and positive values favoring SD. Choose a diverging
+colormap when revisiting that setting. The `[searches]`, `[intercepts]`, and
+`[sample_sizes]` tables configure the secondary visual distinctions. Plotting
+scripts request these mappings explicitly through `style.py`; their numeric
+groupings and drawing order remain independent of the palette configuration.
+
 Inside `devenv shell`, run:
 
 ```sh
@@ -58,9 +85,9 @@ rate-search script exports the $n = 2048$ paths under aggregate validation used
 in the supplement.
 
 `task paper` rebuilds its figures when the corresponding scripts, shared style,
-Taskfile, environment configuration, or saved summaries change. Missing PDF,
-SVG, or PNG exports also trigger a rebuild. `task paper-figures` performs that
-step without compiling LaTeX.
+palette configuration, Taskfile, environment configuration, or saved summaries
+change. Missing PDF, SVG, or PNG exports also trigger a rebuild.
+`task paper-figures` performs that step without compiling LaTeX.
 
 Numerical results and summaries live in `results/<experiment>/`. These scripts
 read saved summaries and write the figures used by the manuscript. They do not

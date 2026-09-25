@@ -3,7 +3,16 @@
 import json
 
 import numpy as np
-from style import OUTPUT, PAPER_WIDTH, ROOT, apply_style, plt, save
+from style import (
+    CLIPPING_STYLES,
+    OUTPUT,
+    PAPER_WIDTH,
+    ROOT,
+    VALIDATION_STYLES,
+    apply_style,
+    plt,
+    save,
+)
 
 SCALES = ("none", "sd", "damped", "variance")
 
@@ -12,7 +21,7 @@ def plot(report, diagnostics):
     apply_style()
     figure, axes = plt.subplots(1, 2, figsize=(PAPER_WIDTH, 2.5), layout="constrained")
     search_axis, clipping_axis = axes
-    for objective, (marker, color) in enumerate((("o", "#0072B2"), ("s", "#D55E00"))):
+    for objective, name in enumerate(("aggregate", "rare")):
         rows = {
             row["search"]: row["rare"]
             for row in report["contrasts"]
@@ -28,11 +37,10 @@ def plot(report, diagnostics):
             np.arange(2) + (objective - 0.5) * 0.08,
             [rows[search]["mean"] for search in searches],
             yerr=[rows[search]["mcse"] for search in searches],
-            fmt=marker + "-",
-            color=color,
+            **VALIDATION_STYLES[name],
             linewidth=1,
             capsize=3,
-            label=f"{('Aggregate', 'Rare')[objective]} validation",
+            label=f"{name.capitalize()} validation",
         )
     search_axis.axhline(0, color="0.45", linewidth=0.8, linestyle="--")
     search_axis.set(
@@ -40,7 +48,7 @@ def plot(report, diagnostics):
         xticklabels=("5 rates\n$10M$ work", "25 rates\n$50M$ work"),
         xlim=(-0.3, 1.3),
         ylim=(-0.013, 0.0015),
-        ylabel="SD minus U: rare test loss",
+        ylabel="SD minus U: rare test loss\n(negative favors SD)",
         title="(a) Expanding the rate search",
     )
     search_axis.legend(loc="lower right", frameon=False, fontsize=7)
@@ -62,17 +70,15 @@ def plot(report, diagnostics):
             linewidth=1,
             zorder=1,
         )
-    for i, (treatment, label, marker, color) in enumerate(
-        (("raw", "Raw", "o", "#555555"), ("clipped", "Clipped", "s", "#009E73"))
-    ):
+    for i, treatment in enumerate(("raw", "clipped")):
         clipping_axis.errorbar(
             np.arange(4) + (i - 0.5) * 0.2,
             [rows[scale][treatment]["aggregate"]["mean"] for scale in SCALES],
             yerr=[rows[scale][treatment]["aggregate"]["mcse"] for scale in SCALES],
-            fmt=marker,
-            color=color,
+            **CLIPPING_STYLES[treatment],
+            linestyle="none",
             capsize=3,
-            label=label,
+            label=treatment.capitalize(),
         )
     clipping_axis.set(
         xticks=range(4),

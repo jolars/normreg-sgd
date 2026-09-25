@@ -1,5 +1,6 @@
 """Shared ALT typography and figure exports for the manuscript."""
 
+import tomllib
 from pathlib import Path
 
 import matplotlib
@@ -11,6 +12,37 @@ ROOT = Path(__file__).resolve().parents[2]
 OUTPUT = ROOT / "figures"
 PAPER_WIDTH = 6.0
 SINGLE_PANEL_WIDTH = 3.25
+
+with Path(__file__).with_name("palette.toml").open("rb") as source:
+    PALETTE = tomllib.load(source)
+COLORS = PALETTE["colors"]
+
+
+def _styles(section):
+    return {
+        key: {**style, "color": COLORS[style["color"]]}
+        for key, style in PALETTE[section].items()
+    }
+
+
+METHOD_STYLES = _styles("methods")
+VALIDATION_STYLES = _styles("validation")
+BUDGET_STYLES = {float(key): value for key, value in _styles("budgets").items()}
+PREVALENCE_STYLES = {float(key): value for key, value in _styles("prevalences").items()}
+ARM_STYLES = _styles("arms")
+COMPONENT_STYLES = _styles("components")
+CLIPPING_STYLES = _styles("clipping")
+SEARCH_STYLES = PALETTE["searches"]
+INTERCEPT_STYLES = PALETTE["intercepts"]
+SAMPLE_SIZE_STYLES = {int(key): value for key, value in PALETTE["sample_sizes"].items()}
+RISK_COLORMAP = PALETTE["defaults"]["risk_colormap"]
+BAR_EDGE_COLOR = COLORS[PALETTE["defaults"]["bar_edgecolor"]]
+METHOD_LABELS = {
+    "none": "Unscaled",
+    "sd": "Standardized",
+    "damped": "Damped",
+    "variance": "Variance",
+}
 
 # LaTeX renders text and math with the same font package as the manuscript.
 RC_PARAMS = {
@@ -30,6 +62,9 @@ RC_PARAMS = {
     "ytick.labelsize": 8,
     "axes.spines.top": False,
     "axes.spines.right": False,
+    "axes.prop_cycle": plt.cycler(
+        color=[COLORS[name] for name in PALETTE["defaults"]["cycle"]]
+    ),
     "svg.fonttype": "path",
     "svg.hashsalt": "normreg-paper-figures",
     "savefig.dpi": 160,

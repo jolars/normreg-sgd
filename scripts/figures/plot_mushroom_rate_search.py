@@ -2,14 +2,23 @@
 
 import json
 
-from style import OUTPUT, PAPER_WIDTH, ROOT, apply_style, plt, save
+from style import (
+    METHOD_LABELS,
+    METHOD_STYLES,
+    OUTPUT,
+    PAPER_WIDTH,
+    ROOT,
+    SEARCH_STYLES,
+    apply_style,
+    plt,
+    save,
+)
 
 SCALES = ("none", "sd", "damped")
 
 
 def plot(summary):
     apply_style()
-    colors = ("#32688e", "#d66b24", "#31865a")
     directory = OUTPUT / "mushroom-rate-search"
     case, objective = 1, 0
     fig, axes = plt.subplots(2, 3, figsize=(PAPER_WIDTH, 5.3), constrained_layout=True)
@@ -22,8 +31,10 @@ def plot(summary):
         "other_contribution",
     )
     for ax, metric in zip(axes.flat, metrics, strict=True):
-        for scale, color in zip(SCALES, colors, strict=True):
-            for search, style in (("original", ":"), ("expanded", "-")):
+        for scale in SCALES:
+            method = METHOD_STYLES[scale]
+            for search in ("original", "expanded"):
+                search_style = SEARCH_STYLES[search]
                 values = [
                     p
                     for p in summary["selected_paths"]
@@ -36,9 +47,11 @@ def plot(summary):
                 ax.plot(
                     [p["observations"] for p in values],
                     [p[metric]["mean"] for p in values],
-                    color=color,
-                    linestyle=style,
-                    label=f"{scale}, {5 if search == 'original' else 17} rates",
+                    **(method | search_style),
+                    markevery=max(1, len(values) // 5),
+                    markersize=3,
+                    label=f"{METHOD_LABELS[scale]}, "
+                    f"{5 if search == 'original' else 17} rates",
                 )
                 endpoint = next(
                     s
@@ -52,12 +65,14 @@ def plot(summary):
                     and s["search"] == search
                     and s["stratum"] == "all"
                 )
-                ax.scatter(
+                ax.plot(
                     10496,
                     endpoint[metric]["mean"],
-                    color=color,
-                    marker="o" if search == "expanded" else "x",
-                    s=26,
+                    color=method["color"],
+                    marker=method["marker"],
+                    fillstyle=search_style["fillstyle"],
+                    linestyle="none",
+                    markersize=5,
                 )
         ax.axvline(9216, color="0.7", linewidth=0.8)
         ax.set_xticks(
