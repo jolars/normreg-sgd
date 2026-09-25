@@ -63,18 +63,7 @@ tasks:
     desc: Export the manuscript figures to figures/.
     aliases: [paper-figures]
     cmds:
-      - task: figure
-        vars:
-          SCRIPT: coefficient_paths
-          STUDY: coefficient-paths
-          SUMMARY: results/coefficient-paths/summary.json
-          NAME: paths-to-ols
-      - task: figure
-        vars:
-          SCRIPT: signal_crossing
-          STUDY: signal-crossing
-          SUMMARY: results/signal-allocation/summary.json
-          NAME: risk-crossing
+      - task: figure:intro
       - task: figure
         vars:
           SCRIPT: predictive_intro
@@ -115,6 +104,33 @@ tasks:
           STUDY: mushroom-rate-search
           SUMMARY: results/mushroom/rates17/summary.json
           NAME: paths-n2048-aggregate
+
+  figure:intro:
+    desc: Plot the introductory subfigures and their shared legend.
+    sources:
+      - scripts/figures/plot_coefficient_paths.py
+      - scripts/figures/plot_signal_crossing.py
+      - scripts/figures/style.py
+      - scripts/figures/palette.toml
+      - results/coefficient-paths/summary.json
+      - results/signal-allocation/summary.json
+      - Taskfile.yml
+      - devenv.nix
+      - devenv.lock
+      - uv.lock
+    generates:
+      - figures/coefficient-paths/paths-to-ols.pdf
+      - figures/coefficient-paths/paths-to-ols.svg
+      - figures/coefficient-paths/paths-to-ols.png
+      - figures/coefficient-paths/method-legend.pdf
+      - figures/coefficient-paths/method-legend.svg
+      - figures/coefficient-paths/method-legend.png
+      - figures/signal-crossing/risk-crossing.pdf
+      - figures/signal-crossing/risk-crossing.svg
+      - figures/signal-crossing/risk-crossing.png
+    cmds:
+      - python scripts/figures/plot_coefficient_paths.py
+      - python scripts/figures/plot_signal_crossing.py
 
   figure:
     internal: true

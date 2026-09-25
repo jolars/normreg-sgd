@@ -1,4 +1,4 @@
-"""Plot a saved signal-allocation slice as a single-column introduction figure."""
+"""Plot a saved signal-allocation slice as the second introduction panel."""
 
 import json
 
@@ -24,8 +24,8 @@ def plot(report):
     fractions = np.array(model["rare_signal_fractions"])
     risk = np.array(report["risk"])[cap_index, noise_index]
     gap = risk[:, 0] - risk[:, 1]
-    figure, axis = plt.subplots(figsize=(SINGLE_PANEL_WIDTH, 2.75))
-    figure.subplots_adjust(left=0.18, right=0.96, bottom=0.24, top=0.84)
+    figure, axis = plt.subplots(figsize=(SINGLE_PANEL_WIDTH, 2.45))
+    figure.subplots_adjust(left=0.18, right=0.97, bottom=0.25, top=0.97)
     for scaling, scale in enumerate(("none", "sd")):
         style = METHOD_STYLES[scale]
         axis.plot(
@@ -55,11 +55,11 @@ def plot(report):
         alpha=0.1,
     )
     axis.text(
-        0.05, 0.19, "Unscaled\nhelps", color=METHOD_STYLES["none"]["color"], fontsize=8
+        0.22, 0.21, "Unscaled\nhelps", color=METHOD_STYLES["none"]["color"], fontsize=8
     )
     axis.text(
         0.62,
-        0.07,
+        0.11,
         "Standardization\nhelps",
         color=METHOD_STYLES["sd"]["color"],
         fontsize=8,
@@ -75,16 +75,8 @@ def plot(report):
     )
     axis.grid(axis="y", color="0.9", linewidth=0.6)
     axis.set_axisbelow(True)
-    figure.legend(
-        *axis.get_legend_handles_labels(),
-        loc="upper center",
-        ncol=2,
-        bbox_to_anchor=(0.56, 1.0),
-        frameon=False,
-        handlelength=2.2,
-        columnspacing=1.2,
-    )
-    save(figure, OUTPUT / "signal-crossing", "risk-crossing")
+    # Equal canvases keep the axes aligned when LaTeX pairs the two panels.
+    save(figure, OUTPUT / "signal-crossing", "risk-crossing", tight=False)
 
 
 if __name__ == "__main__":

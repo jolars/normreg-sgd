@@ -1,4 +1,4 @@
-"""Plot saved full-gradient paths at manuscript column width."""
+"""Plot the coefficient-path panel and the shared introduction legend."""
 
 import json
 
@@ -6,6 +6,7 @@ import numpy as np
 from style import (
     METHOD_STYLES,
     OUTPUT,
+    PAPER_WIDTH,
     ROOT,
     SINGLE_PANEL_WIDTH,
     apply_style,
@@ -16,8 +17,8 @@ from style import (
 
 def plot(report):
     apply_style()
-    figure, axis = plt.subplots(figsize=(SINGLE_PANEL_WIDTH, 2.75))
-    figure.subplots_adjust(left=0.18, right=0.97, bottom=0.18, top=0.84)
+    figure, axis = plt.subplots(figsize=(SINGLE_PANEL_WIDTH, 2.45))
+    figure.subplots_adjust(left=0.18, right=0.97, bottom=0.25, top=0.97)
     ols = np.array(report["ols"])
     values = np.linspace(-0.08, 1.18, 250)
     xx, yy = np.meshgrid(values, values)
@@ -87,16 +88,20 @@ def plot(report):
         xticks=[0, 0.5, 1],
         yticks=[0, 0.5, 1],
     )
-    figure.legend(
-        *axis.get_legend_handles_labels(),
-        loc="upper center",
+    handles, labels = axis.get_legend_handles_labels()
+    # Equal canvases keep the axes aligned when LaTeX pairs the two panels.
+    save(figure, OUTPUT / "coefficient-paths", "paths-to-ols", tight=False)
+    legend = plt.figure(figsize=(PAPER_WIDTH, 0.25))
+    legend.legend(
+        handles,
+        labels,
+        loc="center",
         ncol=2,
-        bbox_to_anchor=(0.56, 1.0),
         frameon=False,
         handlelength=2.2,
         columnspacing=1.2,
     )
-    save(figure, OUTPUT / "coefficient-paths", "paths-to-ols")
+    save(legend, OUTPUT / "coefficient-paths", "method-legend")
 
 
 if __name__ == "__main__":

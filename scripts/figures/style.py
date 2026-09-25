@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 ROOT = Path(__file__).resolve().parents[2]
 OUTPUT = ROOT / "figures"
 PAPER_WIDTH = 6.0
-SINGLE_PANEL_WIDTH = 3.25
+SINGLE_PANEL_WIDTH = (PAPER_WIDTH - 0.2) / 2
 
 with Path(__file__).with_name("palette.toml").open("rb") as source:
     PALETTE = tomllib.load(source)
@@ -76,8 +76,8 @@ def apply_style():
     plt.rcParams.update(RC_PARAMS)
 
 
-def save(figure, directory, name):
-    """Export tightly cropped PDF, SVG, and PNG files with portable fonts."""
+def save(figure, directory, name, *, tight=True):
+    """Export PDF, SVG, and PNG files with portable fonts."""
     directory.mkdir(parents=True, exist_ok=True)
     for extension in ("pdf", "svg", "png"):
         metadata = {
@@ -87,7 +87,10 @@ def save(figure, directory, name):
         }[extension]
         destination = directory / f"{name}.{extension}"
         figure.savefig(
-            destination, metadata=metadata, bbox_inches="tight", pad_inches=0.02
+            destination,
+            metadata=metadata,
+            bbox_inches="tight" if tight else None,
+            pad_inches=0.02,
         )
         if extension == "svg":
             # Strip exporter whitespace so diffs remain readable when sharing SVGs.

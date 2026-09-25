@@ -64,26 +64,11 @@ but it also makes the fitted coefficient more sensitive to noise.
 These effects can substantially change prediction where the rare feature is
 present, despite contributing little to average error. Normalization therefore
 raises a statistical question: how strongly should training respond to scarce
-evidence? Scaling leaves the full-rank least-squares solution unchanged but
-changes which signals we learn before stopping.
+evidence? Scaling for instance leaves a full-rank least-squares solution
+unchanged, but changes which signals we learn before stopping.
 \Cref{fig:intro-coefficient-paths} illustrates this difference on a fixed
 least-squares problem: the methods approach the same solution along different
 paths and reach different coefficients when stopped early.
-
-\begin{figure}[htb]
-  \centering
-  \includegraphics{../figures/coefficient-paths/paths-to-ols.pdf}
-  \caption{
-    Normalization changes the path to a shared least-squares solution.
-    Full-gradient descent fits a fixed noiseless dataset with feature
-    prevalences $1/2$ and $0.02$. Rates give the common coefficient identical
-    progress. Dots mark an illustrative stop after 20 updates; pale curves
-    continue toward OLS. Gray contours show training loss. This example isolates
-    the geometry of early stopping; \cref{sec:coefficient-paths} gives the
-    construction.
-  }
-  \label{fig:intro-coefficient-paths}
-\end{figure}
 
 Adjusting the learning rate and stopping time is a natural way to compensate for
 different learning speeds. Our main result shows that this adjustment need not
@@ -98,16 +83,28 @@ observation caps.
 
 \begin{figure}[htb]
   \centering
-  \includegraphics{../figures/signal-crossing/risk-crossing.pdf}
+  \includegraphics{../figures/coefficient-paths/method-legend.pdf}\par\smallskip
+  \subfigure[Paths to a shared solution]{%
+    \label{fig:intro-coefficient-paths}%
+    \includegraphics{../figures/coefficient-paths/paths-to-ols.pdf}%
+  }\hfill
+  \subfigure[Risk depends on signal allocation]{%
+    \label{fig:intro-signal-crossing}%
+    \includegraphics{../figures/signal-crossing/risk-crossing.pdf}%
+  }
   \caption{
-    The preferred normalization changes with signal allocation. Fresh-sample SGD
-    uses $q = 10^{-4}$, noise variance one, and cap $M = 20{,}503$. Each rule
+    Normalization changes learning paths, and its effect on risk depends on the
+    signal. (a) Full-gradient descent fits a noiseless dataset with binary
+    features at prevalences $0.5$ and $0.02$. Dots mark an illustrative stop
+    after 20 updates. Pale curves show progress toward the shared OLS solution,
+    while gray contours show training loss. (b) Fresh-sample SGD uses
+    $q = 10^{-4}$, noise variance one, and cap $M = 20{,}503$. Each rule
     separately minimizes rare risk over finite rate and stopping grids. The
     horizontal axis varies $f \in [0,1]$, with $(\beta_C^*)^2 = 1.01(1 - f)$ and
     $(\beta_R^*)^2 = 1.01f$; equal effects means equal coefficient magnitudes.
     \Cref{sec:signal-allocation} gives the setup and numerical checks.
   }
-  \label{fig:intro-signal-crossing}
+  \label{fig:intro-normalization}
 \end{figure}
 
 \begin{figure}[t]
@@ -227,10 +224,9 @@ Our main objective is excess prediction risk where the rare feature is present,
 $J = 1$. Under half squared loss, independence gives a weighted sum of the two
 coefficient mean squared errors:
 \begin{equation}
-  \begin{aligned}
-    R_{R,k} & = \frac18\E\bigl[(\beta_{C,k} - \beta_C^*)^2\bigr]                    \\
-            & \quad + \frac{(1 - q)^2}{2}\E\bigl[(\beta_{R,k} - \beta_R^*)^2\bigr].
-  \end{aligned} \label{eq:conference-rare-risk}
+  R_{R,k}
+  = \frac18\E\bigl[(\beta_{C,k} - \beta_C^*)^2\bigr]
+    + \frac{(1 - q)^2}{2}\E\bigl[(\beta_{R,k} - \beta_R^*)^2\bigr]. \label{eq:conference-rare-risk}
 \end{equation}
 The expectations average over training randomness, and the risk excludes
 irreducible test noise. Aggregate excess risk $R_k$ replaces $(1 - q)^2$ by
@@ -397,13 +393,13 @@ to avoid the noise cost of further progress.
   \includegraphics{../figures/signal-allocation/risk-map.pdf}
   \caption{
     Intermediate signals in the theorem's data model, with $q = 10^{-4}$ and
-    $(\beta_C^*)^2 = 1.01(1 - f)$, $(\beta_R^*)^2 = 1.01f$. Positive values favor
-    SD and negative values favor U after separate selection over finite rate and
-    stopping grids.
-    Black contours interpolate zero grid-risk difference. Columns vary noise
-    variance, and the vertical axis varies the observation cap. These are
-    numerical comparisons, not certified boundaries for unrestricted oracle
-    tuning. \Cref{sec:signal-allocation} gives the grids and accuracy checks.
+    $(\beta_C^*)^2 = 1.01(1 - f)$, $(\beta_R^*)^2 = 1.01f$. Positive values
+    favor SD and negative values favor U after separate selection over finite
+    rate and stopping grids. Black contours interpolate zero grid-risk
+    difference. Columns vary noise variance, and the vertical axis varies the
+    observation cap. These are numerical comparisons, not certified boundaries
+    for unrestricted oracle tuning. \Cref{sec:signal-allocation} gives the grids
+    and accuracy checks.
   }
   \label{fig:signal-allocation}
 \end{figure}
@@ -430,10 +426,8 @@ comparison changes dimension without adding signal.
 
 The common features enter rare risk through their combined error. Define
 \[
-  \begin{aligned}
-    G_k & = \frac14\sum_{j=1}^m\E[(\beta_{j,k} - \beta_j^*)^2], \\
-    H_k & = \E[(\beta_{R,k} - \beta_R^*)^2].
-  \end{aligned}
+  G_k = \frac14\sum_{j=1}^m\E[(\beta_{j,k} - \beta_j^*)^2],\qquad H_k
+      = \E[(\beta_{R,k} - \beta_R^*)^2].
 \]
 Then $R_{R,k} = \{G_k + (1 - q)^2H_k\}/2$. With the rare-coordinate step
 $\alpha$ used above, set $u = \alpha/4$ for U or $u = b\alpha$ for S, and

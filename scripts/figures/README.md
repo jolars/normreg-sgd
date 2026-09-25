@@ -4,8 +4,9 @@ Edit the plotting scripts in this directory. All use `style.py` for Matplotlib's
 `rcParams`, font sizes, and export settings. Text and equations render through
 LaTeX with `times`, matching the ALT template. Change `RC_PARAMS` to adjust the
 shared typography. Set figure dimensions in each script; `PAPER_WIDTH` is the
-manuscript's six-inch text width. `SINGLE_PANEL_WIDTH` is used by the two
-smaller introductory figures.
+manuscript's six-inch text width. `SINGLE_PANEL_WIDTH` leaves room for two
+introductory panels and a gap between them. They share a legend in the
+manuscript.
 
 Edit [`palette.toml`](palette.toml) to change colors and their meanings across
 all figures. The `[colors]` table defines the Okabe–Ito colors and neutral
@@ -41,12 +42,13 @@ task figures
 ```
 
 This reads saved experiment summaries and moment archives, then writes PDF, SVG,
-and PNG files under `figures/`. The shared exporter crops every format to the
-figure's content with Matplotlib's `bbox_inches="tight"` and a 0.02-inch margin.
-Cropping runs automatically for `task figures`, `task paper`, and individual
-plotting scripts. PDFs embed their fonts, and SVGs contain glyph outlines so
-their appearance does not depend on installed viewer fonts. The environment
-includes the LaTeX packages and `dvipng` needed by [Matplotlib's LaTeX
+and PNG files under `figures/`. By default, the shared exporter crops every
+format to the figure's content with Matplotlib's `bbox_inches="tight"` and a
+0.02-inch margin. The introductory panels use `tight=False` to preserve equal
+canvas dimensions and align their axes in LaTeX. PDFs embed their fonts, and
+SVGs contain glyph outlines so their appearance does not depend on installed
+viewer fonts. The environment includes the LaTeX packages and `dvipng` needed by
+[Matplotlib's LaTeX
 renderer](https://matplotlib.org/stable/users/explain/text/usetex.html).
 
   | Script                         | Output directory under `figures/` |
@@ -67,6 +69,12 @@ Run a single generator while editing, for example:
 ```sh
 python scripts/figures/plot_predictive_intro.py
 ```
+
+Run `task figure:intro` to regenerate both introductory panels and their shared
+legend. The coefficient-path script also exports
+`coefficient-paths/method-legend`. The manuscript uses the ALT template's
+`\subfigure` command to place the panels side by side and keep their references
+separate.
 
 Run `task figure:theory-bridge` to export the controlled study's
 `figures/theory-bridge/controlled-gaps` and `validation-gaps` in all three
