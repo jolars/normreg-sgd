@@ -83,8 +83,8 @@ remain the next substantive questions.
 
 - [x] Integrate the limiting theorem, allocation corollary, variational
   consequences, and finite-prevalence checks into the paper. Redraw the
-  introductory crossing at fixed $s/4+r$ and retain the earlier $s+r$ map in
-  the supplement.
+  introductory crossing at fixed $s/4 + r$ and retain the earlier $s + r$
+  map in the supplement.
 
 ## 3. Explain the adaptive-selection reversal
 

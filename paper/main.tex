@@ -39,18 +39,18 @@
   deterministic stop under the same observation cap. For two independent binary
   features, we derive both optimized risks as prevalence vanishes while the
   expected number of rare observations remains finite. Uniform control over
-  rates and stops reduces each limiting oracle to a scalar minimization. At
-  positive noise, the formulas yield a unique crossing as signal moves to the
-  rare feature at fixed positive initial limiting subgroup risk, and explain how
-  noise and budget change the preferred scaling. Separate finite-prevalence
-  bounds favor standardization on a rare-dominant signal family and unscaled
-  training on a common-dominant family. The results concern final iterates with
-  population preprocessing and fresh observations. Exact-moment searches assess
-  the approximation at finite prevalence. In a controlled study, both orderings
-  persist under observation reuse, estimated preprocessing, and intercept
-  fitting when tuning choices are fixed before evaluation. Selecting a predictor
-  after observing training can reverse an ordering, even when selection uses
-  exact population risk.
+  rates and stops reduces each limiting oracle to a scalar minimization. With
+  positive noise, the preferred scaling changes exactly once as signal moves to
+  the rare feature while the limiting risk at initialization stays fixed and
+  positive. The formulas also explain how noise and budget affect the
+  comparison. Separate finite-prevalence bounds favor standardization on a
+  rare-dominant signal family and unscaled training on a common-dominant family.
+  The results concern final iterates with population preprocessing and fresh
+  observations. Exact-moment searches assess the approximation at finite
+  prevalence. In a controlled study, both orderings persist under observation
+  reuse, estimated preprocessing, and intercept fitting when tuning choices are
+  fixed before evaluation. Selecting a predictor after observing training can
+  reverse an ordering, even when selection uses exact population risk.
 \end{abstract}
 
 \begin{keywords}
@@ -69,7 +69,7 @@ but it also makes the fitted coefficient more sensitive to noise.
 These effects can substantially change prediction where the rare feature is
 present, despite contributing little to average error. Normalization therefore
 raises a statistical question: how strongly should training respond to scarce
-evidence? Scaling for instance leaves a full-rank least-squares solution
+evidence? For instance, scaling leaves a full-rank least-squares solution
 unchanged, but changes which signals we learn before stopping.
 \Cref{fig:intro-coefficient-paths} illustrates this difference on a fixed
 least-squares problem: the methods approach the same solution along different
@@ -138,12 +138,12 @@ and one fresh observation per update. Our main characterization,
 $q \to 0$ and the observation cap $M$ satisfies
 $Mq(1 - q) \to \tau \in (0,\infty)$, for arbitrary fixed signal strengths and
 noise. Uniform bounds over all nonnegative constant rates and deterministic
-stops justify passing from the finite-budget oracle infima to scalar limiting
-minimizations. These bounds include prevalence-dependent choices, unstable
-rates, and vanishing rates that learn the common signal while leaving the rare
-effect unchanged. At positive noise and fixed positive initial limiting subgroup
-risk, the formulas give exactly one crossing as signal moves to the rare
-feature. They also explain how noise and budget can reverse the ordering.
+stops justify taking the limit after optimization. These bounds include
+prevalence-dependent choices, unstable rates, and vanishing rates that learn the
+common signal while leaving the rare effect unchanged. We then move signal to
+the rare feature while holding the limiting risk at initialization fixed and
+positive. With positive noise, the preferred scaling changes exactly once. The
+formulas also explain how noise and budget can reverse the ordering.
 
 The finite-prevalence comparison in \cref{thm:conference-predictive} complements
 this characterization with explicit positive gaps for two signal families. The
@@ -302,8 +302,8 @@ learns the rare signal faster but also introduces more noise.
 We now compare the lowest attainable rare-presence risks of the two scaling
 rules in the independent model of \cref{sec:conference-setting}. We first give
 quantitative gaps when $1 \leq Mq(1 - q) \leq 4$, corresponding to roughly one
-to four expected rare occurrences. We then characterize the oracles for every
-fixed positive limiting rescaled budget.
+to four expected rare occurrences. We then derive limiting formulas for the
+oracle risks at arbitrary fixed signals, noise, and positive rescaled budgets.
 
 A global learning rate moves both coordinate steps together, while normalization
 fixes their ratio. Tuning can change how much each method learns, but cannot
@@ -315,9 +315,10 @@ other coefficient.
 
 \paragraph{The oracle comparison.}
 
-Each method chooses its own constant learning rate and iteration count. Let
-$\alpha$ denote the rare-coordinate step on the original coefficient scale, so
-the update matrices are
+Each method chooses its own constant learning rate and iteration count. To
+express both searches in terms of their effect on the rare coefficient, let
+$\alpha$ denote the step on that coordinate in the original coefficient scale.
+The update matrices are
 \begin{equation}
   D_U(\alpha) = \alpha I_2,\qquad D_S(\alpha)
               = \diag(4b\alpha,\alpha),\quad \alpha
@@ -364,34 +365,11 @@ and stop. It is not a comparison under equal total tuning computation.
   together with initialization.
 \end{theorem}
 
-We prove the theorem in \cref{sec:predictive-proofs} by bounding one method
-below at every rate and stop and bounding the other above with a stable
-candidate. The diagonal error moments satisfy an exact positive recurrence, even
-though the stochastic updates couple the independent features. These bounds
-compare the best attainable risks without identifying the minimizing rates and
-stops. The stated numerical constants use computer-assisted certification: exact
-rational interval calculations certify the analytic bounds over the continuous
-parameter regions. \Cref{sec:predictive-certification} describes the enclosures
-and coverage checks; the source supplement includes the checker and its recorded
-output.
-
-The prevalence-dependent bounds in \cref{sec:predictive-finite-bounds} give
-larger gaps in parts of this range. For example, at $q = 0.02$ and $M = 102$,
-they give gaps greater than $0.009\sigma^2$ and $0.064\sigma^2$ for the
-respective full signal families. \Cref{sec:predictive-certification} gives a
-wider prevalence range for the rare-signal family and stronger small-prevalence
-constants. These sufficient cutoffs are not transition boundaries.
-
-The expected number of rare occurrences at the cap is $Mq = \tau/(1 - q)$. Hence
-the positive gaps persist as the budget grows inversely with prevalence while
-rare observations remain scarce. The interval $\tau \in[1,4]$ describes the
-budgets covered by the proof, not a general threshold for learning rare
-features. Likewise, the two signal families give sufficient conditions for
-opposite orderings. The limiting characterization below supplies a transition
-along a specified signal-allocation path. Both results concern constant rates,
-deterministic stops, final iterates, and population preprocessing; batch
-selection, learning-rate schedules, averaging, and data-dependent selection
-remain outside their scope.
+The gaps persist even as the observation cap grows inversely with prevalence.
+The expected number of rare occurrences at the cap is $Mq = \tau/(1 - q)$, so
+rare observations remain scarce throughout this regime. The two signal families
+give sufficient conditions for opposite orderings. The limiting characterization
+below locates a transition along a specified path of signal allocations.
 
 \paragraph{The compromise after tuning.}
 
@@ -424,7 +402,168 @@ to avoid the noise cost of further progress.
   \label{fig:tuned-decomposition}
 \end{figure}
 
-\input{oracle-characterization}
+\paragraph{Establishing the gaps.}
+
+The proof bounds one method's risk below at every rate and stop and bounds the
+other's above with a stable candidate. The diagonal error moments satisfy an
+exact positive recurrence, even though the stochastic updates couple the
+independent features. This lets us compare the best attainable risks without
+identifying the minimizing rates and stops. \Cref{sec:predictive-proofs} gives
+the argument. Exact rational interval calculations certify the stated constants
+over the continuous parameter regions. \Cref{sec:predictive-certification}
+describes these enclosures and their coverage checks, and the source supplement
+includes the checker and its recorded output.
+
+The bounds can give larger gaps at particular prevalences. For example, at
+$q = 0.02$ and $M = 102$, they exceed $0.009\sigma^2$ and $0.064\sigma^2$ for
+the respective full signal families (\cref{sec:predictive-finite-bounds}).
+\Cref{sec:predictive-certification} also gives a wider prevalence range for the
+rare-signal family and stronger constants at small prevalence. These prevalence
+and budget ranges describe where the bounds establish a gap. Their endpoints
+need not mark a change in the preferred scaling or a threshold for learning rare
+features.
+
+\subsection{Limiting oracle risks}
+\label{sec:oracle-limits}
+
+The finite-prevalence theorem gives explicit gaps for two signal families. We
+next characterize both oracles for arbitrary fixed signals and noise as rare
+prevalence decreases. The key difference is that U can learn the common signal
+on a shorter time scale than the rare signal. Under SD, both signals are learned
+on the time scale set by rare prevalence.
+
+Write $s = (\beta_C^*)^2$, $r = (\beta_R^*)^2$, $\nu = \sigma^2$, and
+$v = s/4 + r$. The limiting rare-subgroup risk at initialization is $v/2$. For
+$\alpha \in[0,1]$, define
+\[
+  d(\alpha) = \alpha(2 - \alpha),\qquad z_\tau(\alpha)
+            = e^{-\tau d(\alpha)},\qquad g(\alpha)
+            = \frac{\nu\alpha}{8 - \alpha}.
+\]
+Here $z_\tau$ describes the decay of the initial error, and $g$ is the limiting
+common-coordinate noise contribution under U, before the factor $1/2$ in the
+risk. The limiting objectives are
+\begin{equation}
+  \begin{aligned}
+    F_S(\alpha;s,r,\nu,\tau) & = \frac12\left[ vz_\tau + \frac{\nu\alpha}{2 - \alpha}(1 - z_\tau) \right],           \\
+    F_U(\alpha;r,\nu,\tau)   & = \frac12\left[ g + rz_\tau + \frac{\alpha(\nu + g)}{2 - \alpha}(1 - z_\tau) \right].
+  \end{aligned} \label{eq:limiting-objectives}
+\end{equation}
+
+\begin{theorem}[Limiting oracle risks]
+  \label{thm:oracle-limits}
+  In the model of \cref{sec:conference-setting}, fix finite $s,r,\nu \geq 0$. If
+  $q \to 0$ and integer observation caps satisfy $M_qb \to \tau \in (0,\infty)$,
+  then
+  \[
+    R_A^*(M_q) \longrightarrow L_A(\tau)
+               := \min_{0 \leq \alpha \leq 1}F_A(\alpha;\tau), \qquad A
+               \in \{U,S\},
+  \]
+  with the signal and noise arguments as in \cref{eq:limiting-objectives}. More
+  precisely, for every $0 < T_0 < T_1 < \infty$, uniformly over integer caps
+  with $T_q = M_qb \in[T_0,T_1]$,
+  \begin{equation}
+    |R_S^*(M_q) - L_S(T_q)| \leq C_Sb,\qquad |R_U^*(M_q) - L_U(T_q)|
+                            \leq C_Ub\log(1/b) \label{eq:oracle-limit-errors}
+  \end{equation}
+  for all sufficiently small $q$. The constants depend only on
+  $s,r,\nu,T_0,T_1$.
+\end{theorem}
+
+The theorem reduces the limiting optimization to $\alpha \in[0,1]$ and the full
+cap. This reduction follows from bounds over the original search, which still
+includes every nonnegative constant rate and deterministic stop, even when they
+depend on prevalence or the rate is unstable. The error bounds describe
+convergence as prevalence falls. Their constants are not optimized to certify a
+gap at a specified prevalence; \cref{thm:conference-predictive} provides that
+separate guarantee.
+
+\paragraph{Why the limits differ.}
+
+SD's limiting risk depends on the signal only through $v$. U's depends on $r$
+but loses its dependence on the initial common signal. At a positive limiting
+rate, U learns that signal quickly and retains common-coordinate noise $g$,
+which also feeds into the rare error. By taking $b \ll \alpha_q \ll 1$, U
+instead learns the common signal with vanishing noise cost and leaves the rare
+effect unchanged. This gives the endpoint $F_U(0) = r/2$. Literal zero-rate
+training retains both signal errors and has limiting risk $v/2$.
+
+For $\nu > 0$, U uses this endpoint exactly when $r\tau \leq \nu/16$; above that
+threshold, its unique minimizer is positive. SD has a unique positive minimizer
+whenever $v,\nu > 0$. The scalar equations in \cref{sec:oracle-variational}
+determine these rates without a grid search.
+
+\paragraph{Proof outline.}
+
+Let $G$ and $H$ denote the common and rare contributions before the factor $1/2$
+in the limiting risk. Under SD, their sum $W = G + H$ obeys
+$\dot W = -d(\alpha)W + \alpha^2\nu$, starting at $W(0) = v$. Under U, the
+common moment rapidly approaches $g(\alpha)$, and the rare moment obeys
+$\dot H = -d(\alpha)H + \alpha^2(\nu + g)$, starting at $H(0) = r$. Solving
+these equations gives \cref{eq:limiting-objectives}.
+
+To pass from these limits at fixed rates to the oracle risks, we also need
+bounds that hold uniformly over large rates, early stops, and vanishing rates.
+For U, these bounds track the common moment as it approaches $g$. We then
+construct rates that attain each limiting minimum, including its zero endpoint.
+\Cref{sec:oracle-limit-proofs} gives the full argument.
+
+\subsection{A unique signal-allocation crossing}
+\label{sec:oracle-allocation}
+
+Hold the limiting subgroup risk at initialization fixed while moving signal
+between the features. With $v > 0$, write $r = \theta v$ and
+$s = 4(1 - \theta)v$ for $\theta \in[0,1]$. Thus $\theta$ measures the rare
+feature's share of $s/4 + r$, rather than its share of the unweighted squared
+coefficient sum.
+
+\begin{corollary}[Signal allocation]
+  \label{cor:oracle-allocation}
+  Fix $v,\nu,\tau > 0$. Along this allocation path, $L_S$ is constant and $L_U$
+  increases strictly with $\theta$. There is a unique $\theta_* \in (0,1)$ such
+  that $L_S = L_U$. Unscaled training has lower limiting risk for
+  $\theta < \theta_*$, and standardization has lower limiting risk for
+  $\theta > \theta_*$.
+\end{corollary}
+
+\begin{proof}
+  The SD objective depends only on $v$. Each U objective has slope
+  $vz_\tau(\alpha)/2 \in[ve^{-\tau}/2,v/2]$ in $\theta$, so its minimum is
+  continuous and strictly increasing. At $\theta = 0$, U has zero risk and SD
+  has positive risk. At $\theta = 1$, a positive U minimizer incurs strictly
+  more noise than the same SD rate. If U instead minimizes at zero, a small
+  positive SD rate improves on $v/2$. The endpoint signs give the unique
+  crossing.
+\end{proof}
+
+\Cref{fig:oracle-finite}(b) illustrates this corollary. At $v = \nu = 1$ and
+$\tau = 2$, the crossing is numerically $\theta_* \approx 0.8377$.
+\Cref{sec:oracle-variational} gives a variational formula and an equivalent
+boundary obtained by varying the common signal at fixed rare signal.
+
+\paragraph{Noise and budget.}
+
+Increasing noise can change the preferred scaling more than once. With positive
+common signal, U wins at sufficiently small and sufficiently large noise, while
+SD can win between them.
+
+When the rare signal and noise are positive, a large enough rescaled budget
+favors SD. For fixed $r,\nu > 0$ and finite $s \geq 0$, the limiting risks
+satisfy $L_S(\tau)/L_U(\tau) \to 4/5$ as $\tau \to \infty$, although convergence
+can be slow. This statement takes $q \to 0$ before $\tau \to \infty$ and does
+not cover joint limits with $M_qb \to \infty$. The expansions and examples are
+in \cref{sec:oracle-noise-budget}.
+
+\paragraph{Accuracy at finite prevalence.}
+
+We assess the limiting predictions using exact-moment searches at six
+prevalences. At the smallest prevalence, the searches agree with the limiting
+choice of scaling for the tested cases away from ties. At larger prevalence,
+they can favor a different scaling: in a high-noise example, SD wins on the
+finite grids while the limit favors U. These searches assess the approximation
+without certifying the continuous optima. \Cref{sec:oracle-finite} reports the
+comparisons and search refinements.
 
 \paragraph{Additional common features.}
 \label{sec:common-block}
@@ -442,36 +581,41 @@ not asserted for this larger model.
 \label{sec:conference-experiments}
 
 The oracle fixes its rate and stop before observing training. Validation instead
-selects among fitted predictors. We examine this distinction under controlled
-changes to the theorem's setup and assess how missing rare validation
-observations affect selection.
+selects among fitted predictors. We first ask whether the two risk orderings
+survive changes to the training procedure when tuning choices are fixed in
+advance. We then examine how selection among fitted predictors changes the
+comparison, including when validation contains no rare observations.
 
 \subsection{Controlled departures from the oracle model}
 \label{sec:theory-bridge}
 
-We retain the independent binary model, coefficient pairs $(0.1,1)$ and
-$(1,0.1)$, and noise variance one. At $q = 0.02$ and $0.005$, caps give roughly
-one, two, or four expected rare occurrences. Eight training arms separately
-introduce observation reuse, estimated preprocessing, and intercept fitting,
-then combine them. Reuse draws from 256 noisy training rows. Empirical
-preprocessing uses all 256 rows, so its data requirements can exceed the SGD
-observation cap. \Cref{sec:theory-bridge-protocol} gives the full protocol.
+We change three aspects of training: whether observations are reused, whether
+preprocessing is estimated, and whether an intercept is fitted. Eight training
+arms introduce these changes separately and in combination. We retain the
+independent binary model, coefficient pairs $(0.1,1)$ and $(1,0.1)$, and noise
+variance one. At $q = 0.02$ and $0.005$, the caps give roughly one, two, or four
+expected rare occurrences. Arms that reuse observations draw from 256 noisy
+training rows. Empirical preprocessing uses all 256 rows, so its data
+requirements can exceed the SGD observation cap.
+\Cref{sec:theory-bridge-protocol} gives the full protocol.
 
 For each scaling and training arm, we calibrate a rate factor and stop to
 minimize mean rare risk, then evaluate those fixed choices on independent
 training runs. With estimated preprocessing, the factor determines a constant
-rate from the training data. Both orderings persist in all 96 comparisons: SD
-has lower rare risk for the dominant rare signal, and U has lower rare risk for
-the dominant common signal (\cref{fig:bridge-controlled}). This evidence
-concerns the tested signal pairs and a conservative finite rate search; it does
-not extend the theorem to these training procedures.
+rate from the training data.
+
+Both orderings persist across all eight training arms. SD has lower rare risk
+for the dominant rare signal, and U has lower rare risk for the dominant common
+signal (\cref{fig:bridge-controlled}). This holds in all 96 comparisons across
+the arms, signal pairs, prevalences, and caps. These numerical comparisons use a
+conservative finite rate search and cover only the two tested signal pairs.
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[]{../figures/theory-bridge/controlled-gaps.pdf}
   \caption{
     Both calibrated risk orderings persist across the eight training arms.
-    Negative SD-minus-U rare risk favors SD. Colors distinguish the three caps;
+    Negative SD-minus-U rare risk favors SD. Shades distinguish the three caps;
     bars show two paired Monte Carlo standard errors over 4096 evaluation
     replications, conditional on the calibration choices. The last two rows
     successively add empirical centering and response-mean initialization to
@@ -488,8 +632,8 @@ after training favor U in this example, while calibration favors SD. Every
 validation set here contains rare observations. The reversal under exact
 selection shows that validation noise is not needed: choosing the best predictor
 in each training run is a different objective from choosing the best tuning
-settings on average. Exact selection reduces U's rare risk by $0.28$ and SD's by
-$0.16$; U's larger gain overturns SD's advantage under calibration.
+settings on average. Exact selection reduces U's rare risk by about $0.28$ and
+SD's by $0.15$. U's larger gain overturns SD's advantage under calibration.
 
 \begin{table}[t]
   \centering
@@ -518,42 +662,42 @@ $0.16$; U's larger gain overturns SD's advantage under calibration.
 
 \paragraph{Missing rare validation observations.}
 
-Missing rare validation observations create a separate obstacle. For the fresh
-baseline at $q = 0.005$, $M = 804$, and the dominant rare signal, selection with
-128 validation rows changes the SD-minus-U gap from $-0.0216$ to $+1.133$ (MCSE
-$0.062$). The rare group is absent in 2206 of 4096 validation sets, triggering
-the declared fallback to aggregate loss. Conditional on absence, the gap is
-$+2.193$; when the group is present, it is $-0.105$. Even this conservative
-search can miss the group on which the methods differ most
-(\cref{sec:theory-bridge-protocol,fig:bridge-validation}).
+Validation can also fail to represent the subgroup whose risk we want to
+minimize. For the fresh baseline with a dominant rare signal, $q = 0.005$, and
+$M = 804$, more than half of the validation sets with 128 rows contain no rare
+observations: the group is absent in 2206 of 4096 sets. In those runs, selection
+falls back to aggregate loss.
+
+When the rare group is present, the SD-minus-U gap is $-0.105$, favoring SD.
+When it is absent, the gap is $+2.193$, favoring U. Overall, validation
+selection changes the gap from $-0.0216$ under calibration to $+1.133$ (MCSE
+$0.062$) (\cref{sec:theory-bridge-protocol,fig:bridge-validation}).
 
 \section{Discussion}
 
-Our limiting characterization identifies the lowest rare-subgroup risks
-attainable by each scaling after optimizing its constant learning rate and
-deterministic stopping time. Uniform control over the full rate-and-stop domain
-reduces these oracles to scalar minimizations for arbitrary fixed signals and
-noise. With positive noise, the formulas prove a unique crossing along
-allocations of fixed positive initial limiting subgroup risk. The separate
-finite-prevalence theorem supplies explicit positive gaps on two signal families
-while rare observations remain scarce.
+Normalization changes the noise cost of learning each signal. In the
+rare-prevalence limit, unscaled training can learn the common signal with
+vanishing noise cost while leaving the rare effect unchanged. Standardization
+can instead avoid the common-coordinate noise cost of learning a rare effect.
+Noise and budget determine which compromise is preferable, even after each
+method has optimized its learning rate and stopping time.
 
-The characterization explains the noise cost of learning each signal. Unscaled
-training can learn the common signal with vanishing noise cost while leaving the
-rare effect unchanged; standardization can instead avoid the common-coordinate
-noise cost of learning a rare effect. Noise and budget determine which
-compromise is preferable. Normalization therefore determines how a finite-budget
-learner responds to the evidence for each feature, even after rate and stopping
-choices have been optimized.
+The limiting formulas make this comparison explicit for arbitrary fixed signals
+and noise. With positive noise, moving signal to the rare feature changes the
+preferred scaling exactly once when the limiting risk at initialization is held
+fixed and positive. The finite-prevalence theorem establishes positive gaps for
+two signal families while rare observations remain scarce. Together, these
+results show both why the preferred scaling changes and where one scaling has a
+guaranteed advantage.
 
 Both theorems concern two independent binary features, known population
 preprocessing, zero initialization, a fixed zero intercept, and final iterates
-under fresh sampling. Finite-prevalence searches show that convergence to the
-limiting decision can be slow enough to change the preferred scaling. The
-large-budget ratio $4/5$ describes a further limit of the limiting functions,
-not a simultaneous limit in prevalence and budget. Learning-rate schedules,
-averaging, batch selection, data-dependent stopping, and adaptive optimizers
-remain outside the comparison.
+under fresh sampling. Applying the limiting comparison at a finite prevalence
+also requires care: numerical searches can favor a different scaling even when
+the limiting risks are separated. The large-budget ratio $4/5$ takes prevalence
+to zero before letting the rescaled budget grow. Extending the comparison to
+joint limits, learning-rate schedules, averaging, batch selection,
+data-dependent stopping, or adaptive optimizers requires further analysis.
 
 Replacing the common feature with an independent block preserves the exact
 moment reduction. At fixed total signal strength, increasing the number of

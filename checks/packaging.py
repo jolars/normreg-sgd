@@ -19,7 +19,6 @@ def check_archive(path, review=False):
         "uv.lock",
         "paper/main.tex",
         "paper/oracle-proofs.tex",
-        "paper/oracle-characterization.tex",
         "paper/oracle-numerics.tex",
         "paper/references.bib",
         "paper/.latexmkrc",
