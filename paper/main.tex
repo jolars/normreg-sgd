@@ -41,16 +41,16 @@
   expected number of rare observations remains finite. Uniform control over
   rates and stops reduces each limiting oracle to a scalar minimization. At
   positive noise, the formulas yield a unique crossing as signal moves to the
-  rare feature at fixed positive initial limiting subgroup risk, and explain
-  how noise and budget change the preferred scaling. Separate finite-prevalence
+  rare feature at fixed positive initial limiting subgroup risk, and explain how
+  noise and budget change the preferred scaling. Separate finite-prevalence
   bounds favor standardization on a rare-dominant signal family and unscaled
-  training on a common-dominant family. The results concern final iterates
-  with population preprocessing and fresh observations. Exact-moment searches
-  assess the approximation at finite prevalence. In a controlled study, both
-  orderings persist under observation reuse, estimated preprocessing, and
-  intercept fitting when tuning choices are fixed before evaluation. Selecting a
-  predictor after observing training can reverse an ordering, even when
-  selection uses exact population risk.
+  training on a common-dominant family. The results concern final iterates with
+  population preprocessing and fresh observations. Exact-moment searches assess
+  the approximation at finite prevalence. In a controlled study, both orderings
+  persist under observation reuse, estimated preprocessing, and intercept
+  fitting when tuning choices are fixed before evaluation. Selecting a predictor
+  after observing training can reverse an ordering, even when selection uses
+  exact population risk.
 \end{abstract}
 
 \begin{keywords}
@@ -80,12 +80,12 @@ different learning speeds. We ask how low each scaling can drive rare-subgroup
 risk when both optimize these choices under the same observation cap. Our main
 result characterizes both optimized risks in a rare-prevalence limit and
 identifies when each scaling is preferable. \Cref{fig:intro-signal-crossing}
-illustrates the resulting unique crossing: standardization gives lower risk
-when the rare signal dominates, whereas unscaled training gives lower risk when
-the common signal dominates. The comparison holds initial subgroup risk,
-rescaled budget, and noise level fixed. A separate finite-prevalence theorem
-establishes positive gaps for two signal families, illustrated across
-observation caps in \cref{fig:conference-tuned-intro}.
+illustrates the resulting unique crossing: standardization gives lower risk when
+the rare signal dominates, whereas unscaled training gives lower risk when the
+common signal dominates. The comparison holds initial subgroup risk, rescaled
+budget, and noise level fixed. A separate finite-prevalence theorem establishes
+positive gaps for two signal families, illustrated across observation caps in
+\cref{fig:conference-tuned-intro}.
 
 \begin{figure}[htb]
   \centering
@@ -133,8 +133,8 @@ observation caps in \cref{fig:conference-tuned-intro}.
 \end{figure}
 
 We study two independent binary predictors under squared loss, with known
-population centering and scales, zero initialization, a fixed zero intercept, and one fresh
-observation per update. Our main characterization,
+population centering and scales, zero initialization, a fixed zero intercept,
+and one fresh observation per update. Our main characterization,
 \cref{thm:oracle-limits}, gives both optimized total risks as rare prevalence
 $q \to 0$ and the observation cap $M$ satisfies
 $Mq(1 - q) \to \tau \in (0,\infty)$, for arbitrary fixed signal strengths and
@@ -147,13 +147,12 @@ risk, the formulas give exactly one crossing as signal moves to the rare
 feature. They also explain how noise and budget can reverse the ordering.
 
 The finite-prevalence comparison in \cref{thm:conference-predictive} complements
-this characterization with explicit positive gaps for two signal families.
-The gaps hold whenever $0 < q \leq 0.04$ and $1 \leq Mq(1 - q) \leq 4$,
-after each method optimizes over all nonnegative constant rates and
-deterministic stops. As prevalence decreases, the budget grows while the
-expected number of rare occurrences remains roughly between one and four.
-Relative feature scaling therefore remains consequential after tuning as the
-total observation cap grows.
+this characterization with explicit positive gaps for two signal families. The
+gaps hold whenever $0 < q \leq 0.04$ and $1 \leq Mq(1 - q) \leq 4$, after each
+method optimizes over all nonnegative constant rates and deterministic stops. As
+prevalence decreases, the budget grows while the expected number of rare
+occurrences remains roughly between one and four. Relative feature scaling
+therefore remains consequential after tuning as the total observation cap grows.
 
 The analysis explains this result through the noise cost of learning each
 signal. To learn a dominant rare signal, unscaled training also introduces noise
@@ -161,9 +160,9 @@ in the common coefficient. To learn a dominant common signal, standardization
 introduces noise in the rare coefficient. Exact moments separate these costs
 from incomplete learning and variation due to feature sampling.
 
-Exact-moment searches assess the limiting predictions at finite prevalence.
-An extension with several common features retains the two-moment reduction and
-both numerical orderings through 64 common features.
+Exact-moment searches assess the limiting predictions at finite prevalence. An
+extension with several common features retains the two-moment reduction and both
+numerical orderings through 64 common features.
 
 A controlled study then asks how these comparisons change when training reuses
 observations, estimates preprocessing, or fits an intercept. We retain the two
@@ -191,9 +190,9 @@ ask which normalization achieves lower rare-subgroup risk after each method
 chooses its nonnegative constant learning rate and deterministic stopping time
 under the same observation cap. For final iterates of fresh-sample SGD, our
 limiting theorem characterizes the optimized total risk for arbitrary fixed
-signals and noise, with uniform control over the full rate-and-stop domain.
-Our finite-prevalence theorem establishes opposite positive gaps on two fixed
-signal families.
+signals and noise, with uniform control over the full rate-and-stop domain. Our
+finite-prevalence theorem establishes opposite positive gaps on two fixed signal
+families.
 
 Our calculations build on established mechanisms. Early stopping changes
 least-squares regularization \citep{ali2019early}. \citet{ali2020stochastic}
@@ -371,11 +370,11 @@ below at every rate and stop and bounding the other above with a stable
 candidate. The diagonal error moments satisfy an exact positive recurrence, even
 though the stochastic updates couple the independent features. These bounds
 compare the best attainable risks without identifying the minimizing rates and
-stops. The stated numerical constants use computer-assisted certification:
-exact rational interval calculations certify the analytic bounds over the
-continuous parameter regions. \Cref{sec:predictive-certification} describes
-the enclosures and coverage checks; the source supplement includes the checker
-and its recorded output.
+stops. The stated numerical constants use computer-assisted certification: exact
+rational interval calculations certify the analytic bounds over the continuous
+parameter regions. \Cref{sec:predictive-certification} describes the enclosures
+and coverage checks; the source supplement includes the checker and its recorded
+output.
 
 The prevalence-dependent bounds in \cref{sec:predictive-finite-bounds} give
 larger gaps in parts of this range. For example, at $q = 0.02$ and $M = 102$,
@@ -452,7 +451,7 @@ observations affect selection.
 \label{sec:theory-bridge}
 
 We retain the independent binary model, coefficient pairs $(0.1,1)$ and
-$(1,0.1)$, and noise variance one. At $q = .02$ and $.005$, caps give roughly
+$(1,0.1)$, and noise variance one. At $q = 0.02$ and $0.005$, caps give roughly
 one, two, or four expected rare occurrences. Eight training arms separately
 introduce observation reuse, estimated preprocessing, and intercept fitting,
 then combine them. Reuse draws from 256 noisy training rows. Empirical
@@ -490,8 +489,8 @@ after training favor U in this example, while calibration favors SD. Every
 validation set here contains rare observations. The reversal under exact
 selection shows that validation noise is not needed: choosing the best predictor
 in each training run is a different objective from choosing the best tuning
-settings on average. Exact selection reduces U's rare risk by $.2771$ and SD's
-by $.1457$; U's larger gain overturns SD's advantage under calibration.
+settings on average. Exact selection reduces U's rare risk by $0.28$ and SD's by
+$0.16$; U's larger gain overturns SD's advantage under calibration.
 
 \begin{table}[t]
   \centering
@@ -507,12 +506,13 @@ by $.1457$; U's larger gain overturns SD's advantage under calibration.
     \bottomrule
   \end{tabular}
   \caption{
-    Rare risk and gains from selection with $(\beta_C^*,\beta_R^*) = (.1,1)$,
-    $q = .02$, and $M = 204$, under reuse, estimated preprocessing, and a fitted
-    intercept (arm 8 in \cref{tab:bridge-arms}). Positive reductions indicate
-    improvement over the separately calibrated choice for the same scaling;
-    negative SD-minus-U gaps favor SD. Means use 4096 paired evaluation runs.
-    MCSEs refer to the paired gaps and condition on the calibration choices.
+    Rare risk and gains from selection with $(\beta_C^*,\beta_R^*) = (0.1,1)$,
+    $q = 0.02$, and $M = 204$, under reuse, estimated preprocessing, and a
+    fitted intercept (arm 8 in \cref{tab:bridge-arms}). Positive reductions
+    indicate improvement over the separately calibrated choice for the same
+    scaling; negative SD-minus-U gaps favor SD. Means use 4096 paired evaluation
+    runs. MCSEs refer to the paired gaps and condition on the calibration
+    choices.
   }
   \label{tab:bridge-selection}
 \end{table}
@@ -520,11 +520,11 @@ by $.1457$; U's larger gain overturns SD's advantage under calibration.
 \paragraph{Missing rare validation observations.}
 
 Missing rare validation observations create a separate obstacle. For the fresh
-baseline at $q = .005$, $M = 804$, and the dominant rare signal, selection with
-128 validation rows changes the SD-minus-U gap from $-.0216$ to $+1.133$ (MCSE
-$.062$). The rare group is absent in 2206 of 4096 validation sets, triggering
+baseline at $q = 0.005$, $M = 804$, and the dominant rare signal, selection with
+128 validation rows changes the SD-minus-U gap from $-0.0216$ to $+1.133$ (MCSE
+$0.062$). The rare group is absent in 2206 of 4096 validation sets, triggering
 the declared fallback to aggregate loss. Conditional on absence, the gap is
-$+2.193$; when the group is present, it is $-.105$. Even this conservative
+$+2.193$; when the group is present, it is $-0.105$. Even this conservative
 search can miss the group on which the methods differ most
 (\cref{sec:theory-bridge-protocol,fig:bridge-validation}).
 
@@ -536,16 +536,16 @@ deterministic stopping time. Uniform control over the full rate-and-stop domain
 reduces these oracles to scalar minimizations for arbitrary fixed signals and
 noise. With positive noise, the formulas prove a unique crossing along
 allocations of fixed positive initial limiting subgroup risk. The separate
-finite-prevalence theorem supplies explicit positive gaps on two signal
-families while rare observations remain scarce.
+finite-prevalence theorem supplies explicit positive gaps on two signal families
+while rare observations remain scarce.
 
 The characterization explains the noise cost of learning each signal. Unscaled
-training can learn the common signal with vanishing noise cost while leaving the rare
-effect unchanged; standardization can instead avoid the common-coordinate noise
-cost of learning a rare effect. Noise and budget determine which compromise is
-preferable. Normalization therefore determines how a finite-budget learner
-responds to the evidence for each feature, even after rate and stopping choices
-have been optimized.
+training can learn the common signal with vanishing noise cost while leaving the
+rare effect unchanged; standardization can instead avoid the common-coordinate
+noise cost of learning a rare effect. Noise and budget determine which
+compromise is preferable. Normalization therefore determines how a finite-budget
+learner responds to the evidence for each feature, even after rate and stopping
+choices have been optimized.
 
 Both theorems concern two independent binary features, known population
 preprocessing, zero initialization, a fixed zero intercept, and final iterates
