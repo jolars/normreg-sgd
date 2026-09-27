@@ -77,15 +77,16 @@ paths and reach different coefficients when stopped early.
 
 Adjusting the learning rate and stopping time is a natural way to compensate for
 different learning speeds. We ask how low each scaling can drive rare-subgroup
-risk when both optimize these choices under the same observation cap. Our main
-result characterizes both optimized risks in a rare-prevalence limit and
-identifies when each scaling is preferable. \Cref{fig:intro-signal-crossing}
-illustrates the resulting unique crossing: standardization gives lower risk when
-the rare signal dominates, whereas unscaled training gives lower risk when the
-common signal dominates. The comparison holds initial subgroup risk, rescaled
-budget, and noise level fixed. A separate finite-prevalence theorem establishes
-positive gaps for two signal families, illustrated across observation caps in
-\cref{fig:conference-tuned-intro}.
+risk when both optimize these choices under the same observation cap.
+\Cref{fig:intro-signal-crossing} illustrates the tradeoff numerically:
+standardization gives lower risk when the rare signal dominates, whereas
+unscaled training gives lower risk when the common signal dominates. Each method
+selects its own rate and stop on finite grids as signal moves between features
+at fixed total squared coefficient magnitude, budget, and noise level. Our main
+result characterizes both optimized risks in a rare-prevalence limit and proves
+a unique crossing when initial subgroup risk is held fixed. A separate
+finite-prevalence theorem establishes positive gaps for two signal families,
+illustrated across observation caps in \cref{fig:conference-tuned-intro}.
 
 \begin{figure}[htb]
   \centering
@@ -103,14 +104,12 @@ positive gaps for two signal families, illustrated across observation caps in
     signal. (a) Full-gradient descent fits a noiseless dataset with binary
     features at prevalences $0.5$ and $0.02$. Dots mark an illustrative stop
     after 20 updates. Pale curves show progress toward the shared OLS solution,
-    while gray contours show training loss. (b) Curves show the limiting oracle
-    risks at noise variance one and rescaled budget $\tau = 2$. Squared
-    coefficients $s = (\beta_C^*)^2 = 4(1 - \theta)$ and
-    $r = (\beta_R^*)^2 = \theta$ hold $s/4 + r = 1$ fixed. Circles and crosses
-    show saved finite-grid selections at $q = 0.02$ and $q = 2 \times 10^{-6}$,
-    respectively. \Cref{cor:oracle-allocation} proves the unique limiting
-    crossing; \cref{sec:oracle-finite} gives the finite searches and numerical
-    checks.
+    while gray contours show training loss. (b) Fresh-sample SGD uses
+    $q = 10^{-4}$, noise variance one, and cap $M = 20{,}503$. Each rule
+    separately minimizes rare risk over finite rate and stopping grids. The
+    horizontal axis varies $f \in [0,1]$, with $(\beta_C^*)^2 = 1.01(1 - f)$ and
+    $(\beta_R^*)^2 = 1.01f$; equal effects means equal coefficient magnitudes.
+    \Cref{sec:signal-allocation} gives the setup and numerical checks.
   }
   \label{fig:intro-normalization}
 \end{figure}

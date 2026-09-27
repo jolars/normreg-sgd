@@ -118,11 +118,10 @@ tasks:
     sources:
       - scripts/figures/plot_coefficient_paths.py
       - scripts/figures/plot_signal_crossing.py
-      - experiments/common/limiting_oracle.py
       - scripts/figures/style.py
       - scripts/figures/palette.toml
       - results/coefficient-paths/summary.json
-      - results/oracle-finite/summary.json
+      - results/signal-allocation/summary.json
       - Taskfile.yml
       - devenv.nix
       - devenv.lock
