@@ -14,6 +14,7 @@ import numpy as np
 
 from checks.predictive_theorem import observation_operator
 from experiments.common.moments import make_model, moment_path
+from experiments.common.reproduction import assert_reproduced
 
 ROOT = Path(__file__).resolve().parents[2]
 OUTPUT = ROOT / "results/predictive-intro"
@@ -171,7 +172,7 @@ def calculate():
             "stops": "every integer from zero through the observation cap",
             "selection": "population rare risk, averaged over training randomness",
             "max_risk_change_on_rate_refinement": float(refinement.max()),
-            "max_selected_risk_tensor_replay_error": tensor_error,
+            "max_selected_risk_tensor_replay_error": float(tensor_error),
             "max_selected_component_tensor_replay_error": component_error,
             "continuous_optimality_certified": False,
         },
@@ -217,7 +218,7 @@ def main():
     args = parser.parse_args()
     report = calculate()
     if args.check:
-        assert json.loads((OUTPUT / "summary.json").read_text()) == report
+        assert_reproduced(report, json.loads((OUTPUT / "summary.json").read_text()))
         print("Introduction illustration numerical checks passed.")
     else:
         OUTPUT.mkdir(parents=True, exist_ok=True)

@@ -6,6 +6,8 @@ from pathlib import Path
 
 import numpy as np
 
+from experiments.common.reproduction import assert_reproduced
+
 ROOT = Path(__file__).resolve().parents[2]
 OUTPUT = ROOT / "results/coefficient-paths"
 
@@ -81,7 +83,7 @@ def main():
     args = parser.parse_args()
     report = calculate()
     if args.check:
-        assert json.loads((OUTPUT / "summary.json").read_text()) == report
+        assert_reproduced(report, json.loads((OUTPUT / "summary.json").read_text()))
         print("Coefficient-path illustration numerical checks passed.")
     else:
         OUTPUT.mkdir(parents=True, exist_ok=True)

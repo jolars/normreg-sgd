@@ -1,4 +1,4 @@
-"""Plot a saved signal-allocation slice as the second introduction panel."""
+"""Plot saved limiting risks along the corollary's signal-allocation path."""
 
 import json
 
@@ -18,12 +18,19 @@ from scripts.figures.style import (
 
 def plot(report):
     apply_style()
-    model = report["model"]
-    budgets = np.array(report["observation_caps"]) * model["q"]
-    cap_index = int(np.argmin(abs(budgets - 2)))
-    noise_index = model["noise_variances"].index(1.0)
-    fractions = np.array(model["rare_signal_fractions"])
-    risk = np.array(report["risk"])[cap_index, noise_index]
+    prevalence = min(row["q"] for row in report["rows"])
+    rows = sorted(
+        [
+            row
+            for row in report["rows"]
+            if row["group"] == "allocation" and row["q"] == prevalence
+        ],
+        key=lambda row: row["r"],
+    )
+    assert all(row["tau"] == 2 and row["noise"] == 1 for row in rows)
+    np.testing.assert_allclose([row["s"] / 4 + row["r"] for row in rows], 1)
+    fractions = np.array([row["r"] for row in rows])
+    risk = np.array([row["nominal_limiting_risk"] for row in rows])
     gap = risk[:, 0] - risk[:, 1]
     figure, axis = plt.subplots(figsize=(SINGLE_PANEL_WIDTH, 2.45))
     figure.subplots_adjust(left=0.18, right=0.97, bottom=0.25, top=0.97)
@@ -56,23 +63,29 @@ def plot(report):
         alpha=0.1,
     )
     axis.text(
-        0.22, 0.21, "Unscaled\nhelps", color=METHOD_STYLES["none"]["color"], fontsize=8
+        0.12, 0.14, "Unscaled\nhelps", color=METHOD_STYLES["none"]["color"], fontsize=8
     )
-    axis.text(
-        0.62,
-        0.11,
+    axis.annotate(
         "Standardization\nhelps",
+        xy=(0.96, float(np.interp(0.96, fractions, risk.mean(axis=1)))),
+        xytext=(0.65, 0.08),
         color=METHOD_STYLES["sd"]["color"],
         fontsize=8,
+        arrowprops=dict(
+            arrowstyle="->",
+            color=METHOD_STYLES["sd"]["color"],
+            linewidth=0.7,
+            connectionstyle="arc3,rad=0.15",
+        ),
     )
     axis.set(
         xlim=(0, 1),
         ylim=(0, 0.28),
         xticks=[0, 0.5, 1],
-        xticklabels=["Common\nonly", "Equal\neffects", "Rare\nonly"],
+        xticklabels=["Common\nonly", "Equal risk\ncontributions", "Rare\nonly"],
         yticks=[0, 0.1, 0.2],
-        ylabel="Rare-subgroup excess risk",
-        xlabel="Signal allocation",
+        ylabel="Limiting rare-subgroup risk",
+        xlabel=r"Rare signal share $\theta$",
     )
     # Keep the endpoint labels inside the fixed canvas shared by both panels.
     axis.get_xticklabels()[0].set_ha("left")
@@ -84,4 +97,4 @@ def plot(report):
 
 
 if __name__ == "__main__":
-    plot(json.loads((ROOT / "results/signal-allocation/summary.json").read_text()))
+    plot(json.loads((ROOT / "results/oracle-finite/summary.json").read_text()))

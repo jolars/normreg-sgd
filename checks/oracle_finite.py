@@ -8,6 +8,7 @@ import numpy as np
 
 from checks.oracle_limits import reference_risk
 from checks.predictive_theorem import observation_operator
+from experiments.common.reproduction import assert_reproduced
 from experiments.oracle_finite.config import OUTPUT, cases
 from experiments.oracle_finite.run import search
 from experiments.oracle_finite.summarize import summarize
@@ -59,11 +60,11 @@ def check_small_search():
 
 def check_saved(rerun=False):
     settings = json.loads((OUTPUT / "settings.json").read_text())
-    assert settings["cases"] == cases()
+    assert_reproduced(cases(), settings["cases"])
     report = json.loads((OUTPUT / "summary.json").read_text())
     replays, max_error = 0, 0.0
     with np.load(OUTPUT / "search.npz") as archive:
-        assert summarize(settings, archive) == report
+        assert_reproduced(summarize(settings, archive), report)
         for qi, q in enumerate(settings["prevalences"]):
             risks, alphas, stops = [
                 archive[f"q{qi}_{key}"] for key in ("risk", "alpha", "stop")

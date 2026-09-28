@@ -112,33 +112,22 @@ these experiments.
 \subsection{Introductory signal-allocation illustration}
 \label{sec:signal-allocation}
 
-\Cref{fig:intro-signal-crossing} uses a separate finite-grid study with the same
-fresh-sample model, $q = 10^{-4}$, population preprocessing, zero initialization,
-and fixed intercept. We set $(\beta_C^*)^2 = 1.01(1 - f)$ and
-$(\beta_R^*)^2 = 1.01f$. The study holds the squared coefficient sum fixed;
-\cref{cor:oracle-allocation} instead holds initial limiting subgroup risk fixed.
-The grid contains 41 equally spaced values of $f$ in $[0,1]$, plus $1/101$ and
-$100/101$, which recover the two signal pairs in
-\cref{fig:conference-tuned-intro}. We cross these 43 allocations with noise
-variances $1/4$, $1$, and $4$, and 21 integer caps evenly spaced up to rounding
-from $10{,}002$ to $40{,}004$. The introductory panel displays noise variance
-one and cap $M = 20{,}503$, so $Mq = 2.0503$. Its middle tick corresponds to
-$f = 1/2$, where the two coefficient magnitudes are equal.
+\Cref{fig:intro-signal-crossing} uses the allocation path in
+\cref{cor:oracle-allocation}: $s=4(1-\theta)$ and $r=\theta$, with $\nu=1$ and
+$\tau=2$. Thus $s/4+r=1$ and initial limiting subgroup risk stays at $1/2$.
+The middle tick, $\theta=1/2$, gives equal common and rare contributions to
+this risk. We plot the scalar minima in \cref{eq:limiting-objectives}, saved
+as the nominal limiting risks of the allocation cases in
+\path{results/oracle-finite/summary.json}. The eight allocation values are
+$0$, $1/4$, $1/2$, $3/4$, $1$, and $\theta_* - .02$, $\theta_*$,
+$\theta_* + .02$, where scalar root finding gives $\theta_*\approx .8377$.
+Lines connect these saved values; \cref{cor:oracle-allocation} supplies the
+unique-crossing guarantee. Unlike the finite-prevalence curves in
+\cref{fig:oracle-finite}(b), this panel uses the limiting risks at exactly
+$\tau=2$, without integer-cap rounding.
 
-For each scaling, the fine rate grid contains zero and 1025 geometric values of
-$\alpha$ from $10^{-6}$ to $2$. Stopping candidates contain zero, every cap, and
-the distinct rounded values of 1025 geometric points from one to the largest
-cap. Powers of the affine diagonal-moment recurrence give exact risks at each
-candidate. The coarse search keeps every second positive rate and every second
-geometric stopping point, together with zero and all caps. Joint refinement
-changes any reported risk by less than $3 \times 10^{-5}$. All positive-stop
-selections have interior rates. Replaying 112 selected endpoints with the
-separately enumerated full tensor operator gives maximum absolute risk
-discrepancy below $10^{-9}$. These checks assess the finite-grid calculation;
-they do not certify unrestricted oracle risks or the crossing location.
-
-The file \path{results/signal-allocation/summary.json} retains the grids, selected
-rates and stops, risks, and checks. Run \texttt{task} \path{experiment:signal-allocation}
-to regenerate the study, \texttt{python -m experiments.signal\_allocation.run
---check} to check the saved results, and \texttt{task} \path{figure:intro} to
-plot them without rerunning the experiment.
+Run \texttt{task} \path{check:oracle-limits} to check the scalar solver and
+saved comparisons, and \texttt{task} \path{figure:intro} to plot the saved
+values without new optimization or training. The earlier study at fixed
+unweighted squared coefficient sum remains in
+\path{results/signal-allocation/} but is not used in this figure.

@@ -121,7 +121,7 @@ tasks:
       - scripts/figures/style.py
       - scripts/figures/palette.toml
       - results/coefficient-paths/summary.json
-      - results/signal-allocation/summary.json
+      - results/oracle-finite/summary.json
       - Taskfile.yml
       - devenv.nix
       - devenv.lock
@@ -206,6 +206,7 @@ tasks:
       - task: check:illustrations
       - task: check:workflow
       - task: check:theory-bridge
+      - task: check:calibration-sensitivity
       - task: check:common-block
 
   check:common-block:
@@ -217,6 +218,12 @@ tasks:
     desc: Check independent dynamics, risks, and selections for the bridge study.
     cmds:
       - python -m checks.theory_bridge
+
+  check:calibration-sensitivity:
+    desc: Check disjoint recalibration and reconstruct its saved sensitivity results.
+    cmds:
+      - python -m checks.calibration_sensitivity
+      - python -m experiments.theory_bridge.calibration_sensitivity --check
 
   check:moments:
     desc: Check moments calculations.
@@ -259,6 +266,7 @@ tasks:
   check:oracle-finite:
     desc: Replay finite-prevalence risks and limiting predictions (-- --rerun for full searches).
     cmds:
+      - python -m checks.reproduction
       - 'python -m checks.oracle_finite {{.CLI_ARGS}}'
 
   check:exact-risk:
@@ -391,6 +399,11 @@ tasks:
     desc: Summarize the saved bridge study without retraining.
     cmds:
       - python -m experiments.theory_bridge.summarize
+
+  experiment:calibration-sensitivity:
+    desc: Recalibrate and evaluate on disjoint halves of saved calibration shards.
+    cmds:
+      - python -m experiments.theory_bridge.calibration_sensitivity
 
   figure:theory-bridge:
     desc: Plot the saved controlled comparisons and validation selections.

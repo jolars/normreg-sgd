@@ -73,6 +73,11 @@ legend. The coefficient-path script also exports
 `\subfigure` command to place the panels side by side and keep their references
 separate.
 
+The signal-allocation panel reads the saved nominal limiting risks in
+`results/oracle-finite/summary.json`. It follows the corollary's path at fixed
+initial subgroup risk, with noise variance one and rescaled budget two. It does
+not use the earlier fixed-coefficient-norm experiment in `signal-allocation/`.
+
 Run `task figure:theory-bridge` to export the controlled study's
 `figures/theory-bridge/controlled-gaps` and `validation-gaps` in all three
 formats. It reads `results/theory-bridge/summary.json` and never trains models.

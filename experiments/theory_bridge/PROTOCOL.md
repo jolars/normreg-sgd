@@ -100,3 +100,21 @@ Summarization and plotting never retrain. Numerical checks compare transformed
 SGD with independent original-coordinate updates, exact-risk evaluation with
 four-cell enumeration, and the fresh simulation with exact expected moments. The
 complete protocol includes unresolved comparisons and numerical failures.
+
+## Calibration sensitivity added after review
+
+The sensitivity diagnostic uses only the saved calibration risk sums. For each
+prevalence, seed 20260928 generates 100 random partitions of the 32 shards into
+two equal groups. Each group contains 1024 replications. Select rate factors and
+stops on one half and evaluate the selected candidates on the disjoint other
+half, then reverse their roles. Keep the fine candidate family and original tie
+rule. The fresh fixed-intercept arm retains exact calibration and exact risk.
+
+The 200 overlapping splits are a descriptive diagnostic at half the original
+calibration size, not independent replications or confidence intervals. They
+combine variation in selection and held-out evaluation. The original evaluation
+and its conditional MCSEs remain unchanged. Retain all partitions, selected
+indices, and held-out risks in `calibration-sensitivity.npz`, with settings and
+row summaries in `calibration-sensitivity.json` under `results/theory-bridge/`.
+Run `task experiment:calibration-sensitivity` to reconstruct this diagnostic
+without training, and `task check:calibration-sensitivity` to verify it.

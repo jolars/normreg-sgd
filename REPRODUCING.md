@@ -101,6 +101,15 @@ The analytic limiting proof and its variational consequences are in
 candidate families, calibration, evaluation, and selection rules are specified
 in
 [`experiments/theory_bridge/PROTOCOL.md`](experiments/theory_bridge/PROTOCOL.md).
+Run `task experiment:calibration-sensitivity` to reconstruct the diagnostic that
+recalibrates on disjoint halves of the saved calibration shards without
+retraining. Its partitions, selected candidates, held-out risks, and summaries
+are saved as `results/theory-bridge/calibration-sensitivity.npz` and
+`calibration-sensitivity.json`. `task check:calibration-sensitivity` checks the
+selection logic and saved diagnostic. The overlapping splits describe
+sensitivity at half the original calibration size, not independent repetitions
+or confidence intervals.
+
 The earlier fixed-calibration certificates can be recomputed with
 `task check:normalization-risk`. Recorded numerical discrepancies in the earlier
 synthetic studies remain in the saved diagnostics; passing the checks does not

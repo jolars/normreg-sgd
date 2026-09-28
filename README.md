@@ -176,6 +176,15 @@ The runner accepts `--workers`, `--output`, `--calibration-reps`, and
 `--evaluation-reps` for explicitly separate runs, through
 `task experiment:theory-bridge:run -- ...`.
 
+`task experiment:calibration-sensitivity` reconstructs a diagnostic that selects
+tuning choices on one half of the saved calibration shards and evaluates them on
+the disjoint other half. It uses 100 partitions in both orientations without
+retraining. The [saved
+results](results/theory-bridge/calibration-sensitivity.json) report ordering and
+selection sensitivity; overlapping splits are not independent replications.
+`task check:calibration-sensitivity` checks the selection logic and reconstructs
+the saved diagnostic.
+
 Experiments can take substantial time and replace the saved outputs for the
 selected configuration. Use a separate extracted copy to retain the supplied
 results when rerunning experiments. Summarizing reads those outputs without
@@ -283,10 +292,10 @@ tables, then `task check:results` to verify them. Use
 `task experiment:signal-allocation` to regenerate the signal-allocation
 illustration, `task experiment:coefficient-paths` to regenerate the constructed
 paths to OLS, and `task check:illustrations` to verify the illustration
-summaries. The introductory signal-crossing figure holds $s/4+r$ fixed,
-evaluates the limiting scalar characterization, and overlays saved
-`oracle-finite` selections. The earlier allocation map at fixed $s+r$ remains
-available through its experiment and plotting script.
+summaries. The introductory signal-crossing figure holds $s/4+r$ fixed and plots
+the saved nominal limiting risks from `oracle-finite` at rescaled budget two.
+The earlier allocation map at fixed $s+r$ remains available through its
+experiment and plotting script.
 
 Checks retain and report the known numerical discrepancies in extreme synthetic
 paths. They do not certify those paths merely because structural checks pass.
