@@ -82,11 +82,11 @@ risk when both optimize these choices under the same observation cap.
 standardization gives lower risk when the rare signal dominates, whereas
 unscaled training gives lower risk when the common signal dominates. Each method
 optimizes its rate and stop as signal moves between features at fixed initial
-subgroup risk, rescaled budget, and noise level. Our main
-result characterizes both optimized risks in a rare-prevalence limit and proves
-a unique crossing when initial subgroup risk is held fixed. A separate
-finite-prevalence theorem establishes positive gaps for two signal families,
-illustrated across observation caps in \cref{fig:conference-tuned-intro}.
+subgroup risk, rescaled budget, and noise level. Our main result characterizes
+both optimized risks in a rare-prevalence limit and proves a unique crossing
+when initial subgroup risk is held fixed. A separate finite-prevalence theorem
+establishes positive gaps for two signal families, illustrated across
+observation caps in \cref{fig:conference-tuned-intro}.
 
 \begin{figure}[htb]
   \centering
@@ -105,12 +105,13 @@ illustrated across observation caps in \cref{fig:conference-tuned-intro}.
     features at prevalences $0.5$ and $0.02$. Dots mark an illustrative stop
     after 20 updates. Pale curves show progress toward the shared OLS solution,
     while gray contours show training loss. (b) Limiting oracle risks for
-    fresh-sample SGD with noise variance one and rescaled budget $\tau = 2$.
-    As the rare signal share $\theta$ increases, $(\beta_C^*)^2 = 4(1-\theta)$
-    and $(\beta_R^*)^2 = \theta$, fixing initial limiting subgroup risk at $1/2$.
-    The middle tick gives equal contributions to that risk. Lines connect saved
-    scalar minima along the allocation path in \cref{cor:oracle-allocation}.
-    \Cref{sec:signal-allocation} gives the setup and numerical checks.
+    fresh-sample SGD with noise variance one and rescaled budget $\tau = 2$. As
+    the rare signal share $\theta$ increases, $(\beta_C^*)^2 = 4(1 - \theta)$
+    and $(\beta_R^*)^2 = \theta$, fixing initial limiting subgroup risk at
+    $1/2$. The middle tick gives equal contributions to that risk. Lines connect
+    saved scalar minima along the allocation path in
+    \cref{cor:oracle-allocation}. \Cref{sec:signal-allocation} gives the setup
+    and numerical checks.
   }
   \label{fig:intro-normalization}
 \end{figure}
@@ -190,20 +191,19 @@ covariate shift. \citet{lei2021shift} study minimax linear estimation under
 target-weighted loss; \citet{wu2022pretraining} and
 \citet[Theorem 4]{liu2025precondition} analyze SGD variants with decaying rates
 under different training and test laws. We ask which normalization achieves
-lower rare-subgroup risk after each method
-chooses its nonnegative constant learning rate and deterministic stopping time
-under the same observation cap. For final iterates of fresh-sample SGD, our
-limiting theorem characterizes the optimized total risk for arbitrary fixed
-signals and noise, with uniform control over the full rate-and-stop domain. Our
-finite-prevalence theorem establishes opposite positive gaps on two fixed signal
-families.
+lower rare-subgroup risk after each method chooses its nonnegative constant
+learning rate and deterministic stopping time under the same observation cap.
+For final iterates of fresh-sample SGD, our limiting theorem characterizes the
+optimized total risk for arbitrary fixed signals and noise, with uniform control
+over the full rate-and-stop domain. Our finite-prevalence theorem establishes
+opposite positive gaps on two fixed signal families.
 
 The rare-prevalence limit also changes the moment assumptions. The rare
-coordinate has standardized fourth moment $(1-3b)/b$, where $b=q(1-q)$.
+coordinate has standardized fourth moment $(1 - 3b)/b$, where $b = q(1 - q)$.
 For example, the fourth-moment constant in
-\citet[Assumption 3.2]{su2024preconditioning} must be at least $(1-4b)/b$ in our
-model. These constants diverge as prevalence vanishes. Our exact moments retain
-this dependence when passing to optimized final-iterate risks.
+\citet[Assumption 3.2]{su2024preconditioning} must be at least $(1 - 4b)/b$ in
+our model. These constants diverge as prevalence vanishes. Our exact moments
+retain this dependence when passing to optimized final-iterate risks.
 
 Our calculations build on established mechanisms. Early stopping changes
 least-squares regularization \citep{ali2019early}. \citet{ali2020stochastic}
@@ -1504,21 +1504,21 @@ the same while the cost of choosing the other scaling changes substantially.
 We added a diagnostic after the original study to assess sensitivity to the
 estimated tuning choices. For each prevalence, we randomly partition the 32
 saved calibration shards into two groups of 16, each containing 1024
-replications. We choose each rate factor and stop on one half and evaluate
-its mean rare risk on the other, then reverse their roles. We repeat this for
-100 partitions using seed 20260928, retaining the same candidate family and
-tie rule. Saved sums of candidate risks suffice for both selection and
-evaluation; no training is repeated. The fresh fixed-intercept arm retains
-its exact calibration and exact risk, leaving 84 comparisons with estimated
-tuning choices.
+replications. We choose each rate factor and stop on one half and evaluate its
+mean rare risk on the other, then reverse their roles. We repeat this for 100
+partitions using seed 20260928, retaining the same candidate family and tie
+rule. Saved sums of candidate risks suffice for both selection and evaluation;
+no training is repeated. The fresh fixed-intercept arm retains its exact
+calibration and exact risk, leaving 84 comparisons with estimated tuning
+choices.
 
-Of these 84 comparisons, 83 retain the original ordering in all 200 splits.
-For the dominant rare signal with reuse and estimated scales at $q=.005$ and
-$M=402$, SD wins in 198 splits and U in two. Its SD-minus-U gaps range from
-$-.01194$ to $+.000687$, with median $-.00595$. Across the 84 comparisons,
-at least one scaling changes its selected rate or stop relative to full
-calibration in 18 to 182 splits. The orderings are therefore more stable than
-the individual tuning choices, although a small gap can change sign.
+Of these 84 comparisons, 83 retain the original ordering in all 200 splits. For
+the dominant rare signal with reuse and estimated scales at $q = .005$ and
+$M = 402$, SD wins in 198 splits and U in two. Its SD-minus-U gaps range from
+$-.01194$ to $+.000687$, with median $-.00595$. Across the 84 comparisons, at
+least one scaling changes its selected rate or stop relative to full calibration
+in 18 to 182 splits. The orderings are therefore more stable than the individual
+tuning choices, although a small gap can change sign.
 
 These overlapping splits give a descriptive sensitivity analysis at half the
 original calibration size. They combine variation in calibration choices and
