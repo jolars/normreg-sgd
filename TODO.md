@@ -151,9 +151,9 @@ changes when preparing the supplied artifact.
 
 ## 6. Extend Lean verification
 
-The current proofs check the large-rate steps in both oracle arguments,
-conditional on the moment recurrences. Dimension monotonicity is the next small
-extension; the final two items are larger optional projects.
+The current proofs check the large-rate steps in both oracle arguments and
+common-feature dimension monotonicity, conditional on the moment recurrences.
+The final two items are larger optional projects.
 
 - [x] Extend the finite-prevalence large-rate bounds to $0 < q \leq 1/16$ and
   expose the manuscript's exact U risk floor. Retain the $49/100$ bound as a
@@ -172,11 +172,19 @@ extension; the final two items are larger optional projects.
   signal, and zero noise. It also proves $2 \leq c_S(b) \leq c_U(b) < 3$ for
   $q \leq 1/16$. All main statements pass the axiom audit and `task check-lean`.
 
-- [ ] Formalize the common-feature dimension proposition: compare the two moment
+- [x] Formalize the common-feature dimension proposition: compare the two moment
   recurrences by induction at fixed rate and stop, then prove that taking
   infima over the same controls preserves the comparison. Keep the
   distinction between monotonicity of each method's risk and behavior of
   their risk gap.
+
+  [CommonBlock.lean](lean/NormReg/CommonBlock.lean) proves coordinatewise moment
+  comparison, fixed-rate risk comparison for U and S, and oracle comparison over
+  all nonnegative rates and stops up to a shared budget. It includes
+  initialization, zero signals and noise, and unstable finite rates. The
+  dimension-one recurrence matches the existing two-feature formalization. All
+  main statements pass the axiom audit and `task check-lean`; neither the proofs
+  nor the documentation claim monotonicity of the risk gap.
 
 - [ ] Formalize the remaining analytic finite-prevalence bounds: lower bounds
   for rates in $[0,1]$, the S candidate upper bound, and the U candidate's

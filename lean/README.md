@@ -1,11 +1,12 @@
-# Lean proof pilot
+# Lean verification
 
 This project formalizes large-rate lower bounds used in the
-[manuscript](../paper/main.tex)'s finite-prevalence and limiting-oracle proofs.
-It treats the exact moment recurrences as explicit hypotheses and uses the
-manuscript's rare-subgroup risk. The finite-prevalence bounds normalize noise
-variance to one; the limiting-oracle bounds allow arbitrary nonnegative noise
-variance.
+[manuscript](../paper/main.tex)'s finite-prevalence and limiting-oracle proofs,
+and the proposition on increasing the common-feature dimension. It treats the
+exact moment recurrences as explicit hypotheses and uses the manuscript's
+rare-subgroup risk. The finite-prevalence bounds normalize noise variance to
+one; the limiting-oracle bounds and dimension comparison allow arbitrary
+nonnegative noise variance.
 
 ## Finite-prevalence bounds
 
@@ -108,6 +109,59 @@ $0 \leq q \leq 1/16$ on which $2 \leq c_S(b) \leq c_U(b) < 3$ and
 $1 - w \leq 4b$. These are the cutoff and risk-weight bounds used to restrict
 the rate domain in the limiting proof.
 
+## Increasing the common-feature dimension
+
+[CommonBlock.lean](NormReg/CommonBlock.lean) formalizes
+`prop:common-block-dimension` in the manuscript. Its
+`CommonBlockMomentRecurrence` records
+
+$$
+  G_{k+1} = (1 - 2u + mu^2)G_k + mu^2(bH_k + \nu),\qquad H_{k+1}
+          = D_bH_k + b\theta^2(G_k + \nu),
+$$
+
+where $b = q(1 - q)$, $\theta$ is the manuscript's rare-coordinate step
+$\alpha$, and $\nu = \sigma^2$. The theorem
+`CommonBlockMomentRecurrence.one_iff_general` proves that $m = 1$ recovers
+`GeneralMomentRecurrence`. The explicit trajectory `commonBlockMoments` starts
+at $(s/4,r)$ and satisfies both equations, so the risk and oracle definitions
+have concrete recurrence witnesses.
+
+For integers $m_2 \geq m_1 \geq 1$, nonnegative noise variance, and
+$0 \leq b \leq 1/4$, `CommonBlockMomentRecurrence.dimension_mono` compares the
+two systems by induction. It allows any real $u$ and $\theta$ and ordered
+nonnegative initial moments. The proof uses
+
+$$
+  1 - 2u + mu^2 = (1 - u)^2 + (m - 1)u^2 \geq 0
+$$
+
+and the existing nonnegativity proof for $D_b$. Increasing $m$ increases the
+common coefficient and forcing term while leaving the rare equation unchanged.
+Both moments therefore increase at each fixed rate and stop.
+
+`CommonBlockScaling` selects U with $u = \theta/4$ or S with $u = b\theta$. For
+either choice, `common_block_risk_dimension_mono` proves that the risk
+$\{G_k + (1 - q)^2H_k\}/2$ is nondecreasing in $m$, for $0 \leq q \leq 1/2$ and
+$s,r,\nu \geq 0$. This includes every nonnegative rate, initialization, zero
+signals, zero noise, and unstable finite rates.
+
+`commonBlockOracleRisk` is the real infimum over all $\theta \geq 0$ and
+deterministic stops $k \in \{0,\ldots,M\}$. The control set is the same at both
+dimensions, contains $(0,0)$ even when $M = 0$, and yields nonnegative risks.
+The lemma `same_controls_sInf_mono` transfers pointwise order to infima over a
+shared nonempty control set with a bounded-below smaller objective. Applying it
+proves
+
+$$
+  R_A^*(M;m_1) \leq R_A^*(M;m_2)
+$$
+
+in `common_block_oracle_dimension_mono`. The proof requires neither a stability
+restriction nor an attained minimum. These statements establish monotonicity of
+each method's risk separately. They do not establish monotonicity of the risk
+gap or persistence of either method's advantage as dimension increases.
+
 ## Scope
 
 The recurrence and risk formula correspond to independent centered Bernoulli
@@ -120,13 +174,13 @@ real sequences satisfying the displayed recurrences. They do not assume the
 lower bounds they prove.
 
 The finite-prevalence pilot does not formalize bounds for rates below one,
-winning candidate bounds, interval certificates for the oracle gaps, the infimum
-argument, or rescaling by $\sigma^2$. It therefore does not certify the full
-finite-prevalence theorem. For the limiting-oracle theorem, only the general
-large-rate bounds and cutoff properties are checked. Its uniform approximations,
-recovery argument, and convergence rates remain outside the formalization. Human
-review of the correspondence between these statements and the statistical model
-remains necessary.
+winning candidate bounds, interval certificates for the oracle gaps, the
+oracle-gap infimum argument, or rescaling by $\sigma^2$. It therefore does not
+certify the full finite-prevalence theorem. For the limiting-oracle theorem,
+only the general large-rate bounds and cutoff properties are checked. Its
+uniform approximations, recovery argument, and convergence rates remain outside
+the formalization. Human review of the correspondence between these statements
+and the statistical model remains necessary.
 
 ## Build and audit
 
@@ -154,8 +208,11 @@ The build treats warnings, including unfinished proofs, as errors.
 [Audit.lean](NormReg/Audit.lean) also checks the transitive axiom dependencies
 of the main risk bounds, the small-prevalence corollary, the cutoff bounds, both
 existence constructions, and the recurrence and risk correspondences against the
-standard Lean axioms `propext`, `Classical.choice`, and `Quot.sound`. These
-checks fail if an unfinished proof, custom axiom, or native-evaluation axiom
-enters their dependencies. See the official [proof validation
+standard Lean axioms `propext`, `Classical.choice`, and `Quot.sound`. It also
+audits the block recurrence correspondence and explicit trajectory, the moment
+and fixed-rate dimension comparisons, the shared-control infimum lemma, and the
+oracle dimension comparison. These checks fail if an unfinished proof, custom
+axiom, or native-evaluation axiom enters their dependencies. See the official
+[proof validation
 guide](https://lean-lang.org/doc/reference/latest/ValidatingProofs/) for the
 meaning and limits of this audit.

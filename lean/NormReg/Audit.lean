@@ -1,4 +1,4 @@
-import NormReg.OracleLargeRates
+import NormReg.CommonBlock
 
 /-!
 The expected axiom lists make incomplete dependencies and additional axioms fail
@@ -76,3 +76,39 @@ info: 'NormReg.oracle_rate_cutoff_bounds' depends on axioms: [propext, Classical
 -/
 #guard_msgs in
 #print axioms NormReg.oracle_rate_cutoff_bounds
+
+/--
+info: 'NormReg.CommonBlockMomentRecurrence.one_iff_general' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
+#print axioms NormReg.CommonBlockMomentRecurrence.one_iff_general
+
+/--
+info: 'NormReg.commonBlockMoments_recurrence' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
+#print axioms NormReg.commonBlockMoments_recurrence
+
+/--
+info: 'NormReg.CommonBlockMomentRecurrence.dimension_mono' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
+#print axioms NormReg.CommonBlockMomentRecurrence.dimension_mono
+
+/--
+info: 'NormReg.common_block_risk_dimension_mono' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
+#print axioms NormReg.common_block_risk_dimension_mono
+
+/--
+info: 'NormReg.same_controls_sInf_mono' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
+#print axioms NormReg.same_controls_sInf_mono
+
+/--
+info: 'NormReg.common_block_oracle_dimension_mono' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
+#print axioms NormReg.common_block_oracle_dimension_mono

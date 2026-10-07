@@ -240,10 +240,10 @@ task check:exact-risk-results # Check the large exact-risk outputs, if generated
 The finite-prevalence checker certifies the continuous parameter regions in
 Theorem 3.1 and Appendix A with exact rational exponential enclosures. Its rate
 intervals bound every nonnegative constant rate, with analytic bounds above one,
-and every admissible stop. It also checks the fixed example at $q=0.02$ and
-$M=102$ and compares the bounds with observation-level moment calculations. The
-earlier small-prevalence certificates remain in the theorem and review checkers;
-they do not independently certify the new extension.
+and every admissible stop. It also checks the fixed example at $q = 0.02$ and
+$M = 102$ and compares the bounds with observation-level moment calculations.
+The earlier small-prevalence certificates remain in the theorem and review
+checkers; they do not independently certify the new extension.
 
 The source archive includes the certificate checkers and their recorded standard
 output:
@@ -292,9 +292,9 @@ tables, then `task check:results` to verify them. Use
 `task experiment:signal-allocation` to regenerate the signal-allocation
 illustration, `task experiment:coefficient-paths` to regenerate the constructed
 paths to OLS, and `task check:illustrations` to verify the illustration
-summaries. The introductory signal-crossing figure holds $s/4+r$ fixed and plots
-the saved nominal limiting risks from `oracle-finite` at rescaled budget two.
-The earlier allocation map at fixed $s+r$ remains available through its
+summaries. The introductory signal-crossing figure holds $s/4 + r$ fixed and
+plots the saved nominal limiting risks from `oracle-finite` at rescaled budget
+two. The earlier allocation map at fixed $s + r$ remains available through its
 experiment and plotting script.
 
 Checks retain and report the known numerical discrepancies in extreme synthetic
@@ -305,5 +305,6 @@ checks supplement the retained mathematical proofs.
 Edit manuscript plots in [scripts/figures/](scripts/figures/README.md).
 Generated PDF, SVG, and PNG files go in `figures/`; LaTeX output goes in
 `build/`. The generated diagnostic table is
-`paper/generated/review-diagnostics.tex`. Formal proofs live in `lean/` and are
+`paper/generated/review-diagnostics.tex`. Formal proofs of the large-rate bounds
+and common-feature dimension proposition live in [lean/](lean/README.md) and are
 checked separately with `task prepare-lean` and `task check-lean`.
