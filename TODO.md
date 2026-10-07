@@ -135,7 +135,7 @@ changes when preparing the supplied artifact.
 - [ ] Arrange independent verification of the finite-prevalence bounds,
   exponential enclosures, and complete certificate domain coverage.
   Distinguish this work from the existing small-prevalence checks and Lean
-  pilot.
+  proofs of the large-rate bounds.
 - [ ] Verify that the supplied source archive includes the certificate checkers,
   dependencies, minimal commands, and expected outputs. Run the certificate
   commands from an extracted archive without launching experiments.
@@ -148,3 +148,57 @@ changes when preparing the supplied artifact.
   first 12 pages, excluding references, that ALT reviewers may not read. ALT
   2027 has no page limit; do not make substantive cuts just to fit this
   threshold.
+
+## 6. Extend Lean verification
+
+The current proofs check the large-rate steps in both oracle arguments,
+conditional on the moment recurrences. Dimension monotonicity is the next small
+extension; the final two items are larger optional projects.
+
+- [x] Extend the finite-prevalence large-rate bounds to $0 < q \leq 1/16$ and
+  expose the manuscript's exact U risk floor. Retain the $49/100$ bound as a
+  small-prevalence corollary.
+
+  [LargeRates.lean](lean/NormReg/LargeRates.lean) proves both floors at every
+  finite stop, including initialization and unstable rates. The documentation
+  and axiom audits cover the extended statements.
+
+- [x] Formalize the limiting proof's general geometric bounds and rate cutoffs
+  for arbitrary nonnegative signals and noise variance.
+
+  [OracleLargeRates.lean](lean/NormReg/OracleLargeRates.lean) verifies the
+  recurrence and risk rescaling, both geometric bounds, and both risk floors
+  above the cutoffs. It includes equality at the cutoffs, initialization, zero
+  signal, and zero noise. It also proves $2 \leq c_S(b) \leq c_U(b) < 3$ for
+  $q \leq 1/16$. All main statements pass the axiom audit and `task check-lean`.
+
+- [ ] Formalize the common-feature dimension proposition: compare the two moment
+  recurrences by induction at fixed rate and stop, then prove that taking
+  infima over the same controls preserves the comparison. Keep the
+  distinction between monotonicity of each method's risk and behavior of
+  their risk gap.
+
+- [ ] Formalize the remaining analytic finite-prevalence bounds: lower bounds
+  for rates in $[0,1]$, the S candidate upper bound, and the U candidate's
+  $H_{\max}$ feedback bound. Include positivity of denominators, stability
+  of the candidate rates, and rescaling by $\sigma^2$.
+
+- [ ] Prove the rational exponential enclosures used by [the certificate
+  checker](checks/predictive_fixed_q.py), including the Taylor remainder
+  bound, reciprocal bounds, and range reduction.
+
+- [ ] Have the certificate search emit a subdivision tree, and build a Lean
+  checker that verifies each leaf's rational margin and the tree's complete
+  domain coverage. Prove that accepted certificates imply the reported
+  oracle gap bounds, and include the checker results in the axiom audit.
+
+- [ ] As a larger optional project, derive the moment recurrences and
+  rare-subgroup risk formula from the probabilistic SGD model. Start with
+  the one-step calculation over the four feature outcomes and conditional
+  noise moments, then account for independence from the training history.
+
+- [ ] As a larger optional project, formalize the rest of the limiting-oracle
+  theorem: uniform moment approximations, the vanishing-rate U transient,
+  trajectory reduction, and the lower bounds and recovery choices needed to
+  pass to oracle infima. Cover zero signals and noise, and prove the uniform
+  $O(b)$ and $O(b\log(1/b))$ errors on positive compact budget intervals.
