@@ -512,7 +512,7 @@ tasks:
     desc: Fetch the Mathlib caches needed by the proofs.
     dir: lean
     cmds:
-      - lake exe cache get Mathlib.Data.Real.Basic Mathlib.Tactic.FieldSimp Mathlib.Tactic.Linarith Mathlib.Tactic.Positivity Mathlib.Tactic.Ring
+      - lake exe cache get Mathlib.Algebra.Ring.GeomSum Mathlib.Data.Real.Basic Mathlib.Tactic.FieldSimp Mathlib.Tactic.Linarith Mathlib.Tactic.Positivity Mathlib.Tactic.Ring
 
   check-lean:
     desc: Build the formal proofs and axiom audits.
