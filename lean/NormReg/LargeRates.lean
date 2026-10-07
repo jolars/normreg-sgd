@@ -7,24 +7,25 @@ import Mathlib.Tactic.Ring
 /-!
 # Large-rate lower bounds for the predictive moment recurrence
 
-The recurrence and risk functional are (T5) and (T4) in
-`notes/predictive-theorem.md`, with noise variance normalized to one.
-The conclusions are the two large-rate lower bounds in the addendum to
-`notes/predictive-proof-review.md`. The probabilistic derivation of the recurrence
-is outside this formalization.
+The recurrence and risk functional are `eq:predictive-moments` and
+`eq:predictive-risk` in `paper/main.tex`, with noise variance normalized to one.
+The parameter θ is the manuscript's rare-coordinate step α. The main theorems
+give the two large-rate lower bounds over the full prevalence range used in
+`sec:predictive-finite-bounds`. The probabilistic derivation of the recurrence is
+outside this formalization.
 -/
 
 namespace NormReg
 
-/-- The rare diagonal coefficient in (T5). -/
+/-- The rare diagonal coefficient in the manuscript's moment recurrence. -/
 def rareFactor (b θ : ℝ) : ℝ :=
   1 - b * θ * (2 - θ + 3 * b * θ)
 
-/-- The original-scale rare-presence risk in (T4), excluding test noise. -/
+/-- The manuscript's original-scale rare-presence risk, excluding test noise. -/
 noncomputable def rareRisk (q C H : ℝ) : ℝ :=
   C / 8 + (1 - q) ^ 2 * H / 2
 
-/-- Equation (T5) is an explicit hypothesis, rather than an axiom about SGD. -/
+/-- The moment equations are explicit hypotheses, rather than axioms about SGD. -/
 structure MomentRecurrence (b θ u : ℝ) (C H : ℕ → ℝ) : Prop where
   common : ∀ k, C (k + 1) = (1 - u) ^ 2 * C k + 4 * u ^ 2 * b * H k + 4 * u ^ 2
   rare : ∀ k, H (k + 1) = b * θ ^ 2 / 4 * C k + rareFactor b θ * H k + b * θ ^ 2
@@ -99,37 +100,48 @@ theorem rare_moment_floor {b θ u : ℝ} {C H : ℕ → ℝ}
         add_le_add (mul_le_mul_of_nonneg_left ih hd) le_rfl
       _ ≤ H (k + 1) := by rw [rec.rare k]; linarith
 
-lemma prevalence_bounds {q : ℝ} (hq : 0 ≤ q) (hq' : q ≤ 1 / 10000) :
+lemma prevalence_bounds {q : ℝ} (hq : 0 ≤ q) (hq' : q ≤ 1 / 16) :
     0 ≤ q * (1 - q) ∧ q * (1 - q) ≤ 1 / 4 ∧
-      q * (1 - q) ≤ 1 / 10000 ∧ 2 ≤ 4 * (1 - q) ^ 2 := by
+      2 ≤ 4 * (1 - q) ^ 2 := by
   have hq1 : 0 ≤ 1 - q := by linarith
   have hb : q * (1 - q) ≤ q := by nlinarith [sq_nonneg q]
-  refine ⟨mul_nonneg hq hq1, ?_, ?_, ?_⟩
-  · linarith
+  refine ⟨mul_nonneg hq hq1, ?_, ?_⟩
   · linarith
   · nlinarith [sq_nonneg q]
 
 /-- The U lower bound in the rare-signal family, for every finite stop. -/
 theorem unscaled_large_rate_lower_bound {q θ : ℝ} {C H : ℕ → ℝ}
-    (hq : 0 < q) (hq' : q ≤ 1 / 10000) (hθ : 1 ≤ θ)
+    (hq : 0 < q) (hq' : q ≤ 1 / 16) (hθ : 1 ≤ θ)
     (rec : MomentRecurrence (q * (1 - q)) θ (θ / 4) C H)
     (hC : 0 ≤ C 0) (hH : H 0 = 1) (k : ℕ) :
-    (49 : ℝ) / 100 < rareRisk q (C k) (H k) := by
-  obtain ⟨hb, hb', hbQ, _⟩ := prevalence_bounds hq.le hq'
+    (1 - q) ^ 2 / (2 * (1 + 3 * (q * (1 - q)))) ≤ rareRisk q (C k) (H k) := by
+  obtain ⟨hb, hb', _⟩ := prevalence_bounds hq.le hq'
   have hf := rare_moment_floor rec hb hb' hθ hC hH k
   have hc := (rec.nonneg hb hb' hC (by rw [hH]; norm_num) k).1
   have hden : 0 < 1 + 3 * (q * (1 - q)) := by positivity
-  have hfrac : (49 : ℝ) / 100 <
-      (1 - q) ^ 2 / (2 * (1 + 3 * (q * (1 - q)))) := by
-    apply (lt_div_iff₀ (by positivity : 0 < 2 * (1 + 3 * (q * (1 - q))))).2
-    nlinarith only [hq', hbQ, sq_nonneg q]
   have hmul := mul_le_mul_of_nonneg_left hf (sq_nonneg (1 - q))
   unfold rareRisk
   have hid : (1 - q) ^ 2 / (2 * (1 + 3 * (q * (1 - q)))) =
       (1 - q) ^ 2 * (1 / (1 + 3 * (q * (1 - q)))) / 2 := by
     field_simp [ne_of_gt hden]
-  rw [hid] at hfrac
-  linarith only [hfrac, hmul, hc]
+  rw [hid]
+  linarith only [hmul, hc]
+
+/-- The original small-prevalence constant follows from the exact U risk floor. -/
+theorem unscaled_small_prevalence_lower_bound {q θ : ℝ} {C H : ℕ → ℝ}
+    (hq : 0 < q) (hq' : q ≤ 1 / 10000) (hθ : 1 ≤ θ)
+    (rec : MomentRecurrence (q * (1 - q)) θ (θ / 4) C H)
+    (hC : 0 ≤ C 0) (hH : H 0 = 1) (k : ℕ) :
+    (49 : ℝ) / 100 < rareRisk q (C k) (H k) := by
+  have hqWide : q ≤ (1 : ℝ) / 16 := by linarith
+  obtain ⟨hb, _, _⟩ := prevalence_bounds hq.le hqWide
+  have hbQ : q * (1 - q) ≤ 1 / 10000 := by nlinarith [sq_nonneg q]
+  have hfrac : (49 : ℝ) / 100 <
+      (1 - q) ^ 2 / (2 * (1 + 3 * (q * (1 - q)))) := by
+    apply (lt_div_iff₀ (by positivity : 0 < 2 * (1 + 3 * (q * (1 - q))))).2
+    nlinarith only [hq', hbQ, sq_nonneg q]
+  exact lt_of_lt_of_le hfrac
+    (unscaled_large_rate_lower_bound hq hqWide hθ rec hC hH k)
 
 /-- A weighted risk floor avoids division by the drift deficit at the boundary. -/
 theorem scaled_weighted_floor {b θ w : ℝ} {C H : ℕ → ℝ}
@@ -165,11 +177,11 @@ theorem scaled_weighted_floor {b θ w : ℝ} {C H : ℕ → ℝ}
 
 /-- The S lower bound in the common-signal family, for every finite stop. -/
 theorem scaled_large_rate_lower_bound {q θ : ℝ} {C H : ℕ → ℝ}
-    (hq : 0 < q) (hq' : q ≤ 1 / 10000) (hθ : 1 ≤ θ)
+    (hq : 0 < q) (hq' : q ≤ 1 / 16) (hθ : 1 ≤ θ)
     (rec : MomentRecurrence (q * (1 - q)) θ (q * (1 - q) * θ) C H)
     (hC : C 0 = 1) (hH : 0 ≤ H 0) (k : ℕ) :
     (1 : ℝ) / 8 ≤ rareRisk q (C k) (H k) := by
-  obtain ⟨hb, hb', _, hw⟩ := prevalence_bounds hq.le hq'
+  obtain ⟨hb, hb', hw⟩ := prevalence_bounds hq.le hq'
   have hf := scaled_weighted_floor rec hb hb' hθ hw hC hH k
   unfold rareRisk
   linarith

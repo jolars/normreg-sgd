@@ -18,6 +18,12 @@ info: 'NormReg.unscaled_large_rate_lower_bound' depends on axioms: [propext, Cla
 #print axioms NormReg.unscaled_large_rate_lower_bound
 
 /--
+info: 'NormReg.unscaled_small_prevalence_lower_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
+#print axioms NormReg.unscaled_small_prevalence_lower_bound
+
+/--
 info: 'NormReg.scaled_large_rate_lower_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in
