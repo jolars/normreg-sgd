@@ -207,6 +207,7 @@ tasks:
       - task: check:workflow
       - task: check:theory-bridge
       - task: check:calibration-sensitivity
+      - task: check:selection-gains
       - task: check:common-block
 
   check:common-block:
@@ -224,6 +225,12 @@ tasks:
     cmds:
       - python -m checks.calibration_sensitivity
       - python -m experiments.theory_bridge.calibration_sensitivity --check
+
+  check:selection-gains:
+    desc: Verify paired selection gains and saved predictor errors.
+    cmds:
+      - python -m checks.selection_gains
+      - python -m experiments.theory_bridge.selection_gains --check
 
   check:moments:
     desc: Check moments calculations.
@@ -316,6 +323,7 @@ tasks:
       - python -m experiments.diagnostics.run --check
       - python -m checks.theory_bridge --saved
       - python -m experiments.theory_bridge.summarize --check
+      - task: check:selection-gains
 
   check:exact-risk-results:
     desc: Check the large exact-risk outputs after running that experiment.
@@ -405,6 +413,11 @@ tasks:
     cmds:
       - python -m experiments.theory_bridge.calibration_sensitivity
 
+  experiment:selection-gains:
+    desc: Analyze selection gains from saved fresh-arm predictors without training.
+    cmds:
+      - python -m experiments.theory_bridge.selection_gains
+
   figure:theory-bridge:
     desc: Plot the saved controlled comparisons and validation selections.
     sources:
@@ -412,6 +425,7 @@ tasks:
       - scripts/figures/style.py
       - scripts/figures/palette.toml
       - results/theory-bridge/summary.json
+      - results/theory-bridge/selection-gains.npz
       - Taskfile.yml
       - devenv.nix
       - devenv.lock
@@ -422,6 +436,9 @@ tasks:
       - figures/theory-bridge/validation-gaps.pdf
       - figures/theory-bridge/validation-gaps.svg
       - figures/theory-bridge/validation-gaps.png
+      - figures/theory-bridge/selection-gains.pdf
+      - figures/theory-bridge/selection-gains.svg
+      - figures/theory-bridge/selection-gains.png
     cmds:
       - python scripts/figures/plot_theory_bridge.py
 

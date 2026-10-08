@@ -102,13 +102,22 @@ $-.10456$ to $+.01643$ with a fitted intercept.
   MCSEs. The fitted-intercept arm reverses the ordering, while the baseline
   retains SD's advantage in the rare-dominant example.
 
-- [ ] Analyze the distributions of selection gains for the fresh,
+- [x] Analyze the distributions of selection gains for the fresh,
   fitted-intercept arm and its baseline. Saved summaries already include
   absolute risks, paired MCSEs, and distribution summaries of risk changes
   relative to calibration; the paper reports mean gains for both arms. Use
   the saved summaries and predictors to explain how gains differ across runs
   and between scalings, retaining the distinction from theoretical
   adaptation gains.
+
+  The appendix reports gain quantiles, paired gain differences, tail shares, and
+  validation losses relative to calibration, with a generated table and
+  cumulative-distribution figure for the primary example. Saved predictor errors
+  explain where the selected rare risks differ. The analysis retains all 96
+  setting–selector combinations for the two fresh arms and separates theoretical
+  finite-family adaptation gains from calibration suboptimality.
+  `task check:selection-gains` verifies the results against rare-cell
+  predictions and existing risk-change summaries without retraining.
 
 - [ ] Decompose rare-subgroup error into common-coefficient error, intercept
   error, rare-coefficient error, and the intercept–rare cross term. Test

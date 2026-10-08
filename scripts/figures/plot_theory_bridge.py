@@ -6,6 +6,7 @@ import numpy as np
 from style import (
     ARM_STYLES,
     BUDGET_STYLES,
+    METHOD_STYLES,
     OUTPUT,
     PAPER_WIDTH,
     ROOT,
@@ -157,8 +158,47 @@ def validation(report):
     save(figure, OUTPUT / "theory-bridge", "validation-gaps")
 
 
+def selection_gains():
+    figure, axes = plt.subplots(2, 2, figsize=(PAPER_WIDTH, 4.5), sharey=True)
+    with np.load(ROOT / "results/theory-bridge/selection-gains.npz") as archive:
+        gains = archive["q0_gain"][:, -1, :, :, 0]
+    for arm, title in enumerate(("Fixed zero intercept", "Fitted intercept")):
+        for column, policy in enumerate((0, 3)):
+            axis = axes[arm, column]
+            for scaling, name in enumerate(("none", "sd")):
+                values = np.sort(gains[:, arm, scaling, policy])
+                style = METHOD_STYLES[name]
+                axis.step(
+                    values,
+                    np.arange(1, len(values) + 1) / len(values),
+                    where="post",
+                    color=style["color"],
+                    linestyle=style["linestyle"],
+                    label="U" if scaling == 0 else "SD",
+                )
+            axis.axvline(0, color="0.35", linewidth=0.8, linestyle="--")
+            axis.set_xscale("symlog", linthresh=0.05)
+            axis.set_xlim(-0.5, 2.5)
+            axis.set_ylim(0, 1)
+            axis.set_xticks(
+                [-0.5, -0.1, 0, 0.1, 0.5, 2], ["-.5", "-.1", "0", ".1", ".5", "2"]
+            )
+            axis.set_title(
+                title + " / " + ("Exact risk" if policy == 0 else "Validation (2048)")
+            )
+            axis.grid(axis="y", color="0.92", linewidth=0.5)
+    figure.supylabel("Fraction of evaluation runs", x=0.015)
+    figure.supxlabel(
+        "Calibrated minus selected rare risk (symmetric log scale)", y=0.01
+    )
+    axes[0, 0].legend(frameon=False, loc="lower right")
+    figure.tight_layout(rect=(0.025, 0.035, 1, 1))
+    save(figure, OUTPUT / "theory-bridge", "selection-gains")
+
+
 if __name__ == "__main__":
     report = json.loads((ROOT / "results/theory-bridge/summary.json").read_text())
     apply_style()
     controlled(report)
     validation(report)
+    selection_gains()

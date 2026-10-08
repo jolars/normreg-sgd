@@ -656,8 +656,11 @@ Every validation set in this example contains rare observations. The reversal
 under exact selection shows that validation noise is not needed: choosing the
 best predictor in each training run is a different objective from choosing the
 best tuning settings on average. The comparison isolates intercept fitting as
-sufficient for a reversal in this setting, but does not identify how the
-selected predictors achieve their gains.
+sufficient for a reversal in this setting. U gains more than SD in $71.3\%$ of
+runs under exact selection, with median gains $.1456$ and $.0626$, respectively.
+The selected U predictors have smaller mean prediction errors within the rare
+group, while SD retains a slightly smaller common-coefficient error.
+\Cref{sec:bridge-gains} examines these distributions and predictor errors.
 
 \begin{table}[t]
   \centering
@@ -1611,6 +1614,117 @@ No prediction clipping is applied. We average paired SD-minus-U differences
 across evaluation replications and report their Monte Carlo standard errors.
 These errors condition on the frozen calibration choices; they exclude
 calibration uncertainty and adjustments for multiple comparisons.
+
+\subsubsection{Distributions of selection gains}
+\label{sec:bridge-gains}
+
+For each scaling $s$ and evaluation run $D$, define the empirical selection gain
+\[
+  G_s(D) = r_R(\widehat f_{D,s,\mathrm{cal}})
+           - r_R(\widehat f_{D,s,\mathrm{sel}}).
+\]
+Positive values indicate improvement over that scaling's frozen calibrated
+choice. These gains describe selection among a fixed finite family of trained
+predictors, conditional on the saved calibration choices. They do not estimate
+an unrestricted oracle, and the fitted-intercept arm also departs from the
+theorem's training assumptions. Since exact-risk selection includes the
+calibrated candidate, its gain is nonnegative in every run. Validation selection
+has no corresponding guarantee for population risk.
+
+Even within the finite family $\mathcal A$, a theoretical adaptation gain
+compares the best fixed candidate with the best realized candidate:
+\[
+  A_s = \min_{a\in\mathcal A}\E_D[r_R(\widehat f_{D,s,a})]
+        - \E_D[\min_{a\in\mathcal A}r_R(\widehat f_{D,s,a})].
+\]
+Conditional on the frozen calibration choice $a_{s,\mathrm{cal}}$, exact
+selection instead gives
+\[
+  \E_D[G_s]
+  = A_s + \left\{\E_D[r_R(\widehat f_{D,s,a_{s,\mathrm{cal}}})]
+                 - \min_{a\in\mathcal A}\E_D[r_R(\widehat f_{D,s,a})]\right\}.
+\]
+The second term measures calibration suboptimality. It vanishes for the baseline,
+which chooses the finite-family optimum using exact expected moments, but is
+not identified for the fitted-intercept arm. Its observed gains can therefore
+combine adaptation with correction of a suboptimal calibration choice; their
+Monte Carlo standard errors do not resolve this distinction. Neither $A_s$ nor
+these empirical gains is a gain covered by the theorem's optimization over
+deterministic rates and stops.
+
+\begin{table}[htbp]
+  \centering
+  \input{generated/selection-gains.tex}
+  \caption{
+    Selection-gain distributions for the example in
+    \cref{tab:bridge-selection}: fresh observations, $q = .02$, $M = 204$,
+    and $(\beta_C^*,\beta_R^*) = (.1,1)$. Quantiles use 4096 evaluation runs.
+    ``Worse'' is the percentage with negative gain, meaning higher population
+    rare risk than the calibrated predictor of the same scaling.
+  }
+  \label{tab:bridge-gain-distributions}
+\end{table}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[]{../figures/theory-bridge/selection-gains.pdf}
+  \caption{
+    Empirical cumulative distributions of selection gains for
+    \cref{tab:bridge-gain-distributions}. A curve farther to the right indicates
+    larger gains. The horizontal scale is symmetric logarithmic, linear for
+    absolute gains at most $.05$; negative gains mean selection worsens risk.
+    Both arms and scalings use the same 4096 evaluation streams.
+  }
+  \label{fig:bridge-selection-gains}
+\end{figure}
+
+The mean gains conceal substantial variation across runs
+(\cref{tab:bridge-gain-distributions,fig:bridge-selection-gains}). With a fitted
+intercept and exact selection, U's gain has median $.1456$ and 5th--95th
+percentiles $.0067$--$.7747$, compared with $.0626$ and $.0012$--$.4083$ for SD.
+The largest $10\%$ of gains contribute $35.5\%$ of U's total and $39.3\%$ of
+SD's total. Thus larger U gains appear in typical runs as well as in the upper
+tail. Pairing the scalings, $G_U-G_{\mathrm{SD}}$ has mean $.1210$ (MCSE
+$.00378$), median $.0599$, and 5th--95th percentiles $-.1706$--$.5962$.
+U gains more in $71.3\%$ of runs, so its larger average gain does not hold in
+every run. The per-run identity
+\[
+  \mathrm{gap}_{\mathrm{sel}}(D)
+  = \mathrm{gap}_{\mathrm{cal}}(D) + G_U(D)-G_{\mathrm{SD}}(D)
+\]
+explains why the mean gain difference overturns the calibrated gap $-.1046$.
+For the fixed-intercept baseline, the mean paired gain difference is only
+$.0133$ (MCSE $.00086$), with median $.0131$ and 5th--95th percentiles
+$-.0699$--$.0915$. U gains more in $68.2\%$ of runs, but this smaller difference
+does not overturn the calibrated gap $-.0192$.
+
+The saved predictors show where the remaining rare risk lies. Let
+$e_R=a+(1-q)(b_R-\beta_R^*)$ denote their mean signed prediction error across
+the two rare cells, and let $e_C=b_C-\beta_C^*$.
+Under exact selection with a fitted intercept, the root mean squares of $e_R$
+fall from $.6735$ to $.0255$ for U and from $.5194$ to $.1843$ for SD.
+The corresponding values for $e_C$ fall from $.3365$ to $.0775$ for U and
+from $.1082$ to $.0647$ for SD. Since $r_R=e_C^2/8+e_R^2/2$, the remaining
+rare-group mean error dominates SD's selected risk, while U nearly removes it.
+In the baseline, selected U and SD predictors instead have $e_R$ root mean
+squares $.1528$ and $.1269$, and $e_C$ root mean squares $.1564$ and $.0796$.
+SD retains smaller errors of both kinds and hence lower mean risk. These
+descriptive comparisons combine the intercept and rare-coefficient effects in
+$e_R$; they do not establish that cancellation between them causes the reversal.
+
+With 2048 validation rows, fitted-intercept U gains more than SD in $68.0\%$
+of runs, but selection worsens risk relative to calibration in $13.3\%$ of
+U runs and $22.3\%$ of SD runs. The baseline also has negative gains, in
+$17.9\%$ and $20.8\%$ of runs, respectively. Thus a positive mean improvement
+does not guarantee an improvement on each training stream, even when every
+validation set contains rare observations. The files
+\path{results/theory-bridge/selection-gains.json} and
+\path{results/theory-bridge/selection-gains.npz} retain distributions and
+per-run risks, gains, and predictor errors for both fresh arms, both
+prevalences, all three caps, both signals, and exact-risk selection and all three
+validation sizes. Run \texttt{task experiment:selection-gains} to reconstruct
+them and the table without training, and \texttt{task check:selection-gains} to
+verify them against independent predictions on the two rare cells.
 
 \subsection{Numerical checks}
 

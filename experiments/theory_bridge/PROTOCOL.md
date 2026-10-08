@@ -118,3 +118,30 @@ indices, and held-out risks in `calibration-sensitivity.npz`, with settings and
 row summaries in `calibration-sensitivity.json` under `results/theory-bridge/`.
 Run `task experiment:calibration-sensitivity` to reconstruct this diagnostic
 without training, and `task check:calibration-sensitivity` to verify it.
+
+## Selection-gain analysis added after review
+
+Use the saved evaluation predictors for both fresh arms, both prevalences, all
+three caps, and both signals. Define gain as calibrated minus selected
+population rare risk for the same scaling and run. Analyze exact-risk selection
+and all three validation sizes. Retain gain quantiles, paired U-minus-SD gain
+differences and MCSEs, counts of positive, zero, and negative gains, and the
+share of positive gain contributed by the largest 10% of gains. These
+descriptive finite-family gains condition on the frozen calibration choices.
+Their means under exact selection combine theoretical adaptation gains (the
+difference between the minimum expected risk and the expectation of minimum
+risk) with calibration suboptimality. The latter is zero for the baseline's
+exact moment calibration and is not identified for the fitted-intercept arm. The
+theorem optimizes deterministic rates and stops and does not cover adaptive
+selection.
+
+Evaluate each saved predictor on the two rare cells. Record its signed mean
+prediction error in the rare subgroup and common-coefficient error, including
+their root mean squares. The rare mean error combines the intercept and
+rare-coefficient effects; this analysis does not test cancellation between them.
+Retain per-run risks, gains, and errors in `selection-gains.npz` and all setting
+summaries in `selection-gains.json` under `results/theory-bridge/`. Generate the
+manuscript table in `paper/generated/selection-gains.tex` from these summaries.
+Run `task experiment:selection-gains` without retraining, then
+`task check:selection-gains` to verify the results using independent rare-cell
+predictions and the existing risk-change summaries.
