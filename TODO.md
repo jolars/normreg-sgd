@@ -95,17 +95,29 @@ the SD-minus-U gap changes from $-.01915$ to $-.00589$ in the baseline and from
 $-.10456$ to $+.01643$ with a fitted intercept.
 
 - [ ] Use the fresh, fitted-intercept arm as the primary example and report the
-  baseline comparison alongside it.
-- [ ] Analyze the saved predictors' gains from selection, including their
-  distributions across runs. Retain absolute risks and paired uncertainty,
-  and distinguish gains relative to calibrated choices from theoretical
-  adaptation gains.
+  baseline comparison alongside it. The current main-paper example uses arm
+  8, which combines reuse, estimated preprocessing, and a fitted intercept.
+
+- [ ] Analyze the distributions of selection gains for the fresh,
+  fitted-intercept arm and its baseline. Saved summaries already include
+  absolute risks, paired MCSEs, and distribution summaries of risk changes
+  relative to calibration; the paper reports mean gains for arm 8. Use the
+  saved summaries and predictors to explain how gains differ across runs and
+  between scalings, retaining the distinction from theoretical adaptation
+  gains.
+
 - [ ] Decompose rare-subgroup error into common-coefficient error, intercept
   error, rare-coefficient error, and the intercept–rare cross term. Test
   whether cancellation explains the reversal; the ordering alone does not
   establish it.
-- [ ] Keep exact-risk selection distinct from feasible validation selection and
+
+- [x] Keep exact-risk selection distinct from feasible validation selection and
   from the theorem's choices made before training.
+
+  The appendix distinguishes per-run exact-risk selection from minimizing mean
+  risk over a fixed finite candidate family and from feasible validation
+  selection. It also states that calibration choices are fixed before evaluation
+  and that neither finite search is the theorem's unrestricted oracle.
 
 ## 4. Focus the manuscript and empirical narrative
 
