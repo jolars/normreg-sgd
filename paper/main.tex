@@ -641,15 +641,23 @@ choices. One small gap reverses in 2 of 200 splits
   \label{fig:bridge-controlled}
 \end{figure}
 
-Selecting among the fitted predictors can reverse an ordering.
-\Cref{tab:bridge-selection} compares calibration, rare validation loss, and
-exact population rare risk on the same candidate paths. Both forms of selection
-after training favor U in this example, while calibration favors SD. Every
-validation set here contains rare observations. The reversal under exact
-selection shows that validation noise is not needed: choosing the best predictor
-in each training run is a different objective from choosing the best tuning
-settings on average. Exact selection reduces U's rare risk by about $0.28$ and
-SD's by $0.15$. U's larger gain overturns SD's advantage under calibration.
+Selecting among the fitted predictors can reverse an ordering even with fresh
+observations and population preprocessing. \Cref{tab:bridge-selection} compares
+the fixed-intercept baseline with the arm that adds only a fitted intercept,
+initialized at zero. With the fitted intercept, calibration favors SD, while
+both rare validation loss and exact population rare risk select predictors that
+favor U on average. Exact selection changes the SD-minus-U gap from $-.1046$ to
+$+.0164$, reducing U's rare risk by $.2399$ and SD's by $.1189$. U's larger gain
+overturns SD's advantage under calibration. In the baseline, exact selection
+narrows the gap from $-.0192$ to $-.0059$, preserving SD's advantage. Both
+orderings persist under exact selection in all 12 baseline settings.
+
+Every validation set in this example contains rare observations. The reversal
+under exact selection shows that validation noise is not needed: choosing the
+best predictor in each training run is a different objective from choosing the
+best tuning settings on average. The comparison isolates intercept fitting as
+sufficient for a reversal in this setting, but does not identify how the
+selected predictors achieve their gains.
 
 \begin{table}[t]
   \centering
@@ -659,16 +667,24 @@ SD's by $0.15$. U's larger gain overturns SD's advantage under calibration.
     \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
     Selection              &       U &      SD &       U &      SD &     Mean &     MCSE \\
     \midrule
-    Separate calibration   & $.2786$ & $.1931$ &     --- &     --- & $-.0855$ & $.00355$ \\
-    Validation (2048 rows) & $.0267$ & $.0637$ & $.2519$ & $.1295$ & $+.0370$ & $.00214$ \\
-    Exact population risk  & $.0015$ & $.0474$ & $.2771$ & $.1457$ & $+.0460$ & $.00215$ \\
+    \multicolumn{7}{l}{Fresh observations, fitted intercept} \\
+    Separate calibration   & $.2409$ & $.1364$ &     --- &     --- & $-.1046$ & $.00364$ \\
+    Validation (2048 rows) & $.0268$ & $.0344$ & $.2141$ & $.1020$ & $+.0075$ & $.00132$ \\
+    Exact population risk  & $.0011$ & $.0175$ & $.2399$ & $.1189$ & $+.0164$ & $.00128$ \\
+    \midrule
+    \multicolumn{7}{l}{Fresh observations, fixed zero intercept (baseline)} \\
+    Separate calibration   & $.1528$ & $.1337$ &     --- &     --- & $-.0192$ & $.00070$ \\
+    Validation (2048 rows) & $.0393$ & $.0259$ & $.1136$ & $.1078$ & $-.0134$ & $.00065$ \\
+    Exact population risk  & $.0147$ & $.0088$ & $.1381$ & $.1248$ & $-.0059$ & $.00056$ \\
     \bottomrule
   \end{tabular}
   \caption{
     Rare risk and gains from selection with $(\beta_C^*,\beta_R^*) = (0.1,1)$,
-    $q = 0.02$, and $M = 204$, under reuse, estimated preprocessing, and a
-    fitted intercept (arm 8 in \cref{tab:bridge-arms}). Positive reductions
-    indicate improvement over the separately calibrated choice for the same
+    $q = 0.02$, and $M = 204$, with fresh observations and population
+    preprocessing. The fitted-intercept arm and baseline (arms 2 and 1 in
+    \cref{tab:bridge-arms}) share the observation cap and differ only in whether
+    an intercept is fitted; all coefficients are initialized at zero. Positive
+    reductions indicate improvement over the separately calibrated choice for the same
     scaling; negative SD-minus-U gaps favor SD. Means use 4096 paired evaluation
     runs. MCSEs refer to the paired gaps and condition on the calibration
     choices.

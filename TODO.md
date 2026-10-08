@@ -94,17 +94,21 @@ produces a reversal. For the rare-dominant signal at $q = .02$ and $M = 204$,
 the SD-minus-U gap changes from $-.01915$ to $-.00589$ in the baseline and from
 $-.10456$ to $+.01643$ with a fitted intercept.
 
-- [ ] Use the fresh, fitted-intercept arm as the primary example and report the
-  baseline comparison alongside it. The current main-paper example uses arm
-  8, which combines reuse, estimated preprocessing, and a fitted intercept.
+- [x] Use the fresh, fitted-intercept arm as the primary example and report the
+  baseline comparison alongside it.
+
+  The main paper compares both arms under calibration, validation, and
+  exact-risk selection, reporting absolute risks, mean gains, and paired gap
+  MCSEs. The fitted-intercept arm reverses the ordering, while the baseline
+  retains SD's advantage in the rare-dominant example.
 
 - [ ] Analyze the distributions of selection gains for the fresh,
   fitted-intercept arm and its baseline. Saved summaries already include
   absolute risks, paired MCSEs, and distribution summaries of risk changes
-  relative to calibration; the paper reports mean gains for arm 8. Use the
-  saved summaries and predictors to explain how gains differ across runs and
-  between scalings, retaining the distinction from theoretical adaptation
-  gains.
+  relative to calibration; the paper reports mean gains for both arms. Use
+  the saved summaries and predictors to explain how gains differ across runs
+  and between scalings, retaining the distinction from theoretical
+  adaptation gains.
 
 - [ ] Decompose rare-subgroup error into common-coefficient error, intercept
   error, rare-coefficient error, and the intercept–rare cross term. Test
