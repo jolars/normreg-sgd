@@ -659,8 +659,13 @@ best tuning settings on average. The comparison isolates intercept fitting as
 sufficient for a reversal in this setting. U gains more than SD in $71.3\%$ of
 runs under exact selection, with median gains $.1456$ and $.0626$, respectively.
 The selected U predictors have smaller mean prediction errors within the rare
-group, while SD retains a slightly smaller common-coefficient error.
-\Cref{sec:bridge-gains} examines these distributions and predictor errors.
+group, while SD retains a slightly smaller common-coefficient error. Their
+intercept and rare-coefficient errors nearly cancel: the cross term removes
+$99.9\%$ of U's mean squared-error contributions from those two coordinates,
+compared with $27.4\%$ for SD. This cancellation accounts for the selected
+risk ordering even though U has larger errors in each coordinate separately
+(\cref{sec:bridge-cancellation}). \Cref{sec:bridge-gains} examines the gain
+distributions.
 
 \begin{table}[t]
   \centering
@@ -1709,8 +1714,8 @@ rare-group mean error dominates SD's selected risk, while U nearly removes it.
 In the baseline, selected U and SD predictors instead have $e_R$ root mean
 squares $.1528$ and $.1269$, and $e_C$ root mean squares $.1564$ and $.0796$.
 SD retains smaller errors of both kinds and hence lower mean risk. These
-descriptive comparisons combine the intercept and rare-coefficient effects in
-$e_R$; they do not establish that cancellation between them causes the reversal.
+comparisons locate the remaining error; the decomposition below separates the
+intercept and rare-coefficient contributions.
 
 With 2048 validation rows, fitted-intercept U gains more than SD in $68.0\%$
 of runs, but selection worsens risk relative to calibration in $13.3\%$ of
@@ -1725,6 +1730,86 @@ prevalences, all three caps, both signals, and exact-risk selection and all thre
 validation sizes. Run \texttt{task experiment:selection-gains} to reconstruct
 them and the table without training, and \texttt{task check:selection-gains} to
 verify them against independent predictions on the two rare cells.
+
+\subsubsection{Intercept--rare error cancellation}
+\label{sec:bridge-cancellation}
+
+Write each saved predictor in the population-centered coordinates used above.
+The true centered intercept is zero, so its error is $a$, not the raw intercept
+saved with the coefficients. Let $d=(1-q)(b_R-\beta_R^*)$. Independence and
+balance of the common feature within the rare subgroup give the per-run identity
+\[
+  r_R = \underbrace{e_C^2/8}_{\text{common}}
+        + \underbrace{a^2/2}_{\text{intercept}}
+        + \underbrace{d^2/2}_{\text{rare}}
+        + \underbrace{ad}_{\text{cross}}.
+\]
+The cross term is negative when the intercept and rare-coefficient errors oppose
+each other. Define their pooled cancellation fraction as
+$-\E[ad]/\E[(a^2+d^2)/2]$, using evaluation means. It equals one for complete
+cancellation and is negative when the errors reinforce each other. The two
+square terms and their cross term must be considered together: accurate rare
+predictions do not require either coordinate to be estimated accurately.
+
+\begin{table}[htbp]
+  \centering
+  \input{generated/risk-decomposition.tex}
+  \caption{
+    Mean rare-risk contributions for the primary example in
+    \cref{tab:bridge-selection}, using the same 4096 paired evaluation runs.
+    Columns give $e_C^2/8$, $a^2/2$, $d^2/2$, $ad$, and their sum. Rounding
+    can obscure exact addition. The baseline's centered intercept and cross
+    terms are exactly zero.
+  }
+  \label{tab:bridge-risk-decomposition}
+\end{table}
+
+For fitted-intercept U under exact selection, the intercept and rare square
+terms have means $.2208$ and $.2235$, while the cross term is $-.4439$
+(\cref{tab:bridge-risk-decomposition}). Their sum is only $.000325$.
+The pooled cancellation fraction is $99.93\%$, compared with $27.37\%$ for SD.
+U's errors oppose each other in $99.2\%$ of runs. Its intercept and rare-error
+root mean squares actually increase from $.3384$ and $.5792$ under calibration
+to $.6645$ and $.6685$ under exact selection. Calibration has little cancellation
+for either scaling. Thus U's lower selected risk reflects closely matched,
+opposing errors rather than more accurate intercept and rare coefficients.
+
+Separating the paired SD-minus-U gap gives a direct accounting test. Under exact
+selection, the common, intercept, and rare terms sum to a gap of $-.42112$
+(MCSE $.00667$); the cross-term gap adds $+.43754$ (MCSE $.00687$), producing
+the observed $+.01643$ (MCSE $.00128$). Relative to calibration, the cross term
+changes the gap by $+.43838$, while the other three contributions together
+change it by $-.31740$. Cancellation therefore accounts for the larger U gain
+that overturns SD's calibrated advantage. Removing the cross term is an
+accounting diagnostic, not a risk attainable by simply deleting a model
+coordinate. If we instead set the centered intercept to zero in these already
+selected predictors, their mean gap becomes $-.20360$. This intervention does
+not retrain or reselect them and does not estimate the fixed-intercept arm.
+In that separately trained baseline, both intercept contributions vanish and
+SD retains smaller common and rare errors under exact selection.
+
+The same decomposition supports the primary validation comparison: with 2048
+validation rows, the pooled cancellation fractions are $97.1\%$ for U and
+$19.9\%$ for SD. The square terms give gap $-.43865$, and the cross term adds
+$+.44619$, yielding $+.00754$. Across both prevalences and all three caps,
+exact selection reverses all six fitted-intercept comparisons with the dominant
+rare signal. In each, omitting the cross term restores the calibrated sign.
+Neither common-dominant exact-selection comparisons nor any of the 12 baseline
+exact-selection comparisons reverse. Validation also produces reversals in the
+fixed-intercept baseline, where this cancellation is impossible, so the
+mechanism does not explain every selection reversal.
+
+These are descriptive identities for the selected predictors in a finite
+candidate family, conditional on calibration. They identify how cancellation
+accounts for this reversal, without identifying a causal effect of altering
+intercept training or separating adaptation gains from calibration
+suboptimality. The files \path{results/theory-bridge/risk-decomposition.json}
+and \path{results/theory-bridge/risk-decomposition.npz} retain per-run errors,
+four risk terms, paired gap and gain contributions, and cancellation summaries
+for all 120 setting--policy combinations in the two fresh arms. Run
+\texttt{task experiment:risk-decomposition} to reconstruct them and the table
+without training. The command \texttt{task check:risk-decomposition} verifies
+them using independent four-cell predictions and the existing risks and gains.
 
 \subsection{Numerical checks}
 

@@ -208,6 +208,7 @@ tasks:
       - task: check:theory-bridge
       - task: check:calibration-sensitivity
       - task: check:selection-gains
+      - task: check:risk-decomposition
       - task: check:common-block
 
   check:common-block:
@@ -231,6 +232,12 @@ tasks:
     cmds:
       - python -m checks.selection_gains
       - python -m experiments.theory_bridge.selection_gains --check
+
+  check:risk-decomposition:
+    desc: Verify rare-risk terms and intercept cancellation from saved predictors.
+    cmds:
+      - python -m checks.risk_decomposition
+      - python -m experiments.theory_bridge.risk_decomposition --check
 
   check:moments:
     desc: Check moments calculations.
@@ -324,6 +331,7 @@ tasks:
       - python -m checks.theory_bridge --saved
       - python -m experiments.theory_bridge.summarize --check
       - task: check:selection-gains
+      - task: check:risk-decomposition
 
   check:exact-risk-results:
     desc: Check the large exact-risk outputs after running that experiment.
@@ -417,6 +425,11 @@ tasks:
     desc: Analyze selection gains from saved fresh-arm predictors without training.
     cmds:
       - python -m experiments.theory_bridge.selection_gains
+
+  experiment:risk-decomposition:
+    desc: Decompose saved fresh-arm rare risks and measure cancellation without training.
+    cmds:
+      - python -m experiments.theory_bridge.risk_decomposition
 
   figure:theory-bridge:
     desc: Plot the saved controlled comparisons and validation selections.

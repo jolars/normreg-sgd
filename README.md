@@ -185,6 +185,19 @@ selection sensitivity; overlapping splits are not independent replications.
 `task check:calibration-sensitivity` checks the selection logic and reconstructs
 the saved diagnostic.
 
+`task experiment:risk-decomposition` decomposes saved rare risks in both fresh
+arms into common-coefficient, centered-intercept, rare-coefficient, and cross
+terms without retraining. The [saved
+results](results/theory-bridge/risk-decomposition.json) show that opposing
+intercept and rare-coefficient errors account for the fitted-intercept
+exact-selection reversal. The analysis retains all caps, prevalences, signals,
+and selectors, including validation reversals without this mechanism.
+`task check:risk-decomposition` verifies the per-run terms, paired
+contributions, cancellation summaries, and generated table against independent
+cell predictions and the existing risks and gains. Omitting the cross term is an
+accounting diagnostic; resetting the selected intercept does not retrain or
+reselect.
+
 Experiments can take substantial time and replace the saved outputs for the
 selected configuration. Use a separate extracted copy to retain the supplied
 results when rerunning experiments. Summarizing reads those outputs without

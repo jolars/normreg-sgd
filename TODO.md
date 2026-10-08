@@ -119,10 +119,21 @@ $-.10456$ to $+.01643$ with a fitted intercept.
   `task check:selection-gains` verifies the results against rare-cell
   predictions and existing risk-change summaries without retraining.
 
-- [ ] Decompose rare-subgroup error into common-coefficient error, intercept
+- [x] Decompose rare-subgroup error into common-coefficient error, intercept
   error, rare-coefficient error, and the intercept–rare cross term. Test
   whether cancellation explains the reversal; the ordering alone does not
   establish it.
+
+  The saved-predictor decomposition shows that intercept–rare cancellation
+  accounts for all six rare-dominant fitted-intercept reversals under exact
+  selection. In the primary example, the square terms give an SD-minus-U gap of
+  $-.42112$, and the cross term adds $+.43754$, yielding $+.01643$. The paper
+  reports the four terms, paired contributions and MCSEs, cancellation
+  fractions, the separately trained baseline, and the scope of this descriptive
+  explanation. `task experiment:risk-decomposition` reconstructs all 120
+  setting–policy decompositions without training;
+  `task check:risk-decomposition` verifies them independently using cell
+  predictions and existing risks and gains.
 
 - [x] Keep exact-risk selection distinct from feasible validation selection and
   from the theorem's choices made before training.

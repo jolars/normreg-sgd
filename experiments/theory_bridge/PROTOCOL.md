@@ -145,3 +145,32 @@ manuscript table in `paper/generated/selection-gains.tex` from these summaries.
 Run `task experiment:selection-gains` without retraining, then
 `task check:selection-gains` to verify the results using independent rare-cell
 predictions and the existing risk-change summaries.
+
+## Rare-risk decomposition added after the gain analysis
+
+Separate the centered intercept error from the rare-coefficient error for every
+saved predictor in the same two fresh arms. For the predictor
+`a + b_C (I - 1/2) + b_R (J - q)`, the true intercept is zero. Recover `a` from
+the saved raw intercept as `raw_intercept + b_C/2 + q*b_R`, and define
+`e_C = b_C - beta_C` and `d = (1-q)*(b_R-beta_R)`. Decompose rare excess half
+loss into `e_C^2/8`, `a^2/2`, `d^2/2`, and `a*d`. Preserve the baseline's exact
+zero centered intercept when converting from raw coordinates.
+
+Retain per-run errors and terms, their means and MCSEs, paired SD-minus-U gap
+contributions, and changes relative to calibration. Summarize opposing signs and
+cancellation as `-a*d / ((a^2+d^2)/2)`, defining it as zero when both errors are
+zero. Also report the pooled fraction, taking means before division. Check
+whether the cross term accounts for the primary reversal and whether the same
+explanation holds across prevalence, cap, signal, and selector. Omitting the
+cross term is an accounting diagnostic, not a predictor risk. Setting the
+centered intercept to zero in an already selected predictor is a separate
+intervention without retraining or reselection; it does not recover the
+fixed-intercept training arm. This descriptive analysis does not identify causal
+training effects or resolve calibration suboptimality.
+
+Run `task experiment:risk-decomposition` to write `risk-decomposition.npz` and
+`risk-decomposition.json` under `results/theory-bridge/` and the generated
+manuscript table in `paper/generated/risk-decomposition.tex`, without training.
+Run `task check:risk-decomposition` to verify all 120 setting–policy
+combinations using independent four-cell predictions, saved risks, and selection
+gains.
