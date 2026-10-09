@@ -74,7 +74,7 @@ def plot(summary):
                     linestyle="none",
                     markersize=5,
                 )
-        ax.axvline(9216, color="0.7", linewidth=0.8)
+        ax.axvline(9216, linestyle="--", color="0.7", linewidth=0.8)
         ax.set_xticks(
             (0, 2048, 4096, 8192, 10496),
             ("0", "2048", "4096", "8192", "Selected"),

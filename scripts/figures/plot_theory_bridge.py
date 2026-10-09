@@ -172,7 +172,7 @@ def selection_gains():
     figure, axes = plt.subplots(2, 2, figsize=(PAPER_WIDTH, 4.5), sharey=True)
     with np.load(ROOT / "results/theory-bridge/selection-gains.npz") as archive:
         gains = archive["q0_gain"][:, -1, :, :, 0]
-    for arm, title in enumerate(("Fixed zero intercept", "Fitted intercept")):
+    for arm, title in enumerate(LABELS[:2]):
         for column, policy in enumerate((0, 3)):
             axis = axes[arm, column]
             for scaling, name in enumerate(("none", "sd")):
@@ -194,15 +194,27 @@ def selection_gains():
                 [-0.5, -0.1, 0, 0.1, 0.5, 2], ["-.5", "-.1", "0", ".1", ".5", "2"]
             )
             axis.set_title(
-                title + " / " + ("Exact risk" if policy == 0 else "Validation (2048)")
+                ("Exact risk" if policy == 0 else "Validation (2048)")
+                if arm == 0
+                else ""
             )
             axis.grid(axis="y", color="0.92", linewidth=0.5)
+        axes[arm, 1].text(
+            1.08,
+            0.5,
+            title,
+            transform=axes[arm, 1].transAxes,
+            rotation=270,
+            ha="center",
+            va="center",
+            fontsize=plt.rcParams["axes.labelsize"],
+        )
     figure.supylabel("Fraction of evaluation runs", x=0.015)
     figure.supxlabel(
         "Calibrated minus selected rare risk (symmetric log scale)", y=0.01
     )
     axes[0, 0].legend(frameon=False, loc="lower right")
-    figure.tight_layout(rect=(0.025, 0.035, 1, 1))
+    figure.tight_layout(rect=(0.025, 0.035, 0.94, 1))
     save(figure, OUTPUT / "theory-bridge", "selection-gains")
 
 

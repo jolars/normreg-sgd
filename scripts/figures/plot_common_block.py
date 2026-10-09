@@ -20,7 +20,7 @@ def budget_slice(settings, gaps):
     counts = settings["common_counts"]
     cap = settings["target_scaled_budgets"].index(2.0)
     for signal, ax in enumerate(axes):
-        ax.axhline(0, color="0.55", linewidth=0.7)
+        ax.axhline(0, linestyle="--", color="0.55", linewidth=0.7)
         for q in (0.02, 0.0001):
             qi = settings["prevalences"].index(q)
             label = r"$q=0.02$" if q == 0.02 else r"$q=10^{-4}$"
@@ -54,7 +54,7 @@ def main():
     for qi, q in enumerate(settings["prevalences"]):
         for signal in range(2):
             ax = axes[signal, qi]
-            ax.axhline(0, color="0.55", linewidth=0.7)
+            ax.axhline(0, linestyle="--", color="0.55", linewidth=0.7)
             for cap, target in enumerate(settings["target_scaled_budgets"]):
                 ax.plot(
                     counts,
@@ -67,15 +67,21 @@ def main():
             ax.set_xticks([1, 4, 16, 64], labels=[1, 4, 16, 64])
             if signal == 0:
                 ax.set_title(rf"$q={q:g}$")
-            else:
-                ax.set_xlabel("Number of common features")
-            if qi == 0:
-                ax.set_ylabel(
-                    settings["signal_names"][signal]
-                    + "\nSD minus unscaled risk\n(negative favors SD)"
+            if qi == len(settings["prevalences"]) - 1:
+                ax.text(
+                    1.08,
+                    0.5,
+                    settings["signal_names"][signal],
+                    transform=ax.transAxes,
+                    rotation=270,
+                    ha="center",
+                    va="center",
+                    fontsize=plt.rcParams["axes.labelsize"],
                 )
+    fig.supylabel("SD minus unscaled risk\n(negative favors SD)", x=0.015)
+    fig.supxlabel("Number of common features", y=0.015)
     axes[0, 0].legend(frameon=False)
-    fig.tight_layout(pad=0.5)
+    fig.tight_layout(pad=0.5, rect=(0.035, 0.035, 0.96, 1))
     save(fig, OUTPUT / "common-block", "dimension-gaps")
 
 

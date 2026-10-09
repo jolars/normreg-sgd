@@ -7,9 +7,9 @@ import numpy as np
 from style import (
     METHOD_STYLES,
     OUTPUT,
-    PAPER_WIDTH,
     PREVALENCE_STYLES,
     ROOT,
+    SINGLE_PANEL_WIDTH,
     apply_style,
     save,
 )
@@ -18,7 +18,8 @@ from style import (
 def main():
     report = json.loads((ROOT / "results/oracle-finite/summary.json").read_text())
     apply_style()
-    fig, axes = plt.subplots(2, 2, figsize=(PAPER_WIDTH, 4.9))
+    panels = [plt.subplots(figsize=(SINGLE_PANEL_WIDTH, 2.4)) for _ in range(4)]
+    axes = np.array([ax for _, ax in panels]).reshape(2, 2)
     ax = axes[0, 0]
     q = [row["q"] for row in report["convergence"]]
     errors = np.array(
@@ -34,7 +35,6 @@ def main():
         )
     ax.set_xlabel(r"Prevalence $q$")
     ax.set_ylabel("Largest absolute risk error")
-    ax.set_title("(a) All 43 settings")
     ax.legend(frameon=False)
 
     prevalences = (0.02, 0.0002, 0.000002)
@@ -89,23 +89,25 @@ def main():
             linewidth=1,
             label=r"$q\to0$",
         )
-        ax.axhline(1 if group == "budget" else 0, color="0.6", linewidth=0.6)
+        ax.axhline(
+            1 if group == "budget" else 0, linestyle="--", color="0.6", linewidth=0.6
+        )
         if group != "budget":
             ax.set_ylabel("SD minus unscaled risk")
     axes[0, 1].set_xlabel(r"Rare signal fraction $r/(s/4+r)$")
-    axes[0, 1].set_title(r"(b) Allocation, $s/4+r=1$, $\tau\approx2$")
     axes[0, 1].legend(frameon=False, fontsize=7)
     axes[1, 0].set_xscale("symlog", linthresh=0.1)
     axes[1, 0].set_xlim(-0.015, 150)
     axes[1, 0].set_xlabel(r"Noise variance $\nu$")
-    axes[1, 0].set_title(r"(c) $s=0.1$, $r=1$, $\tau\approx2$")
     axes[1, 1].set_xscale("log")
-    axes[1, 1].axhline(0.8, color="0.6", linestyle=":", linewidth=0.8)
+    axes[1, 1].axhline(0.8, color="0.6", linestyle="--", linewidth=0.8)
     axes[1, 1].set_xlabel(r"Target rescaled budget $\tau$")
     axes[1, 1].set_ylabel("SD / unscaled risk")
-    axes[1, 1].set_title(r"(d) $s=r=\nu=1$")
-    fig.tight_layout(pad=0.6)
-    save(fig, OUTPUT / "oracle-finite", "limit-comparison")
+    for (fig, _), name in zip(
+        panels, ("convergence", "allocation", "noise", "budget"), strict=True
+    ):
+        fig.tight_layout(pad=0.6)
+        save(fig, OUTPUT / "oracle-finite", name)
 
 
 if __name__ == "__main__":

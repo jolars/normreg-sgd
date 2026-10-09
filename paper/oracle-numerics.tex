@@ -40,17 +40,27 @@ that full-cap training is always optimal at finite prevalence.
 
 \begin{figure}[t]
   \centering
-  \includegraphics{../figures/oracle-finite/limit-comparison.pdf}
+  \subfigure[Largest absolute risk discrepancy from $L_A(Mb)$ across all 43 settings at each prevalence.]{%
+    \includegraphics{../figures/oracle-finite/convergence.pdf}%
+  }\hfill
+  \subfigure[Allocation at fixed initial limiting subgroup risk,
+    $s/4 + r = 1$ and $\tau \approx 2$.]{%
+    \includegraphics{../figures/oracle-finite/allocation.pdf}%
+  }\par\medskip
+  \subfigure[Noise can change the preferred scaling twice,
+    with a finite-prevalence disagreement at high noise; $s = 0.1$, $r = 1$,
+    and $\tau \approx 2$.]{%
+    \includegraphics{../figures/oracle-finite/noise.pdf}%
+  }\hfill
+  \subfigure[The budget comparison approaches the ordered large-budget risk ratio $4/5$; $s = r = \nu = 1$.]{%
+    \includegraphics{../figures/oracle-finite/budget.pdf}%
+  }
   \caption{
-    Exact finite-grid selections approach the limiting oracle predictions. (a)
-    Largest absolute risk discrepancy from $L_A(Mb)$ across the 43 settings at
-    each prevalence. (b) Allocation at fixed initial limiting subgroup risk. (c)
-    Noise can change the preferred scaling twice, with a finite-prevalence
-    disagreement at high noise. (d) The budget comparison approaches the ordered
-    large-budget risk ratio $4/5$. Colored curves connect finite-grid results;
-    black dashed curves connect limiting predictions at the sampled settings.
-    Panels (b)--(d) use nominal target budgets, so coarse caps also reflect
-    rounding. Lines do not certify intervening crossing locations.
+    Exact finite-grid selections approach the limiting oracle predictions.
+    Colored curves connect finite-grid results; black dashed curves connect
+    limiting predictions at the sampled settings. Panels (b)--(d) use nominal
+    target budgets, so coarse caps also reflect rounding. Lines do not certify
+    intervening crossing locations.
   }
   \label{fig:oracle-finite}
 \end{figure}

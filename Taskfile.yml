@@ -519,13 +519,30 @@ tasks:
 
   figure:oracle-finite:
     desc: Plot saved finite-prevalence comparisons and limiting predictions.
+    sources:
+      - scripts/figures/plot_oracle_finite.py
+      - scripts/figures/style.py
+      - scripts/figures/palette.toml
+      - results/oracle-finite/summary.json
+      - Taskfile.yml
+      - devenv.nix
+      - devenv.lock
+      - uv.lock
+    generates:
+      - figures/oracle-finite/convergence.pdf
+      - figures/oracle-finite/convergence.svg
+      - figures/oracle-finite/convergence.png
+      - figures/oracle-finite/allocation.pdf
+      - figures/oracle-finite/allocation.svg
+      - figures/oracle-finite/allocation.png
+      - figures/oracle-finite/noise.pdf
+      - figures/oracle-finite/noise.svg
+      - figures/oracle-finite/noise.png
+      - figures/oracle-finite/budget.pdf
+      - figures/oracle-finite/budget.svg
+      - figures/oracle-finite/budget.png
     cmds:
-      - task: figure
-        vars:
-          SCRIPT: oracle_finite
-          STUDY: oracle-finite
-          SUMMARY: results/oracle-finite/summary.json
-          NAME: limit-comparison
+      - python scripts/figures/plot_oracle_finite.py
 
   experiment:diagnostics:
     desc: Reconstruct numerical discrepancies and compute post hoc diagnostics.
