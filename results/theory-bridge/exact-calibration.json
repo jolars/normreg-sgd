@@ -1,0 +1,1467 @@
+{
+  "method": "Exact second-moment recurrence, evaluated in float64 arithmetic.",
+  "scope": "Minimum expected population rare excess half loss over the saved finite rate-and-stop family. Fresh observations, population preprocessing, unit noise variance, and zero initialization. Frozen calibration choices are retained; no paths are retrained.",
+  "uncertainty": "Deterministic expectations over training randomness, conditional on the saved calibration choices. No Monte Carlo error. This is not an optimization over all real rates and integer stops.",
+  "arms": [
+    "fresh",
+    "fresh_intercept"
+  ],
+  "scalings": [
+    "none",
+    "sd"
+  ],
+  "signals": [
+    [
+      0.1,
+      1.0
+    ],
+    [
+      1.0,
+      0.1
+    ]
+  ],
+  "signal_names": [
+    "rare",
+    "common"
+  ],
+  "rate_factors": [
+    0.0,
+    0.0001,
+    0.00010800099646720794,
+    0.00011664215237909862,
+    0.00012597468687022562,
+    0.00013605391711628864,
+    0.00014693958621826093,
+    0.00015869621732051393,
+    0.00017139349606192091,
+    0.00018510668362685937,
+    0.0001999170628444104,
+    0.00021591241997993756,
+    0.00023318756507479554,
+    0.00025184489391839816,
+    0.00027199499498365277,
+    0.0002937573049232773,
+    0.00031726081651235397,
+    0.0003426448432333425,
+    0.0003700598450355124,
+    0.00039966832016335893,
+    0.0004316457683401786,
+    0.0004661817310159289,
+    0.0005034809148452823,
+    0.00054376440505512,
+    0.0005872709758935139,
+    0.0006342585059276922,
+    0.000685005506579932,
+    0.0007398127729615731,
+    0.0007990051667901816,
+    0.000862933541957873,
+    0.0009319768241642749,
+    0.0010065442569408552,
+    0.0010870778273795775,
+    0.0011740548859440183,
+    0.0012679909758914816,
+    0.0013694428890770746,
+    0.0014790119662525616,
+    0.0015973476614220118,
+    0.0017251513913814176,
+    0.0018631806932598316,
+    0.002012253714705253,
+    0.002173254063330079,
+    0.002347136044160574,
+    0.0025349303161344232,
+    0.0027377500011745246,
+    0.0029567972820494838,
+    0.0031933705281287634,
+    0.0034488719912692052,
+    0.0037248161174491786,
+    0.00402283852341628,
+    0.0043447056915562965,
+    0.004692325440448298,
+    0.005067758233168466,
+    0.005473229390370915,
+    0.005911142280536678,
+    0.00638409256557406,
+    0.006894883586208918,
+    0.007446542978359602,
+    0.008042340618987266,
+    0.008685808007793276,
+    0.009380759199645271,
+    0.010131313411806184,
+    0.010941919439966561,
+    0.011817382027803025,
+    0.012762890346364011,
+    0.01378404875209022,
+    0.01488691000578318,
+    0.016078011149422318,
+    0.017364412253484895,
+    0.018753738264437648,
+    0.020254224200444728,
+    0.021874763963182685,
+    0.02362496305508701,
+    0.025515195514503704,
+    0.02755666540622037,
+    0.029761473231852378,
+    0.03214268765372193,
+    0.0347144229573619,
+    0.037491922711792046,
+    0.040491650123450865,
+    0.04373138561934237,
+    0.04723033223780703,
+    0.05100922945160455,
+    0.055090476097977424,
+    0.059498263144344636,
+    0.06425871707657374,
+    0.06940005475974355,
+    0.07495275068931101,
+    0.08094971762403796,
+    0.08742650167135213,
+    0.09442149298148052,
+    0.10197615329921376,
+    0.11013526172207841,
+    0.11894718012161214,
+    0.12846413980098578,
+    0.13874255108809175,
+    0.14984333769916414,
+    0.16183229785482073,
+    0.17478049428898637,
+    0.18876467546241674,
+    0.20386773047750126,
+    0.22017918039078313,
+    0.23779570883537712,
+    0.25682173509846773,
+    0.2773700330507183,
+    0.29956239959619974,
+    0.32353037660497536,
+    0.349416030607484,
+    0.377372794872247,
+    0.40756637885817937,
+    0.4401757504321497,
+    0.475394196673732,
+    0.5134304695549089,
+    0.5545100232855663,
+    0.5988763506589584,
+    0.6467924263181255,
+    0.6985422654980074,
+    0.7544326074824572,
+    0.8147947337545934,
+    0.8799864316172948,
+    0.9503941149229038,
+    1.0264351144824386,
+    1.1085601517303592,
+    1.1972560103071814,
+    1.2930484213952926,
+    1.3965051799104193,
+    1.5082395100194266,
+    1.6289136999331169,
+    1.75924302751863,
+    1.9
+  ],
+  "risk_objectives": [
+    "aggregate",
+    "rare"
+  ],
+  "profile_axes": [
+    "stop",
+    "arm",
+    "scaling",
+    "signal",
+    "rate",
+    "risk objective"
+  ],
+  "learning_rate_axes": [
+    "arm",
+    "scaling",
+    "rate"
+  ],
+  "selection_axes": [
+    "cap",
+    "arm",
+    "scaling",
+    "signal",
+    "selection field"
+  ],
+  "selection_fields": [
+    "stopping-checkpoint index",
+    "rate-factor index"
+  ],
+  "runs": [
+    {
+      "q": 0.02,
+      "caps": [
+        52,
+        102,
+        204
+      ],
+      "checkpoints": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        16,
+        17,
+        18,
+        20,
+        22,
+        24,
+        26,
+        28,
+        30,
+        33,
+        36,
+        39,
+        42,
+        46,
+        50,
+        52,
+        54,
+        59,
+        64,
+        69,
+        75,
+        82,
+        89,
+        97,
+        102,
+        105,
+        114,
+        124,
+        135,
+        146,
+        159,
+        173,
+        188,
+        204
+      ]
+    },
+    {
+      "q": 0.005,
+      "caps": [
+        202,
+        402,
+        804
+      ],
+      "checkpoints": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        14,
+        15,
+        17,
+        19,
+        21,
+        23,
+        26,
+        28,
+        31,
+        35,
+        39,
+        43,
+        48,
+        53,
+        59,
+        65,
+        73,
+        81,
+        90,
+        99,
+        110,
+        123,
+        136,
+        151,
+        168,
+        186,
+        202,
+        207,
+        229,
+        255,
+        283,
+        314,
+        348,
+        387,
+        402,
+        429,
+        477,
+        529,
+        588,
+        652,
+        724,
+        804
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "q": 0.02,
+      "cap": 52,
+      "arm": "fresh",
+      "signal": "rare",
+      "scaling": {
+        "none": {
+          "calibrated": {
+            "checkpoint_index": 30,
+            "stop": 52,
+            "rate_index": 111,
+            "rate_factor": 0.475394196673732,
+            "learning_rate": 0.3927579285143193,
+            "expected_rare_risk": 0.3335543843851176
+          },
+          "optimum": {
+            "checkpoint_index": 30,
+            "stop": 52,
+            "rate_index": 111,
+            "rate_factor": 0.475394196673732,
+            "learning_rate": 0.3927579285143193,
+            "expected_rare_risk": 0.3335543843851176
+          },
+          "calibration_excess": 0.0
+        },
+        "sd": {
+          "calibrated": {
+            "checkpoint_index": 30,
+            "stop": 52,
+            "rate_index": 110,
+            "rate_factor": 0.4401757504321497,
+            "learning_rate": 0.00880351500864299,
+            "expected_rare_risk": 0.30481887315866
+          },
+          "optimum": {
+            "checkpoint_index": 30,
+            "stop": 52,
+            "rate_index": 110,
+            "rate_factor": 0.4401757504321497,
+            "learning_rate": 0.00880351500864299,
+            "expected_rare_risk": 0.30481887315866
+          },
+          "calibration_excess": 0.0
+        }
+      },
+      "calibrated_gap": -0.028735511226457566,
+      "optimal_gap": -0.028735511226457566
+    },
+    {
+      "q": 0.02,
+      "cap": 52,
+      "arm": "fresh",
+      "signal": "common",
+      "scaling": {
+        "none": {
+          "calibrated": {
+            "checkpoint_index": 30,
+            "stop": 52,
+            "rate_index": 95,
+            "rate_factor": 0.13874255108809175,
+            "learning_rate": 0.11462537267687686,
+            "expected_rare_risk": 0.023126145480978265
+          },
+          "optimum": {
+            "checkpoint_index": 30,
+            "stop": 52,
+            "rate_index": 95,
+            "rate_factor": 0.13874255108809175,
+            "learning_rate": 0.11462537267687686,
+            "expected_rare_risk": 0.023126145480978265
+          },
+          "calibration_excess": 0.0
+        },
+        "sd": {
+          "calibrated": {
+            "checkpoint_index": 30,
+            "stop": 52,
+            "rate_index": 99,
+            "rate_factor": 0.18876467546241674,
+            "learning_rate": 0.0037752935092483335,
+            "expected_rare_risk": 0.10647021911345717
+          },
+          "optimum": {
+            "checkpoint_index": 30,
+            "stop": 52,
+            "rate_index": 99,
+            "rate_factor": 0.18876467546241674,
+            "learning_rate": 0.0037752935092483335,
+            "expected_rare_risk": 0.10647021911345717
+          },
+          "calibration_excess": 0.0
+        }
+      },
+      "calibrated_gap": 0.0833440736324789,
+      "optimal_gap": 0.0833440736324789
+    },
+    {
+      "q": 0.02,
+      "cap": 52,
+      "arm": "fresh_intercept",
+      "signal": "rare",
+      "scaling": {
+        "none": {
+          "calibrated": {
+            "checkpoint_index": 29,
+            "stop": 50,
+            "rate_index": 109,
+            "rate_factor": 0.40756637885817937,
+            "learning_rate": 0.18438580295791684,
+            "expected_rare_risk": 0.4288150988049203
+          },
+          "optimum": {
+            "checkpoint_index": 30,
+            "stop": 52,
+            "rate_index": 109,
+            "rate_factor": 0.40756637885817937,
+            "learning_rate": 0.18438580295791684,
+            "expected_rare_risk": 0.424782447588468
+          },
+          "calibration_excess": 0.004032651216452299
+        },
+        "sd": {
+          "calibrated": {
+            "checkpoint_index": 30,
+            "stop": 52,
+            "rate_index": 110,
+            "rate_factor": 0.4401757504321497,
+            "learning_rate": 0.00863089706729705,
+            "expected_rare_risk": 0.30827457949353587
+          },
+          "optimum": {
+            "checkpoint_index": 30,
+            "stop": 52,
+            "rate_index": 110,
+            "rate_factor": 0.4401757504321497,
+            "learning_rate": 0.00863089706729705,
+            "expected_rare_risk": 0.30827457949353587
+          },
+          "calibration_excess": 0.0
+        }
+      },
+      "calibrated_gap": -0.12054051931138443,
+      "optimal_gap": -0.11650786809493213
+    },
+    {
+      "q": 0.02,
+      "cap": 52,
+      "arm": "fresh_intercept",
+      "signal": "common",
+      "scaling": {
+        "none": {
+          "calibrated": {
+            "checkpoint_index": 30,
+            "stop": 52,
+            "rate_index": 98,
+            "rate_factor": 0.17478049428898637,
+            "learning_rate": 0.07907188485748569,
+            "expected_rare_risk": 0.0492543640284201
+          },
+          "optimum": {
+            "checkpoint_index": 30,
+            "stop": 52,
+            "rate_index": 98,
+            "rate_factor": 0.17478049428898637,
+            "learning_rate": 0.07907188485748569,
+            "expected_rare_risk": 0.0492543640284201
+          },
+          "calibration_excess": 0.0
+        },
+        "sd": {
+          "calibrated": {
+            "checkpoint_index": 30,
+            "stop": 52,
+            "rate_index": 99,
+            "rate_factor": 0.18876467546241674,
+            "learning_rate": 0.0037012681463218958,
+            "expected_rare_risk": 0.1068625483139435
+          },
+          "optimum": {
+            "checkpoint_index": 30,
+            "stop": 52,
+            "rate_index": 99,
+            "rate_factor": 0.18876467546241674,
+            "learning_rate": 0.0037012681463218958,
+            "expected_rare_risk": 0.1068625483139435
+          },
+          "calibration_excess": 0.0
+        }
+      },
+      "calibrated_gap": 0.057608184285523396,
+      "optimal_gap": 0.057608184285523396
+    },
+    {
+      "q": 0.02,
+      "cap": 102,
+      "arm": "fresh",
+      "signal": "rare",
+      "scaling": {
+        "none": {
+          "calibrated": {
+            "checkpoint_index": 39,
+            "stop": 102,
+            "rate_index": 109,
+            "rate_factor": 0.40756637885817937,
+            "learning_rate": 0.33672040553385607,
+            "expected_rare_risk": 0.24399129828020408
+          },
+          "optimum": {
+            "checkpoint_index": 39,
+            "stop": 102,
+            "rate_index": 109,
+            "rate_factor": 0.40756637885817937,
+            "learning_rate": 0.33672040553385607,
+            "expected_rare_risk": 0.24399129828020408
+          },
+          "calibration_excess": 0.0
+        },
+        "sd": {
+          "calibrated": {
+            "checkpoint_index": 39,
+            "stop": 102,
+            "rate_index": 108,
+            "rate_factor": 0.377372794872247,
+            "learning_rate": 0.007547455897444938,
+            "expected_rare_risk": 0.21825439542139394
+          },
+          "optimum": {
+            "checkpoint_index": 39,
+            "stop": 102,
+            "rate_index": 108,
+            "rate_factor": 0.377372794872247,
+            "learning_rate": 0.007547455897444938,
+            "expected_rare_risk": 0.21825439542139394
+          },
+          "calibration_excess": 0.0
+        }
+      },
+      "calibrated_gap": -0.02573690285881014,
+      "optimal_gap": -0.02573690285881014
+    },
+    {
+      "q": 0.02,
+      "cap": 102,
+      "arm": "fresh",
+      "signal": "common",
+      "scaling": {
+        "none": {
+          "calibrated": {
+            "checkpoint_index": 39,
+            "stop": 102,
+            "rate_index": 89,
+            "rate_factor": 0.08742650167135213,
+            "learning_rate": 0.07222942966899548,
+            "expected_rare_risk": 0.01579248195499003
+          },
+          "optimum": {
+            "checkpoint_index": 39,
+            "stop": 102,
+            "rate_index": 89,
+            "rate_factor": 0.08742650167135213,
+            "learning_rate": 0.07222942966899548,
+            "expected_rare_risk": 0.01579248195499003
+          },
+          "calibration_excess": 0.0
+        },
+        "sd": {
+          "calibrated": {
+            "checkpoint_index": 39,
+            "stop": 102,
+            "rate_index": 98,
+            "rate_factor": 0.17478049428898637,
+            "learning_rate": 0.0034956098857797263,
+            "expected_rare_risk": 0.09048881606326428
+          },
+          "optimum": {
+            "checkpoint_index": 39,
+            "stop": 102,
+            "rate_index": 98,
+            "rate_factor": 0.17478049428898637,
+            "learning_rate": 0.0034956098857797263,
+            "expected_rare_risk": 0.09048881606326428
+          },
+          "calibration_excess": 0.0
+        }
+      },
+      "calibrated_gap": 0.07469633410827425,
+      "optimal_gap": 0.07469633410827425
+    },
+    {
+      "q": 0.02,
+      "cap": 102,
+      "arm": "fresh_intercept",
+      "signal": "rare",
+      "scaling": {
+        "none": {
+          "calibrated": {
+            "checkpoint_index": 39,
+            "stop": 102,
+            "rate_index": 110,
+            "rate_factor": 0.4401757504321497,
+            "learning_rate": 0.1991385045386128,
+            "expected_rare_risk": 0.33779741833661053
+          },
+          "optimum": {
+            "checkpoint_index": 39,
+            "stop": 102,
+            "rate_index": 111,
+            "rate_factor": 0.475394196673732,
+            "learning_rate": 0.2150715692515979,
+            "expected_rare_risk": 0.3375992800513544
+          },
+          "calibration_excess": 0.00019813828525611088
+        },
+        "sd": {
+          "calibrated": {
+            "checkpoint_index": 39,
+            "stop": 102,
+            "rate_index": 108,
+            "rate_factor": 0.377372794872247,
+            "learning_rate": 0.007399466566122489,
+            "expected_rare_risk": 0.22185062894753962
+          },
+          "optimum": {
+            "checkpoint_index": 39,
+            "stop": 102,
+            "rate_index": 108,
+            "rate_factor": 0.377372794872247,
+            "learning_rate": 0.007399466566122489,
+            "expected_rare_risk": 0.22185062894753962
+          },
+          "calibration_excess": 0.0
+        }
+      },
+      "calibrated_gap": -0.11594678938907091,
+      "optimal_gap": -0.1157486511038148
+    },
+    {
+      "q": 0.02,
+      "cap": 102,
+      "arm": "fresh_intercept",
+      "signal": "common",
+      "scaling": {
+        "none": {
+          "calibrated": {
+            "checkpoint_index": 39,
+            "stop": 102,
+            "rate_index": 93,
+            "rate_factor": 0.11894718012161214,
+            "learning_rate": 0.05381251362722229,
+            "expected_rare_risk": 0.03206455635595085
+          },
+          "optimum": {
+            "checkpoint_index": 39,
+            "stop": 102,
+            "rate_index": 93,
+            "rate_factor": 0.11894718012161214,
+            "learning_rate": 0.05381251362722229,
+            "expected_rare_risk": 0.03206455635595085
+          },
+          "calibration_excess": 0.0
+        },
+        "sd": {
+          "calibrated": {
+            "checkpoint_index": 39,
+            "stop": 102,
+            "rate_index": 98,
+            "rate_factor": 0.17478049428898637,
+            "learning_rate": 0.00342706851547032,
+            "expected_rare_risk": 0.0910586758317393
+          },
+          "optimum": {
+            "checkpoint_index": 39,
+            "stop": 102,
+            "rate_index": 98,
+            "rate_factor": 0.17478049428898637,
+            "learning_rate": 0.00342706851547032,
+            "expected_rare_risk": 0.0910586758317393
+          },
+          "calibration_excess": 0.0
+        }
+      },
+      "calibrated_gap": 0.05899411947578844,
+      "optimal_gap": 0.05899411947578844
+    },
+    {
+      "q": 0.02,
+      "cap": 204,
+      "arm": "fresh",
+      "signal": "rare",
+      "scaling": {
+        "none": {
+          "calibrated": {
+            "checkpoint_index": 48,
+            "stop": 204,
+            "rate_index": 106,
+            "rate_factor": 0.32353037660497536,
+            "learning_rate": 0.2672921155031191,
+            "expected_rare_risk": 0.15518017423110214
+          },
+          "optimum": {
+            "checkpoint_index": 48,
+            "stop": 204,
+            "rate_index": 106,
+            "rate_factor": 0.32353037660497536,
+            "learning_rate": 0.2672921155031191,
+            "expected_rare_risk": 0.15518017423110214
+          },
+          "calibration_excess": 0.0
+        },
+        "sd": {
+          "calibrated": {
+            "checkpoint_index": 48,
+            "stop": 204,
+            "rate_index": 105,
+            "rate_factor": 0.29956239959619974,
+            "learning_rate": 0.005991247991923993,
+            "expected_rare_risk": 0.13556662912878048
+          },
+          "optimum": {
+            "checkpoint_index": 48,
+            "stop": 204,
+            "rate_index": 105,
+            "rate_factor": 0.29956239959619974,
+            "learning_rate": 0.005991247991923993,
+            "expected_rare_risk": 0.13556662912878048
+          },
+          "calibration_excess": 0.0
+        }
+      },
+      "calibrated_gap": -0.01961354510232166,
+      "optimal_gap": -0.01961354510232166
+    },
+    {
+      "q": 0.02,
+      "cap": 204,
+      "arm": "fresh",
+      "signal": "common",
+      "scaling": {
+        "none": {
+          "calibrated": {
+            "checkpoint_index": 48,
+            "stop": 204,
+            "rate_index": 82,
+            "rate_factor": 0.05100922945160455,
+            "learning_rate": 0.04214245658592577,
+            "expected_rare_risk": 0.010794345287118154
+          },
+          "optimum": {
+            "checkpoint_index": 48,
+            "stop": 204,
+            "rate_index": 82,
+            "rate_factor": 0.05100922945160455,
+            "learning_rate": 0.04214245658592577,
+            "expected_rare_risk": 0.010794345287118154
+          },
+          "calibration_excess": 0.0
+        },
+        "sd": {
+          "calibrated": {
+            "checkpoint_index": 48,
+            "stop": 204,
+            "rate_index": 96,
+            "rate_factor": 0.14984333769916414,
+            "learning_rate": 0.002996866753983282,
+            "expected_rare_risk": 0.0691700994479056
+          },
+          "optimum": {
+            "checkpoint_index": 48,
+            "stop": 204,
+            "rate_index": 96,
+            "rate_factor": 0.14984333769916414,
+            "learning_rate": 0.002996866753983282,
+            "expected_rare_risk": 0.0691700994479056
+          },
+          "calibration_excess": 0.0
+        }
+      },
+      "calibrated_gap": 0.05837575416078745,
+      "optimal_gap": 0.05837575416078745
+    },
+    {
+      "q": 0.02,
+      "cap": 204,
+      "arm": "fresh_intercept",
+      "signal": "rare",
+      "scaling": {
+        "none": {
+          "calibrated": {
+            "checkpoint_index": 47,
+            "stop": 188,
+            "rate_index": 110,
+            "rate_factor": 0.4401757504321497,
+            "learning_rate": 0.1991385045386128,
+            "expected_rare_risk": 0.24384628639344744
+          },
+          "optimum": {
+            "checkpoint_index": 48,
+            "stop": 204,
+            "rate_index": 109,
+            "rate_factor": 0.40756637885817937,
+            "learning_rate": 0.18438580295791684,
+            "expected_rare_risk": 0.23184307440553462
+          },
+          "calibration_excess": 0.01200321198791282
+        },
+        "sd": {
+          "calibrated": {
+            "checkpoint_index": 48,
+            "stop": 204,
+            "rate_index": 105,
+            "rate_factor": 0.29956239959619974,
+            "learning_rate": 0.005873772541101954,
+            "expected_rare_risk": 0.13823195649235911
+          },
+          "optimum": {
+            "checkpoint_index": 48,
+            "stop": 204,
+            "rate_index": 105,
+            "rate_factor": 0.29956239959619974,
+            "learning_rate": 0.005873772541101954,
+            "expected_rare_risk": 0.13823195649235911
+          },
+          "calibration_excess": 0.0
+        }
+      },
+      "calibrated_gap": -0.10561432990108832,
+      "optimal_gap": -0.0936111179131755
+    },
+    {
+      "q": 0.02,
+      "cap": 204,
+      "arm": "fresh_intercept",
+      "signal": "common",
+      "scaling": {
+        "none": {
+          "calibrated": {
+            "checkpoint_index": 48,
+            "stop": 204,
+            "rate_index": 87,
+            "rate_factor": 0.07495275068931101,
+            "learning_rate": 0.033909134405225756,
+            "expected_rare_risk": 0.020516484022218003
+          },
+          "optimum": {
+            "checkpoint_index": 48,
+            "stop": 204,
+            "rate_index": 87,
+            "rate_factor": 0.07495275068931101,
+            "learning_rate": 0.033909134405225756,
+            "expected_rare_risk": 0.020516484022218003
+          },
+          "calibration_excess": 0.0
+        },
+        "sd": {
+          "calibrated": {
+            "checkpoint_index": 48,
+            "stop": 204,
+            "rate_index": 96,
+            "rate_factor": 0.14984333769916414,
+            "learning_rate": 0.0029381046607679234,
+            "expected_rare_risk": 0.06984499128310262
+          },
+          "optimum": {
+            "checkpoint_index": 48,
+            "stop": 204,
+            "rate_index": 96,
+            "rate_factor": 0.14984333769916414,
+            "learning_rate": 0.0029381046607679234,
+            "expected_rare_risk": 0.06984499128310262
+          },
+          "calibration_excess": 0.0
+        }
+      },
+      "calibrated_gap": 0.04932850726088461,
+      "optimal_gap": 0.04932850726088461
+    },
+    {
+      "q": 0.005,
+      "cap": 202,
+      "arm": "fresh",
+      "signal": "rare",
+      "scaling": {
+        "none": {
+          "calibrated": {
+            "checkpoint_index": 39,
+            "stop": 202,
+            "rate_index": 111,
+            "rate_factor": 0.475394196673732,
+            "learning_rate": 0.3833746873439906,
+            "expected_rare_risk": 0.34706678758790666
+          },
+          "optimum": {
+            "checkpoint_index": 39,
+            "stop": 202,
+            "rate_index": 111,
+            "rate_factor": 0.475394196673732,
+            "learning_rate": 0.3833746873439906,
+            "expected_rare_risk": 0.34706678758790666
+          },
+          "calibration_excess": 0.0
+        },
+        "sd": {
+          "calibrated": {
+            "checkpoint_index": 39,
+            "stop": 202,
+            "rate_index": 110,
+            "rate_factor": 0.4401757504321497,
+            "learning_rate": 0.002200878752160749,
+            "expected_rare_risk": 0.31786955618685364
+          },
+          "optimum": {
+            "checkpoint_index": 39,
+            "stop": 202,
+            "rate_index": 110,
+            "rate_factor": 0.4401757504321497,
+            "learning_rate": 0.002200878752160749,
+            "expected_rare_risk": 0.31786955618685364
+          },
+          "calibration_excess": 0.0
+        }
+      },
+      "calibrated_gap": -0.029197231401053014,
+      "optimal_gap": -0.029197231401053014
+    },
+    {
+      "q": 0.005,
+      "cap": 202,
+      "arm": "fresh",
+      "signal": "common",
+      "scaling": {
+        "none": {
+          "calibrated": {
+            "checkpoint_index": 39,
+            "stop": 202,
+            "rate_index": 84,
+            "rate_factor": 0.059498263144344636,
+            "learning_rate": 0.047981502908687024,
+            "expected_rare_risk": 0.00960648997515766
+          },
+          "optimum": {
+            "checkpoint_index": 39,
+            "stop": 202,
+            "rate_index": 84,
+            "rate_factor": 0.059498263144344636,
+            "learning_rate": 0.047981502908687024,
+            "expected_rare_risk": 0.00960648997515766
+          },
+          "calibration_excess": 0.0
+        },
+        "sd": {
+          "calibrated": {
+            "checkpoint_index": 39,
+            "stop": 202,
+            "rate_index": 99,
+            "rate_factor": 0.18876467546241674,
+            "learning_rate": 0.0009438233773120838,
+            "expected_rare_risk": 0.10719970193980179
+          },
+          "optimum": {
+            "checkpoint_index": 39,
+            "stop": 202,
+            "rate_index": 99,
+            "rate_factor": 0.18876467546241674,
+            "learning_rate": 0.0009438233773120838,
+            "expected_rare_risk": 0.10719970193980179
+          },
+          "calibration_excess": 0.0
+        }
+      },
+      "calibrated_gap": 0.09759321196464413,
+      "optimal_gap": 0.09759321196464413
+    },
+    {
+      "q": 0.005,
+      "cap": 202,
+      "arm": "fresh_intercept",
+      "signal": "rare",
+      "scaling": {
+        "none": {
+          "calibrated": {
+            "checkpoint_index": 39,
+            "stop": 202,
+            "rate_index": 109,
+            "rate_factor": 0.40756637885817937,
+            "learning_rate": 0.18194724561474954,
+            "expected_rare_risk": 0.4356133715944146
+          },
+          "optimum": {
+            "checkpoint_index": 39,
+            "stop": 202,
+            "rate_index": 109,
+            "rate_factor": 0.40756637885817937,
+            "learning_rate": 0.18194724561474954,
+            "expected_rare_risk": 0.4356133715944146
+          },
+          "calibration_excess": 0.0
+        },
+        "sd": {
+          "calibrated": {
+            "checkpoint_index": 39,
+            "stop": 202,
+            "rate_index": 110,
+            "rate_factor": 0.4401757504321497,
+            "learning_rate": 0.0021899291066276106,
+            "expected_rare_risk": 0.31875789672940613
+          },
+          "optimum": {
+            "checkpoint_index": 39,
+            "stop": 202,
+            "rate_index": 110,
+            "rate_factor": 0.4401757504321497,
+            "learning_rate": 0.0021899291066276106,
+            "expected_rare_risk": 0.31875789672940613
+          },
+          "calibration_excess": 0.0
+        }
+      },
+      "calibrated_gap": -0.11685547486500847,
+      "optimal_gap": -0.11685547486500847
+    },
+    {
+      "q": 0.005,
+      "cap": 202,
+      "arm": "fresh_intercept",
+      "signal": "common",
+      "scaling": {
+        "none": {
+          "calibrated": {
+            "checkpoint_index": 39,
+            "stop": 202,
+            "rate_index": 88,
+            "rate_factor": 0.08094971762403796,
+            "learning_rate": 0.03613786347207641,
+            "expected_rare_risk": 0.0200626077864312
+          },
+          "optimum": {
+            "checkpoint_index": 39,
+            "stop": 202,
+            "rate_index": 88,
+            "rate_factor": 0.08094971762403796,
+            "learning_rate": 0.03613786347207641,
+            "expected_rare_risk": 0.0200626077864312
+          },
+          "calibration_excess": 0.0
+        },
+        "sd": {
+          "calibrated": {
+            "checkpoint_index": 39,
+            "stop": 202,
+            "rate_index": 99,
+            "rate_factor": 0.18876467546241674,
+            "learning_rate": 0.0009391277386189889,
+            "expected_rare_risk": 0.10729681297633206
+          },
+          "optimum": {
+            "checkpoint_index": 39,
+            "stop": 202,
+            "rate_index": 99,
+            "rate_factor": 0.18876467546241674,
+            "learning_rate": 0.0009391277386189889,
+            "expected_rare_risk": 0.10729681297633206
+          },
+          "calibration_excess": 0.0
+        }
+      },
+      "calibrated_gap": 0.08723420518990085,
+      "optimal_gap": 0.08723420518990085
+    },
+    {
+      "q": 0.005,
+      "cap": 402,
+      "arm": "fresh",
+      "signal": "rare",
+      "scaling": {
+        "none": {
+          "calibrated": {
+            "checkpoint_index": 47,
+            "stop": 402,
+            "rate_index": 109,
+            "rate_factor": 0.40756637885817937,
+            "learning_rate": 0.3286759370643167,
+            "expected_rare_risk": 0.253321959481601
+          },
+          "optimum": {
+            "checkpoint_index": 47,
+            "stop": 402,
+            "rate_index": 109,
+            "rate_factor": 0.40756637885817937,
+            "learning_rate": 0.3286759370643167,
+            "expected_rare_risk": 0.253321959481601
+          },
+          "calibration_excess": 0.0
+        },
+        "sd": {
+          "calibrated": {
+            "checkpoint_index": 47,
+            "stop": 402,
+            "rate_index": 108,
+            "rate_factor": 0.377372794872247,
+            "learning_rate": 0.0018868639743612353,
+            "expected_rare_risk": 0.22654668683657145
+          },
+          "optimum": {
+            "checkpoint_index": 47,
+            "stop": 402,
+            "rate_index": 108,
+            "rate_factor": 0.377372794872247,
+            "learning_rate": 0.0018868639743612353,
+            "expected_rare_risk": 0.22654668683657145
+          },
+          "calibration_excess": 0.0
+        }
+      },
+      "calibrated_gap": -0.026775272645029574,
+      "optimal_gap": -0.026775272645029574
+    },
+    {
+      "q": 0.005,
+      "cap": 402,
+      "arm": "fresh",
+      "signal": "common",
+      "scaling": {
+        "none": {
+          "calibrated": {
+            "checkpoint_index": 47,
+            "stop": 402,
+            "rate_index": 77,
+            "rate_factor": 0.0347144229573619,
+            "learning_rate": 0.027994937970897277,
+            "expected_rare_risk": 0.007391619727958643
+          },
+          "optimum": {
+            "checkpoint_index": 47,
+            "stop": 402,
+            "rate_index": 77,
+            "rate_factor": 0.0347144229573619,
+            "learning_rate": 0.027994937970897277,
+            "expected_rare_risk": 0.007391619727958643
+          },
+          "calibration_excess": 0.0
+        },
+        "sd": {
+          "calibrated": {
+            "checkpoint_index": 47,
+            "stop": 402,
+            "rate_index": 98,
+            "rate_factor": 0.17478049428898637,
+            "learning_rate": 0.000873902471444932,
+            "expected_rare_risk": 0.09107098019644491
+          },
+          "optimum": {
+            "checkpoint_index": 47,
+            "stop": 402,
+            "rate_index": 98,
+            "rate_factor": 0.17478049428898637,
+            "learning_rate": 0.000873902471444932,
+            "expected_rare_risk": 0.09107098019644491
+          },
+          "calibration_excess": 0.0
+        }
+      },
+      "calibrated_gap": 0.08367936046848627,
+      "optimal_gap": 0.08367936046848627
+    },
+    {
+      "q": 0.005,
+      "cap": 402,
+      "arm": "fresh_intercept",
+      "signal": "rare",
+      "scaling": {
+        "none": {
+          "calibrated": {
+            "checkpoint_index": 47,
+            "stop": 402,
+            "rate_index": 111,
+            "rate_factor": 0.475394196673732,
+            "learning_rate": 0.212227183479529,
+            "expected_rare_risk": 0.34459101006003084
+          },
+          "optimum": {
+            "checkpoint_index": 47,
+            "stop": 402,
+            "rate_index": 111,
+            "rate_factor": 0.475394196673732,
+            "learning_rate": 0.212227183479529,
+            "expected_rare_risk": 0.34459101006003084
+          },
+          "calibration_excess": 0.0
+        },
+        "sd": {
+          "calibrated": {
+            "checkpoint_index": 47,
+            "stop": 402,
+            "rate_index": 108,
+            "rate_factor": 0.377372794872247,
+            "learning_rate": 0.0018774765914042143,
+            "expected_rare_risk": 0.22748302558655692
+          },
+          "optimum": {
+            "checkpoint_index": 47,
+            "stop": 402,
+            "rate_index": 108,
+            "rate_factor": 0.377372794872247,
+            "learning_rate": 0.0018774765914042143,
+            "expected_rare_risk": 0.22748302558655692
+          },
+          "calibration_excess": 0.0
+        }
+      },
+      "calibrated_gap": -0.11710798447347393,
+      "optimal_gap": -0.11710798447347393
+    },
+    {
+      "q": 0.005,
+      "cap": 402,
+      "arm": "fresh_intercept",
+      "signal": "common",
+      "scaling": {
+        "none": {
+          "calibrated": {
+            "checkpoint_index": 47,
+            "stop": 402,
+            "rate_index": 81,
+            "rate_factor": 0.04723033223780703,
+            "learning_rate": 0.02108473442832425,
+            "expected_rare_risk": 0.01347444206634153
+          },
+          "optimum": {
+            "checkpoint_index": 47,
+            "stop": 402,
+            "rate_index": 81,
+            "rate_factor": 0.04723033223780703,
+            "learning_rate": 0.02108473442832425,
+            "expected_rare_risk": 0.01347444206634153
+          },
+          "calibration_excess": 0.0
+        },
+        "sd": {
+          "calibrated": {
+            "checkpoint_index": 47,
+            "stop": 402,
+            "rate_index": 99,
+            "rate_factor": 0.18876467546241674,
+            "learning_rate": 0.0009391277386189889,
+            "expected_rare_risk": 0.09136695544224144
+          },
+          "optimum": {
+            "checkpoint_index": 47,
+            "stop": 402,
+            "rate_index": 98,
+            "rate_factor": 0.17478049428898637,
+            "learning_rate": 0.0008695546979551562,
+            "expected_rare_risk": 0.09121378040274584
+          },
+          "calibration_excess": 0.00015317503949559275
+        }
+      },
+      "calibrated_gap": 0.0778925133758999,
+      "optimal_gap": 0.07773933833640431
+    },
+    {
+      "q": 0.005,
+      "cap": 804,
+      "arm": "fresh",
+      "signal": "rare",
+      "scaling": {
+        "none": {
+          "calibrated": {
+            "checkpoint_index": 54,
+            "stop": 804,
+            "rate_index": 107,
+            "rate_factor": 0.349416030607484,
+            "learning_rate": 0.28178144038022135,
+            "expected_rare_risk": 0.16107317297742188
+          },
+          "optimum": {
+            "checkpoint_index": 54,
+            "stop": 804,
+            "rate_index": 107,
+            "rate_factor": 0.349416030607484,
+            "learning_rate": 0.28178144038022135,
+            "expected_rare_risk": 0.16107317297742188
+          },
+          "calibration_excess": 0.0
+        },
+        "sd": {
+          "calibrated": {
+            "checkpoint_index": 54,
+            "stop": 804,
+            "rate_index": 105,
+            "rate_factor": 0.29956239959619974,
+            "learning_rate": 0.001497811997980999,
+            "expected_rare_risk": 0.14029029776070462
+          },
+          "optimum": {
+            "checkpoint_index": 54,
+            "stop": 804,
+            "rate_index": 105,
+            "rate_factor": 0.29956239959619974,
+            "learning_rate": 0.001497811997980999,
+            "expected_rare_risk": 0.14029029776070462
+          },
+          "calibration_excess": 0.0
+        }
+      },
+      "calibrated_gap": -0.02078287521671726,
+      "optimal_gap": -0.02078287521671726
+    },
+    {
+      "q": 0.005,
+      "cap": 804,
+      "arm": "fresh",
+      "signal": "common",
+      "scaling": {
+        "none": {
+          "calibrated": {
+            "checkpoint_index": 54,
+            "stop": 804,
+            "rate_index": 70,
+            "rate_factor": 0.020254224200444728,
+            "learning_rate": 0.01633372246563152,
+            "expected_rare_risk": 0.00605781492861537
+          },
+          "optimum": {
+            "checkpoint_index": 54,
+            "stop": 804,
+            "rate_index": 70,
+            "rate_factor": 0.020254224200444728,
+            "learning_rate": 0.01633372246563152,
+            "expected_rare_risk": 0.00605781492861537
+          },
+          "calibration_excess": 0.0
+        },
+        "sd": {
+          "calibrated": {
+            "checkpoint_index": 54,
+            "stop": 804,
+            "rate_index": 96,
+            "rate_factor": 0.14984333769916414,
+            "learning_rate": 0.0007492166884958208,
+            "expected_rare_risk": 0.0698081357982055
+          },
+          "optimum": {
+            "checkpoint_index": 54,
+            "stop": 804,
+            "rate_index": 96,
+            "rate_factor": 0.14984333769916414,
+            "learning_rate": 0.0007492166884958208,
+            "expected_rare_risk": 0.0698081357982055
+          },
+          "calibration_excess": 0.0
+        }
+      },
+      "calibrated_gap": 0.06375032086959012,
+      "optimal_gap": 0.06375032086959012
+    },
+    {
+      "q": 0.005,
+      "cap": 804,
+      "arm": "fresh_intercept",
+      "signal": "rare",
+      "scaling": {
+        "none": {
+          "calibrated": {
+            "checkpoint_index": 54,
+            "stop": 804,
+            "rate_index": 109,
+            "rate_factor": 0.40756637885817937,
+            "learning_rate": 0.18194724561474954,
+            "expected_rare_risk": 0.23702515230419985
+          },
+          "optimum": {
+            "checkpoint_index": 54,
+            "stop": 804,
+            "rate_index": 110,
+            "rate_factor": 0.4401757504321497,
+            "learning_rate": 0.19650483830856783,
+            "expected_rare_risk": 0.23657269408696202
+          },
+          "calibration_excess": 0.00045245821723782775
+        },
+        "sd": {
+          "calibrated": {
+            "checkpoint_index": 54,
+            "stop": 804,
+            "rate_index": 105,
+            "rate_factor": 0.29956239959619974,
+            "learning_rate": 0.0014903601969960187,
+            "expected_rare_risk": 0.1409911192535053
+          },
+          "optimum": {
+            "checkpoint_index": 54,
+            "stop": 804,
+            "rate_index": 105,
+            "rate_factor": 0.29956239959619974,
+            "learning_rate": 0.0014903601969960187,
+            "expected_rare_risk": 0.1409911192535053
+          },
+          "calibration_excess": 0.0
+        }
+      },
+      "calibrated_gap": -0.09603403305069455,
+      "optimal_gap": -0.09558157483345672
+    },
+    {
+      "q": 0.005,
+      "cap": 804,
+      "arm": "fresh_intercept",
+      "signal": "common",
+      "scaling": {
+        "none": {
+          "calibrated": {
+            "checkpoint_index": 54,
+            "stop": 804,
+            "rate_index": 74,
+            "rate_factor": 0.02755666540622037,
+            "learning_rate": 0.01230194547213552,
+            "expected_rare_risk": 0.00954985523034163
+          },
+          "optimum": {
+            "checkpoint_index": 54,
+            "stop": 804,
+            "rate_index": 74,
+            "rate_factor": 0.02755666540622037,
+            "learning_rate": 0.01230194547213552,
+            "expected_rare_risk": 0.00954985523034163
+          },
+          "calibration_excess": 0.0
+        },
+        "sd": {
+          "calibrated": {
+            "checkpoint_index": 54,
+            "stop": 804,
+            "rate_index": 96,
+            "rate_factor": 0.14984333769916414,
+            "learning_rate": 0.0007454892422843988,
+            "expected_rare_risk": 0.0699780181922735
+          },
+          "optimum": {
+            "checkpoint_index": 54,
+            "stop": 804,
+            "rate_index": 96,
+            "rate_factor": 0.14984333769916414,
+            "learning_rate": 0.0007454892422843988,
+            "expected_rare_risk": 0.0699780181922735
+          },
+          "calibration_excess": 0.0
+        }
+      },
+      "calibrated_gap": 0.060428162961931875,
+      "optimal_gap": 0.060428162961931875
+    }
+  ]
+}

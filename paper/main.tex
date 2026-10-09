@@ -638,6 +638,15 @@ overturns SD's advantage under calibration. In the baseline, exact selection
 narrows the gap from $-.0192$ to $-.0059$, preserving SD's advantage. Both
 orderings persist under exact selection in all 12 baseline settings.
 
+The reported gains can combine adaptation to each training run with correction
+of a suboptimal calibration choice. For the fitted-intercept setting in
+\cref{tab:bridge-selection}, minimizing exact expected risk over the same finite
+rate-and-stop family gives $.23184$ for U and $.13823$ for SD\@. These are
+expectations over training randomness, distinct from the table's Monte Carlo
+means. SD therefore retains its advantage at the best fixed choices, so
+calibration suboptimality alone cannot explain the reversal
+(\cref{sec:bridge-exact-calibration}).
+
 Every validation set in this example contains rare observations. The reversal
 under exact selection shows that validation noise is not needed: choosing the
 best predictor in each training run is a different objective from choosing the
@@ -681,7 +690,8 @@ distributions.
     reductions indicate improvement over the separately calibrated choice for
     the same scaling; negative SD-minus-U gaps favor SD\@. Means use 4096 paired
     evaluation runs. MCSEs refer to the paired gaps and condition on the
-    calibration choices.
+    calibration choices. \Cref{sec:bridge-exact-calibration} gives exact
+    expected-risk calibration benchmarks for the same candidate family.
   }
   \label{tab:bridge-selection}
 \end{table}
@@ -1589,6 +1599,47 @@ across evaluation replications and report their Monte Carlo standard errors.
 These errors condition on the frozen calibration choices; they exclude
 calibration uncertainty and adjustments for multiple comparisons.
 
+\subsubsection{Exact expected-risk calibration benchmark}
+\label{sec:bridge-exact-calibration}
+
+For the two fresh arms, a deterministic moment calculation identifies the best
+fixed candidate in the same finite family used for \cref{tab:bridge-selection}.
+Let $z$ be the population-centered, transformed feature vector, augmented by a
+unit coordinate when fitting an intercept. If $e_k$ is the transformed
+coefficient error after $k$ updates and $Q_k = \E[e_k e_k^\top]$, then
+independent observations and unit noise variance give
+\[
+  Q_{k+1}
+  = \E_z[(I-\eta zz^\top)Q_k(I-\eta zz^\top)]
+    + \eta^2\E_z[zz^\top],
+  \qquad
+  Q_0 = \theta^*\theta^{*\top}.
+\]
+Here $\theta^*$ is the true transformed coefficient vector, including a zero
+intercept when fitted, and all coefficients start at zero. The expected rare
+risk at stop $k$ is
+$\tfrac12\operatorname{tr}(Q_k\E[zz^\top\mid J=1])$. We sum over the four
+feature cells and evaluate this exact recursion in floating-point arithmetic
+at every saved rate and stopping checkpoint. Including the intercept cross
+moments is essential. The optimization covers the saved finite family, not all
+real rates and integer stops, and leaves the frozen calibration choices intact.
+
+For the fitted-intercept example in \cref{tab:bridge-selection}, the frozen
+choices have expected rare risks $.24385$ for U and $.13823$ for SD\@. The
+finite-family minima are $.23184$ and $.13823$, respectively, attained at stop
+$204$ with rate factors $.407566$ and $.299562$. Calibration suboptimality is
+therefore $.01200$ for U and zero for SD\@. The optimal fixed-choice SD-minus-U
+gap is $-.09361$, so calibration suboptimality cannot account for the reversal
+under selection. In the fixed-intercept baseline, the saved choices already
+attain the finite-family minima, $.15518$ for U and $.13557$ for SD\@. These
+expectations have no Monte Carlo error; the table estimates risks from 4096
+evaluation runs. The source supplement retains expected risks for every
+candidate, the minimizing choices, and calibration excesses for both fresh
+arms, both prevalences, all three caps, and both signals. Independent short-path
+enumeration and the baseline's two-coordinate moment recursion check the
+calculation. The reproduction guide gives commands to reconstruct it without
+training.
+
 \subsubsection{Distributions of selection gains}
 \label{sec:bridge-gains}
 
@@ -1619,12 +1670,13 @@ selection instead gives
     + \left\{ \E_D[r_R(\widehat f_{D,s,a_{s,\mathrm{cal}}})] - \min_{a \in \mathcal A}\E_D[r_R(\widehat f_{D,s,a})] \right\}.
 \]
 The second term measures calibration suboptimality. It vanishes for the
-baseline, which chooses the finite-family optimum using exact expected moments,
-but is not identified for the fitted-intercept arm. Its observed gains can
-therefore combine adaptation with correction of a suboptimal calibration choice;
-their Monte Carlo standard errors do not resolve this distinction. Neither $A_s$
-nor these empirical gains is a gain covered by the theorem's optimization over
-deterministic rates and stops.
+baseline, which chooses the finite-family optimum using exact expected moments.
+For the fitted-intercept example, it is $.01200$ for U and zero for SD
+(\cref{sec:bridge-exact-calibration}). The observed gains therefore combine
+adaptation with correction of U's suboptimal calibration choice; their Monte
+Carlo standard errors describe evaluation uncertainty conditional on those
+choices. Neither $A_s$ nor these empirical gains is a gain covered by the
+theorem's optimization over deterministic rates and stops.
 
 \begin{table}[htbp]
   \centering
@@ -1771,10 +1823,10 @@ mechanism does not explain every selection reversal.
 These are descriptive identities for the selected predictors in a finite
 candidate family, conditional on calibration. They identify how cancellation
 accounts for this reversal, without identifying a causal effect of altering
-intercept training or separating adaptation gains from calibration
-suboptimality. The source supplement retains per-run errors, four risk terms,
-paired gap and gain contributions, and cancellation summaries for all 120
-setting--policy combinations in the two fresh arms. Independent four-cell
+intercept training. \Cref{sec:bridge-exact-calibration} separately quantifies
+calibration suboptimality. The source supplement retains per-run errors, four
+risk terms, paired gap and gain contributions, and cancellation summaries for all
+120 setting--policy combinations in the two fresh arms. Independent four-cell
 predictions and the existing risks and gains verify the decomposition. The
 reproduction guide explains how to reconstruct the analysis without training.
 

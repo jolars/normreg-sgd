@@ -207,6 +207,7 @@ tasks:
       - task: check:workflow
       - task: check:theory-bridge
       - task: check:calibration-sensitivity
+      - task: check:exact-calibration
       - task: check:selection-gains
       - task: check:risk-decomposition
       - task: check:common-block
@@ -232,6 +233,12 @@ tasks:
     cmds:
       - python -m checks.selection_gains
       - python -m experiments.theory_bridge.selection_gains --check
+
+  check:exact-calibration:
+    desc: Verify exact expected-risk calibration by enumeration and saved moments.
+    cmds:
+      - python -m checks.exact_calibration
+      - python -m experiments.theory_bridge.exact_calibration --check
 
   check:risk-decomposition:
     desc: Verify rare-risk terms and intercept cancellation from saved predictors.
@@ -330,6 +337,7 @@ tasks:
       - python -m experiments.diagnostics.run --check
       - python -m checks.theory_bridge --saved
       - python -m experiments.theory_bridge.summarize --check
+      - task: check:exact-calibration
       - task: check:selection-gains
       - task: check:risk-decomposition
 
@@ -425,6 +433,11 @@ tasks:
     desc: Analyze selection gains from saved fresh-arm predictors without training.
     cmds:
       - python -m experiments.theory_bridge.selection_gains
+
+  experiment:exact-calibration:
+    desc: Compute exact expected-risk benchmarks for the saved fresh-arm candidates.
+    cmds:
+      - python -m experiments.theory_bridge.exact_calibration
 
   experiment:risk-decomposition:
     desc: Decompose saved fresh-arm rare risks and measure cancellation without training.

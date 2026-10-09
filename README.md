@@ -185,6 +185,15 @@ selection sensitivity; overlapping splits are not independent replications.
 `task check:calibration-sensitivity` checks the selection logic and reconstructs
 the saved diagnostic.
 
+`task experiment:exact-calibration` computes exact expected risks over the saved
+candidate family for both fresh arms, including the fitted intercept's cross
+moments. The [saved benchmark](results/theory-bridge/exact-calibration.json)
+compares the frozen calibration choices with the best fixed choices at every
+cap, prevalence, and signal pair. This deterministic calculation identifies
+calibration suboptimality without retraining or changing the original choices.
+`task check:exact-calibration` checks exhaustive short SGD paths, the baseline's
+existing moments, and reproduction of all saved candidate risks and summaries.
+
 `task experiment:risk-decomposition` decomposes saved rare risks in both fresh
 arms into common-coefficient, centered-intercept, rare-coefficient, and cross
 terms without retraining. The [saved

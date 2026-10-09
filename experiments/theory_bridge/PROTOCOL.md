@@ -131,9 +131,9 @@ descriptive finite-family gains condition on the frozen calibration choices.
 Their means under exact selection combine theoretical adaptation gains (the
 difference between the minimum expected risk and the expectation of minimum
 risk) with calibration suboptimality. The latter is zero for the baseline's
-exact moment calibration and is not identified for the fitted-intercept arm. The
-theorem optimizes deterministic rates and stops and does not cover adaptive
-selection.
+exact moment calibration. The exact expected-risk benchmark below separately
+identifies it for the fitted-intercept arm. The theorem optimizes deterministic
+rates and stops and does not cover adaptive selection.
 
 Evaluate each saved predictor on the two rare cells. Record its signed mean
 prediction error in the rare subgroup and common-coefficient error, including
@@ -145,6 +145,26 @@ manuscript table in `paper/generated/selection-gains.tex` from these summaries.
 Run `task experiment:selection-gains` without retraining, then
 `task check:selection-gains` to verify the results using independent rare-cell
 predictions and the existing risk-change summaries.
+
+## Exact expected-risk benchmark added after review
+
+For both fresh arms, propagate the full coefficient-error second moment under
+the four-cell feature law and unit noise variance, retaining intercept cross
+moments when fitted. Evaluate aggregate and rare expected risks at every saved
+rate factor and stopping checkpoint, then minimize expected rare risk within
+each cap using the original tie rule. Compare this minimum with the expected
+risk of the frozen calibration choice. This difference identifies calibration
+suboptimality within the finite family. The original calibration choices and
+evaluation paths are retained.
+
+This deterministic calculation evaluates exact moments in floating-point
+arithmetic; it has no Monte Carlo error and does not optimize over unrestricted
+rates and stops. Retain every candidate's expected risks, learning rates, and
+chosen indices in `exact-calibration.npz`, with grids, summaries, and
+calibration excesses in `exact-calibration.json` under `results/theory-bridge/`.
+Run `task experiment:exact-calibration` to reconstruct it without training, then
+`task check:exact-calibration` to verify short paths by exhaustive enumeration
+and compare the baseline with its existing two-coordinate moment recursion.
 
 ## Rare-risk decomposition added after the gain analysis
 

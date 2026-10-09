@@ -168,6 +168,21 @@ summaries, selected predictors and their indices, numerical failure records, and
 the machine-readable summary. Summarizing and plotting use saved results without
 training.
 
+The exact expected-risk calibration benchmark uses the saved rate factors,
+stopping checkpoints, and frozen calibration choices for both fresh arms. It
+propagates full second moments, including intercept cross moments, without
+simulating training paths. `results/theory-bridge/exact-calibration.npz` retains
+every candidate's expected risk, and `exact-calibration.json` records the grids,
+minimizing choices, and calibration excesses. The benchmark optimizes the saved
+finite family; its expectations are distinct from the evaluation means in Table 1.
+Reconstruct it and check it against exhaustive short paths and the baseline's
+existing moments:
+
+```sh
+task experiment:exact-calibration
+task check:exact-calibration
+```
+
 The selection-gain and risk-decomposition analyses retain per-run arrays and
 summaries in `results/theory-bridge/selection-gains.npz`,
 `selection-gains.json`, `risk-decomposition.npz`, and `risk-decomposition.json`.
