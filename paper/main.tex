@@ -114,7 +114,7 @@ observation caps in \cref{fig:conference-tuned-intro}.
   \caption{
     Tuning does not erase the effect of normalization. Independent binary
     features have prevalences $1/2$ and $q = 10^{-4}$, with
-    $(\beta_C^*,\beta_R^*) = (0.1,1)$ (left) or $(1,0.1)$ (right) and noise
+    $(\beta_C^*,\beta_R^*) = (0.1,1)$ (a) or $(1,0.1)$ (right) and noise
     variance one. Under the stated population setup, curves show the lowest
     exact rare risk over a finite rate grid and every integer stop within each
     cap, including zero. Both panels use the same axes; lower is better. This
@@ -659,17 +659,17 @@ distributions.
     \toprule
                            & \multicolumn{2}{c}{Rare risk} & \multicolumn{2}{c}{Reduction from calibration} & \multicolumn{2}{c}{SD-minus-U gap} \\
     \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
-    Selection              &       U &      SD &       U &      SD &     Mean &     MCSE \\
+    Selection              &        U &       SD &        U &       SD &      Mean &      MCSE \\
     \midrule
-    \multicolumn{7}{l}{Fresh observations, fitted intercept}                             \\
-    Separate calibration   & $.2409$ & $.1364$ &     --- &     --- & $-.1046$ & $.00364$ \\
-    Validation (2048 rows) & $.0268$ & $.0344$ & $.2141$ & $.1020$ & $+.0075$ & $.00132$ \\
-    Exact population risk  & $.0011$ & $.0175$ & $.2399$ & $.1189$ & $+.0164$ & $.00128$ \\
+    \multicolumn{7}{l}{\emph{Fresh observations, fitted intercept}}                            \\
+    Separate calibration   & $0.2409$ & $0.1364$ &      --- &      --- & $-0.1046$ & $0.00364$ \\
+    Validation (2048 rows) & $0.0268$ & $0.0344$ & $0.2141$ & $0.1020$ & $+0.0075$ & $0.00132$ \\
+    Exact population risk  & $0.0011$ & $0.0175$ & $0.2399$ & $0.1189$ & $+0.0164$ & $0.00128$ \\
     \midrule
-    \multicolumn{7}{l}{Fresh observations, fixed zero intercept (baseline)}              \\
-    Separate calibration   & $.1528$ & $.1337$ &     --- &     --- & $-.0192$ & $.00070$ \\
-    Validation (2048 rows) & $.0393$ & $.0259$ & $.1136$ & $.1078$ & $-.0134$ & $.00065$ \\
-    Exact population risk  & $.0147$ & $.0088$ & $.1381$ & $.1248$ & $-.0059$ & $.00056$ \\
+    \multicolumn{7}{l}{\emph{Fresh observations, fixed zero intercept (baseline)}}             \\
+    Separate calibration   & $0.1528$ & $0.1337$ &      --- &      --- & $-0.0192$ & $0.00070$ \\
+    Validation (2048 rows) & $0.0393$ & $0.0259$ & $0.1136$ & $0.1078$ & $-0.0134$ & $0.00065$ \\
+    Exact population risk  & $0.0147$ & $0.0088$ & $0.1381$ & $0.1248$ & $-0.0059$ & $0.00056$ \\
     \bottomrule
   \end{tabular}
   \caption{

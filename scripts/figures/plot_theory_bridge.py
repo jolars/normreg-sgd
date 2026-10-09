@@ -46,7 +46,7 @@ def controlled(report):
         2, 2, figsize=(PAPER_WIDTH, 5.2), sharex="col", sharey=True
     )
     figure.subplots_adjust(
-        left=0.32, right=0.965, bottom=0.14, top=0.94, hspace=0.22, wspace=0.14
+        left=0.32, right=0.94, bottom=0.14, top=0.94, hspace=0.22, wspace=0.14
     )
     for row, q in enumerate((0.02, 0.005)):
         for col, signal in enumerate(("rare", "common")):
@@ -70,7 +70,7 @@ def controlled(report):
                 )
             axis.axvline(0, color="0.35", linewidth=0.8, linestyle="--")
             axis.set(
-                title=rf"{signal.capitalize()} signal, $q={q:g}$",
+                title=f"{signal.capitalize()} signal" if row == 0 else "",
                 yticks=np.arange(8),
                 yticklabels=LABELS,
                 ylim=(7.65, -0.65),
@@ -80,6 +80,16 @@ def controlled(report):
             axis.set_xticks(
                 [-0.12, -0.08, -0.04, 0] if col == 0 else [0, 0.04, 0.08, 0.12]
             )
+        axes[row, 1].text(
+            1.08,
+            0.5,
+            rf"$q={q:g}$",
+            transform=axes[row, 1].transAxes,
+            rotation=270,
+            ha="center",
+            va="center",
+            fontsize=plt.rcParams["axes.labelsize"],
+        )
     figure.supxlabel("SD minus unscaled rare risk (negative favors SD)", y=0.075)
     figure.legend(
         *axes[0, 0].get_legend_handles_labels(),
