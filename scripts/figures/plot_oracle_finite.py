@@ -4,7 +4,15 @@ import json
 
 import matplotlib.pyplot as plt
 import numpy as np
-from style import COLORS, METHOD_STYLES, OUTPUT, PAPER_WIDTH, ROOT, apply_style, save
+from style import (
+    METHOD_STYLES,
+    OUTPUT,
+    PAPER_WIDTH,
+    PREVALENCE_STYLES,
+    ROOT,
+    apply_style,
+    save,
+)
 
 
 def main():
@@ -29,11 +37,7 @@ def main():
     ax.set_title("(a) All 43 settings")
     ax.legend(frameon=False)
 
-    series = [
-        (0.02, COLORS["orange"], "o"),
-        (0.0002, COLORS["sky_blue"], "s"),
-        (0.000002, COLORS["purple"], "^"),
-    ]
+    prevalences = (0.02, 0.0002, 0.000002)
     specs = [
         (
             axes[0, 1],
@@ -58,7 +62,7 @@ def main():
         ),
     ]
     for ax, group, xkey, ykey, limitkey in specs:
-        for prevalence, color, marker in series:
+        for prevalence in prevalences:
             rows = sorted(
                 [
                     row
@@ -70,8 +74,7 @@ def main():
             ax.plot(
                 [row[xkey] for row in rows],
                 [row[ykey] for row in rows],
-                color=color,
-                marker=marker,
+                **PREVALENCE_STYLES[prevalence],
                 markersize=3,
                 linewidth=1,
                 label=rf"$q={prevalence:g}$"

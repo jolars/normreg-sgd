@@ -91,7 +91,8 @@ observation caps in \cref{fig:conference-tuned-intro}.
 \begin{figure}[htb]
   \centering
   \includegraphics{../figures/coefficient-paths/method-legend.pdf}\par\smallskip
-  \subfigure[Paths to a shared solution]{%
+  \subfigure[Full-gradient descent fits a noiseless dataset with binary features at prevalences $0.5$ and $0.02$. Dots mark an illustrative stop after 20 updates. Pale curves show progress toward the shared OLS solution,
+    while gray contours show training loss.]{%
     \label{fig:intro-coefficient-paths}%
     \includegraphics{../figures/coefficient-paths/paths-to-ols.pdf}%
   }\hfill
@@ -101,17 +102,13 @@ observation caps in \cref{fig:conference-tuned-intro}.
   }
   \caption{
     Normalization changes learning paths, and its effect on risk depends on the
-    signal. (a) Full-gradient descent fits a noiseless dataset with binary
-    features at prevalences $0.5$ and $0.02$. Dots mark an illustrative stop
-    after 20 updates. Pale curves show progress toward the shared OLS solution,
-    while gray contours show training loss. (b) Limiting oracle risks for
-    fresh-sample SGD with noise variance one and rescaled budget $\tau = 2$. As
-    the rare signal share $\theta$ increases, $(\beta_C^*)^2 = 4(1 - \theta)$
-    and $(\beta_R^*)^2 = \theta$, fixing initial limiting subgroup risk at
-    $1/2$. The middle tick gives equal contributions to that risk. Lines connect
-    saved scalar minima along the allocation path in
-    \cref{cor:oracle-allocation}. \Cref{sec:signal-allocation} gives the setup
-    and numerical checks.
+    signal. (a) (b) Limiting oracle risks for fresh-sample SGD with noise
+    variance one and rescaled budget $\tau = 2$. As the rare signal share
+    $\theta$ increases, $(\beta_C^*)^2 = 4(1 - \theta)$ and
+    $(\beta_R^*)^2 = \theta$, fixing initial limiting subgroup risk at $1/2$.
+    The middle tick gives equal contributions to that risk. Lines connect saved
+    scalar minima along the allocation path in \cref{cor:oracle-allocation}.
+    \Cref{sec:signal-allocation} gives the setup and numerical checks.
   }
   \label{fig:intro-normalization}
 \end{figure}
@@ -332,8 +329,8 @@ express both searches in terms of their effect on the rare coefficient, let
 $\alpha$ denote the step on that coordinate in the original coefficient scale.
 The update matrices are
 \begin{equation}
-  D_U(\alpha) = \alpha I_2,\qquad D_S(\alpha)
-              = \diag(4b\alpha,\alpha),\quad \alpha
+  D_U(\alpha) =    \alpha I_2,\qquad D_S(\alpha)
+              =    \diag(4b\alpha,\alpha),\quad \alpha
               \geq 0. \label{eq:conference-oracle-rates}
 \end{equation}
 Here $D = \eta P$, so $\eta_U = \alpha$ and $\eta_S = b\alpha$. Each
@@ -350,8 +347,9 @@ search faces.
 
 For an observation cap $M \in \mathbb N$, define
 \begin{equation}
-  R_A^*(M) = \inf_{\substack{\alpha\geq0\\ k\in\{0,\ldots,M\}}} R_{R,k}^{A}(\alpha),\qquad A
-           \in \{U,S\}. \label{eq:conference-oracle-risk}
+  R_A^*(M)
+  =   \inf_{\substack{\alpha\geq0\\ k\in\{0,\ldots,M\}}} R_{R,k}^{A}(\alpha),\qquad A
+  \in \{U,S\}. \label{eq:conference-oracle-risk}
 \end{equation}
 The oracle chooses a deterministic rate and stop using population risk averaged
 over training randomness. It may stop at the prescribed zero initialization.
@@ -468,9 +466,10 @@ risk. The limiting objectives are
   $q \to 0$ and integer observation caps satisfy $M_qb \to \tau \in (0,\infty)$,
   then
   \[
-    R_A^*(M_q) \longrightarrow L_A(\tau)
-               := \min_{0 \leq \alpha \leq 1}F_A(\alpha;\tau), \qquad A
-               \in \{U,S\},
+    R_A^*(M_q)
+    \longrightarrow L_A(\tau)
+    :=              \min_{0 \leq \alpha \leq 1}F_A(\alpha;\tau), \qquad A
+    \in             \{U,S\},
   \]
   with the signal and noise arguments as in \cref{eq:limiting-objectives}. More
   precisely, for every $0 < T_0 < T_1 < \infty$, uniformly over integer caps
@@ -631,7 +630,7 @@ choices. One small gap reverses in 2 of 200 splits
   \includegraphics[]{../figures/theory-bridge/controlled-gaps.pdf}
   \caption{
     Both calibrated risk orderings persist across the eight training arms.
-    Negative SD-minus-U rare risk favors SD. Shades distinguish the three caps;
+    Negative SD-minus-U rare risk favors SD. Colors distinguish the three caps;
     bars show two paired Monte Carlo standard errors over 4096 evaluation
     replications, conditional on the calibration choices. The last two rows
     successively add empirical centering and response-mean initialization to
@@ -662,8 +661,8 @@ The selected U predictors have smaller mean prediction errors within the rare
 group, while SD retains a slightly smaller common-coefficient error. Their
 intercept and rare-coefficient errors nearly cancel: the cross term removes
 $99.9\%$ of U's mean squared-error contributions from those two coordinates,
-compared with $27.4\%$ for SD. This cancellation accounts for the selected
-risk ordering even though U has larger errors in each coordinate separately
+compared with $27.4\%$ for SD. This cancellation accounts for the selected risk
+ordering even though U has larger errors in each coordinate separately
 (\cref{sec:bridge-cancellation}). \Cref{sec:bridge-gains} examines the gain
 distributions.
 
@@ -675,12 +674,12 @@ distributions.
     \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
     Selection              &       U &      SD &       U &      SD &     Mean &     MCSE \\
     \midrule
-    \multicolumn{7}{l}{Fresh observations, fitted intercept} \\
+    \multicolumn{7}{l}{Fresh observations, fitted intercept}                             \\
     Separate calibration   & $.2409$ & $.1364$ &     --- &     --- & $-.1046$ & $.00364$ \\
     Validation (2048 rows) & $.0268$ & $.0344$ & $.2141$ & $.1020$ & $+.0075$ & $.00132$ \\
     Exact population risk  & $.0011$ & $.0175$ & $.2399$ & $.1189$ & $+.0164$ & $.00128$ \\
     \midrule
-    \multicolumn{7}{l}{Fresh observations, fixed zero intercept (baseline)} \\
+    \multicolumn{7}{l}{Fresh observations, fixed zero intercept (baseline)}              \\
     Separate calibration   & $.1528$ & $.1337$ &     --- &     --- & $-.0192$ & $.00070$ \\
     Validation (2048 rows) & $.0393$ & $.0259$ & $.1136$ & $.1078$ & $-.0134$ & $.00065$ \\
     Exact population risk  & $.0147$ & $.0088$ & $.1381$ & $.1248$ & $-.0059$ & $.00056$ \\
@@ -692,10 +691,10 @@ distributions.
     preprocessing. The fitted-intercept arm and baseline (arms 2 and 1 in
     \cref{tab:bridge-arms}) share the observation cap and differ only in whether
     an intercept is fitted; all coefficients are initialized at zero. Positive
-    reductions indicate improvement over the separately calibrated choice for the same
-    scaling; negative SD-minus-U gaps favor SD. Means use 4096 paired evaluation
-    runs. MCSEs refer to the paired gaps and condition on the calibration
-    choices.
+    reductions indicate improvement over the separately calibrated choice for
+    the same scaling; negative SD-minus-U gaps favor SD. Means use 4096 paired
+    evaluation runs. MCSEs refer to the paired gaps and condition on the
+    calibration choices.
   }
   \label{tab:bridge-selection}
 \end{table}
@@ -991,7 +990,7 @@ $1/8$. Otherwise $0 < b\alpha < 2$ and the same geometric bound gives
 \[
   R_{R,k}^S \geq \min\left\{ \frac18, \frac{w\alpha}{2(2 - b\alpha)} \right\}
             \geq \min\left\{ \frac18,\frac{w}{2(2 - b)} \right\}
-            = \frac18.
+            =    \frac18.
 \]
 The last equality follows from $q \leq 1/16$. Since $L_C \leq 1/8$, the bound
 covers all larger rates as well.
@@ -1186,9 +1185,9 @@ $k \in \{0,\ldots,M\}$ in the model with $m$ common features.
   At fixed $\alpha$, the value of $u$ does not depend on $m$. Every coefficient
   in \cref{eq:common-block-moments} is nonnegative. In particular,
   \[
-    1 - 2u + mu^2 = (1 - u)^2 + (m - 1)u^2
+    1 - 2u + mu^2 =    (1 - u)^2 + (m - 1)u^2
                   \geq 0, \qquad D_b
-                  = (1 - b\alpha)^2 + b\alpha^2(1 - 4b)
+                  =    (1 - b\alpha)^2 + b\alpha^2(1 - 4b)
                   \geq 0.
   \]
   Increasing $m$ increases the coefficients and noise term in the common
@@ -1639,31 +1638,31 @@ has no corresponding guarantee for population risk.
 Even within the finite family $\mathcal A$, a theoretical adaptation gain
 compares the best fixed candidate with the best realized candidate:
 \[
-  A_s = \min_{a\in\mathcal A}\E_D[r_R(\widehat f_{D,s,a})]
-        - \E_D[\min_{a\in\mathcal A}r_R(\widehat f_{D,s,a})].
+  A_s = \min_{a \in \mathcal A}\E_D[r_R(\widehat f_{D,s,a})]
+        - \E_D[\min_{a \in \mathcal A}r_R(\widehat f_{D,s,a})].
 \]
 Conditional on the frozen calibration choice $a_{s,\mathrm{cal}}$, exact
 selection instead gives
 \[
   \E_D[G_s]
-  = A_s + \left\{\E_D[r_R(\widehat f_{D,s,a_{s,\mathrm{cal}}})]
-                 - \min_{a\in\mathcal A}\E_D[r_R(\widehat f_{D,s,a})]\right\}.
+  = A_s
+    + \left\{ \E_D[r_R(\widehat f_{D,s,a_{s,\mathrm{cal}}})] - \min_{a \in \mathcal A}\E_D[r_R(\widehat f_{D,s,a})] \right\}.
 \]
-The second term measures calibration suboptimality. It vanishes for the baseline,
-which chooses the finite-family optimum using exact expected moments, but is
-not identified for the fitted-intercept arm. Its observed gains can therefore
-combine adaptation with correction of a suboptimal calibration choice; their
-Monte Carlo standard errors do not resolve this distinction. Neither $A_s$ nor
-these empirical gains is a gain covered by the theorem's optimization over
+The second term measures calibration suboptimality. It vanishes for the
+baseline, which chooses the finite-family optimum using exact expected moments,
+but is not identified for the fitted-intercept arm. Its observed gains can
+therefore combine adaptation with correction of a suboptimal calibration choice;
+their Monte Carlo standard errors do not resolve this distinction. Neither $A_s$
+nor these empirical gains is a gain covered by the theorem's optimization over
 deterministic rates and stops.
 
 \begin{table}[htbp]
   \centering
   \input{generated/selection-gains.tex}
   \caption{
-    Selection-gain distributions for the example in
-    \cref{tab:bridge-selection}: fresh observations, $q = .02$, $M = 204$,
-    and $(\beta_C^*,\beta_R^*) = (.1,1)$. Quantiles use 4096 evaluation runs.
+    Selection-gain distributions for the example in \cref{tab:bridge-selection}:
+    fresh observations, $q = .02$, $M = 204$, and
+    $(\beta_C^*,\beta_R^*) = (.1,1)$. Quantiles use 4096 evaluation runs.
     ``Worse'' is the percentage with negative gain, meaning higher population
     rare risk than the calibrated predictor of the same scaling.
   }
@@ -1689,55 +1688,58 @@ intercept and exact selection, U's gain has median $.1456$ and 5th--95th
 percentiles $.0067$--$.7747$, compared with $.0626$ and $.0012$--$.4083$ for SD.
 The largest $10\%$ of gains contribute $35.5\%$ of U's total and $39.3\%$ of
 SD's total. Thus larger U gains appear in typical runs as well as in the upper
-tail. Pairing the scalings, $G_U-G_{\mathrm{SD}}$ has mean $.1210$ (MCSE
-$.00378$), median $.0599$, and 5th--95th percentiles $-.1706$--$.5962$.
-U gains more in $71.3\%$ of runs, so its larger average gain does not hold in
-every run. The per-run identity
+tail. Pairing the scalings, $G_U - G_{\mathrm{SD}}$ has mean $.1210$ (MCSE
+$.00378$), median $.0599$, and 5th--95th percentiles $-.1706$--$.5962$. U gains
+more in $71.3\%$ of runs, so its larger average gain does not hold in every run.
+The per-run identity
 \[
-  \mathrm{gap}_{\mathrm{sel}}(D)
-  = \mathrm{gap}_{\mathrm{cal}}(D) + G_U(D)-G_{\mathrm{SD}}(D)
+  \mathrm{gap}_{\mathrm{sel}}(D) = \mathrm{gap}_{\mathrm{cal}}(D)
+                                   + G_U(D)
+                                   - G_{\mathrm{SD}}(D)
 \]
-explains why the mean gain difference overturns the calibrated gap $-.1046$.
-For the fixed-intercept baseline, the mean paired gain difference is only
-$.0133$ (MCSE $.00086$), with median $.0131$ and 5th--95th percentiles
+explains why the mean gain difference overturns the calibrated gap $-.1046$. For
+the fixed-intercept baseline, the mean paired gain difference is only $.0133$
+(MCSE $.00086$), with median $.0131$ and 5th--95th percentiles
 $-.0699$--$.0915$. U gains more in $68.2\%$ of runs, but this smaller difference
 does not overturn the calibrated gap $-.0192$.
 
 The saved predictors show where the remaining rare risk lies. Let
-$e_R=a+(1-q)(b_R-\beta_R^*)$ denote their mean signed prediction error across
-the two rare cells, and let $e_C=b_C-\beta_C^*$.
-Under exact selection with a fitted intercept, the root mean squares of $e_R$
-fall from $.6735$ to $.0255$ for U and from $.5194$ to $.1843$ for SD.
-The corresponding values for $e_C$ fall from $.3365$ to $.0775$ for U and
-from $.1082$ to $.0647$ for SD. Since $r_R=e_C^2/8+e_R^2/2$, the remaining
-rare-group mean error dominates SD's selected risk, while U nearly removes it.
-In the baseline, selected U and SD predictors instead have $e_R$ root mean
-squares $.1528$ and $.1269$, and $e_C$ root mean squares $.1564$ and $.0796$.
-SD retains smaller errors of both kinds and hence lower mean risk. These
-comparisons locate the remaining error; the decomposition below separates the
-intercept and rare-coefficient contributions.
+$e_R = a + (1 - q)(b_R - \beta_R^*)$ denote their mean signed prediction error
+across the two rare cells, and let $e_C = b_C - \beta_C^*$. Under exact
+selection with a fitted intercept, the root mean squares of $e_R$ fall from
+$.6735$ to $.0255$ for U and from $.5194$ to $.1843$ for SD. The corresponding
+values for $e_C$ fall from $.3365$ to $.0775$ for U and from $.1082$ to $.0647$
+for SD. Since $r_R = e_C^2/8 + e_R^2/2$, the remaining rare-group mean error
+dominates SD's selected risk, while U nearly removes it. In the baseline,
+selected U and SD predictors instead have $e_R$ root mean squares $.1528$ and
+$.1269$, and $e_C$ root mean squares $.1564$ and $.0796$. SD retains smaller
+errors of both kinds and hence lower mean risk. These comparisons locate the
+remaining error; the decomposition below separates the intercept and
+rare-coefficient contributions.
 
-With 2048 validation rows, fitted-intercept U gains more than SD in $68.0\%$
-of runs, but selection worsens risk relative to calibration in $13.3\%$ of
-U runs and $22.3\%$ of SD runs. The baseline also has negative gains, in
-$17.9\%$ and $20.8\%$ of runs, respectively. Thus a positive mean improvement
-does not guarantee an improvement on each training stream, even when every
-validation set contains rare observations. The files
+With 2048 validation rows, fitted-intercept U gains more than SD in $68.0\%$ of
+runs, but selection worsens risk relative to calibration in $13.3\%$ of U runs
+and $22.3\%$ of SD runs. The baseline also has negative gains, in $17.9\%$ and
+$20.8\%$ of runs, respectively. Thus a positive mean improvement does not
+guarantee an improvement on each training stream, even when every validation set
+contains rare observations. The files
 \path{results/theory-bridge/selection-gains.json} and
 \path{results/theory-bridge/selection-gains.npz} retain distributions and
 per-run risks, gains, and predictor errors for both fresh arms, both
-prevalences, all three caps, both signals, and exact-risk selection and all three
-validation sizes. Run \texttt{task experiment:selection-gains} to reconstruct
-them and the table without training, and \texttt{task check:selection-gains} to
-verify them against independent predictions on the two rare cells.
+prevalences, all three caps, both signals, and exact-risk selection and all
+three validation sizes. Run \texttt{task experiment:selection-gains} to
+reconstruct them and the table without training, and
+\texttt{task check:selection-gains} to verify them against independent
+predictions on the two rare cells.
 
 \subsubsection{Intercept--rare error cancellation}
 \label{sec:bridge-cancellation}
 
 Write each saved predictor in the population-centered coordinates used above.
 The true centered intercept is zero, so its error is $a$, not the raw intercept
-saved with the coefficients. Let $d=(1-q)(b_R-\beta_R^*)$. Independence and
-balance of the common feature within the rare subgroup give the per-run identity
+saved with the coefficients. Let $d = (1 - q)(b_R - \beta_R^*)$. Independence
+and balance of the common feature within the rare subgroup give the per-run
+identity
 \[
   r_R = \underbrace{e_C^2/8}_{\text{common}}
         + \underbrace{a^2/2}_{\text{intercept}}
@@ -1757,44 +1759,44 @@ predictions do not require either coordinate to be estimated accurately.
   \caption{
     Mean rare-risk contributions for the primary example in
     \cref{tab:bridge-selection}, using the same 4096 paired evaluation runs.
-    Columns give $e_C^2/8$, $a^2/2$, $d^2/2$, $ad$, and their sum. Rounding
-    can obscure exact addition. The baseline's centered intercept and cross
-    terms are exactly zero.
+    Columns give $e_C^2/8$, $a^2/2$, $d^2/2$, $ad$, and their sum. Rounding can
+    obscure exact addition. The baseline's centered intercept and cross terms
+    are exactly zero.
   }
   \label{tab:bridge-risk-decomposition}
 \end{table}
 
 For fitted-intercept U under exact selection, the intercept and rare square
 terms have means $.2208$ and $.2235$, while the cross term is $-.4439$
-(\cref{tab:bridge-risk-decomposition}). Their sum is only $.000325$.
-The pooled cancellation fraction is $99.93\%$, compared with $27.37\%$ for SD.
-U's errors oppose each other in $99.2\%$ of runs. Its intercept and rare-error
-root mean squares actually increase from $.3384$ and $.5792$ under calibration
-to $.6645$ and $.6685$ under exact selection. Calibration has little cancellation
-for either scaling. Thus U's lower selected risk reflects closely matched,
-opposing errors rather than more accurate intercept and rare coefficients.
+(\cref{tab:bridge-risk-decomposition}). Their sum is only $.000325$. The pooled
+cancellation fraction is $99.93\%$, compared with $27.37\%$ for SD. U's errors
+oppose each other in $99.2\%$ of runs. Its intercept and rare-error root mean
+squares actually increase from $.3384$ and $.5792$ under calibration to $.6645$
+and $.6685$ under exact selection. Calibration has little cancellation for
+either scaling. Thus U's lower selected risk reflects closely matched, opposing
+errors rather than more accurate intercept and rare coefficients.
 
 Separating the paired SD-minus-U gap gives a direct accounting test. Under exact
-selection, the common, intercept, and rare terms sum to a gap of $-.42112$
-(MCSE $.00667$); the cross-term gap adds $+.43754$ (MCSE $.00687$), producing
-the observed $+.01643$ (MCSE $.00128$). Relative to calibration, the cross term
+selection, the common, intercept, and rare terms sum to a gap of $-.42112$ (MCSE
+$.00667$); the cross-term gap adds $+.43754$ (MCSE $.00687$), producing the
+observed $+.01643$ (MCSE $.00128$). Relative to calibration, the cross term
 changes the gap by $+.43838$, while the other three contributions together
 change it by $-.31740$. Cancellation therefore accounts for the larger U gain
 that overturns SD's calibrated advantage. Removing the cross term is an
 accounting diagnostic, not a risk attainable by simply deleting a model
 coordinate. If we instead set the centered intercept to zero in these already
 selected predictors, their mean gap becomes $-.20360$. This intervention does
-not retrain or reselect them and does not estimate the fixed-intercept arm.
-In that separately trained baseline, both intercept contributions vanish and
-SD retains smaller common and rare errors under exact selection.
+not retrain or reselect them and does not estimate the fixed-intercept arm. In
+that separately trained baseline, both intercept contributions vanish and SD
+retains smaller common and rare errors under exact selection.
 
 The same decomposition supports the primary validation comparison: with 2048
 validation rows, the pooled cancellation fractions are $97.1\%$ for U and
 $19.9\%$ for SD. The square terms give gap $-.43865$, and the cross term adds
-$+.44619$, yielding $+.00754$. Across both prevalences and all three caps,
-exact selection reverses all six fitted-intercept comparisons with the dominant
-rare signal. In each, omitting the cross term restores the calibrated sign.
-Neither common-dominant exact-selection comparisons nor any of the 12 baseline
+$+.44619$, yielding $+.00754$. Across both prevalences and all three caps, exact
+selection reverses all six fitted-intercept comparisons with the dominant rare
+signal. In each, omitting the cross term restores the calibrated sign. Neither
+common-dominant exact-selection comparisons nor any of the 12 baseline
 exact-selection comparisons reverse. Validation also produces reversals in the
 fixed-intercept baseline, where this cancellation is impossible, so the
 mechanism does not explain every selection reversal.

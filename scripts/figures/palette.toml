@@ -1,5 +1,6 @@
 # Edit these values to change the palette; edit the tables below to reassign it.
-# Colors follow Okabe and Ito: https://jfly.uni-koeln.de/color/
+# Categorical colors follow Okabe and Ito: https://jfly.uni-koeln.de/color/
+# Ordered factors sample viridis and plasma, avoiding their palest endpoints.
 [colors]
 blue = "#0072B2"
 vermilion = "#D55E00"
@@ -12,6 +13,12 @@ black = "#000000"
 gray = "#888888"
 charcoal = "#555555"
 dark_gray = "#222222"
+viridis_low = "#463480"
+viridis_mid = "#21918C"
+viridis_high = "#7AD151"
+plasma_low = "#5601A4"
+plasma_mid = "#CC4778"
+plasma_high = "#FCA636"
 
 [defaults]
 cycle = ["blue", "vermilion", "green", "purple", "orange", "sky_blue", "black"]
@@ -51,29 +58,39 @@ linestyle = "-"
 
 # Each figure retains its own scaled-budget definition in the labels.
 [budgets."1"]
-color = "gray"
+color = "viridis_low"
 marker = "o"
 linestyle = ":"
 
 [budgets."2"]
-color = "charcoal"
+color = "viridis_mid"
 marker = "s"
 linestyle = "--"
 
 [budgets."4"]
-color = "dark_gray"
+color = "viridis_high"
 marker = "^"
 linestyle = "-"
 
 [prevalences."0.02"]
-color = "orange"
+color = "plasma_high"
 marker = "o"
 linestyle = "-"
 
 [prevalences."0.0001"]
-color = "sky_blue"
+color = "plasma_low"
 marker = "s"
 linestyle = "--"
+
+[prevalences."0.0002"]
+color = "plasma_mid"
+marker = "s"
+linestyle = "-"
+
+[prevalences."0.000002"]
+color = "plasma_low"
+marker = "^"
+linestyle = "-"
 
 [arms.fresh]
 color = "charcoal"

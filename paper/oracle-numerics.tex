@@ -2,50 +2,50 @@
 \label{sec:oracle-finite}
 
 We compare \cref{thm:oracle-limits,cor:oracle-allocation} with exact moments
-under the same population model. The saved study contains 43 signal, noise,
-and target-budget settings at six prevalences from $0.04$ to $2\times10^{-6}$.
-The settings include both finite-prevalence theorem anchors at $\tau=1,2,4$;
+under the same population model. The saved study contains 43 signal, noise, and
+target-budget settings at six prevalences from $0.04$ to $2 \times 10^{-6}$. The
+settings include both finite-prevalence theorem anchors at $\tau = 1,2,4$;
 common signals at 90\%, 100\%, and 110\% of the predicted crossing; eight
-allocations with $s/4+r=1$ and $\tau=2$; four noise levels; points around U's
-rare-learning threshold; budgets from $0.01$ to $1000$; and zero-signal and
-zero-noise endpoints. These are selected slices rather than uniform coverage
-of the surrounding parameter ranges.
-\Cref{fig:oracle-finite} summarizes the comparisons.
+allocations with $s/4 + r = 1$ and $\tau = 2$; four noise levels; points around
+U's rare-learning threshold; budgets from $0.01$ to $1000$; and zero-signal and
+zero-noise endpoints. These are selected slices rather than uniform coverage of
+the surrounding parameter ranges. \Cref{fig:oracle-finite} summarizes the
+comparisons.
 
 Each scaling minimizes expected rare risk over separate finite grids. The fine
 rate grid contains 2049 fractions of its mean-square stability limit, combining
 1025 linear and 1025 logarithmic points, with zero and positive fractions from
-$10^{-10}$ to $1-10^{-6}$. Limiting optimal rates are not inserted into the
+$10^{-10}$ to $1 - 10^{-6}$. Limiting optimal rates are not inserted into the
 grid, and rates outside the stable interval are not searched. Stopping grids
 contain initialization, every integer through 64, all caps, and rounded
 geometric checkpoints up to the largest cap. They have 663 to 883 distinct
-stops, depending on prevalence. The largest cap is $500{,}001{,}001$.
-Matrix powers of the affine recurrence evaluate every candidate without
-Monte Carlo noise.
+stops, depending on prevalence. The largest cap is $500{,}001{,}001$. Matrix
+powers of the affine recurrence evaluate every candidate without Monte Carlo
+noise.
 
-Caps round $\tau/b$ upward, except at target $\tau=4$, where they round
+Caps round $\tau/b$ upward, except at target $\tau = 4$, where they round
 downward to stay within the finite-prevalence theorem's range. Primary errors
 use $L_A(Mb)$, and the saved results also retain predictions at the nominal
-target. At $q=0.04$, target $\tau=0.01$ gives one observation and actual
-$Mb=0.0384$, so the coarse-budget discrepancy includes appreciable rounding.
+target. At $q = 0.04$, target $\tau = 0.01$ gives one observation and actual
+$Mb = 0.0384$, so the coarse-budget discrepancy includes appreciable rounding.
 
-Coarse grids take every second generating rate and geometric stop, retaining
-the early integer stops and all caps. Separate rate refinement, stop refinement,
-and joint refinement assess search resolution. The largest decrease under joint
-refinement is $1.362\times10^{-5}$. Stop refinement alone changes no selected
+Coarse grids take every second generating rate and geometric stop, retaining the
+early integer stops and all caps. Separate rate refinement, stop refinement, and
+joint refinement assess search resolution. The largest decrease under joint
+refinement is $1.362 \times 10^{-5}$. Stop refinement alone changes no selected
 risk: every positive-stop selection uses its cap, and the others use
 initialization. No positive-stop selection reaches a rate-grid edge. These
-observations do not bound the error relative to the unrestricted oracle or
-prove that full-cap training is always optimal at finite prevalence.
+observations do not bound the error relative to the unrestricted oracle or prove
+that full-cap training is always optimal at finite prevalence.
 
 \begin{figure}[t]
   \centering
   \includegraphics{../figures/oracle-finite/limit-comparison.pdf}
   \caption{
-    Exact finite-grid selections approach the limiting oracle predictions.
-    (a) Largest absolute risk discrepancy from $L_A(Mb)$ across the 43 settings
-    at each prevalence. (b) Allocation at fixed initial limiting subgroup risk.
-    (c) Noise can change the preferred scaling twice, with a finite-prevalence
+    Exact finite-grid selections approach the limiting oracle predictions. (a)
+    Largest absolute risk discrepancy from $L_A(Mb)$ across the 43 settings at
+    each prevalence. (b) Allocation at fixed initial limiting subgroup risk. (c)
+    Noise can change the preferred scaling twice, with a finite-prevalence
     disagreement at high noise. (d) The budget comparison approaches the ordered
     large-budget risk ratio $4/5$. Colored curves connect finite-grid results;
     black dashed curves connect limiting predictions at the sampled settings.
@@ -56,50 +56,52 @@ prove that full-cap training is always optimal at finite prevalence.
 \end{figure}
 
 Both theorem orderings hold in every sampled anchor comparison. At
-$q=2\times10^{-6}$, the largest anchor errors are $2.987\times10^{-6}$ for U
-and $1.536\times10^{-6}$ for S. Across all 43 settings, the corresponding
-maxima are $2.01631\times10^{-4}$ and $2.27583\times10^{-6}$; the largest U
-error occurs at target $\tau=0.01$. Every setting with a nonzero nominal
+$q = 2 \times 10^{-6}$, the largest anchor errors are $2.987 \times 10^{-6}$ for
+U and $1.536 \times 10^{-6}$ for S. Across all 43 settings, the corresponding
+maxima are $2.01631 \times 10^{-4}$ and $2.27583 \times 10^{-6}$; the largest U
+error occurs at target $\tau = 0.01$. Every setting with a nonzero nominal
 limiting gap has the predicted sign at the smallest prevalence. The sampled
 common-signal crossings are bracketed by 90\% and 110\% of their limiting
 values, and the allocation slice recovers the ordering on both sides of
-$\theta_*\approx0.83770278$. Cases exactly at limiting ties remain sensitive
-to rounding and search resolution and do not locate a finite-prevalence boundary.
+$\theta_* \approx 0.83770278$. Cases exactly at limiting ties remain sensitive
+to rounding and search resolution and do not locate a finite-prevalence
+boundary.
 
 The U endpoint has a concrete finite-prevalence interpretation. At
-$\tau=2,s=1,r=0.01,\nu=1$, the limiting rate is zero and $L_U=r/2=0.005$.
-The selected finite rate nevertheless remains positive, falling from $0.07003$
-at $q=0.02$ to $2.866\times10^{-5}$ at $q=2\times10^{-6}$, while the risk
-falls from $0.01570$ to $0.00500127$. These rates learn the common signal;
-literal zero-rate training would retain its error.
+$\tau = 2,s = 1,r = 0.01,\nu = 1$, the limiting rate is zero and
+$L_U = r/2 = 0.005$. The selected finite rate nevertheless remains positive,
+falling from $0.07003$ at $q = 0.02$ to $2.866 \times 10^{-5}$ at
+$q = 2 \times 10^{-6}$, while the risk falls from $0.01570$ to $0.00500127$.
+These rates learn the common signal; literal zero-rate training would retain its
+error.
 
 \paragraph{A finite-prevalence disagreement.}
 
-For $s=0.1,r=1$, target $\tau=2$, and $\nu=100$, the limiting risks favor U:
-$L_U=0.500000$ and $L_S\approx0.502306$. The finite-grid SD-minus-U gaps are
-instead $-0.00568756$ at $q=0.02$, $-0.00563282$ at $q=0.002$, and
-$-0.000608220$ at $q=0.0002$. They become positive at $q=0.00002$ and
-$q=0.000002$, with gaps $0.00180198$ and $0.00223702$. These discrepancies
-exceed the observed refinement changes, showing that the limiting decision
-can be inaccurate at finite prevalence. They do not certify a reversal of
-the unrestricted finite-prevalence oracles.
+For $s = 0.1,r = 1$, target $\tau = 2$, and $\nu = 100$, the limiting risks
+favor U: $L_U = 0.500000$ and $L_S \approx 0.502306$. The finite-grid SD-minus-U
+gaps are instead $-0.00568756$ at $q = 0.02$, $-0.00563282$ at $q = 0.002$, and
+$-0.000608220$ at $q = 0.0002$. They become positive at $q = 0.00002$ and
+$q = 0.000002$, with gaps $0.00180198$ and $0.00223702$. These discrepancies
+exceed the observed refinement changes, showing that the limiting decision can
+be inaccurate at finite prevalence. They do not certify a reversal of the
+unrestricted finite-prevalence oracles.
 
-At $s=r=\nu=1$ and the smallest prevalence, U wins at target $\tau=1$, while
-S wins at $\tau=10,100,1000$. At $\tau=1000$, the finite risk ratio is
-$0.839843$ and the limiting ratio is $0.839507$, both still above $4/5$.
-These comparisons preserve the distinction between the prevalence limit and
-the subsequent large-budget limit.
+At $s = r = \nu = 1$ and the smallest prevalence, U wins at target $\tau = 1$,
+while S wins at $\tau = 10,100,1000$. At $\tau = 1000$, the finite risk ratio is
+$0.839843$ and the limiting ratio is $0.839507$, both still above $4/5$. These
+comparisons preserve the distinction between the prevalence limit and the
+subsequent large-budget limit.
 
 \paragraph{Reproduction and independent replay.}
 
 The settings, grids, all four searches, selected risks, rates, stops, and
 summaries are saved under \path{results/oracle-finite/}. The checker
-\path{checks/oracle_finite.py} independently constructs observation-level
-tensor updates and tests all four nested searches on a small problem. It also
-replays all 2064 saved selections with full tensor updates and long-double
-matrix powers; the recorded maximum discrepancy is $7.38\times10^{-11}$.
-Run the following commands to regenerate the searches and summaries, reconstruct
-every selection, and plot the saved results, respectively:
+\path{checks/oracle_finite.py} independently constructs observation-level tensor
+updates and tests all four nested searches on a small problem. It also replays
+all 2064 saved selections with full tensor updates and long-double matrix
+powers; the recorded maximum discrepancy is $7.38 \times 10^{-11}$. Run the
+following commands to regenerate the searches and summaries, reconstruct every
+selection, and plot the saved results, respectively:
 \begin{verbatim}
 task experiment:oracle-finite
 task check:oracle-finite -- --rerun
@@ -113,21 +115,21 @@ these experiments.
 \label{sec:signal-allocation}
 
 \Cref{fig:intro-signal-crossing} uses the allocation path in
-\cref{cor:oracle-allocation}: $s=4(1-\theta)$ and $r=\theta$, with $\nu=1$ and
-$\tau=2$. Thus $s/4+r=1$ and initial limiting subgroup risk stays at $1/2$.
-The middle tick, $\theta=1/2$, gives equal common and rare contributions to
-this risk. We plot the scalar minima in \cref{eq:limiting-objectives}, saved
-as the nominal limiting risks of the allocation cases in
-\path{results/oracle-finite/summary.json}. The eight allocation values are
-$0$, $1/4$, $1/2$, $3/4$, $1$, and $\theta_* - .02$, $\theta_*$,
-$\theta_* + .02$, where scalar root finding gives $\theta_*\approx .8377$.
-Lines connect these saved values; \cref{cor:oracle-allocation} supplies the
-unique-crossing guarantee. Unlike the finite-prevalence curves in
-\cref{fig:oracle-finite}(b), this panel uses the limiting risks at exactly
-$\tau=2$, without integer-cap rounding.
+\cref{cor:oracle-allocation}: $s = 4(1 - \theta)$ and $r = \theta$, with
+$\nu = 1$ and $\tau = 2$. Thus $s/4 + r = 1$ and initial limiting subgroup risk
+stays at $1/2$. The middle tick, $\theta = 1/2$, gives equal common and rare
+contributions to this risk. We plot the scalar minima in
+\cref{eq:limiting-objectives}, saved as the nominal limiting risks of the
+allocation cases in \path{results/oracle-finite/summary.json}. The eight
+allocation values are $0$, $1/4$, $1/2$, $3/4$, $1$, and $\theta_* - .02$,
+$\theta_*$, $\theta_* + .02$, where scalar root finding gives
+$\theta_* \approx .8377$. Lines connect these saved values;
+\cref{cor:oracle-allocation} supplies the unique-crossing guarantee. Unlike the
+finite-prevalence curves in \cref{fig:oracle-finite}(b), this panel uses the
+limiting risks at exactly $\tau = 2$, without integer-cap rounding.
 
 Run \texttt{task} \path{check:oracle-limits} to check the scalar solver and
 saved comparisons, and \texttt{task} \path{figure:intro} to plot the saved
 values without new optimization or training. The earlier study at fixed
-unweighted squared coefficient sum remains in
-\path{results/signal-allocation/} but is not used in this figure.
+unweighted squared coefficient sum remains in \path{results/signal-allocation/}
+but is not used in this figure.

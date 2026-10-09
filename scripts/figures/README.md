@@ -9,23 +9,26 @@ introductory panels and a gap between them. They share a legend in the
 manuscript.
 
 Edit [`palette.toml`](palette.toml) to change colors and their meanings across
-all figures. The `[colors]` table defines the Okabe–Ito colors and neutral
-grays. The remaining tables assign those named colors, markers, and line styles
-to methods, validation objectives, budgets, prevalences, experimental arms, risk
-components, and clipping treatments. For example, change `blue = "#0072B2"` to
-replace that color everywhere, or change `color = "blue"` under `[methods.none]`
-to another named color to change only the unscaled method's assignment. Run
-`task figures` after editing; the build tracks the configuration and regenerates
-every manuscript figure automatically.
+all figures. The `[colors]` table defines the Okabe–Ito colors, neutral grays,
+and samples from viridis and plasma. The remaining tables assign those named
+colors, markers, and line styles to methods, validation objectives, budgets,
+prevalences, experimental arms, risk components, and clipping treatments. For
+example, change `blue = "#0072B2"` to replace that color everywhere, or change
+`color = "blue"` under `[methods.none]` to another named color to change only
+the unscaled method's assignment. Run `task figures` after editing; the build
+tracks the configuration and regenerates every manuscript figure automatically.
 
 The method mapping is unscaled/blue, standardized/vermilion, damped/green, and
 variance scaling/reddish purple. Simple method curves also use distinct line
 styles. When line styles encode another factor, method markers preserve the
 distinction. Aggregate and rare validation use charcoal and reddish purple;
-budget levels 1, 2, and 4 use increasingly dark grays. Risk components use
-charcoal, orange, and sky blue with solid fills and thin borders. Colors can
-recur across these explicitly labeled contexts, while the blue–vermilion pair
-stays associated with the main method comparison.
+budget levels 1, 2, and 4 use viridis, from dark purple through teal to green.
+Prevalence curves use plasma, from dark purple through pink to orange as
+prevalence increases. The oracle comparison retains method colors in panel (a)
+and uses prevalence colors in panels (b)–(d). Risk components use charcoal,
+orange, and sky blue with solid fills and thin borders. Colors can recur across
+these explicitly labeled contexts, while the blue–vermilion pair stays
+associated with the main method comparison.
 
 The `[defaults]` table controls the fallback color cycle, bar borders, and
 continuous risk colormap. The heatmap uses `RdBu_r`, with zero centered between
@@ -124,13 +127,13 @@ earlier versions of plotting code and results.
 
 The coefficient-path illustration reads a constructed full-gradient example from
 `results/coefficient-paths/summary.json`. Regenerate it explicitly with
-`task experiment:coefficient-paths`. The signal-crossing figure holds $s/4+r=1$
-fixed at noise variance one and rescaled budget two. It evaluates the limiting
-scalar solver at 401 allocations and overlays eight saved allocations at each of
-two prevalences from `results/oracle-finite/summary.json`. Run it from the
-repository root with `python -m scripts.figures.plot_signal_crossing`. The
-earlier allocation map uses the different constraint on $s+r$ and is outside the
-manuscript.
+`task experiment:coefficient-paths`. The signal-crossing figure holds
+$s/4 + r = 1$ fixed at noise variance one and rescaled budget two. It evaluates
+the limiting scalar solver at 401 allocations and overlays eight saved
+allocations at each of two prevalences from
+`results/oracle-finite/summary.json`. Run it from the repository root with
+`python -m scripts.figures.plot_signal_crossing`. The earlier allocation map
+uses the different constraint on $s + r$ and is outside the manuscript.
 
 The tuned decomposition reads the selected rates, stops, and weighted risk
 components from `results/predictive-intro/summary.json` at cap $M = 20{,}503$.
