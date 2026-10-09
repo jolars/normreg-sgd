@@ -26,7 +26,7 @@ def plot(report):
     for signal, (axis, title) in enumerate(
         zip(
             axes,
-            ("(a) Rare signal dominates", "(b) Common signal dominates"),
+            ("Rare signal dominates", "Common signal dominates"),
             strict=True,
         )
     ):
