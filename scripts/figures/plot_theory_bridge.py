@@ -104,7 +104,7 @@ def controlled(report):
 def validation(report):
     figure, axes = plt.subplots(2, 2, figsize=(PAPER_WIDTH, 5.2), sharex=True)
     figure.subplots_adjust(
-        left=0.11, right=0.985, bottom=0.21, top=0.9, hspace=0.25, wspace=0.16
+        left=0.11, right=0.94, bottom=0.21, top=0.94, hspace=0.25, wspace=0.16
     )
     policies = ("calibrated", "validation_128", "validation_512", "validation_2048")
     arms = ("fresh", "reuse", "reuse_mean_initialized")
@@ -143,12 +143,22 @@ def validation(report):
             ]
             axis.set_yticks(ticks, [f"{v:g}" for v in ticks])
             axis.set(
-                title=rf"{signal.capitalize()} signal, $q={q:g}$",
+                title=f"{signal.capitalize()} signal" if row == 0 else "",
                 xticks=np.arange(4),
                 xticklabels=("Calibrated", "128", "512", "2048"),
             )
             axis.grid(axis="y", color="0.92", linewidth=0.5)
             axis.set_axisbelow(True)
+        axes[row, 1].text(
+            1.08,
+            0.5,
+            rf"$q={q:g}$",
+            transform=axes[row, 1].transAxes,
+            rotation=270,
+            ha="center",
+            va="center",
+            fontsize=plt.rcParams["axes.labelsize"],
+        )
     figure.supylabel(
         "SD minus unscaled rare risk\n(negative favors SD; symmetric log scale)",
         x=0.015,
@@ -164,7 +174,6 @@ def validation(report):
         ncol=2,
         bbox_to_anchor=(0.52, 0.005),
     )
-    figure.suptitle(r"Changing selection on the same paths, $Mq\approx 4$", y=0.98)
     save(figure, OUTPUT / "theory-bridge", "validation-gaps")
 
 
