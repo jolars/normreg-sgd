@@ -110,7 +110,6 @@ observation caps in \cref{fig:conference-tuned-intro}.
     scalar minima along the allocation path in \cref{cor:oracle-allocation}.
     \Cref{sec:signal-allocation} gives the setup and numerical checks.
   }
-  \label{fig:intro-normalization}
 \end{figure}
 
 \begin{figure}[t]
@@ -173,7 +172,7 @@ also examine how missing rare validation observations affect selection.
 
 Preconditioning changes statistical behavior as well as learning speed. Its
 effect on early-stopped predictions can persist even when the least-squares
-optimum is unchanged \citep{wadia2021whitening}. Its benefit can depend on which
+optimum is unchanged~\citep{wadia2021whitening}. Its benefit can depend on which
 features carry the signal, even after tuning the stopping time.
 \citet[Proposition 7]{amari2020preconditioning} compare optimally early-stopped
 aggregate bias for particular signal covariances in an overparameterized
@@ -203,15 +202,15 @@ our model. These constants diverge as prevalence vanishes. Our exact moments
 retain this dependence when passing to optimized final-iterate risks.
 
 Our calculations build on established mechanisms. Early stopping changes
-least-squares regularization \citep{ali2019early}. \citet{ali2020stochastic}
+least-squares regularization~\citep{ali2019early}. \citet{ali2020stochastic}
 compare stochastic gradient flow with ridge along the training path for a fixed
-design. Their Lemma 1 matches discrete SGD's first two moments to an Euler
+design. Their Lemma~1 matches discrete SGD's first two moments to an Euler
 discretization of the flow; the continuous process is an approximation to SGD.
 Analyses of least-mean-squares methods separate bias and variance while
-accounting for sampling and batching \citep{defossez2015averaged,
+accounting for sampling and batching~\citep{defossez2015averaged,
 jain2018parallelizing}. AdaBatch connects sparse mini-batch aggregation with
-coordinate rescaling \citep{defossez2017adabatch}, while moment operators
-characterize exact mean-square stability \citep{mulayoff2024exact}. For explicit
+coordinate rescaling~\citep{defossez2017adabatch}, while moment operators
+characterize exact mean-square stability~\citep{mulayoff2024exact}. For explicit
 regularization, \citet{larsson2025normalization} analyze how feature scaling
 affects shrinkage.
 
@@ -245,9 +244,7 @@ We divide each feature by a positive scale factor, collected in the diagonal
 matrix $S$. Training on $z = S^{-1}x$ with parameter $\theta = S\beta$ gives the
 following SGD update on the original coefficient scale:
 \begin{equation}
-  \beta_{k+1}
-  = \beta_k
-    - \eta S^{-2}x_k(x_k^\top\beta_k - y_k). \label{eq:conference-update}
+  \beta_{k+1} = \beta_k - \eta S^{-2}x_k(x_k^\top\beta_k - y_k).
 \end{equation}
 We use squared loss with a factor $1/2$. Each update uses one independent fresh
 observation, so an observation cap $M$ permits at most $M$ updates. We compare
@@ -268,9 +265,8 @@ Our main objective is excess prediction risk where the rare feature is present,
 $J = 1$. Under half squared loss, independence gives a weighted sum of the two
 coefficient mean squared errors:
 \begin{equation}
-  R_{R,k}
-  = \frac18\E\bigl[(\beta_{C,k} - \beta_C^*)^2\bigr]
-    + \frac{(1 - q)^2}{2}\E\bigl[(\beta_{R,k} - \beta_R^*)^2\bigr]. \label{eq:conference-rare-risk}
+  R_{R,k} = \frac18\E\bigl[(\beta_{C,k} - \beta_C^*)^2\bigr]
+            + \frac{(1 - q)^2}{2}\E\bigl[(\beta_{R,k} - \beta_R^*)^2\bigr].
 \end{equation}
 The expectations average over training randomness, and the risk excludes
 irreducible test noise. Aggregate excess risk $R_k$ replaces $(1 - q)^2$ by
@@ -306,7 +302,6 @@ that coefficient at each update from $16h^2b\sigma^2$ to $h^2\sigma^2/b$. It
 learns the rare signal faster but also introduces more noise.
 
 \section{Oracle risks and the preferred scaling}
-\label{sec:conference-predictive}
 
 We now compare the lowest attainable rare-presence risks of the two scaling
 rules in the independent model of \cref{sec:conference-setting}. We first give
@@ -349,7 +344,7 @@ For an observation cap $M \in \mathbb N$, define
 \begin{equation}
   R_A^*(M)
   =   \inf_{\substack{\alpha\geq0\\ k\in\{0,\ldots,M\}}} R_{R,k}^{A}(\alpha),\qquad A
-  \in \{U,S\}. \label{eq:conference-oracle-risk}
+  \in \{U,S\}.
 \end{equation}
 The oracle chooses a deterministic rate and stop using population risk averaged
 over training randomness. It may stop at the prescribed zero initialization.
@@ -434,7 +429,6 @@ need not mark a change in the preferred scaling or a threshold for learning rare
 features.
 
 \subsection{Limiting oracle risks}
-\label{sec:oracle-limits}
 
 The finite-prevalence theorem gives explicit gaps for two signal families. We
 next characterize both oracles for arbitrary fixed signals and noise as rare
@@ -521,7 +515,6 @@ construct rates that attain each limiting minimum, including its zero endpoint.
 \Cref{sec:oracle-limit-proofs} gives the full argument.
 
 \subsection{A unique signal-allocation crossing}
-\label{sec:oracle-allocation}
 
 Hold the limiting subgroup risk at initialization fixed while moving signal
 between the features. With $v > 0$, write $r = \theta v$ and
@@ -560,7 +553,7 @@ common signal, U wins at sufficiently small and sufficiently large noise, while
 SD can win between them.
 
 When the rare signal and noise are positive, a large enough rescaled budget
-favors SD. For fixed $r,\nu > 0$ and finite $s \geq 0$, the limiting risks
+favors SD\@. For fixed $r,\nu > 0$ and finite $s \geq 0$, the limiting risks
 satisfy $L_S(\tau)/L_U(\tau) \to 4/5$ as $\tau \to \infty$, although convergence
 can be slow. This statement takes $q \to 0$ before $\tau \to \infty$ and does
 not cover joint limits with $M_qb \to \infty$. The expansions and examples are
@@ -577,7 +570,6 @@ without certifying the continuous optima. \Cref{sec:oracle-finite} reports the
 comparisons and search refinements.
 
 \paragraph{Additional common features.}
-\label{sec:common-block}
 
 Replacing the common feature with $m$ independent balanced binary features
 preserves an exact recurrence for their combined error and the rare error. At
@@ -589,7 +581,6 @@ comparisons; the two-feature separation bounds and limiting characterization are
 not asserted for this larger model.
 
 \section{From oracle tuning to validation selection}
-\label{sec:conference-experiments}
 
 The oracle fixes its rate and stop before observing training. Validation instead
 selects among fitted predictors. We first ask whether the two risk orderings
@@ -630,8 +621,8 @@ choices. One small gap reverses in 2 of 200 splits
   \includegraphics[]{../figures/theory-bridge/controlled-gaps.pdf}
   \caption{
     Both calibrated risk orderings persist across the eight training arms.
-    Negative SD-minus-U rare risk favors SD. Colors distinguish the three caps;
-    bars show two paired Monte Carlo standard errors over 4096 evaluation
+    Negative SD-minus-U rare risk favors SD\@. Colors distinguish the three
+    caps; bars show two paired Monte Carlo standard errors over 4096 evaluation
     replications, conditional on the calibration choices. The last two rows
     successively add empirical centering and response-mean initialization to
     reuse with estimated scales and a fitted intercept. These comparisons
@@ -661,8 +652,8 @@ The selected U predictors have smaller mean prediction errors within the rare
 group, while SD retains a slightly smaller common-coefficient error. Their
 intercept and rare-coefficient errors nearly cancel: the cross term removes
 $99.9\%$ of U's mean squared-error contributions from those two coordinates,
-compared with $27.4\%$ for SD. This cancellation accounts for the selected risk
-ordering even though U has larger errors in each coordinate separately
+compared with $27.4\%$ for SD\@. This cancellation accounts for the selected
+risk ordering even though U has larger errors in each coordinate separately
 (\cref{sec:bridge-cancellation}). \Cref{sec:bridge-gains} examines the gain
 distributions.
 
@@ -692,7 +683,7 @@ distributions.
     \cref{tab:bridge-arms}) share the observation cap and differ only in whether
     an intercept is fitted; all coefficients are initialized at zero. Positive
     reductions indicate improvement over the separately calibrated choice for
-    the same scaling; negative SD-minus-U gaps favor SD. Means use 4096 paired
+    the same scaling; negative SD-minus-U gaps favor SD\@. Means use 4096 paired
     evaluation runs. MCSEs refer to the paired gaps and condition on the
     calibration choices.
   }
@@ -815,7 +806,7 @@ $r = (\beta_R^*)^2$, $b = q(1 - q)$, and $w = (1 - q)^2$. Write
 $C_k = \E\bigl((\beta_{C,k} - \beta_C^*)^2\bigr)$ and
 $H_k = \E\bigl((\beta_{R,k} - \beta_R^*)^2\bigr)$. Independence gives
 \begin{equation}
-  R_{R,k} = C_k/8 + wH_k/2. \label{eq:predictive-risk}
+  R_{R,k} = C_k/8 + wH_k/2.
 \end{equation}
 The required feature moments are $x_C^2 = 1/4$, $\E(x_R^2) = b$,
 $\E(x_R^4) = b(1 - 3b)$, and $\E(x_C^2x_R^2) = b/4$. Mixed moments with an odd
@@ -890,13 +881,12 @@ $\tau b\alpha_U^2G/4 \leq 1/960$, so $H_*$ is well defined. Define
   \begin{aligned}
     V_S(q,\tau) & = \frac12\left[ p_S + \left( w + \frac1{400} - p_S \right) e^{-\tau\alpha_S\{2-(1-q)\alpha_S\}} \right], \\
     V_U(q,\tau) & = \frac{e^{-4}}8 + \frac G8 + \left( \frac w2 + \frac{bG}8 \right)H_*.
-  \end{aligned} \label{eq:predictive-finite-upper}
+  \end{aligned}
 \end{equation}
 Define the gap bounds
 \begin{equation}
   \Delta_R(q,\tau) = L_R(q,\tau) - V_S(q,\tau),\qquad \Delta_C(q,\tau)
-                   = L_C(q,\tau)
-                     - V_U(q,\tau). \label{eq:predictive-finite-gaps}
+                   = L_C(q,\tau) - V_U(q,\tau).
 \end{equation}
 For the rare-signal and common-signal families, respectively, we will prove
 \begin{equation}
@@ -919,7 +909,7 @@ Suppose $r = 1$ and $s \leq 1/100$. For U and $\alpha \in[0,1]$,
 Dropping nonnegative coupling terms in \cref{eq:predictive-moments} and summing
 the direct noise terms gives, with $z = D_b^k$,
 \begin{equation}
-  R_{R,k}^U \geq \frac12\left[ wz + \left\{ \frac{w\alpha}{2 - \alpha + 3b\alpha} + \frac{\alpha}{8 - \alpha} \right\}(1 - z) \right]. \label{eq:predictive-u-lower}
+  R_{R,k}^U \geq \frac12\left[ wz + \left\{ \frac{w\alpha}{2 - \alpha + 3b\alpha} + \frac{\alpha}{8 - \alpha} \right\}(1 - z) \right].
 \end{equation}
 For the common-noise term, use $1 - A^k \geq 1 - D_b^k$. The formula extends
 directly to zero rate. Its right side is affine in $z$. Taking the smaller value
@@ -1063,10 +1053,7 @@ To enclose exponentials, for rational $x \in[0,4]$ put
 $P_{18}(x) = \sum_{j=0}^{18}x^j/j!$. Positivity and the ratio of successive
 omitted terms give
 \begin{equation}
-  P_{18}(x)
-  \leq e^x
-  \leq P_{18}(x)
-       + \frac{x^{19}/19!}{1 - x/20}. \label{eq:predictive-exp-certificate}
+  P_{18}(x) \leq e^x \leq P_{18}(x) + \frac{x^{19}/19!}{1 - x/20}.
 \end{equation}
 Taking reciprocals encloses $e^{-x}$. The checker applies this rule to one
 fourth of each exponent and raises the endpoints to the fourth power. All
@@ -1092,7 +1079,6 @@ oracle gaps. As a separate diagnostic, the checker compares 888 bounds with
 families, and rates above the stability range.
 
 \begin{corollary}[Small prevalence]
-  \label{cor:predictive-small-q}
   Under the assumptions of \cref{thm:conference-predictive}, if
   $0 < q \leq 10^{-4}$, then the rare-signal gap is at least $11\sigma^2/1000$
   and the common-signal gap is at least $11\sigma^2/200$.
@@ -1172,7 +1158,6 @@ under scaling $A$ over every nonnegative constant rate and deterministic stop
 $k \in \{0,\ldots,M\}$ in the model with $m$ common features.
 
 \begin{proposition}[Increasing the common-feature dimension]
-  \label{prop:common-block-dimension}
   For either scaling $A \in \{U,S\}$ and integers $m_2 \geq m_1 \geq 1$,
   \[
     R_A^*(M;m_2) \geq R_A^*(M;m_1).
@@ -1227,7 +1212,7 @@ features; they do not extend the uniform gaps in
     Caps are $M = 102$ at $q = 0.02$ and $M = 20{,}002$ at $q = 10^{-4}$, giving
     $Mq(1 - q) \approx 2$. Curves show SD-minus-U rare risk after separate
     searches over finite stable-rate grids and all integer stops; negative
-    values favor SD. Each panel has its own vertical scale.
+    values favor SD\@. Each panel has its own vertical scale.
     \Cref{sec:common-block-numerics} gives all settings and checks.
   }
   \label{fig:common-block}
@@ -1334,13 +1319,13 @@ count.
 
 For each rule, we use the parameterization in \cref{eq:conference-oracle-rates}
 and a grid consisting of zero and 4097 geometrically spaced positive values of
-$\alpha$ from $10^{-6}$ to $2$. We iterate the exact recurrence
-\labelcref{eq:predictive-moments}, including both sources of training variance.
-At each cap, we select the rate and integer stopping count with the lowest
-population rare risk, searching every stop from zero through the cap. The curves
-connect these numerical minima; they are not trajectories of a single trained
-model. Selection uses population risk averaged over training randomness, rather
-than validation observations.
+$\alpha$ from $10^{-6}$ to $2$. We iterate the exact
+recurrence~\labelcref{eq:predictive-moments}, including both sources of training
+variance. At each cap, we select the rate and integer stopping count with the
+lowest population rare risk, searching every stop from zero through the cap. The
+curves connect these numerical minima; they are not trajectories of a single
+trained model. Selection uses population risk averaged over training randomness,
+rather than validation observations.
 
 We repeat the search with every second positive grid point and check all 244
 selected endpoints against a separate full tensor moment operator constructed by
@@ -1381,7 +1366,6 @@ second is the observation-noise covariance $\sigma^2N_k$.
 \input{oracle-numerics}
 
 \subsection{Paths to a shared least-squares solution}
-\label{sec:coefficient-paths}
 
 \Cref{fig:intro-coefficient-paths} uses a constructed fixed dataset of 200
 observations. The binary cells
@@ -1396,7 +1380,7 @@ $0.1$, so both common-coordinate errors contract by $0.9$ per update.
 We mark update 20 for both methods without selecting the stop. Their common
 coefficients are both about $0.878$, while their rare coefficients are about
 $0.146$ for unscaled training and $0.878$ for standardization. The pale paths
-continue through update 2000 toward OLS. The reproduction script checks the
+continue through update 2000 toward OLS\@. The reproduction script checks the
 paths against the diagonal closed form, decreasing training loss, and
 convergence to the common solution. This example illustrates how scaling changes
 learning before stopping. The oracle theorem separately compares noisy
@@ -1572,11 +1556,11 @@ observe population risk.
     Changing selection on the same candidate paths at the largest cap for each
     prevalence. Calibrated choices are fixed before evaluation; the other points
     select by rare validation loss with the indicated sample size. Negative gaps
-    favor SD. The green curve includes all changes through arm 8. Bars show two
-    paired Monte Carlo standard errors, conditional on the calibration choices.
-    Each panel has its own symmetric logarithmic vertical scale, linear for
-    absolute gaps at most $.05$. Lines connect discrete selection procedures and
-    do not imply monotonic behavior with sample size.
+    favor SD\@. The green curve includes all changes through arm 8. Bars show
+    two paired Monte Carlo standard errors, conditional on the calibration
+    choices. Each panel has its own symmetric logarithmic vertical scale, linear
+    for absolute gaps at most $.05$. Lines connect discrete selection procedures
+    and do not imply monotonic behavior with sample size.
   }
   \label{fig:bridge-validation}
 \end{figure}
@@ -1707,9 +1691,9 @@ The saved predictors show where the remaining rare risk lies. Let
 $e_R = a + (1 - q)(b_R - \beta_R^*)$ denote their mean signed prediction error
 across the two rare cells, and let $e_C = b_C - \beta_C^*$. Under exact
 selection with a fitted intercept, the root mean squares of $e_R$ fall from
-$.6735$ to $.0255$ for U and from $.5194$ to $.1843$ for SD. The corresponding
+$.6735$ to $.0255$ for U and from $.5194$ to $.1843$ for SD\@. The corresponding
 values for $e_C$ fall from $.3365$ to $.0775$ for U and from $.1082$ to $.0647$
-for SD. Since $r_R = e_C^2/8 + e_R^2/2$, the remaining rare-group mean error
+for SD\@. Since $r_R = e_C^2/8 + e_R^2/2$, the remaining rare-group mean error
 dominates SD's selected risk, while U nearly removes it. In the baseline,
 selected U and SD predictors instead have $e_R$ root mean squares $.1528$ and
 $.1269$, and $e_C$ root mean squares $.1564$ and $.0796$. SD retains smaller
@@ -1769,7 +1753,7 @@ predictions do not require either coordinate to be estimated accurately.
 For fitted-intercept U under exact selection, the intercept and rare square
 terms have means $.2208$ and $.2235$, while the cross term is $-.4439$
 (\cref{tab:bridge-risk-decomposition}). Their sum is only $.000325$. The pooled
-cancellation fraction is $99.93\%$, compared with $27.37\%$ for SD. U's errors
+cancellation fraction is $99.93\%$, compared with $27.37\%$ for SD\@. U's errors
 oppose each other in $99.2\%$ of runs. Its intercept and rare-error root mean
 squares actually increase from $.3384$ and $.5792$ under calibration to $.6645$
 and $.6685$ under exact selection. Calibration has little cancellation for
@@ -1792,7 +1776,7 @@ retains smaller common and rare errors under exact selection.
 
 The same decomposition supports the primary validation comparison: with 2048
 validation rows, the pooled cancellation fractions are $97.1\%$ for U and
-$19.9\%$ for SD. The square terms give gap $-.43865$, and the cross term adds
+$19.9\%$ for SD\@. The square terms give gap $-.43865$, and the cross term adds
 $+.44619$, yielding $+.00754$. Across both prevalences and all three caps, exact
 selection reverses all six fitted-intercept comparisons with the dominant rare
 signal. In each, omitting the cross term restores the calibrated sign. Neither
@@ -1871,7 +1855,7 @@ exact rational bounds and coverage volumes. The recorded output is a summary of
 the completed checks, not a substitute for rerunning the checker.
 
 We ran the experiments on a local NixOS workstation with an AMD Ryzen 9 7900 CPU
-(12 cores, 24 hardware threads) and approximately 62\,GiB of usable RAM. The
+(12 cores, 24 hardware threads) and approximately 62\,GiB of usable RAM\@. The
 Python implementations use NumPy and SciPy on the CPU, with OpenBLAS restricted
 to one thread by the experiment tasks. Saved experiment metadata include
 software versions and elapsed runtimes.
