@@ -18,7 +18,7 @@ jobs:
           persist-credentials: false
       - uses: jolars/panache-action@v1
         with:
-          version: v3.4.0
+          version: v3.8.0
 
   check:
     runs-on: ubuntu-latest

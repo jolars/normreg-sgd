@@ -21,9 +21,8 @@ observations, zero initialization, fixed zero intercept, and final iterates.
 Write
 
 $$
-  s = (\beta_C^*)^2,\qquad r = (\beta_R^*)^2,
-  \qquad
-  \nu = \sigma^2,\qquad b = q(1 - q),\qquad w = (1 - q)^2.
+  s = (\beta_C^*)^2,\qquad r = (\beta_R^*)^2, \qquad \nu
+    = \sigma^2,\qquad b = q(1 - q),\qquad w = (1 - q)^2.
 $$
 
 Fix finite $s,r,\nu \geq 0$ and $0 < \tau < \infty$. Let $q \to 0$ and let
@@ -34,9 +33,9 @@ stops $0 \leq k \leq M_q$, including rates that are not mean-square stable.
 For $0 \leq \alpha \leq 1$, define
 
 $$
-  d(\alpha) = \alpha(2 - \alpha),\qquad z(\alpha) = e^{-\tau d(\alpha)},
-  \qquad
-  g(\alpha) = \frac{\nu\alpha}{8 - \alpha},
+  d(\alpha) = \alpha(2 - \alpha),\qquad z(\alpha)
+            = e^{-\tau d(\alpha)}, \qquad g(\alpha)
+            = \frac{\nu\alpha}{8 - \alpha},
 $$
 
 and
@@ -54,9 +53,8 @@ $$
 
 $$
   \lim_{q \to 0}R_S^*(M_q)
-  = \min_{0 \leq \alpha \leq 1}F_S(\alpha;s,r,\nu,\tau),
-  \qquad
-  \lim_{q \to 0}R_U^*(M_q) = \min_{0 \leq \alpha \leq 1}F_U(\alpha;r,\nu,\tau).
+  = \min_{0 \leq \alpha \leq 1}F_S(\alpha;s,r,\nu,\tau), \qquad \lim_{q \to 0}R_U^*(M_q)
+                           = \min_{0 \leq \alpha \leq 1}F_U(\alpha;r,\nu,\tau).
 $$
 
 Both minima exist by continuity. The endpoint $F_U(0) = r/2$ represents rates
@@ -70,9 +68,8 @@ and every integer cap with $T_q \in[T_0,T_1]$, constants depending only on
 $s,r,\nu,T_0,T_1$ give
 
 $$
-  |R_S^*(M_q) - L_S(T_q)| \leq C_S b,
-  \qquad
-  |R_U^*(M_q) - L_U(T_q)| \leq C_U b\log(1/b).
+  |R_S^*(M_q) - L_S(T_q)| \leq C_S b, \qquad |R_U^*(M_q) - L_U(T_q)|
+                          \leq C_U b\log(1/b).
 $$
 
 These bounds apply to the unrestricted infima, including prevalence-dependent
@@ -147,9 +144,8 @@ earlier stop under S.
 An exact scalar lower bound controls this case. Summing the recurrences gives
 
 $$
-  W_{k+1} \geq \lambda_b(\alpha)W_k + b\alpha^2\nu,
-  \qquad
-  \lambda_b(\alpha) = 1 - 2b\alpha + b\alpha^2(1 - 3b + b^2).
+  W_{k+1} \geq \lambda_b(\alpha)W_k + b\alpha^2\nu, \qquad \lambda_b(\alpha)
+          = 1 - 2b\alpha + b\alpha^2(1 - 3b + b^2).
 $$
 
 The common-coordinate coefficient exceeds $\lambda_b$ by $b^2\alpha^2(4 - b)$;
@@ -203,9 +199,8 @@ constant plus $O(b)H_{\max}$. Absorb the latter term for small $b$.
 More precisely, the common recurrence now gives
 
 $$
-  |G_j - g(\alpha)| \leq \rho^j|s/4 - g(\alpha)| + O(b),
-  \qquad
-  b\sum_{j<M_q}|G_j - g(\alpha)| = O(b).
+  |G_j - g(\alpha)| \leq \rho^j|s/4 - g(\alpha)|
+                         + O(b), \qquad b\sum_{j<M_q}|G_j - g(\alpha)| = O(b).
 $$
 
 Consequently, replacing $G_j$ by $g(\alpha)$ in the rare recurrence changes its
@@ -226,9 +221,8 @@ stop, not just a lower bound on the rare moment. To derive it, take
 $0 \leq \alpha \leq 1$, write $T = M_qb$, and set
 
 $$
-  A = (1 - \alpha/4)^2,\qquad c = \frac{b\alpha}{8 - \alpha},
-  \qquad
-  B = \frac{r + T\alpha^2\{s/4 + g(\alpha) + \nu\}} {1 - T\alpha^2c}.
+  A = (1 - \alpha/4)^2,\qquad c = \frac{b\alpha}{8 - \alpha}, \qquad B
+    = \frac{r + T\alpha^2\{s/4 + g(\alpha) + \nu\}} {1 - T\alpha^2c}.
 $$
 
 The denominator is positive for all sufficiently small $q$. Iterating the common
@@ -258,9 +252,9 @@ These estimates also include $\alpha = 0$ and zero signal or noise.
 Consequently, if $k_q\alpha_q \to \ell \in[0,\infty]$, then
 
 $$
-  G_{k_q} \longrightarrow \frac s4e^{-\ell/2},\qquad H_{k_q} \longrightarrow r,
-  \qquad
-  R_{R,k_q} \longrightarrow \frac s8e^{-\ell/2} + \frac r2,
+  G_{k_q} \longrightarrow \frac s4e^{-\ell/2},\qquad H_{k_q}
+          \longrightarrow r, \qquad R_{R,k_q}
+          \longrightarrow \frac s8e^{-\ell/2} + \frac r2,
 $$
 
 where $e^{-\infty} = 0$. For finite $\ell$, use
@@ -293,18 +287,15 @@ from the positive-time argument gives $H_{k_q} = r + O(k_qb) \to r$. Solving the
 common recurrence more precisely gives
 
 $$
-  G_{k_q} = A_q^{k_q}s/4 + g(\alpha_q)(1 - A_q^{k_q}) + O(b),
-  \qquad
-  A_q = (1 - \alpha_q/4)^2.
+  G_{k_q} = A_q^{k_q}s/4 + g(\alpha_q)(1 - A_q^{k_q}) + O(b), \qquad A_q
+          = (1 - \alpha_q/4)^2.
 $$
 
 Along a subsequence, the integer stops either equal a fixed $K \geq 0$ or tend
 to infinity. Writing $A(a) = (1 - a/4)^2$, the limiting risk is respectively
 
 $$
-  \frac12\left[ r + A(a)^K s/4 + \{1 - A(a)^K\}g(a) \right],
-  \qquad
-  \frac12\{r + g(a)\}.
+  \frac12\left[ r + A(a)^K s/4 + \{1 - A(a)^K\}g(a) \right], \qquad \frac12\{r + g(a)\}.
 $$
 
 Both are at least $r/2$. The first includes initialization at $K = 0$; the
@@ -350,9 +341,8 @@ cutoffs lie below three. Then $1 - w \leq 4b$.
 For U, let $0 \leq \alpha \leq c_U(b) := 2/(1 - 3b)$. Set
 
 $$
-  A = (1 - \alpha/4)^2,\qquad h = \frac{\alpha}{8 - \alpha},
-  \qquad
-  g = \nu h,\qquad c = bh,
+  A = (1 - \alpha/4)^2,\qquad h
+    = \frac{\alpha}{8 - \alpha}, \qquad g = \nu h,\qquad c = bh,
 $$
 
 and define
@@ -366,9 +356,8 @@ denominator is at least $1/2$ for sufficiently small $b$, uniformly even when
 $\alpha$ tends to zero. The common recurrence and positivity give
 
 $$
-  H_{\max} \leq B \leq 2\{r + 9T_1(G_0 + 8\nu/5)\},
-  \qquad
-  0 \leq G_j - A^jG_0 - (1 - A^j)g \leq cB.
+  H_{\max} \leq B \leq 2\{r + 9T_1(G_0 + 8\nu/5)\}, \qquad 0
+           \leq G_j - A^jG_0 - (1 - A^j)g \leq cB.
 $$
 
 To justify the first inequality, bound the common moment by
@@ -396,9 +385,8 @@ needed.
 Write $H^\circ_\alpha(t)$ for the solution of
 
 $$
-  \dot H^\circ = -d(\alpha)H^\circ + f,
-  \qquad
-  H^\circ(0) = r,\qquad f = \alpha^2(\nu + g).
+  \dot H^\circ = -d(\alpha)H^\circ + f, \qquad H^\circ(0)
+               = r,\qquad f = \alpha^2(\nu + g).
 $$
 
 The affine scalar map for $\widetilde H$ differs from this flow over one step
@@ -408,9 +396,8 @@ bound, also used by the numerical checks, is
 
 $$
   |\widetilde H_k - H^\circ_\alpha(kb)|
-  \leq Tb\left[ \left\{ 3\alpha^2 + \tfrac12d(\alpha)^2e^{b|d(\alpha)|} \right\}\overline H + \tfrac12|d(\alpha)|e^{b|d(\alpha)|}f \right],
-  \qquad
-  \overline H = e^{T\max\{-d(\alpha),0\}}(r + Tf).
+  \leq Tb\left[ \left\{ 3\alpha^2 + \tfrac12d(\alpha)^2e^{b|d(\alpha)|} \right\}\overline H + \tfrac12|d(\alpha)|e^{b|d(\alpha)|}f \right], \qquad \overline H
+                                        = e^{T\max\{-d(\alpha),0\}}(r + Tf).
 $$
 
 Indeed, $H^\circ_\alpha(t) \leq \overline H$ for $t \leq T$. The exponential
@@ -537,9 +524,8 @@ For passage to a specified $\tau$, the limiting minima are Lipschitz in budget.
 The defining formulas on $[0,1]$ give
 
 $$
-  |L_S(T) - L_S(\tau)| \leq \frac{v + \nu}{2}|T - \tau|,
-  \qquad
-  |L_U(T) - L_U(\tau)| \leq \frac{r + 8\nu/7}{2}|T - \tau|.
+  |L_S(T) - L_S(\tau)| \leq \frac{v + \nu}{2}|T - \tau|, \qquad |L_U(T)
+                            - L_U(\tau)| \leq \frac{r + 8\nu/7}{2}|T - \tau|.
 $$
 
 These follow by bounding the time derivatives uniformly in the rate and then
