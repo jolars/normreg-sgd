@@ -787,13 +787,11 @@ Reproduction instructions are in \cref{sec:reproducibility}.
 We prove \cref{thm:conference-predictive} directly at positive prevalence. The
 bounds below are explicit functions of $q$ and $\tau = Mq(1 - q)$. Finite minima
 over rate intervals bound the continuous search; they do not restrict the oracle
-to a rate grid. Analytic bounds cover every rate above one. The checker
-\texttt{checks/predictive\_fixed\_q.py} certifies the reported positive regions
-with rational arithmetic and checks the moment bounds against observation-level
-tensor calculations.
+to a rate grid. Analytic bounds cover every rate above one. An independent
+checker certifies the reported positive regions with rational arithmetic and
+checks the moment bounds against observation-level tensor calculations.
 
-The source supplement also includes small-prevalence checks in
-\path{checks/predictive_theorem.py} and \path{checks/predictive_review.py}.
+The source supplement also includes independent small-prevalence checks.
 
 \subsection{Exact moments}
 
@@ -1280,24 +1278,18 @@ narrows as both risks increase. At $q = 10^{-4}$, SD's rare-signal risk changes
 little over the tested dimensions, while U's increases substantially, as shown
 in \cref{fig:common-block}.
 
-The checker \path{checks/common_block.py} verifies 60 one-step reductions by
-enumerating individual observations with rational arithmetic in dimensions two
-through six. These cases include nonzero cross-error moments and rates above the
-stability range. Further checks compare full second-moment tensor powers,
-concentrated and spread common signals, and a small rate-and-stop search with
-independent observation-level calculations. All 252 selected risks are replayed
-with matrix powers rather than sequential updates; the largest discrepancy is
-less than $8 \times 10^{-13}$.
+An independent checker verifies 60 one-step reductions by enumerating individual
+observations with rational arithmetic in dimensions two through six. These cases
+include nonzero cross-error moments and rates above the stability range. Further
+checks compare full second-moment tensor powers, concentrated and spread common
+signals, and a small rate-and-stop search with independent observation-level
+calculations. All 252 selected risks are replayed with matrix powers rather than
+sequential updates; the largest discrepancy is less than $8 \times 10^{-13}$.
 
-The saved arrays in \path{results/common-block/search.npz} retain each rate's
-lowest risk and earliest attaining stop at every cap. The settings and summary
-files record the grids, selected rates and stops, and refinement diagnostics. To
-regenerate the study and verify the selected results, run
-\begin{verbatim}
-task experiment:common-block
-task check:common-block -- --saved
-\end{verbatim}
-Summarizing and plotting use saved arrays without rerunning the search.
+The source supplement retains each rate's lowest risk and earliest attaining
+stop at every cap, together with the grids, selected rates and stops, and
+refinement diagnostics. The reproduction guide explains how to regenerate the
+study and verify the selected results.
 
 \section{Numerical illustrations}
 \label{sec:predictive-intro-figure}
@@ -1527,13 +1519,9 @@ These overlapping splits give a descriptive sensitivity analysis at half the
 original calibration size. They combine variation in calibration choices and
 held-out risk estimates, and are not independent replications or confidence
 intervals. They do not change the original 4096-replication evaluation or its
-conditional error bars. The files \mbox{\path{calibration-sensitivity.npz}} and
-\mbox{\path{calibration-sensitivity.json}} under \path{results/theory-bridge/}
-retain the partitions, choices, held-out risks, and summary.
-
-Run \texttt{task experiment:calibration-sensitivity} to reconstruct the files.
-The command \texttt{task check:calibration-sensitivity} checks the selection
-logic and saved results.
+conditional error bars. The source supplement retains the partitions, choices,
+held-out risks, and summary, with instructions for reconstructing and checking
+the analysis from the saved calibration runs.
 
 \subsubsection{Adaptive selection and exact evaluation}
 
@@ -1702,15 +1690,12 @@ runs, but selection worsens risk relative to calibration in $13.3\%$ of U runs
 and $22.3\%$ of SD runs. The baseline also has negative gains, in $17.9\%$ and
 $20.8\%$ of runs, respectively. Thus a positive mean improvement does not
 guarantee an improvement on each training stream, even when every validation set
-contains rare observations. The files
-\path{results/theory-bridge/selection-gains.json} and
-\path{results/theory-bridge/selection-gains.npz} retain distributions and
+contains rare observations. The source supplement retains distributions and
 per-run risks, gains, and predictor errors for both fresh arms, both
 prevalences, all three caps, both signals, and exact-risk selection and all
-three validation sizes. Run \texttt{task experiment:selection-gains} to
-reconstruct them and the table without training, and
-\texttt{task check:selection-gains} to verify them against independent
-predictions on the two rare cells.
+three validation sizes. Independent predictions on the two rare cells verify
+these results. The reproduction guide explains how to reconstruct the analysis
+from saved predictors without training.
 
 \subsubsection{Intercept--rare error cancellation}
 \label{sec:bridge-cancellation}
@@ -1785,13 +1770,11 @@ These are descriptive identities for the selected predictors in a finite
 candidate family, conditional on calibration. They identify how cancellation
 accounts for this reversal, without identifying a causal effect of altering
 intercept training or separating adaptation gains from calibration
-suboptimality. The files \path{results/theory-bridge/risk-decomposition.json}
-and \path{results/theory-bridge/risk-decomposition.npz} retain per-run errors,
-four risk terms, paired gap and gain contributions, and cancellation summaries
-for all 120 setting--policy combinations in the two fresh arms. Run
-\texttt{task experiment:risk-decomposition} to reconstruct them and the table
-without training. The command \texttt{task check:risk-decomposition} verifies
-them using independent four-cell predictions and the existing risks and gains.
+suboptimality. The source supplement retains per-run errors, four risk terms,
+paired gap and gain contributions, and cancellation summaries for all 120
+setting--policy combinations in the two fresh arms. Independent four-cell
+predictions and the existing risks and gains verify the decomposition. The
+reproduction guide explains how to reconstruct the analysis without training.
 
 \subsection{Numerical checks}
 
@@ -1811,13 +1794,12 @@ $q = .005$. Evaluation means differ from their exact expectations by at most
 $1.98$ Monte Carlo standard errors. These checks assess the baseline grids and
 simulation, not continuous optimality for all arms.
 
-The protocol and implementation are in \path{experiments/theory_bridge/};
-\path{results/theory-bridge/} retains settings, raw feature cells and noise,
-replacement indices, calibration summaries, selected predictors and their
-indices, numerical failure records, and the machine-readable summary. The
-summary includes aggregate and rare risks, matched changes between arms,
-coarse-grid comparisons, selection regret, and coverage diagnostics. The checks
-are in \path{checks/theory_bridge.py}. Summarization and plotting use saved
+The source supplement contains the protocol, implementation, settings, raw
+feature cells and noise, replacement indices, calibration summaries, selected
+predictors and their indices, numerical failure records, and numerical checks.
+Its machine-readable summary includes aggregate and rare risks, matched changes
+between arms, coarse-grid comparisons, selection regret, and coverage
+diagnostics. The reproduction guide explains how to summarize and plot the saved
 results without training.
 
 \section{Source supplement}
@@ -1830,25 +1812,16 @@ container, and reproduction instructions, including how to build the complete
 paper from saved results, rerun experiments, and check the numerical
 certificates. It also identifies optional outputs that must be regenerated.
 
-The limiting proofs and consequences are in \path{paper/oracle-proofs.tex}.
-Their finite-prevalence comparison is documented in
-\path{paper/oracle-numerics.tex}. Run \texttt{task} \path{check:oracle-limits}
-to check the moment limits, uniform bounds, variational solver, and saved
-finite-prevalence selections. Recorded diagnostics are in
-\path{results/oracle-limits/} and \path{results/oracle-finite/}; these checks
+The supplement includes checks of the moment limits, uniform bounds, variational
+solver, and saved finite-prevalence selections. These numerical checks
 supplement the analytic proofs.
 
-The certificate checker for \cref{thm:conference-predictive} is
-\path{checks/predictive_fixed_q.py}. Its recorded standard output is in
-\path{results/certificates/predictive-fixed-q.txt}. From the extracted archive,
-enter \texttt{devenv shell} and run
-\begin{verbatim}
-task check:predictive-fixed-q
-\end{verbatim}
-This command recomputes the certificates without training models. It checks the
-six continuous parameter regions in \cref{sec:predictive-proofs}, including
-exact rational bounds and coverage volumes. The recorded output is a summary of
-the completed checks, not a substitute for rerunning the checker.
+The certificate checker for \cref{thm:conference-predictive} recomputes the
+certificates without training models. It checks the six continuous parameter
+regions in \cref{sec:predictive-proofs}, including exact rational bounds and
+coverage volumes. The supplement retains the recorded output as a summary of the
+completed checks, not a substitute for rerunning the checker. The reproduction
+guide gives the commands for these checks.
 
 We ran the experiments on a local NixOS workstation with an AMD Ryzen 9 7900 CPU
 (12 cores, 24 hardware threads) and approximately 62\,GiB of usable RAM\@. The

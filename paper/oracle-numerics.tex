@@ -104,22 +104,13 @@ subsequent large-budget limit.
 
 \paragraph{Reproduction and independent replay.}
 
-The settings, grids, all four searches, selected risks, rates, stops, and
-summaries are saved under \path{results/oracle-finite/}. The checker
-\path{checks/oracle_finite.py} independently constructs observation-level tensor
-updates and tests all four nested searches on a small problem. It also replays
-all 2064 saved selections with full tensor updates and long-double matrix
-powers; the recorded maximum discrepancy is $7.38 \times 10^{-11}$. Run the
-following commands to regenerate the searches and summaries, reconstruct every
-selection, and plot the saved results, respectively:
-\begin{verbatim}
-task experiment:oracle-finite
-task check:oracle-finite -- --rerun
-task figure:oracle-finite
-\end{verbatim}
-Without \texttt{--rerun}, the checker replays saved selections without repeating
-the full searches. Summarizing, plotting, and building the paper never launch
-these experiments.
+The source supplement retains the settings, grids, all four searches, selected
+risks, rates, stops, and summaries. An independent checker constructs
+observation-level tensor updates and tests all four nested searches on a small
+problem. It also replays all 2064 saved selections with full tensor updates and
+long-double matrix powers; the recorded maximum discrepancy is
+$7.38 \times 10^{-11}$. The accompanying reproduction guide explains how to
+regenerate the searches, replay the selections, and plot the saved results.
 
 \subsection{Introductory signal-allocation illustration}
 \label{sec:signal-allocation}
@@ -129,8 +120,7 @@ these experiments.
 $\nu = 1$ and $\tau = 2$. Thus $s/4 + r = 1$ and initial limiting subgroup risk
 stays at $1/2$. The middle tick, $\theta = 1/2$, gives equal common and rare
 contributions to this risk. We plot the scalar minima in
-\cref{eq:limiting-objectives}, saved as the nominal limiting risks of the
-allocation cases in \path{results/oracle-finite/summary.json}. The eight
+\cref{eq:limiting-objectives} along the allocation path. The eight
 allocation values are $0$, $1/4$, $1/2$, $3/4$, $1$, and $\theta_* - .02$,
 $\theta_*$, $\theta_* + .02$, where scalar root finding gives
 $\theta_* \approx .8377$. Lines connect these saved values;
@@ -138,8 +128,6 @@ $\theta_* \approx .8377$. Lines connect these saved values;
 finite-prevalence curves in \cref{fig:oracle-finite}(b), this panel uses the
 limiting risks at exactly $\tau = 2$, without integer-cap rounding.
 
-Run \texttt{task} \path{check:oracle-limits} to check the scalar solver and
-saved comparisons, and \texttt{task} \path{figure:intro} to plot the saved
-values without new optimization or training. The earlier study at fixed
-unweighted squared coefficient sum remains in \path{results/signal-allocation/}
-but is not used in this figure.
+The source supplement retains the sampled limiting risks and scalar-solver
+checks. The reproduction guide explains how to check and plot these values
+without new optimization or training.

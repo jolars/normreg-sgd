@@ -300,7 +300,7 @@ $\nu>0$. If $\nu=0$, choosing rate one gives
 $L_S=ve^{-\tau}/2$ and $L_U=re^{-\tau}/2$; a zero signal makes the
 corresponding objective identically zero.
 
-The implementation in \path{experiments/common/limiting_oracle.py} brackets
+The numerical solver in the source supplement brackets
 these roots and multiplies the derivative by $z$ to avoid growing exponentials.
 It evaluates the proved characterization in floating-point arithmetic; its
 answers are not interval certificates.
@@ -428,8 +428,7 @@ U still wins at $\tau=10^5$, while S wins at $\tau=10^7$. The assumptions
 matter: with $\nu=0$, U is always weakly better; with $r=0$, its limiting risk
 is zero; with $s=0,r,\nu>0$, S wins at every finite positive budget.
 
-The deterministic checks in \path{checks/oracle_limits.py},
-\path{checks/oracle_infima.py}, and \path{checks/oracle_variational.py}
-exercise the moment approximations, unrestricted-infimum bounds, scalar roots,
-boundaries, and expansions. They supplement the proofs and are separate from
+The deterministic checks in the source supplement exercise the moment
+approximations, bounds on unrestricted infima, scalar roots, boundaries, and
+expansions. They supplement the proofs and are separate from
 the finite-prevalence certificates.
