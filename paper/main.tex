@@ -1410,24 +1410,26 @@ preprocessing, beyond the observations counted by the update cap.
 \begin{table}[ht]
   \centering
   \small
-  \begin{tabular}{cllll}
+  \begin{tabular}{clll}
     \toprule
-    Arm & Sampling & Centering  & SD scales  & Intercept                 \\
+    Arm & Sampling & Estimated preprocessing & Intercept                 \\
     \midrule
-     1  & Fresh    & Population & Population & Fixed zero                \\
-     2  & Fresh    & Population & Population & Fitted from zero          \\
-     3  & Reuse    & Population & Population & Fixed zero                \\
-     4  & Reuse    & Population & Estimated  & Fixed zero                \\
-     5  & Reuse    & Population & Population & Fitted from zero          \\
-     6  & Reuse    & Population & Estimated  & Fitted from zero          \\
-     7  & Reuse    & Estimated  & Estimated  & Fitted from zero          \\
-     8  & Reuse    & Estimated  & Estimated  & Fitted from response mean \\
+     1  & Fresh    & None                    & Fixed zero                \\
+     2  & Fresh    & None                    & Fitted from zero          \\
+     3  & Reuse    & None                    & Fixed zero                \\
+     4  & Reuse    & Scales                  & Fixed zero                \\
+     5  & Reuse    & None                    & Fitted from zero          \\
+     6  & Reuse    & Scales                  & Fitted from zero          \\
+     7  & Reuse    & Centering and scales    & Fitted from zero          \\
+     8  & Reuse    & Centering and scales    & Fitted from response mean \\
     \bottomrule
   \end{tabular}
   \caption{
-    Matched training arms, in the order shown in \cref{fig:bridge-controlled}. U
-    uses divisor one in every arm. Every fitted intercept is unscaled and uses
-    the same learning rate as the transformed coefficients.
+    Matched training arms, in the order shown in \cref{fig:bridge-controlled}.
+    Centering and scales use population values unless listed as estimated. A
+    dash denotes no estimated preprocessing. U uses divisor one in every arm.
+    Every fitted intercept is unscaled and uses the same learning rate as the
+    transformed coefficients.
   }
   \label{tab:bridge-arms}
 \end{table}
