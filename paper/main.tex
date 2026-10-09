@@ -96,19 +96,15 @@ observation caps in \cref{fig:conference-tuned-intro}.
     \label{fig:intro-coefficient-paths}%
     \includegraphics{../figures/coefficient-paths/paths-to-ols.pdf}%
   }\hfill
-  \subfigure[Risk depends on signal allocation]{%
+  \subfigure[Limiting oracle risks for fresh-sample SGD with noise variance one and rescaled budget $\tau = 2$. As the rare signal share $\theta$ increases,
+    $(\beta_C^*)^2 = 4(1 - \theta)$ and $(\beta_R^*)^2 = \theta$,
+    fixing initial limiting subgroup risk at $1/2$. The middle tick gives equal contributions to that risk. Lines connect saved scalar minima along the allocation path in \cref{cor:oracle-allocation}. \Cref{sec:signal-allocation} gives the setup and numerical checks.]{%
     \label{fig:intro-signal-crossing}%
     \includegraphics{../figures/signal-crossing/risk-crossing.pdf}%
   }
   \caption{
     Normalization changes learning paths, and its effect on risk depends on the
-    signal. (a) (b) Limiting oracle risks for fresh-sample SGD with noise
-    variance one and rescaled budget $\tau = 2$. As the rare signal share
-    $\theta$ increases, $(\beta_C^*)^2 = 4(1 - \theta)$ and
-    $(\beta_R^*)^2 = \theta$, fixing initial limiting subgroup risk at $1/2$.
-    The middle tick gives equal contributions to that risk. Lines connect saved
-    scalar minima along the allocation path in \cref{cor:oracle-allocation}.
-    \Cref{sec:signal-allocation} gives the setup and numerical checks.
+    signal.
   }
 \end{figure}
 
