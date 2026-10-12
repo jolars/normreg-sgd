@@ -1609,20 +1609,18 @@ unit coordinate when fitting an intercept. If $e_k$ is the transformed
 coefficient error after $k$ updates and $Q_k = \E[e_k e_k^\top]$, then
 independent observations and unit noise variance give
 \[
-  Q_{k+1}
-  = \E_z[(I-\eta zz^\top)Q_k(I-\eta zz^\top)]
-    + \eta^2\E_z[zz^\top],
-  \qquad
-  Q_0 = \theta^*\theta^{*\top}.
+  Q_{k+1} = \E_z[(I - \eta zz^\top)Q_k(I - \eta zz^\top)]
+            + \eta^2\E_z[zz^\top], \qquad Q_0
+          = \theta^*\theta^{*\top}.
 \]
 Here $\theta^*$ is the true transformed coefficient vector, including a zero
 intercept when fitted, and all coefficients start at zero. The expected rare
-risk at stop $k$ is
-$\tfrac12\operatorname{tr}(Q_k\E[zz^\top\mid J=1])$. We sum over the four
-feature cells and evaluate this exact recursion in floating-point arithmetic
-at every saved rate and stopping checkpoint. Including the intercept cross
-moments is essential. The optimization covers the saved finite family, not all
-real rates and integer stops, and leaves the frozen calibration choices intact.
+risk at stop $k$ is $\tfrac12\operatorname{tr}(Q_k\E[zz^\top\mid J=1])$. We sum
+over the four feature cells and evaluate this exact recursion in floating-point
+arithmetic at every saved rate and stopping checkpoint. Including the intercept
+cross moments is essential. The optimization covers the saved finite family, not
+all real rates and integer stops, and leaves the frozen calibration choices
+intact.
 
 For the fitted-intercept example in \cref{tab:bridge-selection}, the frozen
 choices have expected rare risks $.24385$ for U and $.13823$ for SD\@. The
@@ -1634,8 +1632,8 @@ under selection. In the fixed-intercept baseline, the saved choices already
 attain the finite-family minima, $.15518$ for U and $.13557$ for SD\@. These
 expectations have no Monte Carlo error; the table estimates risks from 4096
 evaluation runs. The source supplement retains expected risks for every
-candidate, the minimizing choices, and calibration excesses for both fresh
-arms, both prevalences, all three caps, and both signals. Independent short-path
+candidate, the minimizing choices, and calibration excesses for both fresh arms,
+both prevalences, all three caps, and both signals. Independent short-path
 enumeration and the baseline's two-coordinate moment recursion check the
 calculation. The reproduction guide gives commands to reconstruct it without
 training.
@@ -1825,10 +1823,11 @@ candidate family, conditional on calibration. They identify how cancellation
 accounts for this reversal, without identifying a causal effect of altering
 intercept training. \Cref{sec:bridge-exact-calibration} separately quantifies
 calibration suboptimality. The source supplement retains per-run errors, four
-risk terms, paired gap and gain contributions, and cancellation summaries for all
-120 setting--policy combinations in the two fresh arms. Independent four-cell
-predictions and the existing risks and gains verify the decomposition. The
-reproduction guide explains how to reconstruct the analysis without training.
+risk terms, paired gap and gain contributions, and cancellation summaries for
+all 120 setting--policy combinations in the two fresh arms. Independent
+four-cell predictions and the existing risks and gains verify the decomposition.
+The reproduction guide explains how to reconstruct the analysis without
+training.
 
 \subsection{Numerical checks}
 
