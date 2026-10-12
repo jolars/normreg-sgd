@@ -349,12 +349,7 @@ tasks:
   experiment:mushroom:
     desc: Run and summarize the mushroom experiment (-- --config NAME).
     cmds:
-      - task: experiment:mushroom:run
-        vars:
-          ARGS: '{{.CLI_ARGS}}'
-      - task: experiment:mushroom:summarize
-        vars:
-          ARGS: '{{.CLI_ARGS}}'
+      - 'python -m experiments mushroom {{.CLI_ARGS}}'
 
   experiment:mushroom:run:
     desc: Run the mushroom experiment (-- --config NAME).
@@ -369,12 +364,7 @@ tasks:
   experiment:synthetic:
     desc: Run and summarize the synthetic experiment (-- --config NAME).
     cmds:
-      - task: experiment:synthetic:run
-        vars:
-          ARGS: '{{.CLI_ARGS}}'
-      - task: experiment:synthetic:summarize
-        vars:
-          ARGS: '{{.CLI_ARGS}}'
+      - 'python -m experiments synthetic {{.CLI_ARGS}}'
 
   experiment:synthetic:run:
     desc: Run the synthetic experiment (-- --config NAME).
@@ -389,8 +379,7 @@ tasks:
   experiment:exact-risk:
     desc: Run and summarize the exact-risk comparisons.
     cmds:
-      - task: experiment:exact-risk:run
-      - task: experiment:exact-risk:summarize
+      - 'python -m experiments exact-risk'
 
   experiment:exact-risk:run:
     desc: Compute exact moments and paired simulations.
@@ -406,13 +395,12 @@ tasks:
   experiment:predictive-intro:
     desc: Compute the introduction illustration.
     cmds:
-      - python -m experiments.predictive_intro.run
+      - python -m experiments predictive-intro
 
   experiment:theory-bridge:
     desc: Run and summarize controlled departures from the oracle model.
     cmds:
-      - task: experiment:theory-bridge:run
-      - task: experiment:theory-bridge:summarize
+      - 'python -m experiments theory-bridge'
 
   experiment:theory-bridge:run:
     desc: Run independent calibration and evaluation for the bridge study.
@@ -427,22 +415,22 @@ tasks:
   experiment:calibration-sensitivity:
     desc: Recalibrate and evaluate on disjoint halves of saved calibration shards.
     cmds:
-      - python -m experiments.theory_bridge.calibration_sensitivity
+      - python -m experiments calibration-sensitivity
 
   experiment:selection-gains:
     desc: Analyze selection gains from saved fresh-arm predictors without training.
     cmds:
-      - python -m experiments.theory_bridge.selection_gains
+      - python -m experiments selection-gains
 
   experiment:exact-calibration:
     desc: Compute exact expected-risk benchmarks for the saved fresh-arm candidates.
     cmds:
-      - python -m experiments.theory_bridge.exact_calibration
+      - python -m experiments exact-calibration
 
   experiment:risk-decomposition:
     desc: Decompose saved fresh-arm rare risks and measure cancellation without training.
     cmds:
-      - python -m experiments.theory_bridge.risk_decomposition
+      - python -m experiments risk-decomposition
 
   figure:theory-bridge:
     desc: Plot the saved controlled comparisons and validation selections.
@@ -471,13 +459,12 @@ tasks:
   experiment:coefficient-paths:
     desc: Compute the introductory full-gradient paths to OLS.
     cmds:
-      - python -m experiments.coefficient_paths.run
+      - python -m experiments coefficient-paths
 
   experiment:common-block:
     desc: Run and summarize one rare feature with a growing common block.
     cmds:
-      - task: experiment:common-block:run
-      - task: experiment:common-block:summarize
+      - 'python -m experiments common-block'
 
   experiment:common-block:run:
     desc: Compute exact-moment searches over common-feature dimension.
@@ -512,13 +499,12 @@ tasks:
   experiment:signal-allocation:
     desc: Compute the signal-allocation illustration.
     cmds:
-      - python -m experiments.signal_allocation.run
+      - python -m experiments signal-allocation
 
   experiment:oracle-finite:
     desc: Compute and summarize exact finite-prevalence comparisons with the limits.
     cmds:
-      - task: experiment:oracle-finite:run
-      - task: experiment:oracle-finite:summarize
+      - 'python -m experiments oracle-finite'
 
   experiment:oracle-finite:run:
     desc: Search nested rate and stop grids using exact moments.
@@ -560,13 +546,12 @@ tasks:
   experiment:diagnostics:
     desc: Reconstruct numerical discrepancies and compute post hoc diagnostics.
     cmds:
-      - python -m checks.variance_scaling --write-audit
-      - python -m experiments.diagnostics.run
+      - python -m experiments diagnostics
 
   experiment:precision:
     desc: Replay selected synthetic paths at 160-digit precision.
     cmds:
-      - python -m experiments.precision.run
+      - python -m experiments precision
 
   prepare-lean:
     desc: Fetch the Mathlib caches needed by the proofs.

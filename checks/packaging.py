@@ -17,6 +17,7 @@ def check_archive(path, review=False):
         "nix/release.nix",
         "pyproject.toml",
         "uv.lock",
+        "experiments/__main__.py",
         "paper/main.tex",
         "paper/oracle-proofs.tex",
         "paper/oracle-numerics.tex",

@@ -54,8 +54,9 @@ put $W_k = C_k + wH_k$ and $A = (1 - b\theta)^2$. Nonnegative coupling and
 $D_b \geq A$ imply
 
 $$
-  W_{k+1} \geq A W_k + wb\theta^2, \qquad A + wb\theta^2 - 1
-          = b\theta\{\theta(b + w) - 2\} \geq 0.
+  W_{k+1} \geq A W_k + wb\theta^2,
+  \qquad
+  A + wb\theta^2 - 1 = b\theta\{\theta(b + w) - 2\} \geq 0.
 $$
 
 Thus $W_0 \geq 1$ implies $W_k \geq 1$ by induction. Taking
@@ -82,8 +83,10 @@ theorems `oracle_unscaled_geometric_lower_bound` and
 
 $$
   R_{R,k}^U
-  \geq \frac w2\left[ D_b^kr + b\theta^2\nu \sum_{j=0}^{k-1}D_b^j \right],\qquad R_{R,k}^S
-            \geq \frac w2\left[ \lambda_b^kv + b\theta^2\nu \sum_{j=0}^{k-1}\lambda_b^j \right].
+  \geq \frac w2\left[ D_b^kr + b\theta^2\nu \sum_{j=0}^{k-1}D_b^j \right],
+  \qquad
+  R_{R,k}^S
+  \geq \frac w2\left[ \lambda_b^kv + b\theta^2\nu \sum_{j=0}^{k-1}\lambda_b^j \right].
 $$
 
 These hold at every finite stop and every real rate, including all nonnegative
@@ -116,8 +119,9 @@ the rate domain in the limiting proof.
 `CommonBlockMomentRecurrence` records
 
 $$
-  G_{k+1} = (1 - 2u + mu^2)G_k + mu^2(bH_k + \nu),\qquad H_{k+1}
-          = D_bH_k + b\theta^2(G_k + \nu),
+  G_{k+1} = (1 - 2u + mu^2)G_k + mu^2(bH_k + \nu),
+  \qquad
+  H_{k+1} = D_bH_k + b\theta^2(G_k + \nu),
 $$
 
 where $b = q(1 - q)$, $\theta$ is the manuscript's rare-coordinate step
@@ -185,19 +189,21 @@ and the statistical model remains necessary.
 ## Build and audit
 
 Lean and Mathlib are pinned to v4.30.0; `lake-manifest.json` records the exact
-dependency commits. The existing devenv environment supplies Lean and Lake. From
-the repository root:
+dependency commits. Install Lean and Lake, then run from `lean/`:
 
 ```sh
-devenv shell
-task prepare-lean
-task check-lean
+lake exe cache get Mathlib.Algebra.Ring.GeomSum Mathlib.Data.Real.Archimedean Mathlib.Data.Real.Basic Mathlib.Tactic.FieldSimp Mathlib.Tactic.Linarith Mathlib.Tactic.Positivity Mathlib.Tactic.Ring
+lake build
 ```
 
-The preparation target downloads the required precompiled Mathlib modules. Its
-first run needs network access. Dependencies and build products live in the
-ignored `lean/.lake/` directory. Subsequent checks reuse those files. The Lean
-targets are separate from the manuscript and numerical validation targets.
+The optional devenv environment supplies Lean and Lake. Its `task prepare-lean`
+and `task check-lean` convenience wrappers run these commands from the
+repository root.
+
+The cache command downloads the required precompiled Mathlib modules. Its first
+run needs network access. Dependencies and build products live in the ignored
+`lean/.lake/` directory. Subsequent checks reuse those files. The Lean targets
+are separate from the manuscript and numerical validation targets.
 
 Lake may rebuild dependencies when the local toolchain's build identifier
 differs from that used for the cache. The Nix Lean v4.30.0 package used for this

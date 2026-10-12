@@ -18,37 +18,288 @@ common-feature extension, and the controlled training study. The archive also
 retains earlier fixed-calibration, signal-allocation, synthetic, and Mushroom
 investigations with their numerical diagnostics.
 
-## Environment and paper build
+## Python environment
 
-Install [Nix](https://nixos.org/download/) and
-[devenv](https://devenv.sh/getting-started/), then run:
+Run commands from the repository or extracted archive root. Experiments and
+numerical checks need Python 3.12 or later, NumPy, SciPy, and Matplotlib. They
+run on the CPU and do not need Nix, devenv, Task, or LaTeX.
+
+To install the versions recorded in `uv.lock`, install
+[uv](https://docs.astral.sh/uv/getting-started/installation/) and run:
 
 ```sh
-devenv shell
-task paper
+uv sync --locked --no-dev --python 3.13
+. .venv/bin/activate
+export OPENBLAS_NUM_THREADS=1
 ```
 
-The environment supplies Python 3.13, NumPy, SciPy, Matplotlib, Task, LaTeX, and
-Lean. `devenv.lock` and `uv.lock` pin the dependencies. Initial setup needs
-network access. `task paper` generates figures from saved results and compiles
-`build/main.pdf`, including the appendices. It does not run experiments.
-`task figures` regenerates the figures alone.
+This uses Python 3.13, matching the development environment. Initial setup needs
+network access. The [`--locked`
+option](https://docs.astral.sh/uv/concepts/projects/sync/) checks that the
+lockfile matches `pyproject.toml` and installs its recorded versions without
+updating it. After activation, use the `python` commands below. You can also run
+them without activation by replacing `python` with
+`uv run --locked --no-dev python`.
 
-To inspect the numerical claims without Nix or LaTeX, use Python 3.12 or later
-and install the Python dependencies:
+If you prefer standard Python tools, create a virtual environment and install
+compatible dependencies with pip:
 
 ```sh
 python -m venv .venv
 . .venv/bin/activate
 python -m pip install 'numpy>=2.0' 'scipy>=1.14' 'matplotlib>=3.10'
-python -m checks.predictive_fixed_q
-python -m checks.oracle_limits
+export OPENBLAS_NUM_THREADS=1
 ```
 
-This alternative uses compatible dependency versions; the devenv environment
-provides the pinned versions. The Python checks run from the archive root.
-Plotting and building the manuscript also require the LaTeX tools supplied by
-devenv.
+These version ranges match `pyproject.toml`, but pip does not read `uv.lock`.
+Use the uv setup to reproduce the recorded Python dependency versions. The
+thread setting matches the saved experiments; the named experiment command also
+sets it for every subprocess.
+
+## Certificates and saved results
+
+With the Python environment active, run:
+
+```sh
+python -m checks.predictive_fixed_q
+python -m checks.oracle_limits
+python -m checks.oracle_infima
+python -m checks.oracle_variational
+python -m checks.oracle_finite
+python -m checks.common_block
+python -m checks.theory_bridge
+python -m checks.practical_selection
+python -m checks.mushroom_rate_search
+python -m checks.mushroom_sensitivity
+python -m checks.variance_scaling
+python -m experiments.diagnostics.run --check
+python -m checks.theory_bridge --saved
+python -m experiments.theory_bridge.summarize --check
+python -m checks.exact_calibration
+python -m checks.selection_gains
+python -m checks.risk_decomposition
+```
+
+The first command recomputes the finite-prevalence certificates without training
+models. Its recorded output is in
+[`results/certificates/`](results/certificates/). The checker covers all six
+continuous parameter regions using exact rational enclosures and coverage
+checks. The other commands check the limiting characterization,
+finite-prevalence selections, common-feature extension, and saved empirical
+losses and selections. `python -m checks.workflow` exercises small test
+experiments in temporary directories. Other executable checks are in `checks/`.
+
+The analytic limiting proof and its variational consequences are in
+[`paper/oracle-proofs.tex`](paper/oracle-proofs.tex). The controlled study's
+candidate families, calibration, evaluation, and selection rules are specified
+in
+[`experiments/theory_bridge/PROTOCOL.md`](experiments/theory_bridge/PROTOCOL.md).
+Run `python -m experiments calibration-sensitivity` to reconstruct the
+diagnostic that recalibrates on disjoint halves of the saved calibration shards
+without retraining. Its partitions, selected candidates, held-out risks, and
+summaries are saved as `results/theory-bridge/calibration-sensitivity.npz` and
+`calibration-sensitivity.json`. `python -m checks.calibration_sensitivity`
+checks the selection logic and saved diagnostic. The overlapping splits describe
+sensitivity at half the original calibration size, not independent repetitions
+or confidence intervals.
+
+The earlier fixed-calibration certificates can be recomputed with
+`python -m checks.normalization_risk_theorem`. Recorded numerical discrepancies
+in the earlier synthetic studies remain in the saved diagnostics; passing the
+checks does not certify the affected paths.
+
+For the formal proof pilot, install Lean and run `lake exe cache get`, then
+`lake build` from `lean/`. The preparation downloads Mathlib caches and needs
+network access. The [`lean/README.md`](lean/README.md) identifies the statements
+formalized and the assumptions left outside the formalization.
+
+## Manuscript analyses and file locations
+
+The finite-prevalence certificates use `checks/predictive_fixed_q.py`; the
+recorded output is `results/certificates/predictive-fixed-q.txt`.
+`checks/predictive_theorem.py` and `checks/predictive_review.py` provide the
+small-prevalence checks. The limiting proofs and numerical comparisons are in
+`paper/oracle-proofs.tex` and `paper/oracle-numerics.tex`.
+`experiments/common/limiting_oracle.py` implements the scalar solver, and
+`checks/oracle_limits.py`, `checks/oracle_infima.py`, and
+`checks/oracle_variational.py` check the limiting characterization. Recorded
+limiting diagnostics are in `results/oracle-limits/`.
+
+For the finite-prevalence oracle comparisons, `results/oracle-finite/` retains
+settings, grids, all four searches, selected risks, rates, stops, and summaries.
+`checks/oracle_finite.py` independently constructs observation-level tensor
+updates and replays saved selections. Run:
+
+```sh
+python -m experiments oracle-finite
+python -m checks.oracle_finite --rerun
+python scripts/figures/plot_oracle_finite.py
+```
+
+Without `--rerun`, the checker replays saved selections without repeating the
+full searches. The introductory allocation figure uses the nominal limiting
+risks in `results/oracle-finite/summary.json`. Run
+`python -m checks.oracle_limits` and `python -m checks.oracle_finite` to check
+the scalar solver and saved comparisons, and
+`python -m scripts.figures.plot_signal_crossing` to plot them without new
+optimization or training. The earlier allocation study at fixed unweighted
+squared coefficient sum remains in `results/signal-allocation/`, but is not used
+in that figure.
+
+The common-feature study retains each rate's lowest risk and earliest attaining
+stop at every cap in `results/common-block/search.npz`, with settings and
+summaries in the same directory. `checks/common_block.py` checks the reduction
+and selected results. Run:
+
+```sh
+python -m experiments common-block
+python -m checks.common_block --saved
+```
+
+The controlled-study implementation is in `experiments/theory_bridge/`, and its
+checks are in `checks/theory_bridge.py`. `results/theory-bridge/` retains
+settings, raw feature cells and noise, replacement indices, calibration
+summaries, selected predictors and their indices, numerical failure records, and
+the machine-readable summary. Summarizing and plotting use saved results without
+training.
+
+The exact expected-risk calibration benchmark uses the saved rate factors,
+stopping checkpoints, and frozen calibration choices for both fresh arms. It
+propagates full second moments, including intercept cross moments, without
+simulating training paths. `results/theory-bridge/exact-calibration.npz` retains
+every candidate's expected risk, and `exact-calibration.json` records the grids,
+minimizing choices, and calibration excesses. The benchmark optimizes the saved
+finite family; its expectations are distinct from the evaluation means in Table 1.
+Reconstruct it and check it against exhaustive short paths and the baseline's
+existing moments:
+
+```sh
+python -m experiments exact-calibration
+python -m checks.exact_calibration
+```
+
+The selection-gain and risk-decomposition analyses retain per-run arrays and
+summaries in `results/theory-bridge/selection-gains.npz`,
+`selection-gains.json`, `risk-decomposition.npz`, and `risk-decomposition.json`.
+Reconstruct the analyses and tables from saved predictors without training, then
+check them against independent cell predictions:
+
+```sh
+python -m experiments selection-gains
+python -m checks.selection_gains
+python -m experiments risk-decomposition
+python -m checks.risk_decomposition
+```
+
+## Rerunning experiments
+
+`python -m experiments --help` lists the named experiment commands. For example:
+
+```sh
+python -m experiments mushroom --config rates17
+python -m experiments synthetic --config rates5
+python -m experiments theory-bridge
+```
+
+These commands replace the corresponding saved outputs and can take substantial
+time. Run them in a separate extracted copy to retain the supplied results. Use
+`--stage run` or `--stage summarize` to separate training from summarization
+when an experiment has a separate summary module:
+
+```sh
+python -m experiments mushroom --config rates17 --stage run
+python -m experiments mushroom --config rates17 --stage summarize
+```
+
+Individual modules remain available as `python -m experiments.<name>.run` and
+`python -m experiments.<name>.summarize`. Use these for additional runner
+options, such as `python -m experiments.theory_bridge.run --help`. Plotting
+reads saved results without retraining.
+
+Two optional large exact-risk outputs are omitted from both archives:
+`results/exact-risk/paths.npz` and `results/exact-risk/summary.json`. They are
+not needed for the paper build or the checks listed above. To generate and check
+them explicitly, run:
+
+```sh
+python -m experiments exact-risk
+python -m checks.normalization_robustness
+```
+
+All other supplied numerical arrays, including `results/common-block/search.npz`
+and the Mushroom, synthetic, and controlled study shards, remain in the archive
+for saved-result checks.
+
+## Figures and paper build
+
+Plotting uses Matplotlib's LaTeX renderer. Install a TeX distribution with
+`latex`, `dvipng`, the Times fonts, and the packages listed in `devenv.nix`.
+Compiling the paper also requires `latexmk` and `pdflatex`. These tools can be
+installed separately from Python; the optional devenv environment below supplies
+them together.
+
+Generate the manuscript figures from saved results:
+
+```sh
+python scripts/figures/plot_coefficient_paths.py
+python -m scripts.figures.plot_signal_crossing
+python scripts/figures/plot_predictive_intro.py
+python scripts/figures/plot_tuned_decomposition.py
+python scripts/figures/plot_common_block.py
+python scripts/figures/plot_oracle_finite.py
+python scripts/figures/plot_theory_bridge.py
+```
+
+Then compile the complete paper, including the appendices:
+
+```sh
+(cd paper && latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error -outdir=../build main.tex)
+```
+
+The output is `build/main.pdf`. Plotting and compiling the paper read saved
+results without running experiments. See the [figure
+guide](scripts/figures/README.md) for individual outputs and styling.
+
+## Optional devenv environment
+
+For stronger reproducibility of system tools as well as Python dependencies,
+install [Nix](https://nixos.org/download/) and
+[devenv](https://devenv.sh/getting-started/), then enter:
+
+```sh
+devenv shell
+```
+
+This supplies Python 3.13, the dependencies in `uv.lock`, LaTeX, Lean, Task, and
+validation tools. `devenv.lock` pins the Nix inputs. Initial setup needs network
+access. The same Python commands work inside this environment. Use it when you
+want to reproduce the system packages used for development and the paper build.
+
+## Task convenience wrappers
+
+[Task](https://taskfile.dev/) provides convenience wrappers around the Python,
+plotting, and build commands. It is optional and can be installed independently
+or supplied by devenv. Run `task --list` to see the available wrappers. Task
+uses the active Python environment; it does not install Python dependencies
+itself.
+
+```sh
+task experiment:mushroom -- --config rates17
+task experiment:synthetic -- --config rates5
+task experiment:theory-bridge
+task figures
+task paper
+task check:workflow
+```
+
+The experiment tasks run the same modules as `python -m experiments NAME`. Where
+an experiment has separate summaries, its `:run` and `:summarize` tasks separate
+those steps. `task check:results` groups the saved-result checks, and
+`task check-experiments` runs the broader numerical checks. `task check` also
+runs formatting and configuration checks and builds the paper, using the
+additional development tools supplied by devenv. `task prepare-lean` downloads
+Mathlib caches, and `task check-lean` builds the formal proofs; they run
+separately from `task check`.
 
 ## Container alternative
 
@@ -74,153 +325,3 @@ The loaded image runs these commands without Nix or network access. It also runs
 results have been copied from `/env/results`, or mount a writable copy of the
 extracted archive at `/env`. Lean's separate `task prepare-lean` step needs
 network access to download Mathlib caches.
-
-## Certificates and saved results
-
-Inside `devenv shell`, run:
-
-```sh
-task check:predictive-fixed-q
-task check:oracle-limits
-task check:common-block
-task check:theory-bridge
-task check:results
-```
-
-The first command recomputes the finite-prevalence certificates without training
-models. Its recorded output is in
-[`results/certificates/`](results/certificates/). The checker covers all six
-continuous parameter regions using exact rational enclosures and coverage
-checks. The other commands check the limiting characterization,
-finite-prevalence selections, common-feature extension, and saved empirical
-losses and selections. `task check-experiments` runs the broader numerical
-checks, including small test experiments in temporary directories.
-
-The analytic limiting proof and its variational consequences are in
-[`paper/oracle-proofs.tex`](paper/oracle-proofs.tex). The controlled study's
-candidate families, calibration, evaluation, and selection rules are specified
-in
-[`experiments/theory_bridge/PROTOCOL.md`](experiments/theory_bridge/PROTOCOL.md).
-Run `task experiment:calibration-sensitivity` to reconstruct the diagnostic that
-recalibrates on disjoint halves of the saved calibration shards without
-retraining. Its partitions, selected candidates, held-out risks, and summaries
-are saved as `results/theory-bridge/calibration-sensitivity.npz` and
-`calibration-sensitivity.json`. `task check:calibration-sensitivity` checks the
-selection logic and saved diagnostic. The overlapping splits describe
-sensitivity at half the original calibration size, not independent repetitions
-or confidence intervals.
-
-The earlier fixed-calibration certificates can be recomputed with
-`task check:normalization-risk`. Recorded numerical discrepancies in the earlier
-synthetic studies remain in the saved diagnostics; passing the checks does not
-certify the affected paths.
-
-For the formal proof pilot, run `task prepare-lean`, then `task check-lean`. The
-preparation downloads Mathlib caches and needs network access. The
-[`lean/README.md`](lean/README.md) identifies the statements formalized and the
-assumptions left outside the formalization.
-
-## Manuscript analyses and file locations
-
-The finite-prevalence certificates use `checks/predictive_fixed_q.py`; the
-recorded output is `results/certificates/predictive-fixed-q.txt`.
-`checks/predictive_theorem.py` and `checks/predictive_review.py` provide the
-small-prevalence checks. The limiting proofs and numerical comparisons are in
-`paper/oracle-proofs.tex` and `paper/oracle-numerics.tex`.
-`experiments/common/limiting_oracle.py` implements the scalar solver, and
-`checks/oracle_limits.py`, `checks/oracle_infima.py`, and
-`checks/oracle_variational.py` check the limiting characterization. Recorded
-limiting diagnostics are in `results/oracle-limits/`.
-
-For the finite-prevalence oracle comparisons, `results/oracle-finite/` retains
-settings, grids, all four searches, selected risks, rates, stops, and summaries.
-`checks/oracle_finite.py` independently constructs observation-level tensor
-updates and replays saved selections. Run:
-
-```sh
-task experiment:oracle-finite
-task check:oracle-finite -- --rerun
-task figure:oracle-finite
-```
-
-Without `--rerun`, the checker replays saved selections without repeating the
-full searches. The introductory allocation figure uses the nominal limiting
-risks in `results/oracle-finite/summary.json`. Run `task check:oracle-limits` to
-check the scalar solver and saved comparisons, and `task figure:intro` to plot
-them without new optimization or training. The earlier allocation study at fixed
-unweighted squared coefficient sum remains in `results/signal-allocation/`, but
-is not used in that figure.
-
-The common-feature study retains each rate's lowest risk and earliest attaining
-stop at every cap in `results/common-block/search.npz`, with settings and
-summaries in the same directory. `checks/common_block.py` checks the reduction
-and selected results. Run:
-
-```sh
-task experiment:common-block
-task check:common-block -- --saved
-```
-
-The controlled-study implementation is in `experiments/theory_bridge/`, and its
-checks are in `checks/theory_bridge.py`. `results/theory-bridge/` retains
-settings, raw feature cells and noise, replacement indices, calibration
-summaries, selected predictors and their indices, numerical failure records, and
-the machine-readable summary. Summarizing and plotting use saved results without
-training.
-
-The exact expected-risk calibration benchmark uses the saved rate factors,
-stopping checkpoints, and frozen calibration choices for both fresh arms. It
-propagates full second moments, including intercept cross moments, without
-simulating training paths. `results/theory-bridge/exact-calibration.npz` retains
-every candidate's expected risk, and `exact-calibration.json` records the grids,
-minimizing choices, and calibration excesses. The benchmark optimizes the saved
-finite family; its expectations are distinct from the evaluation means in Table 1.
-Reconstruct it and check it against exhaustive short paths and the baseline's
-existing moments:
-
-```sh
-task experiment:exact-calibration
-task check:exact-calibration
-```
-
-The selection-gain and risk-decomposition analyses retain per-run arrays and
-summaries in `results/theory-bridge/selection-gains.npz`,
-`selection-gains.json`, `risk-decomposition.npz`, and `risk-decomposition.json`.
-Reconstruct the analyses and tables from saved predictors without training, then
-check them against independent cell predictions:
-
-```sh
-task experiment:selection-gains
-task check:selection-gains
-task experiment:risk-decomposition
-task check:risk-decomposition
-```
-
-## Rerunning experiments
-
-`task --list` lists the experiment commands. For example:
-
-```sh
-task experiment:mushroom -- --config rates17
-task experiment:synthetic -- --config rates5
-task experiment:theory-bridge
-```
-
-These commands replace the corresponding saved outputs and can take substantial
-time. Run them in a separate extracted copy to retain the supplied results. The
-`:run` and `:summarize` tasks separate training from summarization. Plotting
-reads saved results without retraining.
-
-Two optional large exact-risk outputs are omitted from both archives:
-`results/exact-risk/paths.npz` and `results/exact-risk/summary.json`. They are
-not needed for the paper build or the checks listed above. To generate and check
-them explicitly, run:
-
-```sh
-task experiment:exact-risk
-task check:exact-risk-results
-```
-
-All other supplied numerical arrays, including `results/common-block/search.npz`
-and the Mushroom, synthetic, and controlled study shards, remain in the archive
-for saved-result checks.

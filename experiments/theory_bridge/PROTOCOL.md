@@ -116,8 +116,9 @@ combine variation in selection and held-out evaluation. The original evaluation
 and its conditional MCSEs remain unchanged. Retain all partitions, selected
 indices, and held-out risks in `calibration-sensitivity.npz`, with settings and
 row summaries in `calibration-sensitivity.json` under `results/theory-bridge/`.
-Run `task experiment:calibration-sensitivity` to reconstruct this diagnostic
-without training, and `task check:calibration-sensitivity` to verify it.
+Run `python -m experiments calibration-sensitivity` to reconstruct this
+diagnostic without training, and `python -m checks.calibration_sensitivity` to
+verify it.
 
 ## Selection-gain analysis added after review
 
@@ -142,9 +143,9 @@ rare-coefficient effects; this analysis does not test cancellation between them.
 Retain per-run risks, gains, and errors in `selection-gains.npz` and all setting
 summaries in `selection-gains.json` under `results/theory-bridge/`. Generate the
 manuscript table in `paper/generated/selection-gains.tex` from these summaries.
-Run `task experiment:selection-gains` without retraining, then
-`task check:selection-gains` to verify the results using independent rare-cell
-predictions and the existing risk-change summaries.
+Run `python -m experiments selection-gains` without retraining, then
+`python -m checks.selection_gains` to verify the results using independent
+rare-cell predictions and the existing risk-change summaries.
 
 ## Exact expected-risk benchmark added after review
 
@@ -162,9 +163,10 @@ arithmetic; it has no Monte Carlo error and does not optimize over unrestricted
 rates and stops. Retain every candidate's expected risks, learning rates, and
 chosen indices in `exact-calibration.npz`, with grids, summaries, and
 calibration excesses in `exact-calibration.json` under `results/theory-bridge/`.
-Run `task experiment:exact-calibration` to reconstruct it without training, then
-`task check:exact-calibration` to verify short paths by exhaustive enumeration
-and compare the baseline with its existing two-coordinate moment recursion.
+Run `python -m experiments exact-calibration` to reconstruct it without
+training, then `python -m checks.exact_calibration` to verify short paths by
+exhaustive enumeration and compare the baseline with its existing two-coordinate
+moment recursion.
 
 ## Rare-risk decomposition added after the gain analysis
 
@@ -188,9 +190,9 @@ intervention without retraining or reselection; it does not recover the
 fixed-intercept training arm. This descriptive analysis does not identify causal
 training effects or resolve calibration suboptimality.
 
-Run `task experiment:risk-decomposition` to write `risk-decomposition.npz` and
-`risk-decomposition.json` under `results/theory-bridge/` and the generated
+Run `python -m experiments risk-decomposition` to write `risk-decomposition.npz`
+and `risk-decomposition.json` under `results/theory-bridge/` and the generated
 manuscript table in `paper/generated/risk-decomposition.tex`, without training.
-Run `task check:risk-decomposition` to verify all 120 setting–policy
+Run `python -m checks.risk_decomposition` to verify all 120 setting–policy
 combinations using independent four-cell predictions, saved risks, and selection
 gains.

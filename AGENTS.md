@@ -20,9 +20,22 @@ budgets.
 
 ## Build, Test, and Development Commands
 
-Run commands from the repository root inside `devenv shell`, which supplies
-Task, Python, LaTeX, Lean, and validation tools. Run `task --list` to list
-tasks.
+Run commands from the repository root. Install the locked Python dependencies
+with `uv sync --locked --no-dev`, then activate `.venv`. A standard Python venv
+with pip also works with the dependency ranges in `pyproject.toml`.
+
+- `python -m experiments NAME`: run and summarize a named experiment. Mushroom
+  and synthetic data accept `--config NAME`. Use `--stage run` or
+  `--stage summarize` to separate steps where a summary module exists.
+- `python -m experiments.<name>.run` and
+  `python -m experiments.<name>.summarize`: invoke individual modules with their
+  additional options.
+- `python -m checks.<name>`: run one numerical or saved-result check.
+
+The optional `devenv shell` supplies pinned system tools, including Python,
+LaTeX, Lean, Task, and validation tools, for stronger environment
+reproducibility. Task provides convenience wrappers and uses the active Python
+environment. Run `task --list` to list wrappers.
 
 - `task paper`: regenerate required figures and compile `build/main.pdf`.
 - `task figures`: regenerate manuscript plots from saved results.
@@ -54,18 +67,19 @@ Tests are executable numerical checks in `checks/`, using assertions and
 NumPy/SciPy comparisons rather than a dedicated test framework. No coverage
 percentage is configured. For bug fixes, add a failing regression check before
 changing behavior. Run the relevant check, such as
-`task check:predictive-theorem`, then broader validation appropriate to the
-change.
+`python -m checks.predictive_theorem`, then broader validation appropriate to
+the change.
 
 ## Reproducibility
 
 Keep seeds, experiment settings, raw data, reported results, and numerical
 failures. Use Git history to record changes; do not add checksum enforcement,
 locked declarations, or dependencies on historical Git revisions. Add explicit
-`experiment:<name>` tasks to `Taskfile.yml`. Building the paper or its figures
-must never launch experiments. Keep summarizing and plotting independent of
-training. Run Python modules from the root with
-`python -m experiments.<name>.run` or `python -m checks.<name>`.
+entries to `experiments/__main__.py` and `experiment:<name>` convenience tasks
+to `Taskfile.yml`. Building the paper or its figures must never launch
+experiments. Keep summarizing and plotting independent of training. Run Python
+modules from the root with `python -m experiments.<name>.run` or
+`python -m checks.<name>`.
 
 ## Commit & Pull Request Guidelines
 

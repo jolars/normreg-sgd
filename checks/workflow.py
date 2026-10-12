@@ -4,14 +4,17 @@ import json
 import subprocess
 import sys
 import tempfile
+from contextlib import redirect_stderr
 from copy import deepcopy
+from io import StringIO
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import numpy as np
 from numpy.testing import assert_allclose
 
 from checks.practical_selection import reference_path
+from experiments import __main__ as experiments_cli
 from experiments.common import data, five_rates, matched, rates25
 from experiments.diagnostics import run as diagnostics
 from experiments.signal_allocation import run as signal_allocation
@@ -188,6 +191,7 @@ def check_small_run():
 
 def check_entry_points():
     for module in (
+        "experiments",
         "experiments.mushroom.run",
         "experiments.mushroom.summarize",
         "experiments.synthetic.run",
@@ -212,9 +216,67 @@ def check_entry_points():
         )
 
 
+def check_named_experiments():
+    """Check stage isolation, prerequisites, and failure handling without training."""
+    with patch.object(experiments_cli.subprocess, "run") as run:
+        run.return_value = Mock(returncode=0)
+        assert experiments_cli.main(["mushroom", "--config", "rates17"]) == 0
+        assert [call.args[0] for call in run.call_args_list] == [
+            [sys.executable, "-m", module, "--config", "rates17"]
+            for module in ("experiments.mushroom.run", "experiments.mushroom.summarize")
+        ]
+        assert all(
+            call.kwargs["env"]["OPENBLAS_NUM_THREADS"] == "1"
+            for call in run.call_args_list
+        )
+        run.reset_mock()
+        assert experiments_cli.main(["theory-bridge", "--stage", "summarize"]) == 0
+        assert run.call_args.args[0] == [
+            sys.executable,
+            "-m",
+            "experiments.theory_bridge.summarize",
+        ]
+        assert run.call_count == 1
+
+        run.reset_mock()
+        assert experiments_cli.main(["exact-risk", "--stage", "run"]) == 0
+        assert [call.args[0][2] for call in run.call_args_list] == [
+            "experiments.exact_risk.run",
+            "experiments.exact_risk.simulate",
+        ]
+        run.reset_mock()
+        assert experiments_cli.main(["diagnostics"]) == 0
+        assert [call.args[0][2:] for call in run.call_args_list] == [
+            ["checks.variance_scaling", "--write-audit"],
+            ["experiments.diagnostics.run"],
+        ]
+
+        run.reset_mock()
+        run.return_value = Mock(returncode=7)
+        assert experiments_cli.main(["exact-risk"]) == 7
+        assert run.call_count == 1
+
+        for arguments in (
+            ["missing"],
+            ["synthetic", "--config", "rates17"],
+            ["exact-risk", "--config", "rates5"],
+            ["diagnostics", "--stage", "summarize"],
+        ):
+            run.reset_mock()
+            with (
+                redirect_stderr(StringIO()),
+                np.testing.assert_raises(SystemExit) as raised,
+            ):
+                experiments_cli.main(arguments)
+            assert raised.exception.code == 2
+            run.assert_not_called()
+    print("Named experiments isolate stages and stop after failed prerequisites.")
+
+
 if __name__ == "__main__":
     check_diagnostics_without_manuscript()
     check_small_run()
     check_signal_allocation_summary()
     check_entry_points()
+    check_named_experiments()
     print("Independent experiment entry points and small saved runs: passed.")
