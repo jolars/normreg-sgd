@@ -57,7 +57,8 @@ def plot(report):
             axis.text(
                 positions[scaling].mean(),
                 -0.27,
-                f"{name}: {risks[signal, scaling]:.3f}\n"
+                f"{name}\n"
+                f"Total risk: {risks[signal, scaling]:.3f}\n"
                 rf"$\alpha={rates[signal, scaling]:.3g}$"
                 "\n"
                 rf"$k={stops[signal, scaling]:,}$",
