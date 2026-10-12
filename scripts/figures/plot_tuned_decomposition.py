@@ -26,9 +26,6 @@ def plot(report):
     apply_style()
     cap = report["observation_caps"].index(CAP)
     parts = np.array(report["decomposition"]["weighted_risk_components"])[cap]
-    risks = np.array(report["risk"])[cap]
-    rates = np.array(report["selected_alpha"])[cap]
-    stops = np.array(report["selected_stop"])[cap]
     positions = np.array([[0.0, 0.85], [2.1, 2.95]])
     figure, axes = plt.subplots(1, 2, figsize=(PAPER_WIDTH, 3.05), sharey=True)
     figure.subplots_adjust(left=0.085, right=0.985, bottom=0.34, top=0.78, wspace=0.17)
@@ -57,16 +54,11 @@ def plot(report):
             axis.text(
                 positions[scaling].mean(),
                 -0.20,
-                f"{name}\n"
-                f"Total risk: {risks[signal, scaling]:.3f}\n"
-                rf"$\alpha={rates[signal, scaling]:.3g}$"
-                "\n"
-                rf"$k={stops[signal, scaling]:,}$",
+                name,
                 transform=axis.get_xaxis_transform(),
                 ha="center",
                 va="top",
                 fontsize=8,
-                linespacing=1.25,
             )
         axis.set(
             title=title,
