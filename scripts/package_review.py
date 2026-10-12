@@ -22,7 +22,8 @@ def package_review(source, output):
             for member in incoming:
                 relative = PurePosixPath(*PurePosixPath(member.name).parts[1:])
                 if (
-                    relative == PurePosixPath("README.md")
+                    relative
+                    in {PurePosixPath("README.md"), PurePosixPath("CONTRIBUTING.md")}
                     or ".github" in relative.parts
                 ):
                     continue

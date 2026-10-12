@@ -22,6 +22,7 @@ let
         ".github"
         ".gitignore"
         "README.md"
+        "CONTRIBUTING.md"
         "REPRODUCING.md"
         "Taskfile.yml"
         "checks"
