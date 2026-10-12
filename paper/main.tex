@@ -151,16 +151,20 @@ We use these formulas to determine how the preferred scaling changes as signal
 moves from the common feature to the rare feature. Along this path, we keep the
 limiting rare-subgroup risk before training fixed and positive. With positive
 noise and $\tau$ held fixed, the preferred scaling switches exactly once. The
-formulas also describe how changing the noise level or budget can reverse the
-ordering.
+formulas also show that, for fixed signal strengths, varying the noise level or
+budget can change whether standardized or unscaled training has lower limiting
+oracle risk.
 
 The finite-prevalence comparison in \cref{thm:conference-predictive} complements
-this characterization with explicit positive gaps for two signal families. The
-gaps hold whenever $0 < q \leq 0.04$ and $1 \leq Mq(1 - q) \leq 4$.
-\Cref{fig:conference-tuned-intro} illustrates them across observation caps. As
-prevalence decreases, the budget grows while the expected number of rare
-occurrences remains roughly between one and four. The risk differences therefore
-persist even as the total observation cap grows.
+this characterization with explicit positive lower bounds on the difference
+between the two oracle risks for two signal families. Standardization has lower
+risk in the family with a dominant rare signal, and unscaled training has lower
+risk in the family with a dominant common signal. The bounds hold whenever
+$0 < q \leq 0.04$ and $1 \leq Mq(1 - q) \leq 4$.
+\Cref{fig:conference-tuned-intro} illustrates these risk differences across
+observation caps. As prevalence decreases, the budget grows while the expected
+number of rare occurrences remains roughly between one and four. The risk
+differences therefore persist even as the total observation cap grows.
 
 Exact moments separate incomplete learning, variation due to feature sampling,
 and observation noise. Searches using these moments assess the limiting
@@ -334,8 +338,8 @@ parameterization covers every nonnegative constant learning rate for its rule.
 Holding $\alpha$ fixed gives both methods the same rare-coordinate mean
 trajectory and the same observation-noise variance injected directly into that
 coordinate at each update. SD's common-coordinate step is $4b$ times U's, so it
-can reduce the common-coordinate observation noise introduced while learning
-the rare effect.
+can reduce the common-coordinate observation noise introduced while learning the
+rare effect.
 
 Each oracle chooses $\alpha$ separately. For an observation cap
 $M \in \mathbb N$, define
@@ -622,13 +626,12 @@ learning rate from the training data.
 Both orderings persist across all eight training arms. SD has lower rare risk
 for the dominant rare signal, and U has lower rare risk for the dominant common
 signal (\cref{fig:bridge-controlled} in the appendix). This holds in all 96
-comparisons across the arms, signal pairs, prevalences, and caps. These numerical
-comparisons use a conservative finite rate search and cover only the two tested
-signal pairs.
-Recalibrating on disjoint halves of the saved calibration runs preserves the
-ordering in all splits for 83 of the 84 comparisons with estimated tuning
-choices. One small gap reverses in 2 of 200 splits
-(\cref{sec:calibration-sensitivity}).
+comparisons across the arms, signal pairs, prevalences, and caps. These
+numerical comparisons use a conservative finite rate search and cover only the
+two tested signal pairs. Recalibrating on disjoint halves of the saved
+calibration runs preserves the ordering in all splits for 83 of the 84
+comparisons with estimated tuning choices. One small gap reverses in 2 of 200
+splits (\cref{sec:calibration-sensitivity}).
 
 Selecting among the fitted predictors can reverse an ordering even with fresh
 observations and population preprocessing. \Cref{tab:bridge-selection} compares
@@ -2458,9 +2461,9 @@ results without training.
 The source supplement is available at
 \url{https://anonymous.4open.science/r/normreg-sgd-1382/}. It contains the paper
 source, experiment and plotting code, saved feature draws, results, numerical
-checks, and pinned environment definitions. Its \texttt{README.md} gives the setup,
-container, and reproduction instructions, including how to build the complete
-paper from saved results, rerun experiments, and check the numerical
+checks, and pinned environment definitions. Its \texttt{README.md} gives the
+setup, container, and reproduction instructions, including how to build the
+complete paper from saved results, rerun experiments, and check the numerical
 certificates.
 
 The supplement includes checks of the moment limits, uniform bounds, variational
