@@ -51,9 +51,19 @@ def package_arxiv(output):
             destination.parent.mkdir(parents=True, exist_ok=True)
             if source.suffix == ".tex":
                 # arXiv compiles from the submission root, outside paper/.
-                destination.write_text(
-                    source.read_text().replace("../figures/", "figures/")
-                )
+                content = source.read_text().replace("../figures/", "figures/")
+                if target == Path("main.tex"):
+                    # Omit proceedings branding only in the staged preprint.
+                    if content.count(r"\maketitle") != 1:
+                        raise ValueError(
+                            r"Expected exactly one \maketitle in main.tex."
+                        )
+                    content = content.replace(
+                        r"\maketitle",
+                        "\\maketitle\n\\thispagestyle{plain}",
+                        1,
+                    )
+                destination.write_text(content)
             else:
                 shutil.copy2(source, destination)
 
