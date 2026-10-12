@@ -11,8 +11,8 @@ Commands below run from the extracted archive's root and do not require a Git
 checkout.
 
 The anonymous review archive uses this document as its root `README.md` and
-omits repository CI configuration. It contains the same reproduction inputs as
-the complete source release. Local environments, Python caches, and Lean's
+omits GitHub automation configuration. It contains the same reproduction inputs
+as the complete source release. Local environments, Python caches, and Lean's
 downloaded dependencies are excluded from both archives.
 
 The manuscript presents the oracle results, their numerical illustrations, the

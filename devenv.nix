@@ -7,7 +7,6 @@
     go-task
     panache
     nixfmt
-    actionlint
     ruff
     lean4
   ];
@@ -61,7 +60,6 @@
       stages = [ "pre-commit" ];
     };
     nixfmt.enable = true;
-    actionlint.enable = true;
   };
 
   enterTest = ''

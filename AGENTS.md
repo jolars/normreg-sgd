@@ -44,7 +44,7 @@ environment. Run `task --list` to list wrappers.
   separate summary modules also provide `:run` and `:summarize` tasks.
 - `task check:results`: reconstruct saved losses, selections, and summaries.
 - `task check`: run formatting, configuration, numerical checks, and the paper
-  build, matching CI.
+  build.
 - `task check-python`: check Python formatting and lint with Ruff.
 - `task prepare-lean`, then `task check-lean`: fetch Mathlib caches and build
   proofs; these checks run separately from `task check`.

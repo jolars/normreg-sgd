@@ -1,12 +1,5 @@
 version: 2
 updates:
-  - package-ecosystem: github-actions
-    directory: /
-    schedule:
-      interval: weekly
-    groups:
-      github-actions:
-        patterns: ["*"]
   - package-ecosystem: uv
     directory: /
     schedule:
@@ -14,4 +7,3 @@ updates:
     groups:
       python:
         patterns: ["*"]
-

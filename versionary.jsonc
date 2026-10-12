@@ -1,9 +1,0 @@
-{
-  "$schema": "https://raw.githubusercontent.com/jolars/versionary/main/schemas/config.json",
-  "version": 1,
-  "review-mode": "pr",
-  "release-type": "python",
-  "include-commit-authors": true,
-  "release-reference-comments": "best-effort"
-}
-

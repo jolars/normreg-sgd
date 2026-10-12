@@ -149,13 +149,9 @@ tasks:
       - panache lint .
 
   check-config:
-    desc: Check Nix, GitHub Actions, and the Python lockfile.
+    desc: Check Nix formatting and the Python lockfile.
     cmds:
       - nixfmt --check devenv.nix nix/*.nix
-      - |
-        if [ -d .github/workflows ]; then
-          actionlint .github/workflows/*.yml
-        fi
       - uv lock --check
 
   check-python:
