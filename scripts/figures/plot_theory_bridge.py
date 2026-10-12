@@ -200,7 +200,8 @@ def selection_gains():
             axis.set_xlim(-0.5, 2.5)
             axis.set_ylim(0, 1)
             axis.set_xticks(
-                [-0.5, -0.1, 0, 0.1, 0.5, 2], ["-.5", "-.1", "0", ".1", ".5", "2"]
+                [-0.5, -0.1, 0, 0.1, 0.5, 2],
+                ["-0.5", "-0.1", "0", "0.1", "0.5", "2"],
             )
             axis.set_title(
                 ("Exact risk" if policy == 0 else "Validation (2048)")
