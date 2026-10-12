@@ -19,8 +19,6 @@ def check_archive(path, review=False):
         "uv.lock",
         "experiments/__main__.py",
         "paper/main.tex",
-        "paper/oracle-proofs.tex",
-        "paper/oracle-numerics.tex",
         "paper/references.bib",
         "paper/.latexmkrc",
         "paper/vendor/alt2027/alt2027.cls",
