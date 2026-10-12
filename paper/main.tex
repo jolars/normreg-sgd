@@ -362,13 +362,22 @@ the rare feature carries the dominant signal; in the other, the common feature
 does. The dominant coefficient has magnitude equal to the noise standard
 deviation, while the other has magnitude at most one tenth as large.
 
-We focus on observation caps that allow roughly one to four expected rare
-occurrences. The total cap can therefore grow as prevalence decreases while
-evidence about the rare feature remains scarce. The following theorem
-establishes a positive risk gap in each direction throughout this regime:
-standardization wins for the rare-dominant family, and unscaled training wins
-for the common-dominant family, even after each method chooses its best constant
-rate and deterministic stop.
+We restrict the finite-prevalence comparison to $1 \leq Mq(1 - q) \leq 4$,
+corresponding to roughly one to four expected rare observations. The total cap
+can therefore grow as prevalence decreases while evidence about the rare feature
+remains scarce. On this interval, we certify uniform positive gaps for both
+signal families. The endpoints specify sufficient bounds for these guarantees;
+they need not mark a change in the preferred scaling or a threshold for learning
+rare features.
+
+The limiting characterization in \cref{thm:oracle-limits} covers every positive
+rescaled budget. With positive noise and a nonzero rare signal, sufficiently
+large budgets favor standardization in that limit even when the common signal
+dominates (\cref{sec:oracle-noise-budget}). The following theorem establishes a
+positive risk gap in each direction throughout the stated finite-prevalence
+regime: standardization wins for the rare-dominant family, and unscaled training
+wins for the common-dominant family, even after each method chooses its best
+constant rate and deterministic stop.
 
 \begin{theorem}[Opposite oracle rare-risk orderings]
   \label{thm:conference-predictive}
@@ -427,9 +436,7 @@ above with a stable candidate. An exact positive recurrence for the diagonal
 error moments makes this comparison possible without finding the minimizing
 choices. Exact rational interval calculations certify the constants over the
 continuous parameter regions. \Cref{sec:predictive-proofs} gives the proof,
-certificates, and stronger bounds. The stated prevalence and budget ranges give
-sufficient guarantees; their endpoints need not mark a change in the preferred
-scaling or a threshold for learning rare features.
+certificates, and stronger bounds.
 
 \subsection{Limiting oracle risks}
 
