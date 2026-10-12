@@ -159,7 +159,7 @@ def decomposition_table(report):
         ("fresh_intercept", "Fitted intercept"),
         ("fresh", "Fixed zero intercept (baseline)"),
     ):
-        lines.append(r"\multicolumn{7}{l}{" + label + r"} \\")
+        lines.append(r"\multicolumn{7}{l}{\emph{" + label + r"}} \\")
         for policy, label in (
             ("calibrated", "Calibrated"),
             ("path_oracle", "Exact risk"),

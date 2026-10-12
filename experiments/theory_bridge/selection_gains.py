@@ -149,7 +149,7 @@ def gain_table(report):
         ("fresh_intercept", "Fitted intercept"),
         ("fresh", "Fixed zero intercept (baseline)"),
     ):
-        lines.append(r"\multicolumn{6}{l}{" + label + r"} \\")
+        lines.append(r"\multicolumn{6}{l}{\emph{" + label + r"}} \\")
         for policy, label in (
             ("path_oracle", "Exact risk"),
             ("validation_2048", "Validation (2048)"),
