@@ -1456,8 +1456,11 @@ U also wins at sufficiently large noise when $s > 0$. For positive common
 signals in the rare-dominant family of \cref{thm:conference-predictive}, S wins
 at noise variance $\nu = r$ and $\tau \in[1,4]$. Continuity then implies at
 least two noise crossings. It does not imply exactly two, or crossings for every
-signal pair. As a numerical illustration, $s = 0.1,r = 1,\tau = 2$ gives:
-\begin{center}
+signal pair. \Cref{tab:oracle-noise-regimes} illustrates these changes in
+preferred scaling for $s = 0.1$, $r = 1$, and $\tau = 2$.
+
+\begin{table}[htbp]
+  \centering
   \begin{tabular}{rrrr}
     \toprule
     $\nu$ &    $L_U$ &    $L_S$ & Preferred scaling \\
@@ -1468,7 +1471,13 @@ signal pair. As a numerical illustration, $s = 0.1,r = 1,\tau = 2$ gives:
       100 & 0.500000 & 0.502306 &                 U \\
     \bottomrule
   \end{tabular}
-\end{center}
+  \caption{
+    Limiting oracle risks across noise variances for $s = 0.1$, $r = 1$, and
+    $\tau = 2$. The preferred scaling has the smaller risk: U at the smallest
+    and largest noise variances shown, and S at the intermediate values.
+  }
+  \label{tab:oracle-noise-regimes}
+\end{table}
 
 Each limiting oracle risk is nonincreasing in $\tau$: the trajectory reduction
 allows the earlier stopping choice under every larger cap. For fixed $v,\nu > 0$
