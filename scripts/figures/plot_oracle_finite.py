@@ -95,7 +95,7 @@ def main():
         if group != "budget":
             ax.set_ylabel("SD minus unscaled risk")
     axes[0, 1].set_xlabel(r"Rare signal fraction $r/(s/4+r)$")
-    axes[0, 1].legend(frameon=False, fontsize=7)
+    axes[0, 1].legend(frameon=False, fontsize=9)
     axes[1, 0].set_xscale("symlog", linthresh=0.1)
     axes[1, 0].set_xlim(-0.015, 150)
     axes[1, 0].set_xlabel(r"Noise variance $\nu$")

@@ -66,7 +66,7 @@ def plot(report):
             rf"Stop: $k={stop}$",
             xy=path[stop],
             xytext=(0.5, 0.29 if scaling == 0 else 0.94),
-            fontsize=8,
+            fontsize=9,
             color=color,
             arrowprops=dict(arrowstyle="-", color=color, lw=0.6),
         )
@@ -77,9 +77,9 @@ def plot(report):
             arrowprops=dict(arrowstyle="->", color=color, lw=1.1),
         )
     axis.scatter(0, 0, s=16, color="0.2", zorder=5)
-    axis.annotate("Start", xy=(0, 0), xytext=(0.06, -0.08), fontsize=8)
+    axis.annotate("Start", xy=(0, 0), xytext=(0.06, -0.08), fontsize=9)
     axis.scatter(*ols, marker="*", s=80, color="0.15", zorder=6)
-    axis.text(0.98, 1.055, "OLS", fontsize=8, ha="center")
+    axis.text(0.98, 1.055, "OLS", fontsize=9, ha="center")
     axis.set(
         xlim=(-0.06, 1.16),
         ylim=(-0.12, 1.18),

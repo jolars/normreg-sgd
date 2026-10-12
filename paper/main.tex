@@ -1,6 +1,8 @@
 \PassOptionsToPackage{capitalize,noabbrev}{cleveref}
 \PassOptionsToPackage{cleveref}{jmlrutils}
 \documentclass[anon]{alt2027}
+% Omit identifying source paths from embedded figure metadata.
+\pdfsuppressptexinfo=15
 \usepackage[T1]{fontenc}
 \usepackage{times}
 \usepackage{mathtools}
@@ -96,7 +98,7 @@ the noise cost of learning it.
 
 \begin{figure}[htb]
   \centering
-  \includegraphics{../figures/coefficient-paths/method-legend.pdf}\par
+  \includegraphics{../figures/coefficient-paths/method-legend.pdf}\par\smallskip
   \subfigure[Full-gradient descent on a noiseless dataset with binary features at prevalences $0.5$ and $0.02$. Dots mark an illustrative stop after 20 updates. Pale curves show progress toward the shared OLS solution,
     while gray contours show training loss.]{%
     \label{fig:intro-coefficient-paths}%
@@ -116,7 +118,7 @@ the noise cost of learning it.
 
 \begin{figure}[t]
   \centering
-  \includegraphics{../figures/predictive-intro/tuned-rare-risk.pdf}
+  \includegraphics{../figures/predictive-intro/tuned-rare-risk.pdf}\par\smallskip
   \caption{
     Tuning does not erase the effect of normalization. Independent binary
     features have prevalences $1/2$ and $q = 10^{-4}$, with
@@ -2160,11 +2162,13 @@ observe population risk.
     Changing selection on the same candidate paths at the largest cap for each
     prevalence. Calibrated choices are fixed before evaluation; the other points
     select by rare validation loss with the indicated sample size. Negative gaps
-    favor SD\@. The green curve includes all changes through arm 8. Bars show
-    two paired Monte Carlo standard errors, conditional on the calibration
-    choices. Each panel has its own symmetric logarithmic vertical scale, linear
-    for absolute gaps at most $0.05$. Lines connect discrete selection
-    procedures and do not imply monotonic behavior with sample size.
+    favor SD\@. The blue curve includes all changes through arm 8. Bars show two
+    paired Monte Carlo standard errors, conditional on the calibration choices.
+    All panels share the same vertical scale and limits, with linear spacing
+    between $-0.05$ and $0.05$ and logarithmic spacing outside this interval to
+    keep both small and large gaps visible. Tick labels give the original risk
+    differences. Lines connect discrete selection procedures and do not imply
+    monotonic behavior with sample size.
   }
   \label{fig:bridge-validation}
 \end{figure}

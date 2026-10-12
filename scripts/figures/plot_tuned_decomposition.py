@@ -58,7 +58,7 @@ def plot(report):
                 transform=axis.get_xaxis_transform(),
                 ha="center",
                 va="top",
-                fontsize=8,
+                fontsize=9,
             )
         axis.set(
             title=title,

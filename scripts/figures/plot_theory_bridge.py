@@ -46,7 +46,7 @@ def controlled(report):
         2, 2, figsize=(PAPER_WIDTH, 5.2), sharex="col", sharey=True
     )
     figure.subplots_adjust(
-        left=0.32, right=0.94, bottom=0.14, top=0.94, hspace=0.22, wspace=0.14
+        left=0.32, right=0.94, bottom=0.18, top=0.94, hspace=0.22, wspace=0.14
     )
     for row, q in enumerate((0.02, 0.005)):
         for col, signal in enumerate(("rare", "common")):
@@ -90,7 +90,7 @@ def controlled(report):
             va="center",
             fontsize=plt.rcParams["axes.labelsize"],
         )
-    figure.supxlabel("SD minus unscaled rare risk (negative favors SD)", y=0.075)
+    figure.supxlabel("SD minus unscaled rare risk (negative favors SD)", y=0.085)
     figure.legend(
         *axes[0, 0].get_legend_handles_labels(),
         loc="lower center",
@@ -102,17 +102,19 @@ def controlled(report):
 
 
 def validation(report):
-    figure, axes = plt.subplots(2, 2, figsize=(PAPER_WIDTH, 5.2), sharex=True)
+    figure, axes = plt.subplots(
+        2, 2, figsize=(PAPER_WIDTH, 5.2), sharex=True, sharey=True
+    )
     figure.subplots_adjust(
-        left=0.11, right=0.94, bottom=0.21, top=0.94, hspace=0.25, wspace=0.16
+        left=0.135, right=0.94, bottom=0.22, top=0.94, hspace=0.15, wspace=0.16
     )
     policies = ("calibrated", "validation_128", "validation_512", "validation_2048")
     arms = ("fresh", "reuse", "reuse_mean_initialized")
     names = ("Fresh", "Reuse only", "Reuse + all preprocessing/intercept changes")
+    bounds = [0.0]
     for row, q in enumerate((0.02, 0.005)):
         for col, signal in enumerate(("rare", "common")):
             axis = axes[row, col]
-            bounds = [0.0]
             for arm, name in zip(arms, names, strict=True):
                 values = [
                     select(report, q, signal, arm, policy)[-1]["gap"]
@@ -130,18 +132,6 @@ def validation(report):
                 bounds.extend(v["mean"] - 2 * v["mcse"] for v in values)
                 bounds.extend(v["mean"] + 2 * v["mcse"] for v in values)
             axis.axhline(0, color="0.35", linestyle="--", linewidth=0.8)
-            axis.set_yscale("symlog", linthresh=0.05)
-            transform = axis.yaxis.get_transform()
-            lower, upper = transform.transform([min(bounds), max(bounds)])
-            margin = 0.08 * (upper - lower)
-            lower, upper = transform.inverted().transform(
-                [lower - margin, upper + margin]
-            )
-            axis.set_ylim(lower, upper)
-            ticks = [
-                v for v in (-0.1, -0.05, 0, 0.05, 0.1, 0.5, 1, 2) if lower <= v <= upper
-            ]
-            axis.set_yticks(ticks, [f"{v:g}" for v in ticks])
             axis.set(
                 title=f"{signal.capitalize()} signal" if row == 0 else "",
                 xticks=np.arange(4),
@@ -159,14 +149,17 @@ def validation(report):
             va="center",
             fontsize=plt.rcParams["axes.labelsize"],
         )
-    figure.supylabel(
-        "SD minus unscaled rare risk\n(negative favors SD; symmetric log scale)",
-        x=0.015,
-    )
-    figure.supxlabel("Selection policy / validation sample size", y=0.13)
-    figure.text(
-        0.54, 0.09, r"Linear for $|\mathrm{gap}|\leq 0.05$", ha="center", fontsize=7
-    )
+    shared_axis = axes[0, 0]
+    shared_axis.set_yscale("symlog", linthresh=0.05)
+    transform = shared_axis.yaxis.get_transform()
+    lower, upper = transform.transform([min(bounds), max(bounds)])
+    margin = 0.08 * (upper - lower)
+    lower, upper = transform.inverted().transform([lower - margin, upper + margin])
+    shared_axis.set_ylim(lower, upper)
+    ticks = [v for v in (-0.1, -0.05, 0, 0.05, 0.1, 0.5, 1, 2) if lower <= v <= upper]
+    shared_axis.set_yticks(ticks, [f"{v:g}" for v in ticks])
+    figure.supylabel("SD minus unscaled rare risk", x=0.015)
+    figure.supxlabel("Selection policy / validation sample size", y=0.12)
     figure.legend(
         *axes[0, 0].get_legend_handles_labels(),
         loc="lower center",

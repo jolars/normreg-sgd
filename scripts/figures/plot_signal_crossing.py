@@ -63,14 +63,14 @@ def plot(report):
         alpha=0.1,
     )
     axis.text(
-        0.12, 0.14, "Unscaled\nhelps", color=METHOD_STYLES["none"]["color"], fontsize=8
+        0.12, 0.14, "Unscaled\nhelps", color=METHOD_STYLES["none"]["color"], fontsize=9
     )
     axis.annotate(
         "Standardization\nhelps",
         xy=(0.96, float(np.interp(0.96, fractions, risk.mean(axis=1)))),
         xytext=(0.65, 0.08),
         color=METHOD_STYLES["sd"]["color"],
-        fontsize=8,
+        fontsize=9,
         arrowprops=dict(
             arrowstyle="->",
             color=METHOD_STYLES["sd"]["color"],
@@ -87,8 +87,7 @@ def plot(report):
         ylabel="Limiting rare-subgroup risk",
         xlabel=r"Rare signal share $\theta$",
     )
-    # Keep the endpoint labels inside the fixed canvas shared by both panels.
-    axis.get_xticklabels()[0].set_ha("left")
+    # Keep the right endpoint label inside the fixed canvas shared by both panels.
     axis.get_xticklabels()[-1].set_ha("right")
     axis.grid(axis="y", color="0.9", linewidth=0.6)
     axis.set_axisbelow(True)

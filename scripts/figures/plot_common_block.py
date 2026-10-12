@@ -80,7 +80,7 @@ def main():
                 )
     fig.supylabel("SD minus unscaled risk\n(negative favors SD)", x=0.015)
     fig.supxlabel("Number of common features", y=0.015)
-    axes[0, 0].legend(frameon=False)
+    axes[1, 2].legend(loc="lower left", frameon=False)
     fig.tight_layout(pad=0.5, rect=(0.035, 0.035, 0.96, 1))
     save(fig, OUTPUT / "common-block", "dimension-gaps")
 
