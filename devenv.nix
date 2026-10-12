@@ -14,7 +14,9 @@
   languages.python = {
     enable = true;
     package = pkgs.python313;
-    manylinux.enable = true;
+    # Manylinux's libraries also reach TeX subprocesses and break font lookup.
+    manylinux.enable = false;
+    libraries = [ pkgs.zlib ];
     venv.enable = !config.container.isBuilding;
     uv = {
       enable = true;

@@ -56,7 +56,7 @@ def plot(report):
         for scaling, name in enumerate(("Unscaled", "Standardized")):
             axis.text(
                 positions[scaling].mean(),
-                -0.27,
+                -0.20,
                 f"{name}\n"
                 f"Total risk: {risks[signal, scaling]:.3f}\n"
                 rf"$\alpha={rates[signal, scaling]:.3g}$"

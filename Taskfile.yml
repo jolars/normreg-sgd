@@ -145,6 +145,7 @@ tasks:
       - task: check-markdown
       - task: check-config
       - task: check-python
+      - task: check:figure-rendering
       - task: check-experiments
       - task: paper
 
@@ -267,6 +268,11 @@ tasks:
     desc: Check experiment entry points and a small saved run.
     cmds:
       - python -m checks.workflow
+
+  check:figure-rendering:
+    desc: Check LaTeX text rendering in PDF, SVG, and PNG figures.
+    cmds:
+      - python -m checks.figure_rendering
 
   check:results:
     desc: Reconstruct saved manuscript risks, selections, summaries, and diagnostics.
