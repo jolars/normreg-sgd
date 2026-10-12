@@ -1027,23 +1027,29 @@ attainment of either infimum.
 \subsection{Positive regions and the small-prevalence corollary}
 \label{sec:predictive-certification}
 
-The checker certifies the following lower bounds for every $1 \leq \tau \leq 4$.
-All intervals include every positive prevalence up to the displayed endpoint.
-The bounds apply to the entire respective signal families.
-\begin{center}
-  \begin{tabular}{@{}llrr@{}}
+\Cref{tab:predictive-certificates} summarizes the checker's certified lower
+bounds for the two signal families.
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{@{}lrrr@{}}
     \toprule
-    Family & Prevalence range     &               Gap bound & Certificate leaves \\
+    Family & Maximum prevalence $Q$ &               Gap bound & Certificate leaves \\
     \midrule
-    Rare   & $0 < q \leq 1/20$    &  $\Delta_R \geq 1/1000$ &         $77{,}510$ \\
-    Common & $0 < q \leq 1/25$    &    $\Delta_C \geq 1/50$ &              $103$ \\
-    Rare   & $0 < q \leq 1/50$    &  $\Delta_R \geq 7/1000$ &         $76{,}623$ \\
-    Common & $0 < q \leq 1/50$    &   $\Delta_C \geq 9/200$ &               $58$ \\
-    Rare   & $0 < q \leq 10^{-4}$ & $\Delta_R \geq 11/1000$ &          $7{,}158$ \\
-    Common & $0 < q \leq 10^{-4}$ &  $\Delta_C \geq 11/200$ &              $105$ \\
+    Rare   &                 $1/20$ &  $\Delta_R \geq 1/1000$ &         $77{,}510$ \\
+    Common &                 $1/25$ &    $\Delta_C \geq 1/50$ &              $103$ \\
+    Rare   &                 $1/50$ &  $\Delta_R \geq 7/1000$ &         $76{,}623$ \\
+    Common &                 $1/50$ &   $\Delta_C \geq 9/200$ &               $58$ \\
+    Rare   &              $10^{-4}$ & $\Delta_R \geq 11/1000$ &          $7{,}158$ \\
+    Common &              $10^{-4}$ &  $\Delta_C \geq 11/200$ &              $105$ \\
     \bottomrule
   \end{tabular}
-\end{center}
+  \caption{
+    Certified gap bounds for $0 < q \leq Q$, $1 \leq \tau \leq 4$, and
+    $\sigma^2 = 1$. Each bound holds throughout the corresponding signal family.
+    Certificate leaves count the accepted boxes in the interval certificates.
+  }
+  \label{tab:predictive-certificates}
+\end{table}
 
 Here is the full certification rule. On a box
 $[a_0,a_1] \times[q_0,q_1] \times[t_0,t_1]$, set $b_i = q_i(1 - q_i)$ and
@@ -1097,10 +1103,10 @@ families, and rates above the stability range.
   and the common-signal gap is at least $11\sigma^2/200$.
 \end{corollary}
 
-The last two rows of the table prove the corollary. The certified gaps grow as
-the prevalence range narrows. These are sufficient bounds, not the largest
-possible gaps or prevalence ranges: the proof discards nonnegative coupling
-terms and replaces discrete powers by exponential bounds.
+The last two rows of \cref{tab:predictive-certificates} prove the corollary. The
+certified gaps grow as the prevalence range narrows. These are sufficient
+bounds, not the largest possible gaps or prevalence ranges: the proof discards
+nonnegative coupling terms and replaces discrete powers by exponential bounds.
 
 \section{Proof of the limiting oracle characterization}
 \label{sec:oracle-limit-proofs}
