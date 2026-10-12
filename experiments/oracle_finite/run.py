@@ -11,7 +11,6 @@ import numpy as np
 import scipy
 
 from experiments.common.data import write_json
-from experiments.common_block.engine import coefficients, stability_limit
 from experiments.oracle_finite.config import (
     OUTPUT,
     PREVALENCES,
@@ -20,6 +19,7 @@ from experiments.oracle_finite.config import (
     rate_grid,
     stop_grid,
 )
+from normreg.common_block import coefficients, stability_limit
 
 SEARCHES = ["coarse", "fine-rates", "fine-stops", "fine"]
 

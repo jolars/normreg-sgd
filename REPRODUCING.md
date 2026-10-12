@@ -4,6 +4,9 @@ This archive accompanies *Feature Normalization under Finite Training Budgets*.
 It contains the manuscript source, experiment and plotting code, saved feature
 draws, saved numerical arrays and summaries, certificate checkers, Lean proofs,
 and pinned environment definitions described in the source-supplement appendix.
+
+The [normreg package](normreg/README.md) contains the shared numerical routines.
+It is importable from the repository root using the Python environment below.
 Commands below run from the extracted archive's root and do not require a Git
 checkout.
 
@@ -122,8 +125,8 @@ The finite-prevalence certificates use `checks/predictive_fixed_q.py`; the
 recorded output is `results/certificates/predictive-fixed-q.txt`.
 `checks/predictive_theorem.py` and `checks/predictive_review.py` provide the
 small-prevalence checks. The limiting proofs and numerical comparisons are in
-`paper/main.tex`. `experiments/common/limiting_oracle.py` implements the scalar
-solver, and `checks/oracle_limits.py`, `checks/oracle_infima.py`, and
+`paper/main.tex`. `normreg/limiting_oracle.py` implements the scalar solver, and
+`checks/oracle_limits.py`, `checks/oracle_infima.py`, and
 `checks/oracle_variational.py` check the limiting characterization. Recorded
 limiting diagnostics are in `results/oracle-limits/`.
 

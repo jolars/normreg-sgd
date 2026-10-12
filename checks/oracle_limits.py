@@ -14,7 +14,7 @@ import scipy
 from scipy.optimize import brentq, minimize_scalar
 
 from checks.predictive_theorem import observation_operator
-from experiments.common_block.engine import coefficients
+from normreg.common_block import coefficients
 
 
 def limiting_risk(alpha, standardized, tau, s, r, noise=1.0):

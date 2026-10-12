@@ -7,8 +7,10 @@ budgets.
 
 - `paper/` contains `main.tex`, the bibliography, and the vendored ALT 2027
   template.
+- `normreg/` contains shared numerical routines with explicit inputs and no
+  dependencies on experiment settings or repository paths.
 - `experiments/<name>/` contains each experiment's configuration, runner, and
-  summary generator. Shared numerical routines live in `experiments/common/`.
+  summary generator. Shared result utilities live in `experiments/common/`.
 - `checks/` contains mathematical, numerical, and saved-result checks.
 - `scripts/figures/` contains editable manuscript plots and shared styling in
   `style.py`.

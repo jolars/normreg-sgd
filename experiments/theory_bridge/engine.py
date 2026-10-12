@@ -3,6 +3,8 @@
 import numpy as np
 
 from experiments.theory_bridge import config as cfg
+from normreg.risk import predictor_risks as raw_predictor_risks
+from normreg.risk import risks
 
 CELLS = np.array([[0.0, 0.0], [0.0, 1.0], [1.0, 0.0], [1.0, 1.0]])
 
@@ -91,22 +93,10 @@ def error_coordinates(common, rare, intercept, mean, q):
     )
 
 
-def risks(errors, q):
-    offset, common, rare = errors
-    aggregate = 0.5 * (offset**2 + 0.25 * common**2 + q * (1 - q) * rare**2)
-    subgroup = 0.5 * (0.25 * common**2 + (offset + (1 - q) * rare) ** 2)
-    return np.stack((aggregate, subgroup), axis=-1)
-
-
 def predictor_risks(coefficients, q, signals=None):
-    """Evaluate saved raw predictors, with signal and policy as the final axes."""
-    signals = cfg.SIGNALS if signals is None else np.asarray(signals)
-    signal_shape = (1,) * (coefficients.ndim - 3) + (len(signals), 1)
-    offset = coefficients[..., 0] + 0.5 * coefficients[..., 1]
-    offset += q * coefficients[..., 2]
-    common = coefficients[..., 1] - signals[:, 0].reshape(signal_shape)
-    rare = coefficients[..., 2] - signals[:, 1].reshape(signal_shape)
-    return risks((offset, common, rare), q)
+    """Evaluate raw predictors using the study's signals unless supplied."""
+    signals = cfg.SIGNALS if signals is None else signals
+    return raw_predictor_risks(coefficients, q, signals)
 
 
 def validation_scores(errors, moments):

@@ -14,8 +14,8 @@ import numpy as np
 
 from checks.predictive_theorem import observation_operator
 from experiments.common.data import write_json
-from experiments.common.moments import make_model, moment_path
 from experiments.common.reproduction import assert_reproduced
+from normreg.moments import make_model, moment_path
 
 ROOT = Path(__file__).resolve().parents[2]
 OUTPUT = ROOT / "results/predictive-intro"

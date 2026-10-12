@@ -32,6 +32,7 @@ let
         "experiments"
         "lean"
         "nix"
+        "normreg"
         "panache.toml"
         "paper"
         "pyproject.toml"

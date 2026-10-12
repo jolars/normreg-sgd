@@ -13,7 +13,7 @@ import scipy
 from scipy.optimize import brentq, minimize_scalar
 
 from checks.oracle_limits import limiting_minimum, limiting_risk
-from experiments.common.limiting_oracle import oracle_minimum
+from normreg.limiting_oracle import oracle_minimum
 
 
 def grid_extremum(function, maximize=False):

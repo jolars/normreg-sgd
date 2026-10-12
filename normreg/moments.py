@@ -7,6 +7,12 @@ from scipy.optimize import brentq
 
 
 def make_model(q, dependence):
+    """Center binary features with prevalences 0.5 and q, where 0 < q < 0.5.
+
+    Dependence is either independent or nested (rare implies common presence).
+    The returned gram and rare_second matrices weight population and conditional
+    rare-subgroup prediction errors, respectively.
+    """
     p = 0.5
     joint = {"independent": p * q, "nested": q}[dependence]
     assert 0 < q < p and max(0, p + q - 1) <= joint <= min(p, q)
@@ -28,6 +34,11 @@ def make_model(q, dependence):
 
 
 def operators(model, scales, step, batch, noise_variance):
+    """Return mean and second-moment transitions and noise injection.
+
+    Features are divided by scales. Each SGD update averages batch independent
+    fresh observations with zero-mean response noise of the given variance.
+    """
     z = model["x"] / scales
     h = model["gram"] / np.outer(scales, scales)
     r = np.eye(2) - step * h
@@ -41,6 +52,7 @@ def operators(model, scales, step, batch, noise_variance):
 
 
 def stability_limit(model, scales, batch):
+    """Return the positive step boundary for fresh-sample second-moment stability."""
     curvature = np.linalg.eigvalsh(model["gram"] / np.outer(scales, scales))[-1]
 
     def residual(step):
@@ -51,7 +63,12 @@ def stability_limit(model, scales, batch):
 
 
 def moment_path(model, scales, step, batch, counts, signal, noise_variance=1.0):
-    """Return original-scale moments with separate sources of covariance."""
+    """Return coefficient error moments from zero initialization at update counts.
+
+    Bias is the mean error, and second is its uncentered second moment, both in
+    original feature coordinates. Design and response-noise covariance are
+    returned separately. Signal contains the true centered-feature coefficients.
+    """
     counts = np.asarray(counts, dtype=int)
     assert np.all(counts >= 0) and batch >= 1 and noise_variance >= 0
     r, transition, injection = operators(model, scales, step, batch, noise_variance)

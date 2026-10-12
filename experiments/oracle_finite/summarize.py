@@ -6,9 +6,9 @@ import json
 import numpy as np
 
 from experiments.common.data import write_json
-from experiments.common.limiting_oracle import oracle_minimum
 from experiments.common.reproduction import assert_reproduced
 from experiments.oracle_finite.config import OUTPUT
+from normreg.limiting_oracle import oracle_minimum
 
 
 def summarize(settings, archive):

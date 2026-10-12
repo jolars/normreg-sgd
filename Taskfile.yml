@@ -186,8 +186,8 @@ tasks:
   check-python:
     desc: Check Python formatting and lint.
     cmds:
-      - ruff format --check experiments checks scripts
-      - ruff check experiments checks scripts
+      - ruff format --check normreg experiments checks scripts
+      - ruff check normreg experiments checks scripts
 
   check-experiments:
     desc: Check mathematical identities, numerical updates, and selections.
@@ -468,4 +468,4 @@ tasks:
     cmds:
       - panache format .
       - nixfmt devenv.nix nix/*.nix
-      - ruff format experiments checks scripts
+      - ruff format normreg experiments checks scripts

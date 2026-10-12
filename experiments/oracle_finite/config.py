@@ -5,7 +5,7 @@ from pathlib import Path
 import numpy as np
 from scipy.optimize import brentq
 
-from experiments.common.limiting_oracle import oracle_minimum
+from normreg.limiting_oracle import oracle_minimum
 
 ROOT = Path(__file__).resolve().parents[2]
 OUTPUT = ROOT / "results/oracle-finite"

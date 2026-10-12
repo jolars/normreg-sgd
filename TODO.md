@@ -62,7 +62,7 @@ remain the next substantive questions.
 
   The [variational comparison](notes/oracle-variational.md) gives unique scalar
   equations for optimal rates, allocation boundaries, and noise and budget
-  regimes. A [root solver](experiments/common/limiting_oracle.py) implements the
+  regimes. A [root solver](normreg/limiting_oracle.py) implements the
   characterization. `task check:oracle-variational` checks it independently
   against objective searches and records examples with two noise reversals. The
   large-budget risk ratio tends to $4/5$ for positive rare signal and noise. The

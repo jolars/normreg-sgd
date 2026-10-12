@@ -33,6 +33,8 @@ can reverse an ordering, even with exact population risk.
   the candidate families, calibration, evaluation, and selection rules.
 - [Lean verification](lean/README.md), describing the formalized bounds and
   their scope.
+- [Numerical package](normreg/README.md), with reusable moment, risk, and oracle
+  routines for experiments and interactive exploration from the repository root.
 
 The main experiment outputs are:
 

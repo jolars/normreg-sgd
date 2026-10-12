@@ -10,7 +10,7 @@ import json
 
 import numpy as np
 
-from experiments.common.moments import make_model, moment_path, stability_limit
+from normreg.moments import make_model, moment_path, stability_limit
 
 
 def enumerate_paths(model, scales, step, batch, signal, sigma, updates):

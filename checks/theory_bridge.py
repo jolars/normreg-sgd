@@ -7,7 +7,6 @@ from pathlib import Path
 import numpy as np
 from numpy.testing import assert_allclose
 
-from experiments.common.moments import make_model, moment_path
 from experiments.theory_bridge import config as cfg
 from experiments.theory_bridge.engine import (
     CELLS,
@@ -18,6 +17,7 @@ from experiments.theory_bridge.engine import (
     sample,
     simulate,
 )
+from normreg.moments import make_model, moment_path
 
 
 def reference_paths(data, q, rep=0):

@@ -29,15 +29,19 @@ sample sizes, and seed are in
 finite-prevalence searches and common-feature extension use
 [experiments/oracle_finite/config.py](experiments/oracle_finite/config.py) and
 [experiments/common_block/config.py](experiments/common_block/config.py). Shared
-moment routines and numerical utilities live in `experiments/common/`.
+moment and risk routines live in the [normreg package](normreg/README.md).
+Shared result utilities live in `experiments/common/`.
 
 To add an experiment, create `experiments/<name>/` with `__init__.py` and
 `run.py`, and add a `summarize.py` when useful. Register its modules in
 `experiments/__main__.py` and add a convenience task in `Taskfile.yml`. Use
 `python -m experiments.<name>.run` from the repository root. Save numerical
 outputs and settings under `results/<name>/`. New experiments can reuse
-functions in `experiments/common/` without depending on another experiment's
-command-line entry point.
+numerical functions in `normreg/` and result utilities in `experiments/common/`
+without depending on another experiment's command-line entry point. Keep
+`normreg` independent of experiment settings and repository paths, and pass all
+scientific parameters explicitly. This package is maintained within the
+repository; PyPI publication is outside its scope.
 
 Use named arrays in compressed `.npz` archives for detailed numerical results,
 and JSON for settings, axis labels, and derived summaries. Small deterministic

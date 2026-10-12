@@ -75,13 +75,13 @@ $\tau d'z\{Q_U(a) - \rho\}$. Consequently:
   $L_U = re^{-\tau}/2$. A zero initial signal makes the corresponding objective
   identically zero.
 
-The [solver](../experiments/common/limiting_oracle.py) brackets the unique root
+The [solver](../normreg/limiting_oracle.py) brackets the unique root
 on $[0,1]$. It evaluates the derivative after multiplication by $z$, avoiding
 the growing exponentials in $Q_S$ and $Q_U$. For example, run this inside
 `devenv shell`:
 
 ```python
-from experiments.common.limiting_oracle import oracle_minimum
+from normreg.limiting_oracle import oracle_minimum
 
 for standardized in (False, True):
     risk, rate = oracle_minimum(standardized, tau=2, s=0.1, r=1, noise=1)

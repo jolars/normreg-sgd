@@ -21,7 +21,7 @@ from experiments.common_block.config import (
     SIGNALS,
     TARGET_BUDGETS,
 )
-from experiments.common_block.engine import coefficients, stability_limit
+from normreg.common_block import coefficients, stability_limit
 
 
 def search(

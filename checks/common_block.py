@@ -9,13 +9,13 @@ from random import Random
 import numpy as np
 
 from experiments.common_block.config import OUTPUT
-from experiments.common_block.engine import (
+from experiments.common_block.run import search
+from normreg.common_block import (
     coefficients,
     fixed_rate_limit,
     risk_at,
     stability_limit,
 )
-from experiments.common_block.run import search
 
 
 def check_reduction():
