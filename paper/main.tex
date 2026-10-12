@@ -138,16 +138,21 @@ learning rate and a deterministic stopping time to minimize the final iterate's
 rare-subgroup risk averaged over training randomness. We call the resulting
 optimized risk its \emph{oracle risk}.
 
-Our main result, \cref{thm:oracle-limits}, characterizes both oracle risks as
-rare prevalence $q \to 0$ and the observation cap $M$ satisfies
-$Mq(1 - q) \to \tau \in (0,\infty)$. In this limit, the expected number of rare
-observations remains finite. For arbitrary fixed signal strengths and noise,
-each limiting oracle reduces to a scalar minimization. Uniform bounds over rates
-and stopping times justify taking the limit after optimization. We also move
-signal from the common feature to the rare feature while holding the limiting
-risk at initialization fixed and positive. At fixed positive noise and rescaled
-budget, the preferred scaling changes exactly once along this path. The formulas
-also explain how noise and budget can reverse the ordering.
+Our main result, \cref{thm:oracle-limits}, characterizes both oracle risks when
+rare observations remain scarce even as the total observation cap grows. We let
+prevalence $q$ decrease and increase the cap $M$ so that
+$Mq(1 - q) \to \tau \in (0,\infty)$. The expected number of rare observations at
+the cap then tends to $\tau$. For any fixed signal strengths and noise level,
+each limiting oracle risk is given by minimizing an explicit function of one
+variable. The characterization remains valid when the learning rate and stopping
+time vary with prevalence.
+
+We use these formulas to determine how the preferred scaling changes as signal
+moves from the common feature to the rare feature. Along this path, we keep the
+limiting rare-subgroup risk before training fixed and positive. With positive
+noise and $\tau$ held fixed, the preferred scaling switches exactly once. The
+formulas also describe how changing the noise level or budget can reverse the
+ordering.
 
 The finite-prevalence comparison in \cref{thm:conference-predictive} complements
 this characterization with explicit positive gaps for two signal families. The
