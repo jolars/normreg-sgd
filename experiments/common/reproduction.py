@@ -1,6 +1,27 @@
-"""Compare reconstructed JSON results with their saved records."""
+"""Compare reconstructed numerical results with their saved records."""
 
 import math
+
+import numpy as np
+
+RTOL = 1e-12
+ATOL = 1e-14
+
+
+def assert_arrays_reproduced(actual, expected):
+    """Preserve archive fields, shapes, dtypes, and discrete selections exactly."""
+    assert set(actual) == set(expected), "archive: different fields"
+    for key, value in actual.items():
+        reference = expected[key]
+        assert value.shape == reference.shape, f"{key}: different shapes"
+        assert value.dtype == reference.dtype, f"{key}: different dtypes"
+        if np.issubdtype(value.dtype, np.inexact):
+            assert np.isfinite(value).all() and np.isfinite(reference).all(), (
+                f"{key}: nonfinite"
+            )
+            np.testing.assert_allclose(value, reference, rtol=RTOL, atol=ATOL)
+        else:
+            np.testing.assert_array_equal(value, reference)
 
 
 def assert_reproduced(actual, expected, path="result"):
@@ -18,7 +39,7 @@ def assert_reproduced(actual, expected, path="result"):
         # Recomputed roots and summaries can differ in their final bits. These
         # tolerances remain far below the independent risk-replay tolerances.
         assert math.isfinite(actual) and math.isfinite(expected), f"{path}: nonfinite"
-        assert math.isclose(actual, expected, rel_tol=1e-12, abs_tol=1e-14), (
+        assert math.isclose(actual, expected, rel_tol=RTOL, abs_tol=ATOL), (
             f"{path}: {actual!r} != {expected!r} within numerical tolerance"
         )
     else:

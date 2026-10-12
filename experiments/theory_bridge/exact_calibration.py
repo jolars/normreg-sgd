@@ -7,7 +7,7 @@ from pathlib import Path
 import numpy as np
 
 from experiments.common.data import write_json
-from experiments.common.reproduction import assert_reproduced
+from experiments.common.reproduction import assert_arrays_reproduced, assert_reproduced
 from experiments.theory_bridge import config as cfg
 
 ARMS = ("fresh", "fresh_intercept")
@@ -171,9 +171,7 @@ def main():
     if args.check:
         assert_reproduced(report, json.loads(summary.read_text()))
         with np.load(archive) as saved:
-            assert set(saved.files) == arrays.keys()
-            for name, values in arrays.items():
-                np.testing.assert_allclose(values, saved[name], rtol=1e-12, atol=1e-14)
+            assert_arrays_reproduced(arrays, saved)
         print("Exact expected-risk calibration benchmark reproduces.")
     else:
         np.savez_compressed(archive, **arrays)

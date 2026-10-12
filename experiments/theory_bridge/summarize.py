@@ -6,7 +6,8 @@ from pathlib import Path
 
 import numpy as np
 
-from experiments.common.data import write_json
+from experiments.common.data import jsonable, write_json
+from experiments.common.reproduction import assert_reproduced
 from experiments.common.statistics import statistics
 from experiments.theory_bridge import config as cfg
 from experiments.theory_bridge.engine import predictor_risks
@@ -25,10 +26,14 @@ def summarize(output):
         failed = 0
         for record in run["evaluation"]:
             with np.load(output / record["file"]) as archive:
-                losses.append(predictor_risks(archive["coefficients"], q))
+                losses.append(
+                    predictor_risks(archive["coefficients"], q, settings["signals"])
+                )
                 selections.append(archive["selected"])
                 coverage.append(archive["validation_rare_count"])
-                train_counts.append((archive["cells"][:, : cfg.TRAIN_SIZE] % 2).sum(-1))
+                train_counts.append(
+                    (archive["cells"][:, : settings["train_size"]] % 2).sum(-1)
+                )
                 failed += int(np.count_nonzero(archive["failure_checkpoint"]))
         loss = np.concatenate(losses)
         selected = np.concatenate(selections)
@@ -40,9 +45,9 @@ def summarize(output):
                 q=q,
                 cap=run["caps"][cap],
                 expected_rare=run["caps"][cap] * q,
-                arm=cfg.ARMS[arm],
-                signal=cfg.SIGNAL_NAMES[signal],
-                policy=cfg.POLICIES[policy],
+                arm=settings["arms"][arm],
+                signal=settings["signal_names"][signal],
+                policy=settings["policies"][policy],
                 gap=statistics(gap[:, cap, arm, signal, policy]),
                 scaling={},
             )
@@ -52,7 +57,7 @@ def summarize(output):
                     label: statistics(gap[mask, cap, arm, signal, policy])
                     for label, mask in (("absent", ~present), ("present", present))
                 }
-            for scaling, name in enumerate(cfg.SCALINGS):
+            for scaling, name in enumerate(settings["scalings"]):
                 risk = loss[:, cap, arm, scaling, signal, policy]
                 oracle = loss[:, cap, arm, scaling, signal, 2, 1]
                 reference = loss[:, cap, arm, scaling, signal, 0, 1]
@@ -66,7 +71,10 @@ def summarize(output):
                     positive_stop_count=int(positive.sum()),
                     lower_rate_boundary=int(np.sum(positive & (choice[:, 1] == 1))),
                     upper_rate_boundary=int(
-                        np.sum(positive & (choice[:, 1] == len(cfg.rates()) - 1))
+                        np.sum(
+                            positive
+                            & (choice[:, 1] == len(settings["rate_factors"]) - 1)
+                        )
                     ),
                     median_stop=float(
                         np.median(np.asarray(run["checkpoints"])[choice[:, 0]])
@@ -79,14 +87,14 @@ def summarize(output):
                     }
             rows.append(row)
         for base, changed in EDGES:
-            for cap, signal in np.ndindex(len(run["caps"]), 2):
+            for cap, signal in np.ndindex(len(run["caps"]), len(settings["signals"])):
                 contrasts.append(
                     dict(
                         q=q,
                         cap=run["caps"][cap],
-                        signal=cfg.SIGNAL_NAMES[signal],
-                        reference=cfg.ARMS[base],
-                        intervention=cfg.ARMS[changed],
+                        signal=settings["signal_names"][signal],
+                        reference=settings["arms"][base],
+                        intervention=settings["arms"][changed],
                         gap_change=statistics(
                             gap[:, cap, changed, signal, 0]
                             - gap[:, cap, base, signal, 0]
@@ -96,7 +104,7 @@ def summarize(output):
                                 loss[:, cap, changed, s, signal, 0, 1]
                                 - loss[:, cap, base, s, signal, 0, 1]
                             )
-                            for s, name in enumerate(cfg.SCALINGS)
+                            for s, name in enumerate(settings["scalings"])
                         },
                     )
                 )
@@ -107,31 +115,38 @@ def summarize(output):
             calibration = archive["mean_risk"]
         baseline = []
         optimism = []
-        for cap, scaling, signal in np.ndindex(len(run["caps"]), 2, 2):
+        for cap, scaling, signal in np.ndindex(
+            len(run["caps"]), len(settings["scalings"]), len(settings["signals"])
+        ):
             stop, rate = fixed[cap, 0, scaling, signal, 0]
             expected = float(exact[stop, scaling, signal, rate, 1])
             observed = statistics(loss[:, cap, 0, scaling, signal, 0, 1])
             baseline.append(
                 dict(
                     cap=run["caps"][cap],
-                    scaling=cfg.SCALINGS[scaling],
-                    signal=cfg.SIGNAL_NAMES[signal],
+                    scaling=settings["scalings"][scaling],
+                    signal=settings["signal_names"][signal],
                     exact_risk=expected,
                     evaluation=observed,
-                    z_score=(observed["mean"] - expected) / observed["mcse"],
+                    z_score=(observed["mean"] - expected) / observed["mcse"]
+                    if observed["mcse"] is not None and observed["mcse"] > 0
+                    else None,
                     grid_excess=expected - float(dense[cap, scaling, signal]),
                 )
             )
         for cap, arm, scaling, signal in np.ndindex(
-            len(run["caps"]), len(cfg.ARMS), 2, 2
+            len(run["caps"]),
+            len(settings["arms"]),
+            len(settings["scalings"]),
+            len(settings["signals"]),
         ):
             stop, rate = fixed[cap, arm, scaling, signal, 0]
             optimism.append(
                 dict(
                     cap=run["caps"][cap],
-                    arm=cfg.ARMS[arm],
-                    scaling=cfg.SCALINGS[scaling],
-                    signal=cfg.SIGNAL_NAMES[signal],
+                    arm=settings["arms"][arm],
+                    scaling=settings["scalings"][scaling],
+                    signal=settings["signal_names"][signal],
                     calibration_risk=float(
                         calibration[stop, arm, scaling, signal, rate, 1]
                     ),
@@ -149,7 +164,7 @@ def summarize(output):
                         empty=int(np.sum(coverage[:, v] == 0)),
                         probability_empty=(1 - q) ** n,
                     )
-                    for v, n in enumerate(cfg.VALIDATION_SIZES)
+                    for v, n in enumerate(settings["validation_sizes"])
                 ],
                 failed_evaluation_candidates=failed,
                 failed_calibration_candidates=sum(
@@ -158,7 +173,7 @@ def summarize(output):
                 exact_baseline=baseline,
                 calibration_comparison=optimism,
                 fine_calibrated_upper_boundaries=int(
-                    np.sum(fixed[..., 0, 1] == len(cfg.rates()) - 1)
+                    np.sum(fixed[..., 0, 1] == len(settings["rate_factors"]) - 1)
                 ),
                 fine_calibrated_lower_boundaries=int(np.sum(fixed[..., 0, 1] == 1)),
             )
@@ -170,8 +185,8 @@ def summarize(output):
         gap_definition="SD minus unscaled rare excess half squared loss",
         uncertainty="Paired MCSE conditional on the saved calibration choices.",
         candidate_family="Conservative stable finite rate and stopping grids.",
-        arms=cfg.ARMS,
-        arm_labels=cfg.ARM_LABELS,
+        arms=settings["arms"],
+        arm_labels=settings["arm_labels"],
         rows=rows,
         matched_interventions=contrasts,
         diagnostics=diagnostics,
@@ -185,10 +200,10 @@ def main():
     args = parser.parse_args()
     report = summarize(args.output)
     if args.check:
-        assert json.loads((args.output / "summary.json").read_text()) == json.loads(
-            json.dumps(report)
+        assert_reproduced(
+            jsonable(report), json.loads((args.output / "summary.json").read_text())
         )
-        print("Saved bridge summaries reconstruct exactly.")
+        print("Saved bridge summaries reconstruct within numerical tolerance.")
     else:
         write_json(args.output / "summary.json", report)
         print(args.output / "summary.json")

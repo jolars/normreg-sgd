@@ -39,6 +39,19 @@ outputs and settings under `results/<name>/`. New experiments can reuse
 functions in `experiments/common/` without depending on another experiment's
 command-line entry point.
 
+Use named arrays in compressed `.npz` archives for detailed numerical results,
+and JSON for settings, axis labels, and derived summaries. Small deterministic
+illustrations may keep their arrays in JSON. Use
+`experiments.common.data.write_json` for JSON files; it rejects nonfinite
+numbers. Encode intended missing values as `None` in the analysis and report
+missing replicate counts when summarizing sampled results. Summaries should read
+settings from the saved records rather than the current configuration. Provide a
+read-only `--check` mode that uses
+`experiments.common.reproduction.assert_reproduced` to verify the summary with
+the shared numerical tolerances, and include it in the saved-result checks. Use
+`assert_arrays_reproduced` from the same module for derived archives; it checks
+floating-point arrays with those tolerances and discrete arrays exactly.
+
 Commit the code, settings, and reported results together when recording a paper
 version. Keep the seeds, candidate settings, selections, and numerical
 diagnostics needed to reproduce and assess the current manuscript in the saved

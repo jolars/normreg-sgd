@@ -394,6 +394,7 @@ def main():
                 "rare_mean_max_error_at_q_1e_minus_6": check_rare_mean(),
             },
             indent=2,
+            allow_nan=False,
         )
     )
 

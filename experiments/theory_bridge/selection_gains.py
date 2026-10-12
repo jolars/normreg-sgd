@@ -7,11 +7,13 @@ from pathlib import Path
 import numpy as np
 
 from experiments.common.data import write_json
-from experiments.common.reproduction import assert_reproduced
+from experiments.common.reproduction import assert_arrays_reproduced, assert_reproduced
 from experiments.common.statistics import statistics
 from experiments.theory_bridge import config as cfg
 
-POLICIES = ("calibrated", "path_oracle") + cfg.POLICIES[3:]
+
+def selection_policies(settings):
+    return ("calibrated", "path_oracle", *settings["policies"][3:])
 
 
 def distribution(values):
@@ -42,7 +44,8 @@ def analyze(output):
     settings = json.loads((output / "settings.json").read_text())
     assert settings["completed"]
     rows, arrays = [], {}
-    policy_ids = [settings["policies"].index(policy) for policy in POLICIES]
+    policies = selection_policies(settings)
+    policy_ids = [settings["policies"].index(policy) for policy in policies]
     for q_id, run in enumerate(settings["runs"]):
         chunks = []
         for record in run["evaluation"]:
@@ -65,7 +68,9 @@ def analyze(output):
         arrays[f"q{q_id}_risk"] = risk
         arrays[f"q{q_id}_gain"] = gains
         arrays[f"q{q_id}_errors"] = errors
-        for cap, arm, signal, policy in np.ndindex(len(run["caps"]), 2, 2, 4):
+        for cap, arm, signal, policy in np.ndindex(
+            len(run["caps"]), 2, len(settings["signals"]), len(policies) - 1
+        ):
             gain = gains[:, cap, arm, :, signal, policy]
             advantage = gain[:, 0] - gain[:, 1]
             scaling = {}
@@ -91,7 +96,7 @@ def analyze(output):
                     cap=run["caps"][cap],
                     arm=settings["arms"][arm],
                     signal=settings["signal_names"][signal],
-                    policy=POLICIES[policy + 1],
+                    policy=policies[policy + 1],
                     scaling=scaling,
                     unscaled_minus_sd_gain=distribution(advantage),
                     calibrated_gap=statistics(
@@ -121,8 +126,8 @@ def analyze(output):
         },
         array_axes=["replication", "cap", "arm", "scaling", "signal", "policy"],
         error_axis=["common_coefficient", "rare_mean_prediction"],
-        policies=list(POLICIES),
-        gain_policies=list(POLICIES[1:]),
+        policies=list(policies),
+        gain_policies=list(policies[1:]),
         arms=settings["arms"][:2],
         scalings=settings["scalings"],
         signals=settings["signal_names"],
@@ -185,11 +190,9 @@ def main():
             report, json.loads(destination.with_suffix(".json").read_text())
         )
         with np.load(destination.with_suffix(".npz")) as saved:
-            assert set(saved.files) == set(arrays)
-            for name, values in arrays.items():
-                np.testing.assert_array_equal(saved[name], values)
+            assert_arrays_reproduced(arrays, saved)
         assert table.read_text() == gain_table(report)
-        print("Saved selection-gain distributions and errors reconstruct exactly.")
+        print("Saved selection gains and errors reconstruct within tolerance.")
     else:
         np.savez_compressed(destination.with_suffix(".npz"), **arrays)
         write_json(destination.with_suffix(".json"), report)

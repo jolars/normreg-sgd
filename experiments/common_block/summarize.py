@@ -1,15 +1,19 @@
 """Summarize saved dimension comparisons without running new trajectories."""
 
+import argparse
 import json
+from pathlib import Path
 
 import numpy as np
 
+from experiments.common.data import write_json
+from experiments.common.reproduction import assert_reproduced
 from experiments.common_block.config import OUTPUT
 
 
-def summarize():
-    settings = json.loads((OUTPUT / "settings.json").read_text())
-    with np.load(OUTPUT / "search.npz") as arrays:
+def summarize(output=OUTPUT):
+    settings = json.loads((output / "settings.json").read_text())
+    with np.load(output / "search.npz") as arrays:
         indices = arrays["risk"].argmin(axis=-1)
         risk = np.take_along_axis(arrays["risk"], indices[..., None], axis=-1)[..., 0]
         stops = np.take_along_axis(arrays["stop"], indices[..., None], axis=-1)[..., 0]
@@ -46,7 +50,22 @@ def summarize():
             ),
             continuous_optimality_certified=False,
         )
-    (OUTPUT / "summary.json").write_text(json.dumps(report, indent=2) + "\n")
+    return report
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path, default=OUTPUT)
+    parser.add_argument("--check", action="store_true")
+    args = parser.parse_args()
+    report = summarize(args.output)
+    if args.check:
+        assert_reproduced(
+            report, json.loads((args.output / "summary.json").read_text())
+        )
+        print("Saved common-block summary matches the search outputs.")
+    else:
+        write_json(args.output / "summary.json", report)
     print(
         f"Maximum refinement change: {report['maximum_refinement_change']:.3g}; "
         f"rate boundary selections: {report['positive_stop_rate_boundary_selections']}."
@@ -54,4 +73,4 @@ def summarize():
 
 
 if __name__ == "__main__":
-    summarize()
+    main()

@@ -274,6 +274,7 @@ def main():
                 "zero_budget_boundary": check_zero_budget_boundary(),
             },
             indent=2,
+            allow_nan=False,
         )
     )
 

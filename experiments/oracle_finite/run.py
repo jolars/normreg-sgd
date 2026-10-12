@@ -5,12 +5,12 @@ optima. All comparisons use deterministic choices before observing training.
 """
 
 import argparse
-import json
 import platform
 
 import numpy as np
 import scipy
 
+from experiments.common.data import write_json
 from experiments.common_block.engine import coefficients, stability_limit
 from experiments.oracle_finite.config import (
     OUTPUT,
@@ -137,9 +137,7 @@ def main():
             scipy=scipy.__version__,
         ),
     )
-    (OUTPUT / "settings.json").write_text(
-        json.dumps(settings, indent=2, allow_nan=False) + "\n"
-    )
+    write_json(OUTPUT / "settings.json", settings)
 
 
 if __name__ == "__main__":

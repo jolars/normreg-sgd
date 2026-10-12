@@ -7,10 +7,10 @@ from pathlib import Path
 import numpy as np
 
 from experiments.common.data import write_json
-from experiments.common.reproduction import assert_reproduced
+from experiments.common.reproduction import assert_arrays_reproduced, assert_reproduced
 from experiments.common.statistics import statistics
 from experiments.theory_bridge import config as cfg
-from experiments.theory_bridge.selection_gains import POLICIES
+from experiments.theory_bridge.selection_gains import selection_policies
 
 TERMS = ("common", "intercept", "rare", "intercept_rare_cross")
 ERRORS = ("common", "intercept", "rare")
@@ -54,7 +54,8 @@ def cancellation_summary(errors, terms):
 def analyze(output):
     settings = json.loads((output / "settings.json").read_text())
     assert settings["completed"]
-    policy_ids = [settings["policies"].index(p) for p in POLICIES]
+    policies = selection_policies(settings)
+    policy_ids = [settings["policies"].index(p) for p in policies]
     arrays, rows = {}, []
     for q_id, run in enumerate(settings["runs"]):
         chunks = []
@@ -70,7 +71,7 @@ def analyze(output):
         arrays[f"q{q_id}_errors"] = errors
         arrays[f"q{q_id}_terms"] = terms
         for cap, arm, signal, policy in np.ndindex(
-            len(run["caps"]), 2, len(settings["signals"]), len(POLICIES)
+            len(run["caps"]), 2, len(settings["signals"]), len(policies)
         ):
             values = terms[:, cap, arm, :, signal, policy]
             gap = values[:, 1] - values[:, 0]
@@ -81,7 +82,7 @@ def analyze(output):
                 cap=run["caps"][cap],
                 arm=settings["arms"][arm],
                 signal=settings["signal_names"][signal],
-                policy=POLICIES[policy],
+                policy=policies[policy],
                 scaling={
                     name: dict(
                         terms={
@@ -140,7 +141,7 @@ def analyze(output):
         arms=settings["arms"][:2],
         scalings=settings["scalings"],
         signals=settings["signal_names"],
-        policies=list(POLICIES),
+        policies=list(policies),
         runs=[dict(q=run["q"], caps=run["caps"]) for run in settings["runs"]],
         evaluation_reps=settings["evaluation_reps"],
         rows=rows,
@@ -197,9 +198,7 @@ def main():
             report, json.loads(destination.with_suffix(".json").read_text())
         )
         with np.load(destination.with_suffix(".npz")) as saved:
-            assert set(saved.files) == set(arrays)
-            for name, values in arrays.items():
-                np.testing.assert_array_equal(saved[name], values)
+            assert_arrays_reproduced(arrays, saved)
         assert table.read_text() == decomposition_table(report)
         print(
             "Saved risk decompositions, cancellation summaries, and table reconstruct."

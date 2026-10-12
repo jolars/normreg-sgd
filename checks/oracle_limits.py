@@ -589,6 +589,7 @@ def main():
                 "numerical_examples_unit_noise": numerical_examples(),
             },
             indent=2,
+            allow_nan=False,
         )
     )
 

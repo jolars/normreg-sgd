@@ -7,7 +7,7 @@ from pathlib import Path
 import numpy as np
 
 from experiments.common.data import write_json
-from experiments.common.reproduction import assert_reproduced
+from experiments.common.reproduction import assert_arrays_reproduced, assert_reproduced
 from experiments.theory_bridge import config as cfg
 from experiments.theory_bridge.engine import choose_fixed
 
@@ -20,7 +20,7 @@ def selected_risks(profile, choices):
     return profile[choices[..., 0], arm, scaling, signal, choices[..., 1], 1]
 
 
-def recalibrate(sums, counts, exact, q, partitions):
+def recalibrate(sums, counts, exact, q, partitions, *, checkpoints=None, caps=None):
     """Return both orientations of each split without sharing selection data."""
     choices, risks, training_counts = [], [], []
     for left in partitions:
@@ -39,7 +39,7 @@ def recalibrate(sums, counts, exact, q, partitions):
             (halves[0], halves[1], left_count),
             (halves[1], halves[0], counts.sum() - left_count),
         ):
-            selected = choose_fixed(train, q)
+            selected = choose_fixed(train, q, checkpoints=checkpoints, caps=caps)
             choices.append(selected)
             risks.append(selected_risks(test, selected))
             training_counts.append(count)
@@ -73,7 +73,15 @@ def analyze(output, partitions=PARTITIONS, seed=SEED):
                 for _ in range(partitions)
             ]
         )
-        choices, risks, training_counts = recalibrate(sums, counts, exact, q, left)
+        choices, risks, training_counts = recalibrate(
+            sums,
+            counts,
+            exact,
+            q,
+            left,
+            checkpoints=run["checkpoints"],
+            caps=run["caps"],
+        )
         assert np.isfinite(risks).all()
         arrays.update(
             {
@@ -107,8 +115,8 @@ def analyze(output, partitions=PARTITIONS, seed=SEED):
                 dict(
                     q=q,
                     cap=run["caps"][cap],
-                    arm=cfg.ARMS[arm],
-                    signal=cfg.SIGNAL_NAMES[signal],
+                    arm=settings["arms"][arm],
+                    signal=settings["signal_names"][signal],
                     splits=len(values),
                     matching_sign_count=int(matching.sum()),
                     changed_choice_count=int(changed[:, cap, arm, signal].sum()),
@@ -155,14 +163,7 @@ def main():
     if args.check:
         assert_reproduced(report, json.loads(summary.read_text()))
         with np.load(archive_path) as archive:
-            assert set(archive.files) == set(arrays)
-            for key, value in arrays.items():
-                if np.issubdtype(value.dtype, np.integer):
-                    np.testing.assert_array_equal(value, archive[key])
-                else:
-                    np.testing.assert_allclose(
-                        value, archive[key], rtol=1e-12, atol=1e-14
-                    )
+            assert_arrays_reproduced(arrays, archive)
         print("Saved calibration splits, choices, and held-out risks reconstruct.")
     else:
         np.savez_compressed(archive_path, **arrays)

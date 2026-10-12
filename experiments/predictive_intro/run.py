@@ -13,6 +13,7 @@ from pathlib import Path
 import numpy as np
 
 from checks.predictive_theorem import observation_operator
+from experiments.common.data import write_json
 from experiments.common.moments import make_model, moment_path
 from experiments.common.reproduction import assert_reproduced
 
@@ -222,7 +223,7 @@ def main():
         print("Introduction illustration numerical checks passed.")
     else:
         OUTPUT.mkdir(parents=True, exist_ok=True)
-        (OUTPUT / "summary.json").write_text(json.dumps(report, indent=2) + "\n")
+        write_json(OUTPUT / "summary.json", report)
 
 
 if __name__ == "__main__":

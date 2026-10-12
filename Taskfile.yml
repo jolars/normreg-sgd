@@ -210,6 +210,7 @@ tasks:
     desc: Check the common-block reduction, dimension search, and fixed-rate limits.
     cmds:
       - 'python -m checks.common_block {{.CLI_ARGS}}'
+      - python -m experiments.common_block.summarize --check
 
   check:theory-bridge:
     desc: Check independent dynamics, risks, and selections for the bridge study.
@@ -296,6 +297,7 @@ tasks:
       - task: check:illustrations
       - task: check:oracle-finite
       - python -m checks.common_block --saved
+      - python -m experiments.common_block.summarize --check
       - python -m checks.theory_bridge --saved
       - python -m experiments.theory_bridge.summarize --check
       - task: check:calibration-sensitivity

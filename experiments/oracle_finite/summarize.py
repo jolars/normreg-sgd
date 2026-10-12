@@ -5,6 +5,7 @@ import json
 
 import numpy as np
 
+from experiments.common.data import write_json
 from experiments.common.limiting_oracle import oracle_minimum
 from experiments.common.reproduction import assert_reproduced
 from experiments.oracle_finite.config import OUTPUT
@@ -102,12 +103,11 @@ def main():
     settings = json.loads((OUTPUT / "settings.json").read_text())
     with np.load(OUTPUT / "search.npz") as archive:
         report = summarize(settings, archive)
-    content = json.dumps(report, indent=2, allow_nan=False) + "\n"
     if args.check:
         assert_reproduced(report, json.loads((OUTPUT / "summary.json").read_text()))
         print("Saved finite-prevalence summary matches the search outputs.")
     else:
-        (OUTPUT / "summary.json").write_text(content)
+        write_json(OUTPUT / "summary.json", report)
         print(f"Summarized {len(report['rows'])} finite-prevalence comparisons.")
     for row in report["convergence"]:
         print(

@@ -4,12 +4,12 @@ The calculation is deterministic and uses exact moment recurrences evaluated in
 floating point. The finite candidate family does not certify an oracle optimum.
 """
 
-import json
 import platform
 import time
 
 import numpy as np
 
+from experiments.common.data import write_json
 from experiments.common_block.config import (
     COMMON_COUNTS,
     NOISE_VARIANCE,
@@ -116,7 +116,7 @@ def main():
         numpy=np.__version__,
         elapsed_seconds=time.monotonic() - started,
     )
-    (OUTPUT / "settings.json").write_text(json.dumps(settings, indent=2) + "\n")
+    write_json(OUTPUT / "settings.json", settings)
 
 
 if __name__ == "__main__":

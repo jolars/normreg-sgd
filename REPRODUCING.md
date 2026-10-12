@@ -102,6 +102,22 @@ formalized and the assumptions left outside the formalization.
 
 ## Manuscript analyses and file locations
 
+Saved `.npz` archives contain named numerical arrays, including candidate grids,
+raw draws, selected predictors, and per-run diagnostics. JSON files contain
+settings, axis labels, and derived summaries. The smaller deterministic
+coefficient-path and predictive-introduction illustrations store their arrays
+and settings together in `summary.json`. Figures and tables read these saved
+artifacts without training models.
+
+JSON records use finite numbers and explicit `null` values for undefined
+statistics. Sampled summaries report finite and missing replicate counts. The
+JSON summary checks require matching fields, types, selections, and ordering,
+while allowing numerical roundoff with relative tolerance `1e-12` and absolute
+tolerance `1e-14`. Derived-array checks use the same tolerances for finite
+floating-point values and require exact shapes, data types, and integer
+selections. The controlled-study summaries and recalibration diagnostic use the
+settings and grids recorded with the saved results.
+
 The finite-prevalence certificates use `checks/predictive_fixed_q.py`; the
 recorded output is `results/certificates/predictive-fixed-q.txt`.
 `checks/predictive_theorem.py` and `checks/predictive_review.py` provide the
@@ -138,6 +154,7 @@ and selected results. Run:
 ```sh
 python -m experiments common-block
 python -m checks.common_block --saved
+python -m experiments.common_block.summarize --check
 ```
 
 The controlled-study implementation is in `experiments/theory_bridge/`, and its

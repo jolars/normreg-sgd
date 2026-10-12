@@ -284,6 +284,7 @@ def main():
                 "budget_expansions": check_budget_expansions(),
             },
             indent=2,
+            allow_nan=False,
         )
     )
 

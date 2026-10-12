@@ -15,10 +15,9 @@ def jsonable(value):
         return {k: jsonable(v) for k, v in value.items()}
     if isinstance(value, (list, tuple)):
         return [jsonable(v) for v in value]
-    if isinstance(value, float) and not np.isfinite(value):
-        return None
     return value
 
 
 def write_json(path, value):
+    """Reject nonfinite numbers; analyses must mark missing values explicitly."""
     Path(path).write_text(json.dumps(jsonable(value), indent=2, allow_nan=False) + "\n")

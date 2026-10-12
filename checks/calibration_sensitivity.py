@@ -1,12 +1,55 @@
 """Check independent selection, disjoint evaluation, and weighted shard means."""
 
+from unittest.mock import patch
+
 import numpy as np
 
 from experiments.theory_bridge import config as cfg
 from experiments.theory_bridge.calibration_sensitivity import recalibrate
 
 
+def check_saved_grids():
+    checkpoints = np.array([0, 2, 5])
+    caps = np.array([2, 5])
+    counts = np.array([2, 3])
+    profiles = np.random.default_rng(73).integers(1, 30, size=(2, 3, 2, 2, 2, 4, 2))
+    sums = profiles * counts.reshape(-1, 1, 1, 1, 1, 1, 1)
+    exact = profiles[0, :, 0]
+    with (
+        patch.object(cfg, "stops", side_effect=AssertionError("Live stopping grid")),
+        patch.object(cfg, "rates", side_effect=AssertionError("Live rate grid")),
+        patch.object(cfg, "budgets", side_effect=AssertionError("Live caps")),
+    ):
+        choices, risks, _ = recalibrate(
+            sums, counts, exact, 0.02, [[0]], checkpoints=checkpoints, caps=caps
+        )
+    for split, train in enumerate((0, 1)):
+        for cap, arm, scaling, signal in np.ndindex(2, 2, 2, 2):
+            training = (
+                exact[:, scaling, signal]
+                if arm == 0
+                else profiles[train, :, arm, scaling, signal]
+            )
+            heldout = (
+                exact[:, scaling, signal]
+                if arm == 0
+                else profiles[1 - train, :, arm, scaling, signal]
+            )
+            _, stop, rate = min(
+                (training[stop, rate, 1], stop, rate)
+                for stop, updates in enumerate(checkpoints)
+                if updates <= caps[cap]
+                for rate in range(4)
+            )
+            np.testing.assert_array_equal(
+                choices[split, cap, arm, scaling, signal], [stop, rate]
+            )
+            assert risks[split, cap, arm, scaling, signal] == heldout[stop, rate, 1]
+    print("Saved calibration grids survive changes to live experiment settings.")
+
+
 def main():
+    check_saved_grids()
     q = 0.02
     shape = (len(cfg.stops(q)), len(cfg.ARMS), 2, 2, len(cfg.rates()), 2)
     rng = np.random.default_rng(19)

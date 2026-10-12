@@ -98,13 +98,14 @@ def risks(errors, q):
     return np.stack((aggregate, subgroup), axis=-1)
 
 
-def predictor_risks(coefficients, q):
+def predictor_risks(coefficients, q, signals=None):
     """Evaluate saved raw predictors, with signal and policy as the final axes."""
-    signal_shape = (1,) * (coefficients.ndim - 3) + (2, 1)
+    signals = cfg.SIGNALS if signals is None else np.asarray(signals)
+    signal_shape = (1,) * (coefficients.ndim - 3) + (len(signals), 1)
     offset = coefficients[..., 0] + 0.5 * coefficients[..., 1]
     offset += q * coefficients[..., 2]
-    common = coefficients[..., 1] - cfg.SIGNALS[:, 0].reshape(signal_shape)
-    rare = coefficients[..., 2] - cfg.SIGNALS[:, 1].reshape(signal_shape)
+    common = coefficients[..., 1] - signals[:, 0].reshape(signal_shape)
+    rare = coefficients[..., 2] - signals[:, 1].reshape(signal_shape)
     return risks((offset, common, rare), q)
 
 
@@ -149,19 +150,23 @@ def exact_baseline(q, factors, checkpoints):
     return np.array(saved)
 
 
-def choose_fixed(profile, q, coarse=False):
-    checkpoints, factors = cfg.stops(q), cfg.rates()
+def choose_fixed(profile, q, coarse=False, *, checkpoints=None, caps=None):
+    checkpoints = cfg.stops(q) if checkpoints is None else np.asarray(checkpoints)
+    caps = cfg.budgets(q) if caps is None else np.asarray(caps)
+    rate_count = profile.shape[-2]
     results = []
-    for cap in cfg.budgets(q):
+    for cap in caps:
         eligible_stops = checkpoints <= cap
-        eligible_rates = np.ones(len(factors), dtype=bool)
+        eligible_rates = np.ones(rate_count, dtype=bool)
         if coarse:
-            eligible_stops &= cfg.coarse_mask(q)
+            coarse_stops = np.arange(len(checkpoints)) % 2 == 0
+            coarse_stops |= np.isin(checkpoints, np.r_[0, caps])
+            eligible_stops &= coarse_stops
             eligible_rates[2::2] = False
         eligible = eligible_stops[:, None, None, None, None] & eligible_rates
         risk = np.where(eligible, profile[..., 1], np.inf)
         order = risk.transpose(1, 2, 3, 0, 4).reshape(*risk.shape[1:4], -1).argmin(-1)
-        results.append(np.stack((order // len(factors), order % len(factors)), axis=-1))
+        results.append(np.stack((order // rate_count, order % rate_count), axis=-1))
     return np.array(results)
 
 

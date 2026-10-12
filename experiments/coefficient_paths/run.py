@@ -6,6 +6,7 @@ from pathlib import Path
 
 import numpy as np
 
+from experiments.common.data import write_json
 from experiments.common.reproduction import assert_reproduced
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -87,9 +88,7 @@ def main():
         print("Coefficient-path illustration numerical checks passed.")
     else:
         OUTPUT.mkdir(parents=True, exist_ok=True)
-        (OUTPUT / "summary.json").write_text(
-            json.dumps(report, indent=2, allow_nan=False) + "\n"
-        )
+        write_json(OUTPUT / "summary.json", report)
 
 
 if __name__ == "__main__":
