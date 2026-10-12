@@ -10,13 +10,6 @@ fixed-calibration, signal-allocation, synthetic, and Mushroom investigations
 remain reproducible from the code and saved results, but are outside the
 manuscript.
 
-The manuscript uses the anonymous ALT 2027 template supplied in
-`alt2027-template.zip`. Its unmodified class files and sample are vendored in
-[`paper/vendor/alt2027/`](paper/vendor/alt2027/README.md). ALT has no page
-limit, but reviewers may stop after the first 12 pages, excluding references.
-The paper build reports the main-text page count and flags drafts beyond that
-threshold.
-
 ## Python environment
 
 Run commands from the repository or extracted archive root. Experiments and
