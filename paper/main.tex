@@ -35,22 +35,23 @@
   Standardizing a rare feature can help stochastic gradient descent learn its
   effect within a finite budget, but it also changes the noise cost of learning.
   We characterize the lowest rare-subgroup risks attainable by standardized and
-  unscaled training when each chooses any nonnegative constant learning rate and
-  deterministic stop under the same observation cap. For two independent binary
-  features, we derive both optimized risks as prevalence vanishes while the
-  expected number of rare observations remains finite. Uniform control over
-  rates and stops reduces each limiting oracle to a scalar minimization. With
-  positive noise, the preferred scaling changes exactly once as signal moves to
-  the rare feature while the limiting risk at initialization stays fixed and
-  positive. The formulas also explain how noise and budget affect the
-  comparison. Separate finite-prevalence bounds favor standardization on a
-  rare-dominant signal family and unscaled training on a common-dominant family.
-  The results concern final iterates with population preprocessing and fresh
-  observations. Exact-moment searches assess the approximation at finite
-  prevalence. In a controlled study, both orderings persist under observation
-  reuse, estimated preprocessing, and intercept fitting when tuning choices are
-  fixed before evaluation. Selecting a predictor after observing training can
-  reverse an ordering, even when selection uses exact population risk.
+  unscaled training when each chooses a nonnegative constant learning rate and a
+  deterministic stopping time under the same observation cap. For two
+  independent binary features, we derive both optimized risks as prevalence
+  vanishes while the expected number of rare observations remains finite.
+  Uniform control over rates and stopping times reduces each limiting oracle to
+  a scalar minimization. With positive noise, the preferred scaling changes
+  exactly once as we move signal to the rare feature while the limiting risk at
+  initialization stays fixed and positive. The formulas also explain how noise
+  and budget affect the comparison. Separate finite-prevalence bounds favor
+  standardization on a rare-dominant signal family and unscaled training on a
+  common-dominant family. The results concern final iterates with population
+  preprocessing and fresh observations. Exact-moment searches assess the
+  approximation at finite prevalence. In a controlled study, both orderings
+  persist under observation reuse, estimated preprocessing, and intercept
+  fitting when tuning choices are fixed before evaluation. Selecting a predictor
+  after observing training can reverse an ordering, even when selection uses
+  exact population risk.
 \end{abstract}
 
 \begin{keywords}
@@ -70,7 +71,7 @@ These effects can substantially change prediction where the rare feature is
 present, despite contributing little to average error. Normalization therefore
 raises a statistical question: how strongly should training respond to scarce
 evidence? For instance, scaling leaves a full-rank least-squares solution
-unchanged, but changes which signals we learn before stopping.
+unchanged but changes which signals we learn before stopping.
 \Cref{fig:intro-coefficient-paths} illustrates this difference on a fixed
 least-squares problem: the methods approach the same solution along different
 paths and reach different coefficients when stopped early.
@@ -81,12 +82,12 @@ risk when both optimize these choices under the same observation cap.
 \Cref{fig:intro-signal-crossing} illustrates the limiting comparison:
 standardization gives lower risk when the rare signal dominates, whereas
 unscaled training gives lower risk when the common signal dominates. Each method
-optimizes its rate and stop as signal moves between features at fixed initial
-subgroup risk, rescaled budget, and noise level. Our main result characterizes
-both optimized risks in a rare-prevalence limit and proves a unique crossing
-when initial subgroup risk is held fixed. A separate finite-prevalence theorem
-establishes positive gaps for two signal families, illustrated across
-observation caps in \cref{fig:conference-tuned-intro}.
+optimizes its rate and stopping time as signal moves between features at fixed
+initial subgroup risk, rescaled budget, and noise level. Our main result
+characterizes both optimized risks in a rare-prevalence limit and proves a
+unique crossing when initial subgroup risk is held fixed. A separate
+finite-prevalence theorem establishes positive gaps for two signal families,
+illustrated across observation caps in \cref{fig:conference-tuned-intro}.
 
 \begin{figure}[htb]
   \centering
@@ -117,10 +118,10 @@ observation caps in \cref{fig:conference-tuned-intro}.
     $(\beta_C^*,\beta_R^*) = (0.1,1)$ (left) or $(1,0.1)$ (right) and noise
     variance one. Under the stated population setup, curves show the lowest
     exact rare risk over a finite rate grid and every integer stop within each
-    cap, including zero. Both panels use the same axes; lower is better. This
-    illustrates \cref{thm:conference-predictive}, which covers all nonnegative
-    constant rates. See \cref{sec:predictive-intro-figure} for numerical
-    details.
+    cap, including zero. Both panels use the same axes, and lower risk is
+    better. This illustrates \cref{thm:conference-predictive}, which covers all
+    nonnegative constant rates. See \cref{sec:predictive-intro-figure} for
+    numerical details.
   }
   \label{fig:conference-tuned-intro}
 \end{figure}
@@ -132,8 +133,8 @@ and one fresh observation per update. Our main characterization,
 $q \to 0$ and the observation cap $M$ satisfies
 $Mq(1 - q) \to \tau \in (0,\infty)$, for arbitrary fixed signal strengths and
 noise. Uniform bounds over all nonnegative constant rates and deterministic
-stops justify taking the limit after optimization. These bounds include
-prevalence-dependent choices, unstable rates, and vanishing rates that learn the
+stops justify taking the limit after optimization. These bounds include choices
+that depend on prevalence, unstable rates, and vanishing rates that learn the
 common signal while leaving the rare effect unchanged. We then move signal to
 the rare feature while holding the limiting risk at initialization fixed and
 positive. With positive noise, the preferred scaling changes exactly once. The
@@ -154,8 +155,8 @@ introduces noise in the rare coefficient. Exact moments separate these costs
 from incomplete learning and variation due to feature sampling.
 
 Exact-moment searches assess the limiting predictions at finite prevalence. An
-extension with several common features retains the two-moment reduction and both
-numerical orderings through 64 common features.
+extension with several common features retains the reduction to two moments and
+both numerical orderings through 64 common features.
 
 A controlled study then asks how these comparisons change when training reuses
 observations, estimates preprocessing, or fits an intercept. We retain the two
@@ -176,11 +177,11 @@ gradient-flow model. \citet[Theorem 4.2]{su2024preconditioning} bound the
 aggregate excess risk of fresh-sample SGD with a restricted constant rate and
 tail averaging, then compare preconditioned SGD with ridge regression.
 
-Evaluating prediction within a rare subgroup also changes how coefficient errors
-contribute to risk. Conditioning the test law on rare presence while retaining
-the training law connects our objective to work on target-distribution risk and
-covariate shift. \citet{lei2021shift} study minimax linear estimation under
-target-weighted loss; \citet{wu2022pretraining} and
+Evaluating predictions within a rare subgroup also changes how coefficient
+errors contribute to risk. Conditioning the test law on the rare feature's
+presence while retaining the training law connects our objective to work on
+target-distribution risk and covariate shift. \citet{lei2021shift} study minimax
+linear estimation under target-weighted loss; \citet{wu2022pretraining} and
 \citet[Theorem 4]{liu2025precondition} analyze SGD variants with decaying rates
 under different training and test laws. We ask which normalization achieves
 lower rare-subgroup risk after each method chooses its nonnegative constant
@@ -194,8 +195,8 @@ The rare-prevalence limit also changes the moment assumptions. The rare
 coordinate has standardized fourth moment $(1 - 3b)/b$, where $b = q(1 - q)$.
 For example, the fourth-moment constant in
 \citet[Assumption 3.2]{su2024preconditioning} must be at least $(1 - 4b)/b$ in
-our model. These constants diverge as prevalence vanishes. Our exact moments
-retain this dependence when passing to optimized final-iterate risks.
+our model. These constants diverge as prevalence vanishes. We retain this
+dependence in the exact moments when passing to optimized final-iterate risks.
 
 Our calculations build on established mechanisms. Early stopping changes
 least-squares regularization~\citep{ali2019early}. \citet{ali2020stochastic}
@@ -292,14 +293,15 @@ sampling and observation noise.
 
 To expose the tradeoff, temporarily fix $\eta_U = 4h$ and $\eta_S = h$. The
 common coefficient then has the same mean trajectory under both rules. SD
-scaling changes the contraction factor for the mean rare-coefficient error from
-$1 - 4hb$ to $1 - h$, while increasing the observation-noise variance added to
-that coefficient at each update from $16h^2b\sigma^2$ to $h^2\sigma^2/b$. It
-learns the rare signal faster but also introduces more noise.
+scaling changes the contraction factor for the mean error in the rare
+coefficient from $1 - 4hb$ to $1 - h$, while increasing the observation-noise
+variance added to that coefficient at each update from $16h^2b\sigma^2$ to
+$h^2\sigma^2/b$. It learns the rare signal faster but also introduces more
+noise.
 
 \section{Oracle risks and the preferred scaling}
 
-We now compare the lowest attainable rare-presence risks of the two scaling
+We now compare the lowest attainable rare-subgroup risks of the two scaling
 rules in the independent model of \cref{sec:conference-setting}. We first give
 quantitative gaps when $1 \leq Mq(1 - q) \leq 4$, corresponding to roughly one
 to four expected rare occurrences. We then derive limiting formulas for the
@@ -327,14 +329,14 @@ The update matrices are
 Here $D = \eta P$, so $\eta_U = \alpha$ and $\eta_S = b\alpha$. Each
 parameterization covers every nonnegative constant learning rate for its rule.
 At the same $\alpha$, the methods give the rare coefficient the same mean
-progress, while SD's common-coordinate step is $4b$ times U's. This complements
-the comparison in \cref{sec:conference-setting}, which matched common-coordinate
-progress and exposed SD's extra rare-coordinate noise. To learn a dominant rare
-signal, U also introduces common-coordinate noise that SD can reduce. To learn a
-dominant common signal, SD introduces rare-coordinate noise that U can reduce by
-leaving the small rare effect largely unchanged. The oracle chooses $\alpha$
-separately for each method; matching progress only explains the constraint each
-search faces.
+trajectory, while SD's common-coordinate step is $4b$ times U's. This
+complements the comparison in \cref{sec:conference-setting}, which matched
+common-coordinate progress and exposed SD's extra rare-coordinate noise. To
+learn a dominant rare signal, U also introduces common-coordinate noise that SD
+can reduce. To learn a dominant common signal, SD introduces rare-coordinate
+noise that U can reduce by leaving the small rare effect largely unchanged. The
+oracle chooses $\alpha$ separately for each method; matching progress only
+explains the constraint each search faces.
 
 For an observation cap $M \in \mathbb N$, define
 \begin{equation}
@@ -346,8 +348,8 @@ The oracle chooses a deterministic rate and stop using population risk averaged
 over training randomness. It may stop at the prescribed zero initialization.
 Because we evaluate finite stops, the search includes rates that need not be
 mean-square stable. The cap $M$ applies to each trajectory; the infimum
-describes attainable risk, without charging for the search needed to find a rate
-and stop. It is not a comparison under equal total tuning computation.
+describes attainable risk without charging for the search needed to find a rate
+and stop. It does not compare methods with equal total computation for tuning.
 
 \subsection{Quantitative gaps at finite prevalence}
 
@@ -370,7 +372,8 @@ The gaps persist even as the observation cap grows inversely with prevalence.
 The expected number of rare occurrences at the cap is $Mq = \tau/(1 - q)$, so
 rare observations remain scarce throughout this regime. The two signal families
 give sufficient conditions for opposite orderings. The limiting characterization
-below locates a transition along a specified path of signal allocations.
+below locates a transition as signal moves between the features along a
+specified path.
 
 \paragraph{The compromise after tuning.}
 
@@ -417,7 +420,7 @@ includes the checker and its recorded output.
 
 The bounds can give larger gaps at particular prevalences. For example, at
 $q = 0.02$ and $M = 102$, they exceed $0.009\sigma^2$ and $0.064\sigma^2$ for
-the respective full signal families (\cref{sec:predictive-finite-bounds}).
+the entire respective signal families (\cref{sec:predictive-finite-bounds}).
 \Cref{sec:predictive-certification} also gives a wider prevalence range for the
 rare-signal family and stronger constants at small prevalence. These prevalence
 and budget ranges describe where the bounds establish a gap. Their endpoints
@@ -474,8 +477,8 @@ risk. The limiting objectives are
 
 The theorem reduces the limiting optimization to $\alpha \in[0,1]$ and the full
 cap. This reduction follows from bounds over the original search, which still
-includes every nonnegative constant rate and deterministic stop, even when they
-depend on prevalence or the rate is unstable. The error bounds describe
+includes every nonnegative constant rate and deterministic stop, including
+choices that depend on prevalence and unstable rates. The error bounds describe
 convergence as prevalence falls. Their constants are not optimized to certify a
 gap at a specified prevalence; \cref{thm:conference-predictive} provides that
 separate guarantee.
@@ -504,10 +507,10 @@ common moment rapidly approaches $g(\alpha)$, and the rare moment obeys
 $\dot H = -d(\alpha)H + \alpha^2(\nu + g)$, starting at $H(0) = r$. Solving
 these equations gives \cref{eq:limiting-objectives}.
 
-To pass from these limits at fixed rates to the oracle risks, we also need
-bounds that hold uniformly over large rates, early stops, and vanishing rates.
-For U, these bounds track the common moment as it approaches $g$. We then
-construct rates that attain each limiting minimum, including its zero endpoint.
+To pass from these fixed-rate limits to the oracle risks, we also need bounds
+that hold uniformly over large rates, early stops, and vanishing rates. For U,
+these bounds track the common moment as it approaches $g$. We then construct
+rates that attain each limiting minimum, including its zero endpoint.
 \Cref{sec:oracle-limit-proofs} gives the full argument.
 
 \subsection{A unique signal-allocation crossing}
@@ -533,8 +536,8 @@ coefficient sum.
   continuous and strictly increasing. At $\theta = 0$, U has zero risk and SD
   has positive risk. At $\theta = 1$, a positive U minimizer incurs strictly
   more noise than the same SD rate. If U instead minimizes at zero, a small
-  positive SD rate improves on $v/2$. The endpoint signs give the unique
-  crossing.
+  positive SD rate improves on $v/2$. The opposite signs at the endpoints give
+  the unique crossing.
 \end{proof}
 
 \Cref{fig:oracle-finite}(b) illustrates this corollary. At $v = \nu = 1$ and
@@ -544,9 +547,9 @@ boundary obtained by varying the common signal at fixed rare signal.
 
 \paragraph{Noise and budget.}
 
-Increasing noise can change the preferred scaling more than once. With positive
-common signal, U wins at sufficiently small and sufficiently large noise, while
-SD can win between them.
+Increasing noise can change the preferred scaling more than once. With a
+positive common signal, U wins at sufficiently small and sufficiently large
+noise, while SD can win between them.
 
 When the rare signal and noise are positive, a large enough rescaled budget
 favors SD\@. For fixed $r,\nu > 0$ and finite $s \geq 0$, the limiting risks
@@ -559,7 +562,7 @@ in \cref{sec:oracle-noise-budget}.
 
 We assess the limiting predictions using exact-moment searches at six
 prevalences. At the smallest prevalence, the searches agree with the limiting
-choice of scaling for the tested cases away from ties. At larger prevalence,
+choice of scaling for the tested cases away from ties. At larger prevalences,
 they can favor a different scaling: in a high-noise example, SD wins on the
 finite grids while the limit favors U. These searches assess the approximation
 without certifying the continuous optima. \Cref{sec:oracle-finite} reports the
@@ -568,10 +571,10 @@ comparisons and search refinements.
 \paragraph{Additional common features.}
 
 Replacing the common feature with $m$ independent balanced binary features
-preserves an exact recurrence for their combined error and the rare error. At
-fixed total squared common signal and rare signal, increasing $m$ cannot lower
-either method's oracle risk. Numerical searches retain both orderings through
-$m = 64$, although their gaps change with dimension.
+preserves an exact recurrence for their combined error and the rare error. With
+the total squared common signal and the rare signal held fixed, increasing $m$
+cannot lower either method's oracle risk. Numerical searches retain both
+orderings through $m = 64$, although their gaps change with dimension.
 \Cref{sec:common-block-details} gives the recurrence, proof, and numerical
 comparisons; the two-feature separation bounds and limiting characterization are
 not asserted for this larger model.
@@ -599,16 +602,16 @@ requirements can exceed the SGD observation cap.
 
 For each scaling and training arm, we calibrate a rate factor and stop to
 minimize mean rare risk, then evaluate those fixed choices on independent
-training runs. With estimated preprocessing, the factor determines a constant
-rate from the training data.
+training runs. With estimated preprocessing, the factor determines the constant
+learning rate from the training data.
 
 Both orderings persist across all eight training arms. SD has lower rare risk
 for the dominant rare signal, and U has lower rare risk for the dominant common
 signal (\cref{fig:bridge-controlled}). This holds in all 96 comparisons across
 the arms, signal pairs, prevalences, and caps. These numerical comparisons use a
 conservative finite rate search and cover only the two tested signal pairs.
-Recalibration on disjoint halves of the saved calibration runs preserves the
-ordering in every split for 83 of the 84 comparisons with estimated tuning
+Recalibrating on disjoint halves of the saved calibration runs preserves the
+ordering in all splits for 83 of the 84 comparisons with estimated tuning
 choices. One small gap reverses in 2 of 200 splits
 (\cref{sec:calibration-sensitivity}).
 
@@ -632,11 +635,11 @@ observations and population preprocessing. \Cref{tab:bridge-selection} compares
 the fixed-intercept baseline with the arm that adds only a fitted intercept,
 initialized at zero. With the fitted intercept, calibration favors SD, while
 both rare validation loss and exact population rare risk select predictors that
-favor U on average. Exact selection changes the SD-minus-U gap from $-.1046$ to
-$+.0164$, reducing U's rare risk by $.2399$ and SD's by $.1189$. U's larger gain
-overturns SD's advantage under calibration. In the baseline, exact selection
-narrows the gap from $-.0192$ to $-.0059$, preserving SD's advantage. Both
-orderings persist under exact selection in all 12 baseline settings.
+give U lower risk on average. Exact selection changes the SD-minus-U gap from
+$-.1046$ to $+.0164$, reducing U's rare risk by $.2399$ and SD's by $.1189$. U's
+larger gain overturns SD's advantage under calibration. In the baseline, exact
+selection narrows the gap from $-.0192$ to $-.0059$, preserving SD's advantage.
+Both orderings persist under exact selection in all 12 baseline settings.
 
 The reported gains can combine adaptation to each training run with correction
 of a suboptimal calibration choice. For the fitted-intercept setting in
@@ -654,13 +657,13 @@ best tuning settings on average. The comparison isolates intercept fitting as
 sufficient for a reversal in this setting. U gains more than SD in $71.3\%$ of
 runs under exact selection, with median gains $.1456$ and $.0626$, respectively.
 The selected U predictors have smaller mean prediction errors within the rare
-group, while SD retains a slightly smaller common-coefficient error. Their
-intercept and rare-coefficient errors nearly cancel: the cross term removes
-$99.9\%$ of U's mean squared-error contributions from those two coordinates,
-compared with $27.4\%$ for SD\@. This cancellation accounts for the selected
-risk ordering even though U has larger errors in each coordinate separately
-(\cref{sec:bridge-cancellation}). \Cref{sec:bridge-gains} examines the gain
-distributions.
+group, while SD retains a slightly smaller error in the common coefficient. For
+U, the intercept and rare-coefficient errors nearly cancel: the cross term
+removes $99.9\%$ of U's contributions to mean squared error from those two
+coordinates, compared with $27.4\%$ for SD\@. This cancellation accounts for the
+selected risk ordering even though U has larger errors in each coordinate
+separately (\cref{sec:bridge-cancellation}). \Cref{sec:bridge-gains} examines
+the gain distributions.
 
 \begin{table}[t]
   \centering
@@ -757,10 +760,9 @@ equivalent in rare-subgroup risk.
 
 \section*{AI Disclosure}
 
-We made use of generative AI tools, including OpenAI Codex, for research
-planning, literature search, mathematical derivation and proof review,
-implementing experiments and independent numerical checks, and editing the
-manuscript.
+We used generative AI tools, including OpenAI Codex, to plan research, search
+the literature, derive mathematical results and review proofs, implement
+experiments and independent numerical checks, and edit the manuscript.
 
 % ALT has no page limit, but reviewers may stop after 12 non-reference pages.
 % Flush main-text floats before reporting the length of the draft.
@@ -780,11 +782,11 @@ manuscript.
 
 \section*{Supplementary Materials}
 
-The supplement gives the finite-prevalence oracle proof and certificates
-(\cref{sec:predictive-proofs}), the limiting oracle proof
-(\cref{sec:oracle-limit-proofs}), and its variational consequences
-(\cref{sec:oracle-variational}). \Cref{sec:common-block-details} gives the
-common-feature extension and its numerical study.
+The supplement gives the proof and certificates for the finite-prevalence oracle
+comparison (\cref{sec:predictive-proofs}), the proof of the limiting oracle
+characterization (\cref{sec:oracle-limit-proofs}), and its variational
+consequences (\cref{sec:oracle-variational}). \Cref{sec:common-block-details}
+gives the common-feature extension and its numerical study.
 \Cref{sec:predictive-intro-figure} describes the numerical illustrations and
 finite-prevalence checks of the limiting predictions.
 \Cref{sec:empirical-methods} specifies the controlled study's training,
@@ -826,18 +828,19 @@ noise assumptions gives
 \end{equation}
 where $A = (1 - u)^2$, $D_b = 1 - b\alpha(2 - \alpha + 3b\alpha)$, and
 $u = \alpha/4$ for U or $u = b\alpha$ for S. The diagonal equations and risk do
-not involve cross error moments, so coefficient signs do not affect risk. Every
-matrix entry is nonnegative for every $\alpha \geq 0$: in particular,
-$D_b = (1 - b\alpha)^2 + b\alpha^2(1 - 4b) \geq 0$. Increasing either initial
-squared coefficient cannot reduce risk.
+not involve cross moments of the coefficient errors, so coefficient signs do not
+affect risk. Every matrix entry is nonnegative for every $\alpha \geq 0$: in
+particular, $D_b = (1 - b\alpha)^2 + b\alpha^2(1 - 4b) \geq 0$. Increasing
+either initial squared coefficient cannot reduce risk.
 
 For $0 < \alpha \leq 1$, the row sums are
 \[
   1 - u\{2 - u(1 + 4b)\} < 1,\qquad 1 - b\alpha\{2 - 5\alpha/4 + 3b\alpha\} < 1.
 \]
-The homogeneous moments contract and the noise moments stay bounded. The cross
-moment is bounded by $\sqrt{C_kH_k}$, so all positive candidate rates used below
-are mean-square stable. At zero rate, the predictor stays at initialization.
+The homogeneous moments contract and the second moments due to noise stay
+bounded. The cross moment is bounded by $\sqrt{C_kH_k}$, so all positive
+candidate rates used below are mean-square stable. At zero rate, the predictor
+stays at initialization.
 
 \subsection{Explicit finite-prevalence bounds}
 \label{sec:predictive-finite-bounds}
@@ -864,8 +867,8 @@ Define the lower bounds
     L_C(q,\tau) & = \min_{0 \leq j<N}\left\{ p_j + \left( \frac18 - p_j \right)z_{C,j} \right\}.
   \end{aligned} \label{eq:predictive-finite-lower}
 \end{equation}
-The integer $N$ controls only the precision of the lower bounds. All their
-denominators are positive on the stated domain.
+The integer $N$ controls only the precision of the lower bounds. All
+denominators in these bounds are positive on the stated domain.
 
 For the upper bounds, use $k = M$ and the stable rates
 \[
@@ -892,7 +895,7 @@ Define the gap bounds
   \Delta_R(q,\tau) = L_R(q,\tau) - V_S(q,\tau),\qquad \Delta_C(q,\tau)
                    = L_C(q,\tau) - V_U(q,\tau).
 \end{equation}
-For the rare-signal and common-signal families, respectively, we will prove
+For the rare-signal and common-signal families, respectively, we prove
 \begin{equation}
   \begin{aligned}
     R_U^*(M) - R_S^*(M) & \geq \Delta_R(q,\tau), \\
@@ -916,8 +919,9 @@ the direct noise terms gives, with $z = D_b^k$,
   R_{R,k}^U \geq \frac12\left[ wz + \left\{ \frac{w\alpha}{2 - \alpha + 3b\alpha} + \frac{\alpha}{8 - \alpha} \right\}(1 - z) \right].
 \end{equation}
 For the common-noise term, use $1 - A^k \geq 1 - D_b^k$. The formula extends
-directly to zero rate. Its right side is affine in $z$. Taking the smaller value
-at $z = 1$ or $z = D_b^M$ is equivalent to capping the noise coefficient at $w$.
+directly to zero rate. Its right side is affine in $z$. Taking the smaller of
+its values at $z = 1$ and $z = D_b^M$ is equivalent to capping the noise
+coefficient at $w$.
 
 For $0 \leq x < 1$, the logarithm series gives $-\log(1 - x) \leq x/(1 - x)$.
 Consequently,
@@ -954,8 +958,9 @@ summation therefore bounds the risk by
   \frac12\left[ p_S + (w + 1/400 - p_S)\rho^M \right] \leq V_S(q,\tau).
 \]
 The last step uses $\rho^M \leq e^{-\tau\alpha_S\{2-(1-q)\alpha_S\}}$ and
-$w + 1/400 > p_S$. Hence every U rate and stop exceeds this S candidate's risk
-by at least $\Delta_R(q,\tau)$, uniformly over the rare-signal family.
+$w + 1/400 > p_S$. Hence the risk at every U rate and stop exceeds this S
+candidate's risk by at least $\Delta_R(q,\tau)$, uniformly over the rare-signal
+family.
 
 \subsection{Dominant common signal}
 
@@ -1004,9 +1009,9 @@ $j \leq M$. Using $\sum_{j \geq 0}A^j = 1/\{u(2 - u)\}$ gives
 \]
 Thus $H_{\max} \leq H_*$. Also,
 $A^M = (1 - \alpha/4)^{2M} \leq e^{-\alpha M/2} = e^{-4}$, which gives
-$R_{R,M}^U \leq V_U(q,\tau)$. Every S rate and stop therefore exceeds this U
-candidate's risk by at least $\Delta_C(q,\tau)$, uniformly over the
-common-signal family.
+$R_{R,M}^U \leq V_U(q,\tau)$. The risk at every S rate and stop therefore
+exceeds this U candidate's risk by at least $\Delta_C(q,\tau)$, uniformly over
+the common-signal family.
 
 Taking the two oracle infima proves \cref{eq:predictive-oracle-gaps}.
 Restricting each search to stable rates preserves both lower bounds and both
@@ -1071,9 +1076,9 @@ $a_1 - a_0$, $q_1 - q_0$, and $(t_1 - t_0)/3$, breaking ties in that order. Stop
 bisecting rate intervals at width $1/N$. All rate endpoints therefore align with
 the partition defining \cref{eq:predictive-finite-lower}; an accepted box bounds
 every constituent interval's expression. The accepted boxes cover the domain,
-and their exact volumes sum to $3Q$. Thus the certificates establish the bounds
-over continuous prevalence and budget ranges, including every admissible integer
-stop. No sampled rate or prevalence search is used as proof.
+and their volumes sum exactly to $3Q$. Thus the certificates establish the
+bounds over continuous prevalence and budget ranges, including every admissible
+integer stop. No sampled rate or prevalence search is used as proof.
 
 At $q = 1/50$ and $M = 102$, direct evaluation of the same formulas with
 rational exponential enclosures gives $\Delta_R > 0.0092472$ and
@@ -1137,13 +1142,13 @@ For U, positivity gives the analogous bound
 \]
 If $\alpha \geq c_U(b) := 2/(1 - 3b)$, then $D_b \geq 1$ and the risk is at
 least $wr/2$. Empty sums cover $k = 0$. These bounds require no stability
-assumption and hold even when rates diverge or stops are chosen to offset their
-growth. For sufficiently small $q$, both cutoffs are below three and
-$1 - w \leq 4b$.
+assumption and hold even when rates diverge or stopping times are chosen to
+offset growth in the moments. For sufficiently small $q$, both cutoffs are below
+three and $1 - w \leq 4b$.
 
 \subsection{Uniform approximation for standardization}
 
-On $\alpha \in[0,3]$, the affine transition for $(G,H,1)$ under S is
+For $\alpha \in[0,3]$, the affine transition for $(G,H,1)$ under S is
 $I + b\mathcal L_\alpha + O(b^2)$ uniformly, where
 \[
   \mathcal L_\alpha = \begin{pmatrix}
@@ -1224,11 +1229,11 @@ gives $\widetilde H_k = H^\circ_\alpha(kb) + O(b)$. Hence
   R^U_{R,k}(\alpha) = \frac12\{A^kG_0 + (1 - A^k)g + H^\circ_\alpha(kb)\}
                       + O(b) \label{eq:limit-u-uniform}
 \end{equation}
-uniformly over every retained rate and stop. Replacing the common term by $g$
-uniformly would be false, including at initialization.
+uniformly over every retained rate and stop. A uniform approximation that
+replaces the common term by $g$ would fail, including at initialization.
 
-For clarity, this approximation also describes the boundary sequences. If
-$\alpha_q \to 0$, positivity and Bernoulli's inequality give
+This approximation also describes sequences approaching the rate or time
+boundaries. If $\alpha_q \to 0$, positivity and Bernoulli's inequality give
 \[
   r - 2rT\alpha_q \leq H_j
                   \leq B
@@ -1251,7 +1256,7 @@ tends to $r$. Along subsequences with $k_q = K$ fixed or $k_q \to \infty$, the
 common moment tends, respectively, to
 $A(\alpha_0)^KG_0 + \{1 - A(\alpha_0)^K\}g(\alpha_0)$ or $g(\alpha_0)$. Both
 give risk at least $r/2$. These cases explain why substituting time zero into
-the positive-time limit alone would miss some attainable transients.
+the positive-time limit alone would miss some attainable transient risks.
 
 \subsection{Reduction of the limiting trajectories}
 
@@ -1289,8 +1294,9 @@ $R^S_{R,k}(\alpha) \geq L_S(T) - O(b)$ at every retained rate and stop. Above
 $c_S(b)$, the exact bound gives $R^S_{R,k} \geq wv/2 \geq L_S(T) - 2bv$. The
 same lower bound therefore holds over the entire S oracle domain.
 
-For U, split the retained controls at $J_b = 2\log(1/b)$. If $k\alpha \geq J_b$,
-then $A^k \leq e^{-k\alpha/2} \leq b$, so
+For U, divide the retained rate-and-stop choices according to whether $k\alpha$
+reaches $J_b = 2\log(1/b)$. If $k\alpha \geq J_b$, then
+$A^k \leq e^{-k\alpha/2} \leq b$, so
 \cref{eq:limit-u-uniform,eq:limit-trajectory-reduction} give
 $R^U_{R,k}(\alpha) \geq L_U(T) - O(b)$. If $k\alpha < J_b$, take $b$ small
 enough that $1 - 2b\alpha \geq 0$. Positivity gives
@@ -1305,7 +1311,7 @@ It follows that
 Above $c_U(b)$, the bound $R^U_{R,k} \geq wr/2 \geq L_U(T) - 2br$ suffices. Thus
 the U oracle is bounded below by $L_U(T) - O(b\log(1/b))$. These bounds permit
 taking infima directly, without requiring finite-prevalence minimizers to exist
-or their controls to converge.
+or their rates and stopping times to converge.
 
 For matching upper bounds, let $\alpha_A(T) \in[0,1]$ minimize $F_A$. Continuity
 ensures existence. For S, use $\alpha_S(T)$ at $k = M_q$;
@@ -1336,9 +1342,9 @@ to an integer introduces an additional budget discrepancy of only $O(b)$.
 
 \paragraph{Why the positive-budget assumption matters.}
 
-The theorem does not assert uniformity for diverging signals, noise, or budgets.
-Nor can $\tau > 0$ be dropped without specifying the cap sequence. For
-$s = 4,r = 0,\nu = 1$, exact one-step minimization gives
+The theorem does not assert uniformity when signals, noise, or budgets diverge.
+Nor can we drop the condition $\tau > 0$ without specifying the cap sequence.
+For $s = 4,r = 0,\nu = 1$, exact one-step minimization gives
 \[
   R_U^*(1) = \frac12 - \frac{1}{4(1 + 16bw)} \longrightarrow \frac14.
 \]
@@ -1376,7 +1382,7 @@ On $0 < \alpha < 1$, define
 \]
 Primes denote rate derivatives. Both functions increase strictly: $p,h,P$ have
 positive first and second derivatives, and $e^{\tau d}$ and $1/d'$ increase on
-this interval. Their endpoint limits are
+this interval. Their limits at the endpoints are
 \[
   Q_S(0) = 0,\qquad Q_U(0) = \frac{1}{16\tau},\qquad Q_S(1-) = Q_U(1-) = \infty.
 \]
@@ -1390,9 +1396,9 @@ $L_U = re^{-\tau}/2$; a zero signal makes the corresponding objective
 identically zero.
 
 The numerical solver in the source supplement brackets these roots and
-multiplies the derivative by $z$ to avoid growing exponentials. It evaluates the
-proved characterization in floating-point arithmetic; its answers are not
-interval certificates.
+multiplies the derivative by $z$ to avoid evaluating growing exponentials. It
+evaluates the proved characterization in floating-point arithmetic; its answers
+are not interval certificates.
 
 \subsection{Allocation boundaries}
 
@@ -1403,8 +1409,8 @@ fixed. Its boundary can be written
 \end{equation}
 For each rate, the bracketed expression is the rare signal-to-noise ratio at
 which that U trajectory equals $J_S$. U wins if at least one trajectory lies
-below $J_S$, which explains the maximum. The lower and upper slope bounds used
-in the corollary also give
+below $J_S$, which explains the maximum. The bounds on the slope used in the
+corollary also give
 \[
   \frac{e^{-\tau}}2(r_2 - r_1) \leq L_U(r_2) - L_U(r_1) \leq \frac12(r_2 - r_1).
 \]
@@ -1415,9 +1421,9 @@ risk is constant, while
   \frac{e^{-\tau}}8(s_2 - s_1) \leq L_S(s_2) - L_S(s_1) \leq \frac18(s_2 - s_1).
 \]
 At $s = 0$, S wins by the same endpoint argument as in
-\cref{cor:oracle-allocation}; its risk then grows without bound with $s$. There
-is therefore exactly one $s_* > 0$ giving equality, with S preferred below it
-and U above it. Its variational expression and a bracket are
+\cref{cor:oracle-allocation}; its risk then grows without bound as $s$
+increases. There is therefore exactly one $s_* > 0$ giving equality, with S
+preferred below it and U above it. Its variational expression and a bracket are
 \[
   s_*
   =    4\nu\max_{0 \leq \alpha \leq 1} \left[ \{J_U(\rho,\tau) - p\}e^{\tau d} + p - \rho \right], \qquad 0
@@ -1437,8 +1443,8 @@ For fixed signals and budget, both limiting risks are nondecreasing and concave
 in $\nu$, because they are minima of affine functions with nonnegative noise
 coefficients. Their difference need not be monotone. If $s > 0$, zero noise
 gives $L_S - L_U = se^{-\tau}/8 > 0$, so sufficiently small positive noise also
-favors U. Once $\nu \geq 16r\tau$, U has risk $r/2$. As $\nu \to \infty$, the S
-minimizing rate must tend to zero, since rates bounded away from zero have
+favors U. Once $\nu \geq 16r\tau$, U has risk $r/2$. As $\nu \to \infty$, the
+optimal S rate must tend to zero, since rates bounded away from zero have
 unbounded noise cost. Its signal term tends to $v/2$, while initialization
 provides the matching upper bound. Hence
 \[
@@ -1473,7 +1479,7 @@ and $\tau \downarrow 0$, expanding uniformly on $\alpha \in[0,1]$ gives
                       + O(\tau^2),\qquad \alpha_S
       \longrightarrow \frac{v}{v + \nu}.
 \]
-The first-order improvement in twice the risk is
+The first-order reduction in twice the risk is
 $\tau\{2\alpha v - \alpha^2(v + \nu)\}$, a strictly concave quadratic. For
 sufficiently small $\tau$, U has risk $r/2$ by its endpoint threshold. Thus
 small positive rescaled budgets favor U when $s > 0$. This statement takes the
@@ -1513,7 +1519,7 @@ $\tau = 10^7$. The assumptions matter: with $\nu = 0$, U is always weakly
 better; with $r = 0$, its limiting risk is zero; with $s = 0,r,\nu > 0$, S wins
 at every finite positive budget.
 
-The deterministic checks in the source supplement exercise the moment
+The deterministic checks in the source supplement test the moment
 approximations, bounds on unrestricted infima, scalar roots, boundaries, and
 expansions. They supplement the proofs and are separate from the
 finite-prevalence certificates.
@@ -1634,7 +1640,7 @@ features; they do not extend the uniform gaps in
   \includegraphics{../figures/common-block/budget-slice.pdf}
   \caption{
     Additional common features change the cost of normalization at fixed signal
-    strength. The total squared common and rare coefficients are
+    strength. The sums of squared common and rare coefficients are
     $(s,r) = (0.01,1)$ (left) or $(1,0.01)$ (right), with noise variance one.
     Caps are $M = 102$ at $q = 0.02$ and $M = 20{,}002$ at $q = 10^{-4}$, giving
     $Mq(1 - q) \approx 2$. Curves show SD-minus-U rare risk after separate
@@ -1657,9 +1663,9 @@ observation caps are
     10^{-4} & 10{,}002 & 20{,}002 & 40{,}004
   \end{array}
 \]
-These approximate $Mq(1 - q) = 1,2,4$ while remaining in $[1,4]$. The initial
-values $(G_0,H_0) = (s/4,r)$ are the same across dimensions. The study uses
-exact expected moments evaluated in floating point; it does not simulate
+These caps give values of $Mq(1 - q)$ close to $1,2,4$, all within $[1,4]$. The
+initial values $(G_0,H_0) = (s/4,r)$ are the same across dimensions. The study
+uses exact expected moments evaluated in floating point; it does not simulate
 training or estimate risks from a test sample.
 
 Each scaling uses zero rate and 1,025 positive rates geometrically spaced
@@ -1685,9 +1691,9 @@ selected gaps are $0.01959$ in favor of SD for the dominant rare signal and
 $0.00633$ in favor of U for the dominant common signal. A nested coarse search
 retains alternate positive rates and zero, giving 513 positive rates. Refining
 this grid changes individual selected risks by at most $3.50 \times 10^{-5}$ and
-preserves every ordering. No positive-stop selection uses either endpoint of the
-positive rate grid. These checks measure sensitivity to the tested grid; they do
-not certify its distance from the continuous optimum.
+preserves every ordering. No selected rate at a positive stop lies at either
+endpoint of the positive rate grid. These checks measure sensitivity to the
+tested grid; they do not certify its distance from the continuous optimum.
 
 \begin{figure}[tp]
   \centering
@@ -1713,14 +1719,15 @@ in \cref{fig:common-block}.
 
 An independent checker verifies 60 one-step reductions by enumerating individual
 observations with rational arithmetic in dimensions two through six. These cases
-include nonzero cross-error moments and rates above the stability range. Further
-checks compare full second-moment tensor powers, concentrated and spread common
-signals, and a small rate-and-stop search with independent observation-level
-calculations. All 252 selected risks are replayed with matrix powers rather than
-sequential updates; the largest discrepancy is less than $8 \times 10^{-13}$.
+include nonzero cross moments of the coefficient errors and rates above the
+stability range. Further checks compare full second-moment tensor powers,
+concentrated and spread common signals, and a small rate-and-stop search with
+independent observation-level calculations. All 252 selected risks are replayed
+with matrix powers rather than sequential updates; the largest discrepancy is
+less than $8 \times 10^{-13}$.
 
-The source supplement retains each rate's lowest risk and earliest attaining
-stop at every cap, together with the grids, selected rates and stops, and
+The source supplement retains each rate's lowest risk and the earliest stop that
+attains it at every cap, together with the grids, selected rates and stops, and
 refinement diagnostics. The reproduction guide explains how to regenerate the
 study and verify the selected results.
 
@@ -1733,7 +1740,7 @@ study and verify the selected results.
 \cref{thm:conference-predictive} at $q = 10^{-4}$ and $\sigma^2 = 1$. We set
 $(\beta_C^*,\beta_R^*) = (0.1,1)$ for the rare-signal panel and $(1,0.1)$ for
 the common-signal panel. All other assumptions match the theorem. We evaluate 61
-integer observation caps, evenly spaced up to rounding from $10{,}002$ to
+integer observation caps, spaced evenly before rounding from $10{,}002$ to
 $40{,}004$, so $1 \leq Mq(1 - q) \leq 4$. The horizontal axis reports the
 expected number of rare observations at the cap, $Mq$, rather than a realized
 count.
@@ -1742,7 +1749,7 @@ For each rule, we use the parameterization in \cref{eq:conference-oracle-rates}
 and a grid consisting of zero and 4097 geometrically spaced positive values of
 $\alpha$ from $10^{-6}$ to $2$. We iterate the exact
 recurrence~\labelcref{eq:predictive-moments}, including both sources of training
-variance. At each cap, we select the rate and integer stopping count with the
+variance. At each cap, we select the rate and integer stopping time with the
 lowest population rare risk, searching every stop from zero through the cap. The
 curves connect these numerical minima; they are not trajectories of a single
 trained model. Selection uses population risk averaged over training randomness,
@@ -1788,15 +1795,15 @@ second is the observation-noise covariance $\sigma^2N_k$.
 \label{sec:oracle-finite}
 
 We compare \cref{thm:oracle-limits,cor:oracle-allocation} with exact moments
-under the same population model. The saved study contains 43 signal, noise, and
-target-budget settings at six prevalences from $0.04$ to $2 \times 10^{-6}$. The
-settings include both finite-prevalence theorem anchors at $\tau = 1,2,4$;
-common signals at 90\%, 100\%, and 110\% of the predicted crossing; eight
-allocations with $s/4 + r = 1$ and $\tau = 2$; four noise levels; points around
-U's rare-learning threshold; budgets from $0.01$ to $1000$; and zero-signal and
-zero-noise endpoints. These are selected slices rather than uniform coverage of
-the surrounding parameter ranges. \Cref{fig:oracle-finite} summarizes the
-comparisons.
+under the same population model. The saved study contains 43 combinations of
+signal, noise, and target budget at six prevalences from $0.04$ to
+$2 \times 10^{-6}$. The settings include both signal pairs from the
+finite-prevalence theorem at $\tau = 1,2,4$; common signals at 90\%, 100\%, and
+110\% of the predicted crossing; eight allocations with $s/4 + r = 1$ and
+$\tau = 2$; four noise levels; points around U's rare-learning threshold;
+budgets from $0.01$ to $1000$; and zero-signal and zero-noise endpoints. These
+are selected slices rather than uniform coverage of the surrounding parameter
+ranges. \Cref{fig:oracle-finite} summarizes the comparisons.
 
 Each scaling minimizes expected rare risk over separate finite grids. The fine
 rate grid contains 2049 fractions of its mean-square stability limit, combining
@@ -1804,10 +1811,10 @@ rate grid contains 2049 fractions of its mean-square stability limit, combining
 $10^{-10}$ to $1 - 10^{-6}$. Limiting optimal rates are not inserted into the
 grid, and rates outside the stable interval are not searched. Stopping grids
 contain initialization, every integer through 64, all caps, and rounded
-geometric checkpoints up to the largest cap. They have 663 to 883 distinct
-stops, depending on prevalence. The largest cap is $500{,}001{,}001$. Matrix
-powers of the affine recurrence evaluate every candidate without Monte Carlo
-noise.
+geometric checkpoints up to the largest cap. These grids have 663 to 883
+distinct stops, depending on prevalence. The largest cap is $500{,}001{,}001$.
+Matrix powers of the affine recurrence evaluate every candidate without Monte
+Carlo noise.
 
 Caps round $\tau/b$ upward, except at target $\tau = 4$, where they round
 downward to stay within the finite-prevalence theorem's range. Primary errors
@@ -1815,14 +1822,15 @@ use $L_A(Mb)$, and the saved results also retain predictions at the nominal
 target. At $q = 0.04$, target $\tau = 0.01$ gives one observation and actual
 $Mb = 0.0384$, so the coarse-budget discrepancy includes appreciable rounding.
 
-Coarse grids take every second generating rate and geometric stop, retaining the
-early integer stops and all caps. Separate rate refinement, stop refinement, and
-joint refinement assess search resolution. The largest decrease under joint
-refinement is $1.362 \times 10^{-5}$. Stop refinement alone changes no selected
-risk: every positive-stop selection uses its cap, and the others use
-initialization. No positive-stop selection reaches a rate-grid edge. These
-observations do not bound the error relative to the unrestricted oracle or prove
-that full-cap training is always optimal at finite prevalence.
+Coarse grids take every second point used to generate the rate and geometric
+stopping grids, retaining the early integer stops and all caps. Separate rate
+refinement, stop refinement, and joint refinement assess search resolution. The
+largest decrease under joint refinement is $1.362 \times 10^{-5}$. Stop
+refinement alone changes no selected risk: every positive-stop selection uses
+its cap, and the others use initialization. No selected rate at a positive stop
+reaches an edge of the rate grid. These observations do not bound the error
+relative to the unrestricted oracle or prove that full-cap training is always
+optimal at finite prevalence.
 
 \begin{figure}[t]
   \centering
@@ -1838,7 +1846,7 @@ that full-cap training is always optimal at finite prevalence.
     and $\tau \approx 2$.]{%
     \includegraphics{../figures/oracle-finite/noise.pdf}%
   }\hfill
-  \subfigure[The budget comparison approaches the ordered large-budget risk ratio $4/5$; $s = r = \nu = 1$.]{%
+  \subfigure[The budget comparison approaches the large-budget risk ratio $4/5$ obtained after taking the prevalence limit; $s = r = \nu = 1$.]{%
     \includegraphics{../figures/oracle-finite/budget.pdf}%
   }
   \caption{
@@ -1851,17 +1859,17 @@ that full-cap training is always optimal at finite prevalence.
   \label{fig:oracle-finite}
 \end{figure}
 
-Both theorem orderings hold in every sampled anchor comparison. At
-$q = 2 \times 10^{-6}$, the largest anchor errors are $2.987 \times 10^{-6}$ for
-U and $1.536 \times 10^{-6}$ for S. Across all 43 settings, the corresponding
-maxima are $2.01631 \times 10^{-4}$ and $2.27583 \times 10^{-6}$; the largest U
-error occurs at target $\tau = 0.01$. Every setting with a nonzero nominal
-limiting gap has the predicted sign at the smallest prevalence. The sampled
-common-signal crossings are bracketed by 90\% and 110\% of their limiting
-values, and the allocation slice recovers the ordering on both sides of
-$\theta_* \approx 0.83770278$. Cases exactly at limiting ties remain sensitive
-to rounding and search resolution and do not locate a finite-prevalence
-boundary.
+Both theorem orderings hold in every sampled comparison using the theorem's
+signal pairs. At $q = 2 \times 10^{-6}$, the largest errors for those signal
+pairs are $2.987 \times 10^{-6}$ for U and $1.536 \times 10^{-6}$ for S. Across
+all 43 settings, the corresponding maxima are $2.01631 \times 10^{-4}$ and
+$2.27583 \times 10^{-6}$; the largest U error occurs at target $\tau = 0.01$.
+Every setting with a nonzero nominal limiting gap has the predicted sign at the
+smallest prevalence. The sampled common-signal crossings are bracketed by 90\%
+and 110\% of their limiting values, and the allocation slice recovers the
+ordering on both sides of $\theta_* \approx 0.83770278$. Cases exactly at
+limiting ties remain sensitive to rounding and search resolution and do not
+locate a finite-prevalence boundary.
 
 The U endpoint has a concrete finite-prevalence interpretation. At
 $\tau = 2,s = 1,r = 0.01,\nu = 1$, the limiting rate is zero and
@@ -1903,9 +1911,9 @@ regenerate the searches, replay the selections, and plot the saved results.
 
 \Cref{fig:intro-signal-crossing} uses the allocation path in
 \cref{cor:oracle-allocation}: $s = 4(1 - \theta)$ and $r = \theta$, with
-$\nu = 1$ and $\tau = 2$. Thus $s/4 + r = 1$ and initial limiting subgroup risk
-stays at $1/2$. The middle tick, $\theta = 1/2$, gives equal common and rare
-contributions to this risk. We plot the scalar minima in
+$\nu = 1$ and $\tau = 2$. Thus $s/4 + r = 1$ and the limiting subgroup risk at
+initialization stays at $1/2$. The middle tick, $\theta = 1/2$, gives equal
+common and rare contributions to this risk. We plot the scalar minima in
 \cref{eq:limiting-objectives} along the allocation path. The eight allocation
 values are $0$, $1/4$, $1/2$, $3/4$, $1$, and $\theta_* - .02$, $\theta_*$,
 $\theta_* + .02$, where scalar root finding gives $\theta_* \approx .8377$.
@@ -1921,14 +1929,15 @@ without new optimization or training.
 \subsection{Paths to a shared least-squares solution}
 
 \Cref{fig:intro-coefficient-paths} uses a constructed fixed dataset of 200
-observations. The binary cells
+observations. The four binary feature combinations
 $(I,J) = (0,0),\allowbreak(0,1),\allowbreak(1,0),\allowbreak(1,1)$ have counts
 $98,2,98,2$, respectively. We center the columns by $(1/2,0.02)$, set
 $y = x_C + x_R$ without noise, and fix the centered intercept at zero. Thus
 $X^\top X/200 = \diag(1/4,0.0196)$ and the unique OLS solution is $(1,1)$. Both
-methods start at zero and use the full gradient of empirical half squared loss.
-The unscaled learning rate is $0.4$, and the standardized learning rate is
-$0.1$, so both common-coordinate errors contract by $0.9$ per update.
+methods initialize their coefficients at zero and use the full gradient of
+empirical half squared loss. The unscaled learning rate is $0.4$, and the
+standardized learning rate is $0.1$, so both common-coordinate errors contract
+by $0.9$ per update.
 
 We mark update 20 for both methods without selecting the stop. Their common
 coefficients are both about $0.878$, while their rare coefficients are about
@@ -1938,7 +1947,7 @@ paths against the diagonal closed form, decreasing training loss, and
 convergence to the common solution. This example illustrates how scaling changes
 learning before stopping. The oracle theorem separately compares noisy
 fresh-sample SGD after each method chooses its rate and stop; distance to a
-sample OLS solution alone does not establish its risk ordering.
+sample OLS solution alone does not establish the ordering of oracle risks.
 
 \section{Empirical methods}
 \label{sec:empirical-methods}
@@ -1991,21 +2000,21 @@ preprocessing, beyond the observations counted by the update cap.
   \end{tabular}
   \caption{
     Matched training arms, in the order shown in \cref{fig:bridge-controlled}.
-    Centering and scales use population values unless listed as estimated. A
-    dash denotes no estimated preprocessing. U uses divisor one in every arm.
-    Every fitted intercept is unscaled and uses the same learning rate as the
-    transformed coefficients.
+    Centering and scales use population values unless listed as estimated.
+    ``None'' denotes no estimated preprocessing. U uses divisor one in every
+    arm. Every fitted intercept is unscaled and uses the same learning rate as
+    the transformed coefficients.
   }
   \label{tab:bridge-arms}
 \end{table}
 
-All feature coefficients start at zero. Empirical variances use denominator 256,
-and a zero variance receives divisor one. No additional coefficient freezing is
-applied. Thus empirical centering automatically makes a constant training
-column's gradient zero, while population centering can leave it nonzero. Only
-arm 8 initializes the fitted intercept at the training response mean. There are
-21 training pools without rare observations at $q = .02$ and 1148 at $q = .005$,
-out of 4096 evaluation replications each.
+All feature coefficients are initialized at zero. Empirical variances use
+denominator 256, and a zero variance receives divisor one. We do not otherwise
+freeze coefficients. Thus empirical centering automatically makes a constant
+training column's gradient zero, while population centering can leave it
+nonzero. Only arm 8 initializes the fitted intercept at the training response
+mean. There are 21 training pools without rare observations at $q = .02$ and
+1148 at $q = .005$, out of 4096 evaluation replications each.
 
 \subsubsection{Candidate family and calibration}
 
@@ -2014,8 +2023,8 @@ scaling, augmented by a unit coordinate when fitting an intercept. Define
 \[
   L = \max_{(i,j) \in \{0,1\}^2}\|z(i,j)\|^2, \qquad \eta = t/L.
 \]
-The rate factors are zero and 129 geometric values from $10^{-4}$ to $1.9$. Each
-homogeneous update $I - \eta zz^\top$ is nonexpansive because
+The rate factors are zero and 129 geometrically spaced values from $10^{-4}$ to
+$1.9$. Each homogeneous update $I - \eta zz^\top$ is nonexpansive because
 $0 \leq \eta\|z\|^2 \leq 1.9 < 2$. This condition rules out expansion by an
 individual homogeneous update; it does not bound accumulated response noise or
 guarantee good predictions on an unseen subgroup. It is a conservative search
@@ -2027,19 +2036,19 @@ Stopping checkpoints are the distinct integers obtained by rounding 65 geometric
 points from one to the largest cap, together with zero and all three caps. A
 nested coarse grid retains every second positive rate factor and every second
 checkpoint, always including zero and the caps. Both scalings receive the same
-number of trajectories. At cap $M$, nominal search cost is $130M$ processed
-observations per arm, scaling, signal, and replication; caps and selection
-policies share paths. Preprocessing, validation scoring, and calibration require
-additional resources.
+number of trajectories. At cap $M$, the nominal cost of the search is $130M$
+processed observations per arm, scaling, signal, and replication; caps and
+selection policies share paths. Preprocessing, validation scoring, and
+calibration require additional resources.
 
 For each prevalence, 2048 calibration replications determine the mean exact
 population rare risk of every candidate. Each arm, scaling, signal, and cap then
 selects a rate factor and eligible stop. The fresh, fixed-intercept arm instead
 uses exact expected moments for this choice. An independent set of 4096
-evaluation replications assesses the frozen choices. The two stages use distinct
-random streams derived from seed 20260924. This procedure estimates a
-finite-family optimum conditional on the calibration run, rather than the
-unrestricted oracle in \cref{thm:conference-predictive}.
+evaluation replications assesses the fixed choices. The two stages use distinct
+random streams derived from seed 20260924. This procedure estimates the optimum
+within a finite candidate family, conditional on the calibration run, rather
+than the unrestricted oracle in \cref{thm:conference-predictive}.
 
 \subsubsection{Effects of changing training}
 
@@ -2066,12 +2075,12 @@ the same while the cost of choosing the other scaling changes substantially.
 We added a diagnostic after the original study to assess sensitivity to the
 estimated tuning choices. For each prevalence, we randomly partition the 32
 saved calibration shards into two groups of 16, each containing 1024
-replications. We choose each rate factor and stop on one half and evaluate its
-mean rare risk on the other, then reverse their roles. We repeat this for 100
-partitions using seed 20260928, retaining the same candidate family and tie
-rule. Saved sums of candidate risks suffice for both selection and evaluation;
-no training is repeated. The fresh fixed-intercept arm retains its exact
-calibration and exact risk, leaving 84 comparisons with estimated tuning
+replications. We choose each rate factor and stop on one half and evaluate the
+resulting mean rare risk on the other, then reverse the halves' roles. We repeat
+this for 100 partitions using seed 20260928, retaining the same candidate family
+and tie rule. Saved sums of candidate risks suffice for both selection and
+evaluation; no training is repeated. The fresh fixed-intercept arm retains its
+exact calibration and exact risk, leaving 84 comparisons with estimated tuning
 choices.
 
 Of these 84 comparisons, 83 retain the original ordering in all 200 splits. For
@@ -2116,9 +2125,9 @@ observe population risk.
   \label{fig:bridge-validation}
 \end{figure}
 
-A further benchmark selects each replication's realized predictor with lowest
-exact population rare risk. To distinguish the two objectives, let
-$r_R(\widehat f_{D,a})$ be the population rare excess risk of candidate $a$
+A further benchmark selects the fitted predictor with the lowest exact
+population rare risk in each replication. To distinguish the two objectives, let
+$r_R(\widehat f_{D,a})$ denote the population rare excess risk of candidate $a$
 trained on random data and sampling choices $D$. For a fixed finite candidate
 index set $\mathcal A$, including the allowed rate factors and stops,
 \[
@@ -2127,10 +2136,11 @@ index set $\mathcal A$, including the allowed rate factors and stops,
 
 The left side allows adaptation to realized training randomness. The calibrated
 procedure approximates the right side, with its choices learned on separate
-replications. Neither side here is an unrestricted rate search, and a lower left
-side for each scaling does not preserve their ordering. The reversal under exact
-selection in \cref{tab:bridge-selection} therefore concerns a different
-objective from the theorem, even without validation noise.
+replications. Neither side here is an unrestricted rate search, and the
+reduction from the right side to the left can change the ordering between
+scalings. The reversal under exact selection in \cref{tab:bridge-selection}
+therefore concerns a different objective from the theorem, even without
+validation noise.
 
 \Cref{fig:bridge-validation} shows how validation selection changes the
 comparisons across both prevalences and signals. Missing validation observations
@@ -2187,10 +2197,10 @@ under selection. In the fixed-intercept baseline, the saved choices already
 attain the finite-family minima, $.15518$ for U and $.13557$ for SD\@. These
 expectations have no Monte Carlo error; the table estimates risks from 4096
 evaluation runs. The source supplement retains expected risks for every
-candidate, the minimizing choices, and calibration excesses for both fresh arms,
-both prevalences, all three caps, and both signals. Independent short-path
-enumeration and the baseline's two-coordinate moment recursion check the
-calculation. The reproduction guide gives commands to reconstruct it without
+candidate, the minimizing choices, and excess risks due to calibration for both
+fresh arms, both prevalences, all three caps, and both signals. Independent
+short-path enumeration and the baseline's two-coordinate moment recursion check
+the calculation. The reproduction guide gives commands to reconstruct it without
 training.
 
 \subsubsection{Distributions of selection gains}
@@ -2228,8 +2238,8 @@ For the fitted-intercept example, it is $.01200$ for U and zero for SD
 (\cref{sec:bridge-exact-calibration}). The observed gains therefore combine
 adaptation with correction of U's suboptimal calibration choice; their Monte
 Carlo standard errors describe evaluation uncertainty conditional on those
-choices. Neither $A_s$ nor these empirical gains is a gain covered by the
-theorem's optimization over deterministic rates and stops.
+choices. The theorem's optimization over deterministic rates and stops does not
+cover $A_s$ or these empirical gains.
 
 \begin{table}[htbp]
   \centering
@@ -2263,10 +2273,10 @@ intercept and exact selection, U's gain has median $.1456$ and 5th--95th
 percentiles $.0067$--$.7747$, compared with $.0626$ and $.0012$--$.4083$ for SD.
 The largest $10\%$ of gains contribute $35.5\%$ of U's total and $39.3\%$ of
 SD's total. Thus larger U gains appear in typical runs as well as in the upper
-tail. Pairing the scalings, $G_U - G_{\mathrm{SD}}$ has mean $.1210$ (MCSE
+tail. The paired difference $G_U - G_{\mathrm{SD}}$ has mean $.1210$ (MCSE
 $.00378$), median $.0599$, and 5th--95th percentiles $-.1706$--$.5962$. U gains
-more in $71.3\%$ of runs, so its larger average gain does not hold in every run.
-The per-run identity
+more in $71.3\%$ of runs, so its advantage in mean gain does not extend to every
+run. The per-run identity
 \[
   \mathrm{gap}_{\mathrm{sel}}(D) = \mathrm{gap}_{\mathrm{cal}}(D)
                                    + G_U(D)
@@ -2279,18 +2289,18 @@ $-.0699$--$.0915$. U gains more in $68.2\%$ of runs, but this smaller difference
 does not overturn the calibrated gap $-.0192$.
 
 The saved predictors show where the remaining rare risk lies. Let
-$e_R = a + (1 - q)(b_R - \beta_R^*)$ denote their mean signed prediction error
-across the two rare cells, and let $e_C = b_C - \beta_C^*$. Under exact
-selection with a fitted intercept, the root mean squares of $e_R$ fall from
-$.6735$ to $.0255$ for U and from $.5194$ to $.1843$ for SD\@. The corresponding
-values for $e_C$ fall from $.3365$ to $.0775$ for U and from $.1082$ to $.0647$
-for SD\@. Since $r_R = e_C^2/8 + e_R^2/2$, the remaining rare-group mean error
-dominates SD's selected risk, while U nearly removes it. In the baseline,
-selected U and SD predictors instead have $e_R$ root mean squares $.1528$ and
-$.1269$, and $e_C$ root mean squares $.1564$ and $.0796$. SD retains smaller
-errors of both kinds and hence lower mean risk. These comparisons locate the
-remaining error; the decomposition below separates the intercept and
-rare-coefficient contributions.
+$e_R = a + (1 - q)(b_R - \beta_R^*)$ denote their signed prediction error
+averaged across the two rare cells, and let $e_C = b_C - \beta_C^*$. Under exact
+selection with a fitted intercept, the root mean square errors for $e_R$ fall
+from $.6735$ to $.0255$ for U and from $.5194$ to $.1843$ for SD\@. The
+corresponding values for $e_C$ fall from $.3365$ to $.0775$ for U and from
+$.1082$ to $.0647$ for SD\@. Since $r_R = e_C^2/8 + e_R^2/2$, the remaining
+rare-group mean error dominates SD's selected risk, while U nearly removes it.
+In the baseline, selected U and SD predictors instead have root mean square
+errors for $e_R$ of $.1528$ and $.1269$, and for $e_C$ of $.1564$ and $.0796$.
+SD retains smaller errors of both kinds and hence lower mean risk. These
+comparisons locate the remaining error; the decomposition below separates the
+intercept and rare-coefficient contributions.
 
 With 2048 validation rows, fitted-intercept U gains more than SD in $68.0\%$ of
 runs, but selection worsens risk relative to calibration in $13.3\%$ of U runs
@@ -2310,8 +2320,8 @@ from saved predictors without training.
 Write each saved predictor in the population-centered coordinates used above.
 The true centered intercept is zero, so its error is $a$, not the raw intercept
 saved with the coefficients. Let $d = (1 - q)(b_R - \beta_R^*)$. Independence
-and balance of the common feature within the rare subgroup give the per-run
-identity
+and the common feature's prevalence of $1/2$ within the rare subgroup give the
+per-run identity
 \[
   r_R = \underbrace{e_C^2/8}_{\text{common}}
         + \underbrace{a^2/2}_{\text{intercept}}
@@ -2322,8 +2332,8 @@ The cross term is negative when the intercept and rare-coefficient errors oppose
 each other. Define their pooled cancellation fraction as
 $-\E[ad]/\E[(a^2+d^2)/2]$, using evaluation means. It equals one for complete
 cancellation and is negative when the errors reinforce each other. The two
-square terms and their cross term must be considered together: accurate rare
-predictions do not require either coordinate to be estimated accurately.
+squared-error terms and their cross term must be considered together: accurate
+rare predictions do not require either coordinate to be estimated accurately.
 
 \begin{table}[htbp]
   \centering
@@ -2338,15 +2348,16 @@ predictions do not require either coordinate to be estimated accurately.
   \label{tab:bridge-risk-decomposition}
 \end{table}
 
-For fitted-intercept U under exact selection, the intercept and rare square
-terms have means $.2208$ and $.2235$, while the cross term is $-.4439$
-(\cref{tab:bridge-risk-decomposition}). Their sum is only $.000325$. The pooled
-cancellation fraction is $99.93\%$, compared with $27.37\%$ for SD\@. U's errors
-oppose each other in $99.2\%$ of runs. Its intercept and rare-error root mean
-squares actually increase from $.3384$ and $.5792$ under calibration to $.6645$
-and $.6685$ under exact selection. Calibration has little cancellation for
-either scaling. Thus U's lower selected risk reflects closely matched, opposing
-errors rather than more accurate intercept and rare coefficients.
+For fitted-intercept U under exact selection, the squared intercept and
+rare-error terms have means $.2208$ and $.2235$, while the cross term is
+$-.4439$ (\cref{tab:bridge-risk-decomposition}). Their sum is only $.000325$.
+The pooled cancellation fraction is $99.93\%$, compared with $27.37\%$ for SD\@.
+U's errors oppose each other in $99.2\%$ of runs. Its intercept and rare-error
+root mean squares actually increase from $.3384$ and $.5792$ under calibration
+to $.6645$ and $.6685$ under exact selection. Calibration has little
+cancellation for either scaling. Thus U's lower selected risk reflects closely
+matched, opposing errors rather than more accurate intercept and rare
+coefficients.
 
 Separating the paired SD-minus-U gap gives a direct accounting test. Under exact
 selection, the common, intercept, and rare terms sum to a gap of $-.42112$ (MCSE
@@ -2364,14 +2375,14 @@ retains smaller common and rare errors under exact selection.
 
 The same decomposition supports the primary validation comparison: with 2048
 validation rows, the pooled cancellation fractions are $97.1\%$ for U and
-$19.9\%$ for SD\@. The square terms give gap $-.43865$, and the cross term adds
-$+.44619$, yielding $+.00754$. Across both prevalences and all three caps, exact
-selection reverses all six fitted-intercept comparisons with the dominant rare
-signal. In each, omitting the cross term restores the calibrated sign. Neither
-common-dominant exact-selection comparisons nor any of the 12 baseline
-exact-selection comparisons reverse. Validation also produces reversals in the
-fixed-intercept baseline, where this cancellation is impossible, so the
-mechanism does not explain every selection reversal.
+$19.9\%$ for SD\@. The squared-error terms give a gap $-.43865$, and the cross
+term adds $+.44619$, yielding $+.00754$. Across both prevalences and all three
+caps, exact selection reverses all six fitted-intercept comparisons with the
+dominant rare signal. In each, omitting the cross term restores the calibrated
+sign. Neither comparisons with a dominant common signal nor any of the 12
+baseline comparisons reverse under exact selection. Validation also produces
+reversals in the fixed-intercept baseline, where this cancellation is
+impossible, so the mechanism does not explain every selection reversal.
 
 These are descriptive identities for the selected predictors in a finite
 candidate family, conditional on calibration. They identify how cancellation
@@ -2379,10 +2390,10 @@ accounts for this reversal, without identifying a causal effect of altering
 intercept training. \Cref{sec:bridge-exact-calibration} separately quantifies
 calibration suboptimality. The source supplement retains per-run errors, four
 risk terms, paired gap and gain contributions, and cancellation summaries for
-all 120 setting--policy combinations in the two fresh arms. Independent
-four-cell predictions and the existing risks and gains verify the decomposition.
-The reproduction guide explains how to reconstruct the analysis without
-training.
+all 120 combinations of settings and selection policies in the two fresh arms.
+Independent four-cell predictions and the existing risks and gains verify the
+decomposition. The reproduction guide explains how to reconstruct the analysis
+without training.
 
 \subsection{Numerical checks}
 
@@ -2392,8 +2403,8 @@ enumeration, and baseline moments against a full tensor recurrence. Replaying
 one evaluation replication from every shard checks 73,728 selected endpoints,
 with maximum coefficient discrepancy below $1.7 \times 10^{-14}$. All saved
 selected predictors pass the cell-enumeration risk check. No calibration or
-evaluation candidate fails numerically, and no fine calibrated choice lies at a
-positive rate boundary.
+evaluation candidate fails numerically, and no calibrated choice on the fine
+grid lies at a boundary of the positive rate range.
 
 For the fresh fixed-intercept baseline, a denser exact search uses 1025 positive
 rate factors and every integer stop. The largest excess of the chosen fine-grid
@@ -2414,8 +2425,8 @@ results without training.
 \label{sec:reproducibility}
 
 The source supplement accompanies the manuscript and contains the paper source,
-experiment and plotting code, saved feature draws, results, numerical checks, and
-pinned environment definitions. Its \texttt{README.md} gives the setup,
+experiment and plotting code, saved feature draws, results, numerical checks,
+and pinned environment definitions. Its \texttt{README.md} gives the setup,
 container, and reproduction instructions, including how to build the complete
 paper from saved results, rerun experiments, and check the numerical
 certificates.
