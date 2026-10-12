@@ -132,11 +132,11 @@ the noise cost of learning it.
 \end{figure}
 
 We study two independent binary predictors under squared loss, with known
-population centering and scales, zero initialization, a fixed zero intercept,
-and one fresh observation per update. Each method chooses a nonnegative constant
-learning rate and a deterministic stopping time to minimize the final iterate's
-rare-subgroup risk averaged over training randomness. We call the resulting
-optimized risk its \emph{oracle risk}.
+population means and standard deviations, zero initialization, a fixed zero
+intercept, and one fresh observation per update. Each method chooses a
+nonnegative constant learning rate and a deterministic stopping time to minimize
+the final iterate's rare-subgroup risk averaged over training randomness. We
+call the resulting optimized risk its \emph{oracle risk}.
 
 Our main result, \cref{thm:oracle-limits}, characterizes both oracle risks when
 rare observations remain scarce even as the total observation cap grows. We let
@@ -243,8 +243,8 @@ $x = (I - 1/2,J - q)^\top$, suppose
     = 0,\qquad \E(\varepsilon^2 \mid x)
     = \sigma^2.
 \]
-Write $a = 1/4$, $b = q(1 - q)$, and $C = \E(xx^\top) = \diag(a,b)$. We use
-population centering, fix the centered intercept at zero, and initialize
+Write $a = 1/4$, $b = q(1 - q)$, and $C = \E(xx^\top) = \diag(a,b)$. We use the
+population means, fix the centered intercept at zero, and initialize
 $\beta_0 = 0$.
 
 \paragraph{Scaling and the training budget.}
