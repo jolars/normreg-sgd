@@ -22,7 +22,3 @@ paper/*.out
 paper/*.pdf
 paper/*.synctex.gz
 paper/*.toc
-
-# These large outputs are generated explicitly by task experiment:exact-risk.
-/results/exact-risk/paths.npz
-/results/exact-risk/summary.json

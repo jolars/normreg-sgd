@@ -193,16 +193,10 @@ tasks:
     desc: Check mathematical identities, numerical updates, and selections.
     cmds:
       - task: check:moments
-      - task: check:normalization-risk
       - task: check:predictive-theorem
       - task: check:predictive-fixed-q
       - task: check:predictive-review
       - task: check:oracle-limits
-      - task: check:exact-risk
-      - task: check:selection
-      - task: check:mushroom-rates
-      - task: check:mushroom-damping
-      - task: check:matched-scaling
       - task: check:illustrations
       - task: check:workflow
       - task: check:theory-bridge
@@ -251,11 +245,6 @@ tasks:
     cmds:
       - python -m checks.joint_interactions
 
-  check:normalization-risk:
-    desc: Check normalization risk calculations.
-    cmds:
-      - python -m checks.normalization_risk_theorem
-
   check:predictive-theorem:
     desc: Check predictive theorem calculations.
     cmds:
@@ -290,37 +279,11 @@ tasks:
       - python -m checks.reproduction
       - 'python -m checks.oracle_finite {{.CLI_ARGS}}'
 
-  check:exact-risk:
-    desc: Check exact risk calculations.
-    cmds:
-      - python -m checks.normalization_robustness --numerics-only
-
-  check:selection:
-    desc: Check selection calculations.
-    cmds:
-      - python -m checks.practical_selection --numerics-only
-
-  check:mushroom-rates:
-    desc: Check mushroom rates calculations.
-    cmds:
-      - python -m checks.mushroom_rate_search --numerics-only
-
-  check:mushroom-damping:
-    desc: Check mushroom damping calculations.
-    cmds:
-      - python -m checks.mushroom_sensitivity --numerics-only
-
-  check:matched-scaling:
-    desc: Check matched scaling calculations.
-    cmds:
-      - python -m checks.variance_scaling --numerics-only
-
   check:illustrations:
     desc: Check the numerical data used in the illustrations.
     cmds:
       - python -m experiments.coefficient_paths.run --check
       - python -m experiments.predictive_intro.run --check
-      - python -m experiments.signal_allocation.run --check
 
   check:workflow:
     desc: Check experiment entry points and a small saved run.
@@ -328,69 +291,17 @@ tasks:
       - python -m checks.workflow
 
   check:results:
-    desc: Reconstruct saved losses, selections, summaries, and diagnostics.
+    desc: Reconstruct saved manuscript risks, selections, summaries, and diagnostics.
     cmds:
-      - python -m checks.practical_selection
-      - python -m checks.mushroom_rate_search
-      - python -m checks.mushroom_sensitivity
-      - python -m checks.variance_scaling
-      - python -m experiments.diagnostics.run --check
+      - task: check:illustrations
+      - task: check:oracle-finite
+      - python -m checks.common_block --saved
       - python -m checks.theory_bridge --saved
       - python -m experiments.theory_bridge.summarize --check
+      - task: check:calibration-sensitivity
       - task: check:exact-calibration
       - task: check:selection-gains
       - task: check:risk-decomposition
-
-  check:exact-risk-results:
-    desc: Check the large exact-risk outputs after running that experiment.
-    cmds:
-      - python -m checks.normalization_robustness
-
-  experiment:mushroom:
-    desc: Run and summarize the mushroom experiment (-- --config NAME).
-    cmds:
-      - 'python -m experiments mushroom {{.CLI_ARGS}}'
-
-  experiment:mushroom:run:
-    desc: Run the mushroom experiment (-- --config NAME).
-    cmds:
-      - 'python -m experiments.mushroom.run {{.ARGS | default .CLI_ARGS}}'
-
-  experiment:mushroom:summarize:
-    desc: Summarize the mushroom experiment (-- --config NAME).
-    cmds:
-      - 'python -m experiments.mushroom.summarize {{.ARGS | default .CLI_ARGS}}'
-
-  experiment:synthetic:
-    desc: Run and summarize the synthetic experiment (-- --config NAME).
-    cmds:
-      - 'python -m experiments synthetic {{.CLI_ARGS}}'
-
-  experiment:synthetic:run:
-    desc: Run the synthetic experiment (-- --config NAME).
-    cmds:
-      - 'python -m experiments.synthetic.run {{.ARGS | default .CLI_ARGS}}'
-
-  experiment:synthetic:summarize:
-    desc: Summarize the synthetic experiment (-- --config NAME).
-    cmds:
-      - 'python -m experiments.synthetic.summarize {{.ARGS | default .CLI_ARGS}}'
-
-  experiment:exact-risk:
-    desc: Run and summarize the exact-risk comparisons.
-    cmds:
-      - 'python -m experiments exact-risk'
-
-  experiment:exact-risk:run:
-    desc: Compute exact moments and paired simulations.
-    cmds:
-      - python -m experiments.exact_risk.run
-      - python -m experiments.exact_risk.simulate
-
-  experiment:exact-risk:summarize:
-    desc: Summarize the saved exact-risk comparisons.
-    cmds:
-      - python -m experiments.exact_risk.summarize
 
   experiment:predictive-intro:
     desc: Compute the introduction illustration.
@@ -496,11 +407,6 @@ tasks:
     cmds:
       - python scripts/figures/plot_common_block.py
 
-  experiment:signal-allocation:
-    desc: Compute the signal-allocation illustration.
-    cmds:
-      - python -m experiments signal-allocation
-
   experiment:oracle-finite:
     desc: Compute and summarize exact finite-prevalence comparisons with the limits.
     cmds:
@@ -542,16 +448,6 @@ tasks:
       - figures/oracle-finite/budget.png
     cmds:
       - python scripts/figures/plot_oracle_finite.py
-
-  experiment:diagnostics:
-    desc: Reconstruct numerical discrepancies and compute post hoc diagnostics.
-    cmds:
-      - python -m experiments diagnostics
-
-  experiment:precision:
-    desc: Replay selected synthetic paths at 160-digit precision.
-    cmds:
-      - python -m experiments precision
 
   prepare-lean:
     desc: Fetch the Mathlib caches needed by the proofs.

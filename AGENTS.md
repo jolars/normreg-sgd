@@ -13,10 +13,9 @@ budgets.
 - `scripts/figures/` contains editable manuscript plots and shared styling in
   `style.py`.
 - `lean/NormReg/` contains formal proofs and axiom audits.
-- `data/mushroom/` stores source data; `results/<experiment>/` stores numerical
-  arrays, settings, and summaries. Generated figures go in root `figures/`,
-  LaTeX build files go in ignored `build/`, and the generated diagnostic table
-  lives in `paper/generated/`.
+- `results/<experiment>/` stores numerical arrays, settings, and summaries.
+  Generated figures go in root `figures/`, LaTeX build files go in ignored
+  `build/`, and generated manuscript tables live in `paper/generated/`.
 
 ## Build, Test, and Development Commands
 
@@ -24,9 +23,9 @@ Run commands from the repository root. Install the locked Python dependencies
 with `uv sync --locked --no-dev`, then activate `.venv`. A standard Python venv
 with pip also works with the dependency ranges in `pyproject.toml`.
 
-- `python -m experiments NAME`: run and summarize a named experiment. Mushroom
-  and synthetic data accept `--config NAME`. Use `--stage run` or
-  `--stage summarize` to separate steps where a summary module exists.
+- `python -m experiments NAME`: run and summarize a named experiment. Use
+  `--stage run` or `--stage summarize` to separate steps where a summary module
+  exists.
 - `python -m experiments.<name>.run` and
   `python -m experiments.<name>.summarize`: invoke individual modules with their
   additional options.
@@ -39,12 +38,9 @@ environment. Run `task --list` to list wrappers.
 
 - `task paper`: regenerate required figures and compile `build/main.pdf`.
 - `task figures`: regenerate manuscript plots from saved results.
-- `task experiment:<name>`: run and summarize one experiment. Mushroom and
-  synthetic data support `-- --config NAME`, plus separate `:run` and
-  `:summarize` tasks.
+- `task experiment:<name>`: run and summarize one experiment. Experiments with
+  separate summary modules also provide `:run` and `:summarize` tasks.
 - `task check:results`: reconstruct saved losses, selections, and summaries.
-- `task check:exact-risk-results`: check the large exact-risk outputs after
-  explicitly generating them with `task experiment:exact-risk`.
 - `task check`: run formatting, configuration, numerical checks, and the paper
   build, matching CI.
 - `task check-python`: check Python formatting and lint with Ruff.
@@ -72,14 +68,16 @@ the change.
 
 ## Reproducibility
 
-Keep seeds, experiment settings, raw data, reported results, and numerical
-failures. Use Git history to record changes; do not add checksum enforcement,
-locked declarations, or dependencies on historical Git revisions. Add explicit
-entries to `experiments/__main__.py` and `experiment:<name>` convenience tasks
-to `Taskfile.yml`. Building the paper or its figures must never launch
-experiments. Keep summarizing and plotting independent of training. Run Python
-modules from the root with `python -m experiments.<name>.run` or
-`python -m checks.<name>`.
+Keep the repository focused on the current manuscript. Retain the seeds,
+experiment settings, data, results, and numerical diagnostics needed to
+reproduce and assess its claims. Obsolete experiments and their artifacts may be
+removed; the working tree does not need to document every past experiment. Use
+Git history to record changes; do not add checksum enforcement, locked
+declarations, or dependencies on historical Git revisions. Add explicit entries
+to `experiments/__main__.py` and `experiment:<name>` convenience tasks to
+`Taskfile.yml`. Building the paper or its figures must never launch experiments.
+Keep summarizing and plotting independent of training. Run Python modules from
+the root with `python -m experiments.<name>.run` or `python -m checks.<name>`.
 
 ## Commit & Pull Request Guidelines
 

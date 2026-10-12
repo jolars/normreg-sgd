@@ -44,10 +44,6 @@ The main experiment outputs are:
   | `common-block`      | Extension to several common features                  | [results/common-block/](results/common-block/)           |
   | `theory-bridge`     | Controlled departures from the theoretical setup      | [results/theory-bridge/](results/theory-bridge/)         |
 
-Earlier fixed-calibration, signal-allocation, synthetic, and Mushroom studies
-remain available in the code and saved results, including their numerical
-diagnostics. They are outside the current manuscript.
-
 ## Reproducing the results
 
 Run commands from the repository or extracted source archive root. Experiments

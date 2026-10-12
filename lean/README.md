@@ -54,9 +54,8 @@ put $W_k = C_k + wH_k$ and $A = (1 - b\theta)^2$. Nonnegative coupling and
 $D_b \geq A$ imply
 
 $$
-  W_{k+1} \geq A W_k + wb\theta^2,
-  \qquad
-  A + wb\theta^2 - 1 = b\theta\{\theta(b + w) - 2\} \geq 0.
+  W_{k+1} \geq A W_k + wb\theta^2, \qquad A + wb\theta^2 - 1
+          = b\theta\{\theta(b + w) - 2\} \geq 0.
 $$
 
 Thus $W_0 \geq 1$ implies $W_k \geq 1$ by induction. Taking
@@ -67,9 +66,9 @@ This argument also covers $b\theta = 2$ without dividing by $1 - A$.
 
 [OracleLargeRates.lean](NormReg/OracleLargeRates.lean) formalizes the general
 bounds in the opening subsection of [the limiting oracle
-proof](../paper/oracle-proofs.tex). Its `GeneralMomentRecurrence` uses
-$G_k = C_k/4$, initial values $G_0 = s/4$ and $H_0 = r$, and arbitrary noise
-variance $\nu \geq 0$. Thus $v = G_0 + H_0 = s/4 + r$, and
+proof](../paper/main.tex). Its `GeneralMomentRecurrence` uses $G_k = C_k/4$,
+initial values $G_0 = s/4$ and $H_0 = r$, and arbitrary noise variance
+$\nu \geq 0$. Thus $v = G_0 + H_0 = s/4 + r$, and
 $R_{R,k} = \{G_k + (1 - q)^2H_k\}/2$. The proofs require only nonnegative
 initial moments. `MomentRecurrence.toGeneral` checks the change of common-moment
 scale at noise variance one, and `rescaledRareRisk_eq` checks the risk formula
@@ -83,10 +82,8 @@ theorems `oracle_unscaled_geometric_lower_bound` and
 
 $$
   R_{R,k}^U
-  \geq \frac w2\left[ D_b^kr + b\theta^2\nu \sum_{j=0}^{k-1}D_b^j \right],
-  \qquad
-  R_{R,k}^S
-  \geq \frac w2\left[ \lambda_b^kv + b\theta^2\nu \sum_{j=0}^{k-1}\lambda_b^j \right].
+  \geq \frac w2\left[ D_b^kr + b\theta^2\nu \sum_{j=0}^{k-1}D_b^j \right], \qquad R_{R,k}^S
+            \geq \frac w2\left[ \lambda_b^kv + b\theta^2\nu \sum_{j=0}^{k-1}\lambda_b^j \right].
 $$
 
 These hold at every finite stop and every real rate, including all nonnegative
@@ -119,9 +116,8 @@ the rate domain in the limiting proof.
 `CommonBlockMomentRecurrence` records
 
 $$
-  G_{k+1} = (1 - 2u + mu^2)G_k + mu^2(bH_k + \nu),
-  \qquad
-  H_{k+1} = D_bH_k + b\theta^2(G_k + \nu),
+  G_{k+1} = (1 - 2u + mu^2)G_k + mu^2(bH_k + \nu), \qquad H_{k+1}
+          = D_bH_k + b\theta^2(G_k + \nu),
 $$
 
 where $b = q(1 - q)$, $\theta$ is the manuscript's rare-coordinate step

@@ -83,8 +83,7 @@ remain the next substantive questions.
 
 - [x] Integrate the limiting theorem, allocation corollary, variational
   consequences, and finite-prevalence checks into the paper. Redraw the
-  introductory crossing at fixed $s/4 + r$ and retain the earlier $s + r$
-  map in the supplement.
+  introductory crossing at fixed $s/4 + r$.
 
 ## 3. Explain the adaptive-selection reversal
 
@@ -151,14 +150,9 @@ $-.10456$ to $+.01643$ with a fitted intercept.
   results.
 - [x] Promote the controlled-persistence figure into the main paper, and
   emphasize the controlled missing-validation example.
-- [x] Move most extreme synthetic-path diagnostics and Mushroom discussion to
-  the supplement, preserving reported failures and qualifications.
 - [ ] Give adaptive selection a central role if the analysis explains its
   mechanism; otherwise present it as a focused qualification of the oracle
   comparison.
-- [ ] Keep Mushroom extensions secondary. If Mushroom remains central, add an
-  identifiable representation or suitable converged prediction references,
-  and evaluate clipping consistently during validation and testing.
 - [ ] Distinguish observation caps in the theorem from update caps with
   additional preprocessing and selection data in the controlled study.
 

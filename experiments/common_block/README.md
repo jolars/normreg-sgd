@@ -13,10 +13,9 @@ and let $J$ be an independent Bernoulli variable with prevalence $q$. Center all
 features at their population means and write
 
 $$
-  y = \sum_{j=1}^m\beta_j^*(I_j - 1/2) + \beta_R^*(J - q) + \varepsilon,
-  \qquad
-  \mathbb E[\varepsilon \mid x] = 0,
-  \quad \mathbb E[\varepsilon^2 \mid x] = \sigma^2.
+  y = \sum_{j=1}^m\beta_j^*(I_j - 1/2) + \beta_R^*(J - q)
+      + \varepsilon, \qquad \mathbb E[\varepsilon \mid x]
+    = 0, \quad \mathbb E[\varepsilon^2 \mid x] = \sigma^2.
 $$
 
 Use fresh observations, zero initialization, a fixed zero intercept, and
@@ -31,9 +30,9 @@ $\alpha$ under unscaled training and $4b\alpha$ under standardization. Put
 $u = \alpha/4$ or $u = b\alpha$, respectively, and define
 
 $$
-  C_k = \frac14\sum_{j=1}^m\mathbb E[(\widehat\beta_{j,k} - \beta_j^*)^2],
-  \qquad
-  H_k = \mathbb E[(\widehat\beta_{R,k} - \beta_R^*)^2].
+  C_k
+  = \frac14\sum_{j=1}^m\mathbb E[(\widehat\beta_{j,k} - \beta_j^*)^2], \qquad H_k
+      = \mathbb E[(\widehat\beta_{R,k} - \beta_R^*)^2].
 $$
 
 The exact recurrence is
@@ -91,9 +90,8 @@ taking $q \to 0$; they do not interchange a limit and an oracle infimum.
 For standardization and $0 < \alpha < 2$, the limiting equations are
 
 $$
-  \dot C = -2\alpha C,
-  \qquad
-  \dot H = -\alpha(2 - \alpha)H + \alpha^2(C + \sigma^2).
+  \dot C = -2\alpha C, \qquad \dot H
+         = -\alpha(2 - \alpha)H + \alpha^2(C + \sigma^2).
 $$
 
 Writing $W = C + H$, $W_0 = s/4 + r$, and $z = \exp\{-\alpha(2 - \alpha)t\}$
@@ -122,9 +120,8 @@ vanishing contribution to the rare equation on the rescaled time horizon.
 Consequently the limiting rare moment obeys
 
 $$
-  \dot H = -\alpha(2 - \alpha)H + \alpha^2\{\sigma^2 + c_m(\alpha)\},
-  \qquad
-  H(0) = r,
+  \dot H = -\alpha(2 - \alpha)H
+           + \alpha^2\{\sigma^2 + c_m(\alpha)\}, \qquad H(0) = r,
 $$
 
 and the resulting fixed-rate expression is
@@ -165,9 +162,8 @@ $\det(I - T) = 0$, where $T$ is the homogeneous two-moment transition. With
 $u = c\alpha$, define
 
 $$
-  L = 2(1 - 3b + mc),\qquad K = mc(1 - 4b),
-  \qquad
-  \alpha_{\mathrm{stab}} = \frac{8}{L + \sqrt{L^2 - 16K}}.
+  L = 2(1 - 3b + mc),\qquad K = mc(1 - 4b), \qquad \alpha_{\mathrm{stab}}
+    = \frac{8}{L + \sqrt{L^2 - 16K}}.
 $$
 
 Here $c = 1/4$ for U and $c = b$ for S. The calculation searches rates below

@@ -26,22 +26,15 @@ def _styles(section):
 
 
 METHOD_STYLES = _styles("methods")
-VALIDATION_STYLES = _styles("validation")
 BUDGET_STYLES = {float(key): value for key, value in _styles("budgets").items()}
 PREVALENCE_STYLES = {float(key): value for key, value in _styles("prevalences").items()}
 ARM_STYLES = _styles("arms")
 COMPONENT_STYLES = _styles("components")
-CLIPPING_STYLES = _styles("clipping")
-SEARCH_STYLES = PALETTE["searches"]
-INTERCEPT_STYLES = PALETTE["intercepts"]
-SAMPLE_SIZE_STYLES = {int(key): value for key, value in PALETTE["sample_sizes"].items()}
 RISK_COLORMAP = PALETTE["defaults"]["risk_colormap"]
 BAR_EDGE_COLOR = COLORS[PALETTE["defaults"]["bar_edgecolor"]]
 METHOD_LABELS = {
     "none": "Unscaled",
     "sd": "Standardized",
-    "damped": "Damped",
-    "variance": "Variance",
 }
 
 # LaTeX renders text and math with the same font package as the manuscript.

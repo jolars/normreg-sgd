@@ -23,14 +23,13 @@ active Python environment. Run `task --list` to see its convenience commands.
 
 ## Editing experiments
 
-Configurations are ordinary Python values. Mushroom's 17-factor grid is in
-[experiments/mushroom/rates17.py](experiments/mushroom/rates17.py), and its
-damping offsets are in
-[experiments/mushroom/damping.py](experiments/mushroom/damping.py). The shared
-25-factor comparison is in
-[experiments/common/rates25.py](experiments/common/rates25.py). Data generation,
-the five-factor grid, sample sizes, and seeds are in
-[experiments/common/data.py](experiments/common/data.py).
+Configurations are ordinary Python values. The controlled study's rate grid,
+sample sizes, and seed are in
+[experiments/theory_bridge/config.py](experiments/theory_bridge/config.py). The
+finite-prevalence searches and common-feature extension use
+[experiments/oracle_finite/config.py](experiments/oracle_finite/config.py) and
+[experiments/common_block/config.py](experiments/common_block/config.py). Shared
+moment routines and numerical utilities live in `experiments/common/`.
 
 To add an experiment, create `experiments/<name>/` with `__init__.py` and
 `run.py`, and add a `summarize.py` when useful. Register its modules in
@@ -41,8 +40,10 @@ functions in `experiments/common/` without depending on another experiment's
 command-line entry point.
 
 Commit the code, settings, and reported results together when recording a paper
-version. Keep seeds, candidate settings, selections, and numerical failures in
-the saved results, and use Git history to record changes.
+version. Keep the seeds, candidate settings, selections, and numerical
+diagnostics needed to reproduce and assess the current manuscript in the saved
+results. Obsolete experiments and their artifacts may be removed. Use Git
+history to record changes.
 
 ## Validation
 
@@ -72,8 +73,7 @@ task check
 `task check-python` checks Python formatting and lint with Ruff.
 `task check:results` reconstructs saved losses, selections, and summaries.
 `task check` runs formatting, configuration, and numerical checks and builds the
-paper, matching CI. After explicitly generating the optional large exact-risk
-outputs, run `task check:exact-risk-results`.
+paper, matching CI.
 
 Lean checks run separately:
 
@@ -99,7 +99,7 @@ task paper
 These commands read saved results without running experiments. If an analysis
 changes, regenerate its summary before plotting. Figure exports go in
 `figures/`, and the compiled manuscript is `build/main.pdf`. The generated
-diagnostic table is `paper/generated/review-diagnostics.tex`.
+selection-gain and risk-decomposition tables live in `paper/generated/`.
 
 ## Style and change descriptions
 
@@ -125,7 +125,7 @@ previews when changing plots.
 `task package` (also named `task package-code`) creates
 `build/normreg-multi-<version>.tar.gz`, using the version in `pyproject.toml`.
 The archive contains the paper source and styles, experiment and plotting code,
-source data, saved results, numerical checks, Lean source, instructions, and
+saved feature draws, results, numerical checks, Lean source, instructions, and
 environment files. It can be extracted and used without Git history. The image
 and archive take their contents from the same definition in
 [nix/release.nix](nix/release.nix).
@@ -133,22 +133,20 @@ and archive take their contents from the same definition in
 `task review:package` derives the anonymous
 `build/normreg-multi-review-<version>.tar.gz` supplement used by private paper
 reviews from the complete release archive. It retains the manuscript source,
-task and environment files, source data, saved arrays, and numerical and formal
-checks described in the source-supplement appendix. It replaces the repository
-README with the anonymous [reproduction guide](REPRODUCING.md) and omits
-contributor documentation and repository CI metadata. Both archives exclude
-private notes, local reviews, instruction files, build products, and downloaded
-caches. `task check:packages` builds both archives and checks their reproduction
-contents and README links.
+task and environment files, saved feature draws and arrays, and numerical and
+formal checks described in the source-supplement appendix. It replaces the
+repository README with the anonymous [reproduction guide](REPRODUCING.md) and
+omits contributor documentation and repository CI metadata. Both archives
+exclude private notes, local reviews, instruction files, build products, and
+downloaded caches. `task check:packages` builds both archives and checks their
+reproduction contents and README links.
 
 For the current ALT rehearsal, run `task review-alt`. It builds the manuscript,
 creates the curated supplement, and passes both to `codex-alt-review`; it never
 passes the repository checkout itself.
 
 Local environments, build products, private mock reviews, and Lean's downloaded
-caches are excluded. As in the repository, the two large exact-risk outputs must
-be generated with `task experiment:exact-risk`; they are not needed to build the
-paper. Packaging and container builds do not run experiments.
+caches are excluded. Packaging and container builds do not run experiments.
 
 Build and load the image on a Linux machine with Nix, devenv, and Docker:
 

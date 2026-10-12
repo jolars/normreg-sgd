@@ -1,9 +1,9 @@
 # Source supplement
 
 This archive accompanies *Feature Normalization under Finite Training Budgets*.
-It contains the manuscript source, experiment and plotting code, source data,
-saved numerical arrays and summaries, certificate checkers, Lean proofs, and
-pinned environment definitions described in the source-supplement appendix.
+It contains the manuscript source, experiment and plotting code, saved feature
+draws, saved numerical arrays and summaries, certificate checkers, Lean proofs,
+and pinned environment definitions described in the source-supplement appendix.
 Commands below run from the extracted archive's root and do not require a Git
 checkout.
 
@@ -14,9 +14,7 @@ instruction files, local environments, Python caches, and Lean's downloaded
 dependencies are excluded from both archives.
 
 The manuscript presents the oracle results, their numerical illustrations, the
-common-feature extension, and the controlled training study. The archive also
-retains earlier fixed-calibration, signal-allocation, synthetic, and Mushroom
-investigations with their numerical diagnostics.
+common-feature extension, and the controlled training study.
 
 ## Python environment
 
@@ -68,11 +66,6 @@ python -m checks.oracle_variational
 python -m checks.oracle_finite
 python -m checks.common_block
 python -m checks.theory_bridge
-python -m checks.practical_selection
-python -m checks.mushroom_rate_search
-python -m checks.mushroom_sensitivity
-python -m checks.variance_scaling
-python -m experiments.diagnostics.run --check
 python -m checks.theory_bridge --saved
 python -m experiments.theory_bridge.summarize --check
 python -m checks.exact_calibration
@@ -90,9 +83,8 @@ losses and selections. `python -m checks.workflow` exercises small test
 experiments in temporary directories. Other executable checks are in `checks/`.
 
 The analytic limiting proof and its variational consequences are in
-[`paper/oracle-proofs.tex`](paper/oracle-proofs.tex). The controlled study's
-candidate families, calibration, evaluation, and selection rules are specified
-in
+[`paper/main.tex`](paper/main.tex). The controlled study's candidate families,
+calibration, evaluation, and selection rules are specified in
 [`experiments/theory_bridge/PROTOCOL.md`](experiments/theory_bridge/PROTOCOL.md).
 Run `python -m experiments calibration-sensitivity` to reconstruct the
 diagnostic that recalibrates on disjoint halves of the saved calibration shards
@@ -102,11 +94,6 @@ summaries are saved as `results/theory-bridge/calibration-sensitivity.npz` and
 checks the selection logic and saved diagnostic. The overlapping splits describe
 sensitivity at half the original calibration size, not independent repetitions
 or confidence intervals.
-
-The earlier fixed-calibration certificates can be recomputed with
-`python -m checks.normalization_risk_theorem`. Recorded numerical discrepancies
-in the earlier synthetic studies remain in the saved diagnostics; passing the
-checks does not certify the affected paths.
 
 For the formal proof pilot, install Lean and run `lake exe cache get`, then
 `lake build` from `lean/`. The preparation downloads Mathlib caches and needs
@@ -119,9 +106,8 @@ The finite-prevalence certificates use `checks/predictive_fixed_q.py`; the
 recorded output is `results/certificates/predictive-fixed-q.txt`.
 `checks/predictive_theorem.py` and `checks/predictive_review.py` provide the
 small-prevalence checks. The limiting proofs and numerical comparisons are in
-`paper/oracle-proofs.tex` and `paper/oracle-numerics.tex`.
-`experiments/common/limiting_oracle.py` implements the scalar solver, and
-`checks/oracle_limits.py`, `checks/oracle_infima.py`, and
+`paper/main.tex`. `experiments/common/limiting_oracle.py` implements the scalar
+solver, and `checks/oracle_limits.py`, `checks/oracle_infima.py`, and
 `checks/oracle_variational.py` check the limiting characterization. Recorded
 limiting diagnostics are in `results/oracle-limits/`.
 
@@ -142,9 +128,7 @@ risks in `results/oracle-finite/summary.json`. Run
 `python -m checks.oracle_limits` and `python -m checks.oracle_finite` to check
 the scalar solver and saved comparisons, and
 `python -m scripts.figures.plot_signal_crossing` to plot them without new
-optimization or training. The earlier allocation study at fixed unweighted
-squared coefficient sum remains in `results/signal-allocation/`, but is not used
-in that figure.
+optimization or training.
 
 The common-feature study retains each rate's lowest risk and earliest attaining
 stop at every cap in `results/common-block/search.npz`, with settings and
@@ -196,8 +180,8 @@ python -m checks.risk_decomposition
 `python -m experiments --help` lists the named experiment commands. For example:
 
 ```sh
-python -m experiments mushroom --config rates17
-python -m experiments synthetic --config rates5
+python -m experiments oracle-finite
+python -m experiments common-block
 python -m experiments theory-bridge
 ```
 
@@ -207,8 +191,8 @@ time. Run them in a separate extracted copy to retain the supplied results. Use
 when an experiment has a separate summary module:
 
 ```sh
-python -m experiments mushroom --config rates17 --stage run
-python -m experiments mushroom --config rates17 --stage summarize
+python -m experiments theory-bridge --stage run
+python -m experiments theory-bridge --stage summarize
 ```
 
 Individual modules remain available as `python -m experiments.<name>.run` and
@@ -216,19 +200,9 @@ Individual modules remain available as `python -m experiments.<name>.run` and
 options, such as `python -m experiments.theory_bridge.run --help`. Plotting
 reads saved results without retraining.
 
-Two optional large exact-risk outputs are omitted from both archives:
-`results/exact-risk/paths.npz` and `results/exact-risk/summary.json`. They are
-not needed for the paper build or the checks listed above. To generate and check
-them explicitly, run:
-
-```sh
-python -m experiments exact-risk
-python -m checks.normalization_robustness
-```
-
-All other supplied numerical arrays, including `results/common-block/search.npz`
-and the Mushroom, synthetic, and controlled study shards, remain in the archive
-for saved-result checks.
+The archive includes the supplied numerical arrays, including the searches in
+`results/common-block/` and `results/oracle-finite/` and the controlled study's
+calibration and evaluation shards, for saved-result checks.
 
 ## Figures and paper build
 
@@ -284,8 +258,8 @@ uses the active Python environment; it does not install Python dependencies
 itself.
 
 ```sh
-task experiment:mushroom -- --config rates17
-task experiment:synthetic -- --config rates5
+task experiment:oracle-finite
+task experiment:common-block
 task experiment:theory-bridge
 task figures
 task paper

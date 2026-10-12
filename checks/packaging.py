@@ -22,13 +22,18 @@ def check_archive(path, review=False):
         "paper/references.bib",
         "paper/.latexmkrc",
         "paper/vendor/alt2027/alt2027.cls",
-        "paper/generated/review-diagnostics.tex",
+        "paper/generated/selection-gains.tex",
+        "paper/generated/risk-decomposition.tex",
         "checks/predictive_fixed_q.py",
-        "checks/normalization_risk_theorem.py",
         "results/certificates/predictive-fixed-q.txt",
-        "results/certificates/normalization-risk.txt",
+        "results/coefficient-paths/summary.json",
+        "results/predictive-intro/summary.json",
         "results/common-block/search.npz",
+        "results/common-block/summary.json",
         "results/oracle-finite/search.npz",
+        "results/oracle-finite/summary.json",
+        "results/theory-bridge/settings.json",
+        "results/theory-bridge/summary.json",
         "lean/lakefile.toml",
         "lean/lake-manifest.json",
     }
@@ -52,13 +57,11 @@ def check_archive(path, review=False):
                 if name in {"README.md", "REPRODUCING.md", "lean/README.md"}:
                     text[name] = archive.extractfile(member).read().decode()
     assert required <= files, f"Missing reproduction files: {sorted(required - files)}"
-    for directory in ("mushroom", "synthetic", "theory-bridge"):
+    for directory in ("common-block", "oracle-finite", "theory-bridge"):
         assert any(
             name.startswith(f"results/{directory}/") and name.endswith(".npz")
             for name in files
         ), f"Missing saved replay arrays for {directory}"
-    assert "results/exact-risk/paths.npz" not in files
-    assert "results/exact-risk/summary.json" not in files
     for name, content in text.items():
         for link in re.findall(r"\]\(([^)]+)\)", content):
             if "://" in link or link.startswith("#"):

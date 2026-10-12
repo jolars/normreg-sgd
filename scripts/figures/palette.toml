@@ -36,26 +36,6 @@ color = "vermilion"
 marker = "s"
 linestyle = "-"
 
-[methods.damped]
-color = "green"
-marker = "^"
-linestyle = "-."
-
-[methods.variance]
-color = "purple"
-marker = "D"
-linestyle = ":"
-
-[validation.aggregate]
-color = "charcoal"
-marker = "o"
-linestyle = "-"
-
-[validation.rare]
-color = "purple"
-marker = "s"
-linestyle = "-"
-
 # Each figure retains its own scaled-budget definition in the labels.
 [budgets."1"]
 color = "viridis_low"
@@ -115,32 +95,3 @@ color = "orange"
 
 [components.observation_noise]
 color = "sky_blue"
-
-[clipping.raw]
-color = "charcoal"
-marker = "o"
-
-[clipping.clipped]
-color = "green"
-marker = "s"
-
-# Secondary factors use line style, fill, or shape rather than extra colors.
-[searches.original]
-linestyle = ":"
-fillstyle = "none"
-
-[searches.expanded]
-linestyle = "-"
-fillstyle = "full"
-
-[intercepts.known]
-linestyle = "--"
-
-[intercepts.centered_fitted]
-linestyle = "-"
-
-[sample_sizes."256"]
-marker = "o"
-
-[sample_sizes."2048"]
-marker = "s"

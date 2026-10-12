@@ -26,7 +26,6 @@ let
         "REPRODUCING.md"
         "Taskfile.yml"
         "checks"
-        "data"
         "devenv.lock"
         "devenv.nix"
         "devenv.yaml"
@@ -58,10 +57,6 @@ let
       ])
       && !(lib.hasSuffix ".pyc" relative)
       && !(lib.hasSuffix ".pyo" relative)
-      && !(builtins.elem relative [
-        "results/exact-risk/paths.npz"
-        "results/exact-risk/summary.json"
-      ])
       && (
         root != "paper"
         || type == "directory"

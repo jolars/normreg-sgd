@@ -5,8 +5,6 @@ import itertools
 import numpy as np
 from scipy.optimize import brentq
 
-SIGNAL = np.ones(2)
-
 
 def make_model(q, dependence):
     p = 0.5
@@ -99,20 +97,3 @@ def moment_path(model, scales, step, batch, counts, signal, noise_variance=1.0):
         "valid": valid,
         "spectral_radius": float(max(abs(np.linalg.eigvalsh(transition)))),
     }
-
-
-def risk_parts(model, moments, index=0):
-    bias = moments["bias"][index]
-    result = {
-        "coefficient_mean": SIGNAL + bias,
-        "coefficient_bias": bias,
-        "coefficient_mse": np.diag(moments["second"][index]),
-    }
-    for name, gram in [("aggregate", model["gram"]), ("rare", model["rare_second"])]:
-        result[name] = {
-            "risk": 0.5 * np.sum(gram * moments["second"][index]),
-            "squared_bias": 0.5 * bias @ gram @ bias,
-            "design_variance": 0.5 * np.sum(gram * moments["design_covariance"][index]),
-            "noise_variance": 0.5 * np.sum(gram * moments["noise_covariance"][index]),
-        }
-    return result
