@@ -166,11 +166,14 @@ observation caps. As prevalence decreases, the budget grows while the expected
 number of rare occurrences remains roughly between one and four. The risk
 differences therefore persist even as the total observation cap grows.
 
-Exact moments separate incomplete learning, variation due to feature sampling,
-and observation noise. Searches using these moments assess the limiting
-predictions at finite prevalence. An extension with several common features
-retains the reduction to two moments and both numerical orderings through 64
-common features.
+We compute expected squared coefficient errors exactly to distinguish incomplete
+learning from variability caused by feature sampling and observation noise.
+These calculations also let us compare the limiting predictions with optimized
+risks at finite prevalence. With several common features, we can still track
+their combined error and the rare coefficient's error using two scalar
+recurrences. Numerical searches through 64 common features continue to favor
+standardization when the rare signal dominates and unscaled training when the
+common signal dominates.
 
 A controlled study then asks how these comparisons change when training reuses
 observations, estimates preprocessing, or fits an intercept. We retain the two
