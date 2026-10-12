@@ -78,17 +78,20 @@ paths and reach different coefficients when stopped early.
 
 Adjusting the learning rate and stopping time is a natural way to compensate for
 different learning speeds. We ask how low each scaling can drive rare-subgroup
-risk when both optimize these choices under the same observation cap.
-\Cref{fig:intro-signal-crossing} illustrates the limiting comparison:
-standardization gives lower risk when the rare signal dominates, whereas
-unscaled training gives lower risk when the common signal dominates. Each method
-optimizes its rate and stopping time as signal moves between features at fixed
-initial subgroup risk, noise level, and rescaled budget---the limiting expected
-number of rare observations. Our main result characterizes both optimized risks
-in a rare-prevalence limit and proves a unique crossing when initial subgroup
-risk is held fixed. A separate
-finite-prevalence theorem establishes positive gaps for two signal families,
-illustrated across observation caps in \cref{fig:conference-tuned-intro}.
+risk when both optimize these choices under the same observation cap. In our
+two-feature model, neither scaling is uniformly preferable.
+\Cref{fig:intro-signal-crossing} illustrates the comparison: standardization
+gives lower risk when the rare signal dominates, whereas unscaled training gives
+lower risk when the common signal dominates.
+
+The constraint is that a single learning rate controls both coefficient updates.
+Relative feature scaling fixes the ratio of their steps, which tuning cannot
+change. To learn a dominant rare signal, unscaled training also introduces noise
+in the common coefficient. To learn a dominant common signal, standardization
+introduces noise in the rare coefficient. A smaller rate reduces noise but slows
+learning, and the observation cap limits how far a longer run can compensate.
+The preferred scaling therefore depends on which signal is worth learning and
+the noise cost of learning it.
 
 \begin{figure}[htb]
   \centering
@@ -129,42 +132,46 @@ illustrated across observation caps in \cref{fig:conference-tuned-intro}.
 
 We study two independent binary predictors under squared loss, with known
 population centering and scales, zero initialization, a fixed zero intercept,
-and one fresh observation per update. Our main characterization,
-\cref{thm:oracle-limits}, gives both optimized total risks as rare prevalence
-$q \to 0$ and the observation cap $M$ satisfies
-$Mq(1 - q) \to \tau \in (0,\infty)$, for arbitrary fixed signal strengths and
-noise. Uniform bounds over all nonnegative constant rates and deterministic
-stops justify taking the limit after optimization. These bounds include choices
-that depend on prevalence, unstable rates, and vanishing rates that learn the
-common signal while leaving the rare effect unchanged. We then move signal to
-the rare feature while holding the limiting risk at initialization fixed and
-positive. With positive noise, the preferred scaling changes exactly once. The
-formulas also explain how noise and budget can reverse the ordering.
+and one fresh observation per update. Each method chooses a nonnegative constant
+learning rate and a deterministic stopping time to minimize the final iterate's
+rare-subgroup risk averaged over training randomness. We call the resulting
+optimized risk its oracle risk.
+
+Our main result, \cref{thm:oracle-limits}, characterizes both oracle risks as
+rare prevalence $q \to 0$ and the observation cap $M$ satisfies
+$Mq(1 - q) \to \tau \in (0,\infty)$. In this limit, the expected number of rare
+observations remains finite. For arbitrary fixed signal strengths and noise,
+each limiting oracle reduces to a scalar minimization. Uniform bounds over rates
+and stopping times justify taking the limit after optimization. We also move
+signal from the common feature to the rare feature while holding the limiting
+risk at initialization fixed and positive. At fixed positive noise and rescaled
+budget, the preferred scaling changes exactly once along this path. The formulas
+also explain how noise and budget can reverse the ordering.
 
 The finite-prevalence comparison in \cref{thm:conference-predictive} complements
 this characterization with explicit positive gaps for two signal families. The
-gaps hold whenever $0 < q \leq 0.04$ and $1 \leq Mq(1 - q) \leq 4$, after each
-method optimizes over all nonnegative constant rates and deterministic stops. As
+gaps hold whenever $0 < q \leq 0.04$ and $1 \leq Mq(1 - q) \leq 4$.
+\Cref{fig:conference-tuned-intro} illustrates them across observation caps. As
 prevalence decreases, the budget grows while the expected number of rare
-occurrences remains roughly between one and four. Relative feature scaling
-therefore remains consequential after tuning as the total observation cap grows.
+occurrences remains roughly between one and four. The risk differences therefore
+persist even as the total observation cap grows.
 
-The analysis explains this result through the noise cost of learning each
-signal. To learn a dominant rare signal, unscaled training also introduces noise
-in the common coefficient. To learn a dominant common signal, standardization
-introduces noise in the rare coefficient. Exact moments separate these costs
-from incomplete learning and variation due to feature sampling.
-
-Exact-moment searches assess the limiting predictions at finite prevalence. An
-extension with several common features retains the reduction to two moments and
-both numerical orderings through 64 common features.
+Exact moments separate incomplete learning, variation due to feature sampling,
+and observation noise. Searches using these moments assess the limiting
+predictions at finite prevalence. An extension with several common features
+retains the reduction to two moments and both numerical orderings through 64
+common features.
 
 A controlled study then asks how these comparisons change when training reuses
 observations, estimates preprocessing, or fits an intercept. We retain the two
 illustrative signal pairs and find that both orderings persist when each
-method's tuning choices are fixed before evaluation. Selecting a predictor after
-observing training can reverse an ordering, even with exact population risk. We
-also examine how missing rare validation observations affect selection.
+method's tuning choices are fixed before evaluation. We then allow selection
+among the fitted predictors in each training run. This changes the objective:
+the best predictor in a particular run can differ from the predictor trained
+with the settings that work best on average. The two scalings can benefit by
+different amounts, enough to reverse an ordering even when selection uses exact
+population risk. We also examine how missing rare validation observations affect
+selection.
 
 \paragraph{Relation to prior work.}
 
@@ -184,20 +191,15 @@ presence while retaining the training law connects our objective to work on
 target-distribution risk and covariate shift. \citet{lei2021shift} study minimax
 linear estimation under target-weighted loss; \citet{wu2022pretraining} and
 \citet[Theorem 4]{liu2025precondition} analyze SGD variants with decaying rates
-under different training and test laws. We ask which normalization achieves
-lower rare-subgroup risk after each method chooses its nonnegative constant
-learning rate and deterministic stopping time under the same observation cap.
-For final iterates of fresh-sample SGD, our limiting theorem characterizes the
-optimized total risk for arbitrary fixed signals and noise, with uniform control
-over the full rate-and-stop domain. Our finite-prevalence theorem establishes
-opposite positive gaps on two fixed signal families.
+under different training and test laws. Our comparison concerns the lowest
+rare-subgroup risks attainable by final iterates of fresh-sample SGD, allowing
+each scaling to choose any nonnegative constant rate and deterministic stop
+under a common observation cap.
 
-The rare-prevalence limit also changes the moment assumptions. The rare
-coordinate has standardized fourth moment $(1 - 3b)/b$, where $b = q(1 - q)$.
-For example, the fourth-moment constant in
-\citet[Assumption 3.2]{su2024preconditioning} must be at least $(1 - 4b)/b$ in
-our model. These constants diverge as prevalence vanishes. We retain this
-dependence in the exact moments when passing to optimized final-iterate risks.
+The rare-prevalence limit also makes moment bounds diverge. The rare
+coordinate's standardized fourth moment grows without bound, as must the
+fourth-moment constant in \citet[Assumption 3.2]{su2024preconditioning} in our
+model. Our exact moments retain this dependence when passing to optimized risks.
 
 Our calculations build on established mechanisms. Early stopping changes
 least-squares regularization~\citep{ali2019early}. \citet{ali2020stochastic}
