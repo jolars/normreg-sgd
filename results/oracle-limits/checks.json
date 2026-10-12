@@ -1,5 +1,5 @@
 {
-  "purpose": "Diagnostics of notes/oracle-limits.md; not finite-q certificates.",
+  "purpose": "Diagnostics of paper/main.tex (sec:oracle-limit-proofs); not finite-q certificates.",
   "environment": {
     "python": "3.13.15",
     "numpy": "2.5.3",

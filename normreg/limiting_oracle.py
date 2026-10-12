@@ -1,4 +1,4 @@
-"""Solve the scalar oracle problems in notes/oracle-variational.md.
+"""Solve the scalar oracle problems in paper/main.tex (sec:oracle-variational).
 
 These floating-point roots describe the small-prevalence limit, not certified
 finite-prevalence risks. S denotes population standardization and U no scaling.

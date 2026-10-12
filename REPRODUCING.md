@@ -11,13 +11,20 @@ Commands below run from the extracted archive's root and do not require a Git
 checkout.
 
 The anonymous review archive uses this document as its root `README.md` and
-omits repository CI and publishing documentation. It contains the same
-reproduction inputs as the complete source release. Private notes, mock reviews,
-instruction files, local environments, Python caches, and Lean's downloaded
-dependencies are excluded from both archives.
+omits repository CI configuration. It contains the same reproduction inputs as
+the complete source release. Local environments, Python caches, and Lean's
+downloaded dependencies are excluded from both archives.
 
 The manuscript presents the oracle results, their numerical illustrations, the
 common-feature extension, and the controlled training study.
+
+The paper, figures, documentation, and saved experimental data and results are
+licensed under [CC BY 4.0](LICENSE-PAPER). The original Python and Lean code,
+scripts, and build configuration are licensed under [MIT](LICENSE-CODE). During
+anonymous review, attribute the research material to the anonymous authors of
+*Feature Normalization under Finite Training Budgets*. Third-party materials,
+including the unmodified ALT/JMLR template files in `paper/vendor/alt2027/` and
+downloaded dependencies, retain their own licenses and copyright notices.
 
 ## Python environment
 
@@ -31,7 +38,6 @@ To install the versions recorded in `uv.lock`, install
 ```sh
 uv sync --locked --no-dev --python 3.13
 . .venv/bin/activate
-export OPENBLAS_NUM_THREADS=1
 ```
 
 This uses Python 3.13, matching the development environment. Initial setup needs
@@ -49,13 +55,13 @@ compatible dependencies with pip:
 python -m venv .venv
 . .venv/bin/activate
 python -m pip install 'numpy>=2.0' 'scipy>=1.14' 'matplotlib>=3.10'
-export OPENBLAS_NUM_THREADS=1
 ```
 
 These version ranges match `pyproject.toml`, but pip does not read `uv.lock`.
-Use the uv setup to reproduce the recorded Python dependency versions. The
-thread setting matches the saved experiments; the named experiment command also
-sets it for every subprocess.
+Use the uv setup to reproduce the recorded Python dependency versions. Task and
+`python -m experiments` set `OPENBLAS_NUM_THREADS=1` for their subprocesses to
+limit CPU contention when experiment workers run in parallel. These commands
+handle the setting automatically.
 
 ## Certificates and saved results
 
@@ -120,6 +126,12 @@ tolerance `1e-14`. Derived-array checks use the same tolerances for finite
 floating-point values and require exact shapes, data types, and integer
 selections. The controlled-study summaries and recalibration diagnostic use the
 settings and grids recorded with the saved results.
+
+Retraining can select a different predictor when validation losses differ only
+at floating-point precision, even with the same seeds and dependency versions.
+The saved draws, selected predictors, and settings support reconstruction of the
+reported summaries without repeating these near-tied selections. The
+controlled-study protocol describes the selection and tie rules.
 
 The finite-prevalence certificates use `checks/predictive_fixed_q.py`; the
 recorded output is `results/certificates/predictive-fixed-q.txt`.

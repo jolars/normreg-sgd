@@ -76,7 +76,12 @@ On each evaluation replication, independently select from the same candidate
 paths using rare validation loss with 128, 512, or 2048 independent validation
 observations. The validation sets are nested prefixes. An empty rare validation
 group falls back to aggregate validation loss. Validation never sees population
-risk. Ties favor the earlier stop, then the smaller rate factor.
+risk. Exactly equal computed losses favor the earlier stop, then the smaller
+rate factor. Selection compares floating-point losses without a tie tolerance.
+Nearly equal losses can therefore select different predictors across numerical
+environments, particularly when few rare validation observations are available.
+The supplied predictors and selection indices define the reported summaries;
+saved-result checks reconstruct these summaries without repeating selection.
 
 A separate diagnostic selects the best realized candidate using exact population
 rare risk. This per-replication benchmark differs from minimizing risk averaged
@@ -101,7 +106,7 @@ SGD with independent original-coordinate updates, exact-risk evaluation with
 four-cell enumeration, and the fresh simulation with exact expected moments. The
 complete protocol includes unresolved comparisons and numerical failures.
 
-## Calibration sensitivity added after review
+## Calibration sensitivity
 
 The sensitivity diagnostic uses only the saved calibration risk sums. For each
 prevalence, seed 20260928 generates 100 random partitions of the 32 shards into
@@ -120,7 +125,7 @@ Run `python -m experiments calibration-sensitivity` to reconstruct this
 diagnostic without training, and `python -m checks.calibration_sensitivity` to
 verify it.
 
-## Selection-gain analysis added after review
+## Selection-gain analysis
 
 Use the saved evaluation predictors for both fresh arms, both prevalences, all
 three caps, and both signals. Define gain as calibrated minus selected
@@ -147,7 +152,7 @@ Run `python -m experiments selection-gains` without retraining, then
 `python -m checks.selection_gains` to verify the results using independent
 rare-cell predictions and the existing risk-change summaries.
 
-## Exact expected-risk benchmark added after review
+## Exact expected-risk benchmark
 
 For both fresh arms, propagate the full coefficient-error second moment under
 the four-cell feature law and unit noise variance, retaining intercept cross
@@ -168,7 +173,7 @@ training, then `python -m checks.exact_calibration` to verify short paths by
 exhaustive enumeration and compare the baseline with its existing two-coordinate
 moment recursion.
 
-## Rare-risk decomposition added after the gain analysis
+## Rare-risk decomposition
 
 Separate the centered intercept error from the rare-coefficient error for every
 saved predictor in the same two fresh arms. For the predictor

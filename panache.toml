@@ -5,6 +5,8 @@ extend-exclude = [
   "lean/.lake/**",
   "build/**",
   "figures/**",
+  "notes/**",
+  "reviews/**",
   "CHANGELOG.md",
 ]
 

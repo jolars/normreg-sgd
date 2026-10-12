@@ -47,7 +47,7 @@ def main(argv=None):
     modules = () if args.stage == "summarize" else RUN_MODULES[args.experiment]
     if args.stage != "run":
         modules += SUMMARY_MODULES.get(args.experiment, ())
-    # Match the saved experiments' thread setting independently of Task.
+    # Limit CPU contention when experiment workers run in parallel.
     env = os.environ | {"OPENBLAS_NUM_THREADS": "1"}
     for module in modules:
         command = [sys.executable, "-m", module]

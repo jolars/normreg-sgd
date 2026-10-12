@@ -1,7 +1,8 @@
-"""Check the working oracle-limit derivation against finite SGD moments.
+"""Check the oracle-limit derivation against finite SGD moments.
 
 These are deterministic mathematical diagnostics, not simulations or certified
-finite-prevalence oracle searches. See notes/oracle-limits.md for the proof.
+finite-prevalence oracle searches. See paper/main.tex (sec:oracle-limit-proofs)
+for the proof.
 """
 
 import itertools
@@ -570,7 +571,8 @@ def main():
         json.dumps(
             {
                 "purpose": (
-                    "Diagnostics of notes/oracle-limits.md; not finite-q certificates."
+                    "Diagnostics of paper/main.tex (sec:oracle-limit-proofs); "
+                    "not finite-q certificates."
                 ),
                 "environment": {
                     "python": platform.python_version(),

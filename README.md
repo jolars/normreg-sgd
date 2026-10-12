@@ -56,12 +56,10 @@ SciPy, and Matplotlib. To install the recorded dependency versions with
 ```sh
 uv sync --locked --no-dev --python 3.13
 . .venv/bin/activate
-export OPENBLAS_NUM_THREADS=1
 ```
 
-Python 3.13 and the thread setting match the development environment and saved
-experiments. The [reproduction guide](REPRODUCING.md#python-environment) also
-provides a pip setup.
+Python 3.13 matches the recorded experiment environment. The [reproduction
+guide](REPRODUCING.md#python-environment) also provides a pip setup.
 
 To check the finite-prevalence certificates, limiting formulas, and saved
 controlled-study results without retraining:
@@ -106,5 +104,14 @@ distribution with `latex`, `dvipng`, Times fonts, `latexmk`, and `pdflatex`;
 commands](REPRODUCING.md#figures-and-paper-build). The [figure
 guide](scripts/figures/README.md) describes individual plots and their outputs.
 
-Development, validation, and release instructions are in
-[CONTRIBUTING.md](CONTRIBUTING.md).
+## Licenses
+
+The paper, figures, documentation, and saved experimental data and results are
+licensed under [CC BY 4.0](LICENSE-PAPER). The original Python and Lean code,
+scripts, and build configuration are licensed under [MIT](LICENSE-CODE). During
+anonymous review, attribute the research material to the anonymous authors of
+*Feature Normalization under Finite Training Budgets*.
+
+Third-party materials, including the unmodified ALT/JMLR template files in
+`paper/vendor/alt2027/` and downloaded dependencies, retain their own licenses
+and copyright notices.

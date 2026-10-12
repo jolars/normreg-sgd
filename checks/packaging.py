@@ -9,6 +9,8 @@ from pathlib import Path, PurePosixPath
 def check_archive(path, review=False):
     required = {
         "README.md",
+        "LICENSE-CODE",
+        "LICENSE-PAPER",
         "REPRODUCING.md",
         "Taskfile.yml",
         "devenv.nix",

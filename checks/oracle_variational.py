@@ -1,4 +1,4 @@
-"""Diagnose the variational comparison in notes/oracle-variational.md.
+"""Diagnose the variational comparison in paper/main.tex (sec:oracle-variational).
 
 Independent objective searches and numerical derivatives check the stationary
 roots. These floating-point diagnostics are not finite-prevalence certificates.
@@ -270,7 +270,7 @@ def main():
         json.dumps(
             {
                 "purpose": (
-                    "Diagnostics of notes/oracle-variational.md; "
+                    "Diagnostics of paper/main.tex (sec:oracle-variational); "
                     "not finite-q certificates."
                 ),
                 "environment": {

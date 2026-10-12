@@ -621,28 +621,14 @@ learning rate from the training data.
 
 Both orderings persist across all eight training arms. SD has lower rare risk
 for the dominant rare signal, and U has lower rare risk for the dominant common
-signal (\cref{fig:bridge-controlled}). This holds in all 96 comparisons across
-the arms, signal pairs, prevalences, and caps. These numerical comparisons use a
-conservative finite rate search and cover only the two tested signal pairs.
+signal (\cref{fig:bridge-controlled} in the appendix). This holds in all 96
+comparisons across the arms, signal pairs, prevalences, and caps. These numerical
+comparisons use a conservative finite rate search and cover only the two tested
+signal pairs.
 Recalibrating on disjoint halves of the saved calibration runs preserves the
 ordering in all splits for 83 of the 84 comparisons with estimated tuning
 choices. One small gap reverses in 2 of 200 splits
 (\cref{sec:calibration-sensitivity}).
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[]{../figures/theory-bridge/controlled-gaps.pdf}
-  \caption{
-    Both calibrated risk orderings persist across the eight training arms.
-    Negative SD-minus-U rare risk favors SD\@. Colors distinguish the three
-    caps; bars show two paired Monte Carlo standard errors over 4096 evaluation
-    replications, conditional on the calibration choices. The last two rows
-    successively add empirical centering and response-mean initialization to
-    reuse with estimated scales and a fitted intercept. These comparisons
-    concern two signal pairs and finite searches, not the full theorem families.
-  }
-  \label{fig:bridge-controlled}
-\end{figure}
 
 Selecting among the fitted predictors can reverse an ordering even with fresh
 observations and population preprocessing. \Cref{tab:bridge-selection} compares
@@ -1891,7 +1877,7 @@ optimal at finite prevalence.
 
 Both theorem orderings hold in every sampled comparison using the theorem's
 signal pairs. At $q = 2 \times 10^{-6}$, the largest errors for those signal
-pairs are $2.987 \times 10^{-6}$ for U and $1.536 \times 10^{-6}$ for S. Across
+pairs are $2.986 \times 10^{-6}$ for U and $1.535 \times 10^{-6}$ for S. Across
 all 43 settings, the corresponding maxima are $2.01631 \times 10^{-4}$ and
 $2.27583 \times 10^{-6}$; the largest U error occurs at target $\tau = 0.01$.
 Every setting with a nonzero nominal limiting gap has the predicted sign at the
@@ -2079,6 +2065,21 @@ evaluation replications assesses the fixed choices. The two stages use distinct
 random streams derived from seed 20260924. This procedure estimates the optimum
 within a finite candidate family, conditional on the calibration run, rather
 than the unrestricted oracle in \cref{thm:conference-predictive}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[]{../figures/theory-bridge/controlled-gaps.pdf}
+  \caption{
+    Both calibrated risk orderings persist across the eight training arms.
+    Negative SD-minus-U rare risk favors SD\@. Colors distinguish the three
+    caps; bars show two paired Monte Carlo standard errors over 4096 evaluation
+    replications, conditional on the calibration choices. The last two rows
+    successively add empirical centering and response-mean initialization to
+    reuse with estimated scales and a fitted intercept. These comparisons
+    concern two signal pairs and finite searches, not the full theorem families.
+  }
+  \label{fig:bridge-controlled}
+\end{figure}
 
 \subsubsection{Effects of changing training}
 
@@ -2454,9 +2455,10 @@ results without training.
 \section{Source supplement}
 \label{sec:reproducibility}
 
-The source supplement accompanies the manuscript and contains the paper source,
-experiment and plotting code, saved feature draws, results, numerical checks,
-and pinned environment definitions. Its \texttt{README.md} gives the setup,
+The source supplement is available at
+\url{https://anonymous.4open.science/r/normreg-sgd-1382/}. It contains the paper
+source, experiment and plotting code, saved feature draws, results, numerical
+checks, and pinned environment definitions. Its \texttt{README.md} gives the setup,
 container, and reproduction instructions, including how to build the complete
 paper from saved results, rerun experiments, and check the numerical
 certificates.

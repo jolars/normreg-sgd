@@ -41,34 +41,6 @@ tasks:
       - python -m checks.packaging 'build/normreg-multi-{{.RELEASE_VERSION}}.tar.gz'
       - python -m checks.packaging 'build/normreg-multi-review-{{.RELEASE_VERSION}}.tar.gz' --review
 
-  review:
-    desc: Build the paper and curated source supplement, then run a private mock review.
-    vars:
-      REVIEW_OUTPUT:
-        sh: date +reviews/aistats-%Y%m%d-%H%M%S
-      RELEASE_VERSION:
-        sh: python -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])'
-    cmds:
-      - task: paper
-      - task: review:package
-      - >-
-        {{.REVIEWER | default "codex-aistats-review"}}
-        --paper build/main.pdf
-        --supplement-archive 'build/normreg-multi-review-{{.RELEASE_VERSION}}.tar.gz'
-        --output '{{.OUTPUT | default .REVIEW_OUTPUT}}'
-        {{.CLI_ARGS}}
-
-  review-alt:
-    desc: Build the paper and curated supplement, then run an ALT mock review.
-    vars:
-      REVIEW_OUTPUT:
-        sh: date +reviews/alt-%Y%m%d-%H%M%S
-    cmds:
-      - task: review
-        vars:
-          REVIEWER: codex-alt-review
-          REVIEW_OUTPUT: '{{.REVIEW_OUTPUT}}'
-
   container:build:
     desc: Build the experiment image with the release contents and dependencies.
     cmds:
@@ -180,7 +152,10 @@ tasks:
     desc: Check Nix, GitHub Actions, and the Python lockfile.
     cmds:
       - nixfmt --check devenv.nix nix/*.nix
-      - actionlint .github/workflows/*.yml
+      - |
+        if [ -d .github/workflows ]; then
+          actionlint .github/workflows/*.yml
+        fi
       - uv lock --check
 
   check-python:

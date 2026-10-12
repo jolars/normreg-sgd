@@ -4,7 +4,7 @@ import NormReg.LargeRates
 /-!
 # General large-rate bounds for the limiting oracle proof
 
-The recurrence is `eq:limit-moments` in `paper/oracle-proofs.tex`, with the
+The recurrence is `eq:limit-moments` in `paper/main.tex`, with the
 rescaled common moment G = C / 4 and arbitrary noise variance ν. These proofs
 check the geometric lower bounds and the rate cutoffs used to restrict the
 unbounded oracle search. The parameter θ is the manuscript's rare-coordinate
