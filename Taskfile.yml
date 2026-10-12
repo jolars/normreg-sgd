@@ -65,10 +65,16 @@ tasks:
       - cd paper && latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error -outdir=../build main.tex
 
   arxiv:
-    desc: Build the preprint PDF and verified arXiv source bundle.
+    desc: Build the preprint PDF, source bundle, and plain-text abstract.
     cmds:
+      - task: abstract
       - task: paper
       - python -m scripts.package_arxiv build/arxiv.tar.gz
+
+  abstract:
+    desc: Export the manuscript abstract to build/abstract.txt.
+    cmds:
+      - python -m scripts.export_abstract paper/main.tex build/abstract.txt
 
   figures:
     desc: Export the manuscript figures to figures/.
