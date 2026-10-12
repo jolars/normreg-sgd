@@ -71,11 +71,11 @@ coefficient more sensitive to noise.
 These effects can substantially change prediction where the rare feature is
 present, despite contributing little to average error. Normalization therefore
 raises a statistical question: how strongly should training respond to scarce
-evidence? For instance, scaling leaves a full-rank least-squares solution
-unchanged but changes which signals we learn before stopping.
-\Cref{fig:intro-coefficient-paths} illustrates this difference on a fixed
-least-squares problem: the methods approach the same solution along different
-paths and reach different coefficients when stopped early.
+evidence? For instance, scaling may leave a solution unchanged but changes which
+signals we learn before stopping. \Cref{fig:intro-coefficient-paths} illustrates
+this difference on a fixed least-squares problem: the methods approach the same
+solution along different paths and reach different coefficients when stopped
+early.
 
 Adjusting the learning rate and stopping time is a natural way to compensate for
 different learning speeds. We ask how low each scaling can drive rare-subgroup
@@ -176,52 +176,48 @@ selection.
 
 \paragraph{Relation to prior work.}
 
-Preconditioning changes statistical behavior as well as learning speed. Its
-effect on early-stopped predictions can persist even when the least-squares
-optimum is unchanged~\citep{wadia2021whitening}. Its benefit can depend on which
-features carry the signal, even after tuning the stopping time.
-\citet[Proposition 7]{amari2020preconditioning} compare optimally early-stopped
-aggregate bias for particular signal covariances in an overparameterized
-gradient-flow model. \citet[Theorem 4.2]{su2024preconditioning} bound the
-aggregate excess risk of fresh-sample SGD with a restricted constant rate and
-tail averaging, then compare preconditioned SGD with ridge regression.
-
-Evaluating predictions within a rare subgroup also changes how coefficient
-errors contribute to risk. Conditioning the test law on the rare feature's
-presence while retaining the training law connects our objective to work on
-target-distribution risk and covariate shift. \citet{lei2021shift} study minimax
-linear estimation under target-weighted loss; \citet{wu2022pretraining} and
-\citet[Theorem 4]{liu2025precondition} analyze SGD variants with decaying rates
-under different training and test laws. Our comparison concerns the lowest
-rare-subgroup risks attainable by final iterates of fresh-sample SGD, allowing
-each scaling to choose any nonnegative constant rate and deterministic stop
-under a common observation cap.
-
-The rare-prevalence limit also makes moment bounds diverge. The rare
-coordinate's standardized fourth moment grows without bound, as must the
-fourth-moment constant in \citet[Assumption 3.2]{su2024preconditioning} in our
-model. Our exact moments retain this dependence when passing to optimized risks.
-
-Our calculations build on established mechanisms. Early stopping changes
-least-squares regularization~\citep{ali2019early}. \citet{ali2020stochastic}
-compare stochastic gradient flow with ridge along the training path for a fixed
-design. Their Lemma~1 matches discrete SGD's first two moments to an Euler
-discretization of the flow; the continuous process is an approximation to SGD.
-Analyses of least-mean-squares methods separate bias and variance while
-accounting for sampling and batching~\citep{defossez2015averaged,
-jain2018parallelizing}. AdaBatch connects sparse mini-batch aggregation with
-coordinate rescaling~\citep{defossez2017adabatch}, while moment operators
-characterize exact mean-square stability~\citep{mulayoff2024exact}. For explicit
-regularization, \citet{larsson2025normalization} analyze how feature scaling
-affects shrinkage.
-
-The risks of scaling rare features also have precedents.
 \citet[Section 5.4]{bordes2010erratum} warn that standardizing very rare
 features can hurt test performance. In a study of deterministic graph neural
 network training, \citet[Section 5]{milligan2024normalization} identify
 increased stochastic variance as a possible cost of standardizing rare binary
-features. These observations motivate quantitative risk comparisons but do not
-establish our oracle inequalities.
+features. These observations motivate a comparison of the best risks attainable
+under each scaling after tuning.
+
+Scaling affects the regularization induced by finite training. Preconditioning
+can change early-stopped predictions even when the least-squares optimum is
+unchanged~\citep{wadia2021whitening}. Early stopping itself regularizes least
+squares~\citep{ali2019early}, and \citet{ali2020stochastic} compare stochastic
+gradient flow with ridge along the training path for a fixed design. For
+explicit regularization, \citet{larsson2025normalization} analyze how feature
+scaling affects shrinkage. Our question concerns scaling's effect when the rate
+and stopping time are chosen under a finite observation cap.
+
+Earlier comparisons after tuning show why the signal matters. In an
+overparameterized gradient-flow model,
+\citet[Proposition 7]{amari2020preconditioning} compare aggregate bias after
+optimal early stopping for particular signal covariances.
+\citet[Theorem 4.2]{su2024preconditioning} bound aggregate excess risk for
+fresh-sample SGD with tail averaging and a restricted constant rate, then
+compare preconditioned SGD with ridge regression. We compare the two scaling
+rules using final iterates, optimizing over all nonnegative constant rates and
+deterministic stops under a common cap.
+
+Our focus on a rare subgroup connects the comparison to target-distribution risk
+and covariate shift. We condition the test distribution on the rare feature's
+presence while retaining the training distribution. \citet{lei2021shift} study
+minimax linear estimation under target-weighted loss. \citet{wu2022pretraining}
+and \citet[Theorem 4]{liu2025precondition} analyze SGD variants with decaying
+rates under different training and test laws.
+
+We use exact discrete-time SGD moments to separate incomplete learning,
+feature-sampling variation, and observation noise. This builds on analyses of
+least-mean-squares methods that separate bias and variance while accounting for
+random sampling~\citep{defossez2015averaged, jain2018parallelizing}. As
+prevalence vanishes, the rare feature's standardized fourth moment diverges, as
+must the fourth-moment constant in \citet[Assumption 3.2]{su2024preconditioning}
+in our model. Risk bounds whose constants depend on this moment need to retain
+that dependence to describe our regime. Our exact moments retain it when passing
+to optimized risks.
 
 \section{Normalization, learning, and rare-subgroup risk}
 \label{sec:conference-setting}
@@ -278,7 +274,7 @@ same trained predictor and retain the original training distribution.
 \paragraph{Learning signal and fitting noise.}
 
 Let $e_k = \E(\beta_k - \beta^*)$ and
-$V_k = \E\bigl((\beta_k - \beta^*)(\beta_k - \beta^*)^\top\bigr)$. Under fresh
+$V_k = \E\bigl[(\beta_k - \beta^*)(\beta_k - \beta^*)^\top\bigr]$. Under fresh
 sampling, the error second moment decomposes as
 \begin{equation}
   V_k = e_ke_k^\top + A_k + \sigma^2N_k, \label{eq:conference-decomposition}
