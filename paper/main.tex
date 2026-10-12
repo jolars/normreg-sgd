@@ -392,10 +392,12 @@ constant rate and deterministic stop.
     \item If $(\beta_C^*)^2 = \sigma^2$ and $(\beta_R^*)^2 \leq \sigma^2/100$,
           then $R_S^*(M) - R_U^*(M) \geq \sigma^2/50$.
   \end{enumerate}
-  Either sign is allowed for each coefficient. Both inequalities also hold if
-  each rule searches only its mean-square-stable nonnegative constant rates,
-  together with initialization.
 \end{theorem}
+
+The same bounds hold when each method restricts its search to mean-square-stable
+nonnegative constant rates and initialization. The proof bounds the
+disadvantaged method's risk below at every rate and stop and compares it with a
+stable candidate for the other method.
 
 The theorem identifies two regions with opposite orderings. To see the tradeoffs
 within those regions, we examine the risk components at separately tuned
@@ -417,29 +419,28 @@ to avoid the noise cost of further progress.
   \centering
   \includegraphics{../figures/tuned-decomposition/risk-components.pdf}
   \caption{
-    The compromise at separately tuned choices. The two signal pairs, prevalence
-    $q = 10^{-4}$, and noise variance one match
-    \cref{fig:conference-tuned-intro}, with cap $M = 20{,}503$. Each method
-    selects its own rate and stop on that figure's finite search grid. Bars
-    separate common and rare contributions to rare-subgroup risk, weighting
-    coefficient errors by $a/2$ and $(1 - q)^2/2$, respectively. Colors separate
-    squared mean error (incomplete learning), feature-sampling variation, and
-    observation noise as in \cref{eq:conference-decomposition}. The two bars for
-    each method sum to the printed total risk; $\alpha$ is the rare-coordinate
-    step in \cref{eq:conference-oracle-rates}. These are numerical selections,
-    not certified continuous minimizers.
+    Normalization changes the balance between incomplete learning and training
+    variability, even after tuning. Panels use $(\beta_C^*,\beta_R^*) = (0.1,1)$
+    (left) and $(1,0.1)$ (right), with prevalence $q = 10^{-4}$, noise variance
+    one, and observation cap $M = 20{,}503$. Each method selects its rate and
+    stop to minimize exact rare-subgroup risk over the search grid used in
+    \cref{fig:conference-tuned-intro}. Bars show the common and rare
+    coefficients' contributions to that risk. Colors distinguish incomplete
+    learning, feature-sampling variation, and observation noise, as in
+    \cref{eq:conference-decomposition}. Each method's two bars sum to its
+    reported total risk. Labels also give the rare-coordinate step $\alpha$ and
+    stopping time $k$.
   }
   \label{fig:tuned-decomposition}
 \end{figure}
 
 \paragraph{Establishing the gaps.}
 
-The proof bounds one method's risk below at every rate and stop and the other's
-above with a stable candidate. An exact positive recurrence for the diagonal
-error moments makes this comparison possible without finding the minimizing
-choices. Exact rational interval calculations certify the constants over the
-continuous parameter regions. \Cref{sec:predictive-proofs} gives the proof,
-certificates, and stronger bounds.
+An exact positive recurrence for the diagonal error moments makes this
+comparison possible without finding the minimizing choices. Exact rational
+interval calculations certify the constants over the continuous parameter
+regions. \Cref{sec:predictive-proofs} gives the proof, certificates, and
+stronger bounds.
 
 \subsection{Limiting oracle risks}
 
