@@ -61,11 +61,12 @@
 
 \section{Introduction}
 
-A rare feature gives a model few opportunities to learn its effect. Without
-scaling, gradient descent may fit common features while leaving the rare feature
-largely unlearned. Dividing by the feature's standard deviation increases the
-influence of those few observations. This can help recover a useful rare signal,
-but it also makes the fitted coefficient more sensitive to noise.
+A rare feature gives a model few opportunities to learn its effect. Within a
+finite training budget, stochastic gradient descent may learn the effects of
+common features while making little progress on the rare one. Standardizing the
+rare feature gives those few observations more influence on its coefficient
+updates. This can help recover the rare effect, but it also makes the fitted
+coefficient more sensitive to noise.
 
 These effects can substantially change prediction where the rare feature is
 present, despite contributing little to average error. Normalization therefore
@@ -96,7 +97,7 @@ the noise cost of learning it.
 \begin{figure}[htb]
   \centering
   \includegraphics{../figures/coefficient-paths/method-legend.pdf}\par
-  \subfigure[Full-gradient descent fits a noiseless dataset with binary features at prevalences $0.5$ and $0.02$. Dots mark an illustrative stop after 20 updates. Pale curves show progress toward the shared OLS solution,
+  \subfigure[Full-gradient descent on a noiseless dataset with binary features at prevalences $0.5$ and $0.02$. Dots mark an illustrative stop after 20 updates. Pale curves show progress toward the shared OLS solution,
     while gray contours show training loss.]{%
     \label{fig:intro-coefficient-paths}%
     \includegraphics{../figures/coefficient-paths/paths-to-ols.pdf}%
@@ -135,7 +136,7 @@ population centering and scales, zero initialization, a fixed zero intercept,
 and one fresh observation per update. Each method chooses a nonnegative constant
 learning rate and a deterministic stopping time to minimize the final iterate's
 rare-subgroup risk averaged over training randomness. We call the resulting
-optimized risk its oracle risk.
+optimized risk its \emph{oracle risk}.
 
 Our main result, \cref{thm:oracle-limits}, characterizes both oracle risks as
 rare prevalence $q \to 0$ and the observation cap $M$ satisfies
