@@ -64,6 +64,12 @@ tasks:
       - task: figures
       - cd paper && latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error -outdir=../build main.tex
 
+  arxiv:
+    desc: Build and verify the upload bundle build/arxiv.tar.gz.
+    cmds:
+      - task: paper
+      - python -m scripts.package_arxiv build/arxiv.tar.gz
+
   figures:
     desc: Export the manuscript figures to figures/.
     aliases: [paper-figures]
