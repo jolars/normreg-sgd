@@ -356,6 +356,21 @@ and stop. It does not compare methods with equal total computation for tuning.
 
 \subsection{Quantitative gaps at finite prevalence}
 
+We first compare two signal families that isolate the competing costs of
+learning. In one, the rare feature carries the dominant signal; in the other,
+the common feature does. We take the dominant coefficient to be comparable to
+the noise standard deviation and keep the other coefficient small. These
+families let us establish that neither scaling is uniformly preferable after
+tuning.
+
+We focus on observation caps that allow roughly one to four expected rare
+occurrences. The total cap can therefore grow as prevalence decreases while
+evidence about the rare feature remains scarce. The following theorem
+establishes a positive risk gap in each direction throughout this regime:
+standardization wins for the rare-dominant family, and unscaled training wins
+for the common-dominant family, even after each method chooses its best constant
+rate and deterministic stop.
+
 \begin{theorem}[Opposite oracle rare-risk orderings]
   \label{thm:conference-predictive}
   Suppose $\sigma^2 > 0$, $0 < q \leq 0.04$, and
@@ -371,12 +386,10 @@ and stop. It does not compare methods with equal total computation for tuning.
   together with initialization.
 \end{theorem}
 
-The gaps persist even as the observation cap grows inversely with prevalence.
-The expected number of rare occurrences at the cap is $Mq = \tau/(1 - q)$, so
-rare observations remain scarce throughout this regime. The two signal families
-give sufficient conditions for opposite orderings. The limiting characterization
-below locates a transition as signal moves between the features along a
-specified path.
+These families give sufficient conditions for opposite orderings. We next
+examine the compromise each method makes at its tuned choices. The limiting
+characterization below extends the comparison to arbitrary fixed signals and
+locates a transition along a specified signal-allocation path.
 
 \paragraph{The compromise after tuning.}
 
