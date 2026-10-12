@@ -83,9 +83,10 @@ risk when both optimize these choices under the same observation cap.
 standardization gives lower risk when the rare signal dominates, whereas
 unscaled training gives lower risk when the common signal dominates. Each method
 optimizes its rate and stopping time as signal moves between features at fixed
-initial subgroup risk, rescaled budget, and noise level. Our main result
-characterizes both optimized risks in a rare-prevalence limit and proves a
-unique crossing when initial subgroup risk is held fixed. A separate
+initial subgroup risk, noise level, and rescaled budget---the limiting expected
+number of rare observations. Our main result characterizes both optimized risks
+in a rare-prevalence limit and proves a unique crossing when initial subgroup
+risk is held fixed. A separate
 finite-prevalence theorem establishes positive gaps for two signal families,
 illustrated across observation caps in \cref{fig:conference-tuned-intro}.
 
@@ -97,9 +98,9 @@ illustrated across observation caps in \cref{fig:conference-tuned-intro}.
     \label{fig:intro-coefficient-paths}%
     \includegraphics{../figures/coefficient-paths/paths-to-ols.pdf}%
   }\hfill
-  \subfigure[Limiting oracle risks for fresh-sample SGD with noise variance one and rescaled budget $\tau = 2$. As the rare signal share $\theta$ increases,
+  \subfigure[Limiting oracle risks for SGD with noise variance one and rescaled budget $\tau = 2$. As the rare signal share $\theta$ increases,
     $(\beta_C^*)^2 = 4(1 - \theta)$ and $(\beta_R^*)^2 = \theta$,
-    fixing initial limiting subgroup risk at $1/2$. The middle tick gives equal contributions to that risk. Lines connect saved scalar minima along the allocation path in \cref{cor:oracle-allocation}. \Cref{sec:signal-allocation} gives the setup and numerical checks.]{%
+    fixing initial limiting subgroup risk at $1/2$. Lines connect saved scalar minima along the allocation path in \cref{cor:oracle-allocation}. \Cref{sec:signal-allocation} gives the setup and numerical checks.]{%
     \label{fig:intro-signal-crossing}%
     \includegraphics{../figures/signal-crossing/risk-crossing.pdf}%
   }
